@@ -1,0 +1,70 @@
+{
+    "Version": 1.66,
+    "Theme": "Dark Theme",
+    "Items": [
+        {
+            "options": [
+                "TODO - tell about power"
+            ],
+            "title": "What this does",
+            "type": "Explanation",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "Take Over Power Management",
+            "type": "Boolean",
+            "key": "TakePwr",
+            "required": false
+        },
+        {
+            "title": "While NOT Printing",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "Turn Off Screen",
+            "type": "Boolean",
+            "key": "NotPrintingScrnOff",
+            "required": false
+        },
+        {
+            "options": [
+                "2",
+                "120",
+                "2"
+            ],
+            "title": "After X Minutes",
+            "type": "Numeric Range",
+            "key": "NotPrintingMinTill",
+            "required": false
+        },
+        {
+            "options": [
+                "30"
+            ],
+            "title": "When Print Is Over",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "Turn Off Screen",
+            "type": "Boolean",
+            "key": "PrintingScrnOff",
+            "required": false
+        },
+        {
+            "options": [
+                "2",
+                "120",
+                "2"
+            ],
+            "title": "After X Minutes",
+            "type": "Numeric Range",
+            "key": "PrintingMinTill",
+            "required": false
+        }
+    ]
+}

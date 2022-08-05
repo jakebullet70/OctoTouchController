@@ -1,0 +1,96 @@
+﻿B4A=true
+Group=PAGE_VIEWS
+ModulesStructureVersion=1
+Type=Class
+Version=11.8
+@EndOfDesignText@
+' Author:  sadLogic
+#Region VERSIONS 
+' V. 1.0 	Aug/4/2022 - Kherson Ukraine
+#End Region
+
+Sub Class_Globals
+	Private Const mModule As String = "pageMenu" 'ignore
+	Private mPnlMain As B4XView
+	Private mCallBackEvent As String
+	Private  mMainObj As B4XMainPage'ignore
+	
+	'--- menus
+	Private mnuFiles As B4XView
+	Private mnuFillament As B4XView
+	Private mnuHeater As B4XView
+	Private mnuMovement As B4XView
+	Private mnuPrinting As B4XView
+	
+End Sub
+
+Public Sub Initialize(masterPanel As B4XView,callBackEvent As String) 
+	
+	mPnlMain = masterPanel
+	mCallBackEvent = callBackEvent
+	mMainObj = B4XPages.MainPage
+	
+	mPnlMain.LoadLayout("pageMenu")
+	
+	CallSubDelayed(Me,"Build_GUI")
+	
+End Sub
+
+public Sub Set_focus()
+	mPnlMain.Visible = True
+End Sub
+
+public Sub Lost_focus()
+	mPnlMain.Visible = False
+End Sub
+
+Private Sub Build_GUI
+	
+	'--- build the main menu screen
+	mnuMovement.LoadLayout("menuCard")
+	BuildMenuCard(mnuMovement,"menuMovement.png","Move",gblConst.PAGE_MOVEMENT)
+	
+	mnuHeater.LoadLayout("menuCard")
+	BuildMenuCard(mnuHeater,"menuHeating.png","Heater",gblConst.PAGE_HEATING	)
+	
+	mnuFiles.LoadLayout("menuCard")
+	BuildMenuCard(mnuFiles,"menuFiles.png","Files",gblConst.PAGE_FILES)
+
+	mnuPrinting.LoadLayout("menuCard")
+	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
+	
+	mnuFillament.LoadLayout("menuCard")
+	BuildMenuCard(mnuFillament,"menuFilament.png","Filament",gblConst.PAGE_FILAMENT)
+	
+End Sub
+
+Private Sub BuildMenuCard(mnuPanel As Panel,imgFile As String, Text As String, mnuAction As String)
+	
+	For Each v As View In mnuPanel.GetAllViewsRecursive
+		
+		If v.Tag <> Null Then
+			If v.Tag Is lmB4XImageViewX Then
+				Dim o1 As lmB4XImageViewX = v.Tag
+				o1.Load(File.DirAssets,imgFile)
+				o1.Tag2 = mnuAction '--- set menu action
+				
+			Else If v.Tag = "lbl" Then
+				Dim o2 As Label = v
+				o2.Text = Text
+				
+			End If
+		End If
+		
+	Next
+	
+End Sub
+
+Private Sub mnuCardImg_Click
+	
+	'--- pass the menu selection back to main page
+	Dim oo As lmB4XImageViewX : oo = Sender
+	Sleep(50)
+	CallSub2(mMainObj,mCallBackEvent,oo.Tag2)
+	
+End Sub
+

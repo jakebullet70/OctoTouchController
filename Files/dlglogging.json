@@ -1,0 +1,50 @@
+{
+    "Version": 1.66,
+    "Theme": "Dark Theme",
+    "Items": [
+        {
+            "options": [
+                "You really only change this if instucted by tech support."
+            ],
+            "title": "Why change this?",
+            "type": "Explanation",
+            "key": "nope",
+            "required": false
+        },
+        {
+            "title": "Logging",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "Turn on full logging",
+            "type": "Boolean",
+            "key": "fulllog",
+            "required": false
+        },
+        {
+            "options": [
+                "1",
+                "14",
+                "1"
+            ],
+            "title": "Daily log files to keep",
+            "type": "Numeric Range",
+            "key": "days",
+            "required": false
+        },
+        {
+            "title": "Debugging",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "Turn on Debug Tab",
+            "type": "Boolean",
+            "key": "dbgtab",
+            "required": false
+        }
+    ]
+}

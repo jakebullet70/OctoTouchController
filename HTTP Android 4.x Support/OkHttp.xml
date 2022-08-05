@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <doclet-version-NOT-library-version>1.07</doclet-version-NOT-library-version>
+    <class>
+        <name>anywheresoftware.b4h.okhttp.OkHttpClientWrapper</name>
+        <shortname>OkHttpClient</shortname>
+        <comment>OkHttpClient allows you to make Http requests. Instead of using OkHttpClient directly it is recommended to use &lt;link&gt;OkHttpUtil2|https://www.b4x.com/android/forum/threads/b4x-okhttputils2-with-wait-for.79345/&lt;/link&gt; 
+modules which are much simpler to use.</comment>
+        <owner>process</owner>
+        <event>ResponseSuccess (Response As OkHttpResponse, TaskId As Int)</event>
+        <event>ResponseError (Response As OkHttpResponse, Reason As String, StatusCode As Int, TaskId As Int)</event>
+        <permission>android.permission.INTERNET</permission>
+        <method>
+            <name>Execute</name>
+            <comment>Executes the OkHttpRequest asynchronously. ResponseSuccess or ResponseError events will be fired later.
+If there is a request with the same TaskId already running then this method will return False and the new request will not be submitted.</comment>
+            <returntype>boolean</returntype>
+            <parameter>
+                <name>ba</name>
+                <type>anywheresoftware.b4a.BA</type>
+            </parameter>
+            <parameter>
+                <name>HttpRequest</name>
+                <type>anywheresoftware.b4h.okhttp.OkHttpClientWrapper.OkHttpRequest</type>
+            </parameter>
+            <parameter>
+                <name>TaskId</name>
+                <type>int</type>
+            </parameter>
+        </method>
+        <method>
+            <name>ExecuteCredentials</name>
+            <comment>Same behavior as Execute. The UserName and Password will be used for Basic authentication and Digest authentication.</comment>
+            <returntype>boolean</returntype>
+            <parameter>
+                <name>ba</name>
+                <type>anywheresoftware.b4a.BA</type>
+            </parameter>
+            <parameter>
+                <name>Request</name>
+                <type>anywheresoftware.b4h.okhttp.OkHttpClientWrapper.OkHttpRequest</type>
+            </parameter>
+            <parameter>
+                <name>TaskId</name>
+                <type>int</type>
+            </parameter>
+            <parameter>
+                <name>UserName</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>Password</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>InitializeAcceptAll</name>
+            <comment>Similar to Initialize, with one important difference. All SSL certificates will be automatically accepted.
+&lt;b&gt;This method should only be used when trying to connect to a server located in a secured network&lt;/b&gt;.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>EventName</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>IsInitialized</name>
+            <comment></comment>
+            <returntype>boolean</returntype>
+        </method>
+        <method>
+            <name>Initialize</name>
+            <comment>Initializes this object.
+IMPORTANT: this object should be declared in Sub Process_Globals.
+EventName - The prefix that will be used for ResponseSuccess and ResponseError events.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>EventName</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+    </class>
+    <class>
+        <name>anywheresoftware.b4h.okhttp.OkHttpClientWrapper.OkHttpRequest</name>
+        <shortname>OkHttpRequest</shortname>
+        <owner>process</owner>
+        <method>
+            <name>InitializePost2</name>
+            <comment>Initializes the request and sets it to be a Http Post method.
+The specified Data array will be added to the request.
+Unlike InitializePost this method will enable the request to retry and send the data several times in case of IO errors.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>URL</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>Data</name>
+                <type>byte[]</type>
+            </parameter>
+        </method>
+        <method>
+            <name>InitializePut</name>
+            <comment>Initializes the request and sets it to be a Http Put method.
+The specified InputStream will be read and added to the request.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>URL</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>InputStream</name>
+                <type>java.io.InputStream</type>
+            </parameter>
+            <parameter>
+                <name>Length</name>
+                <type>int</type>
+            </parameter>
+        </method>
+        <method>
+            <name>SetContentType</name>
+            <comment>Sets the Mime header of the request.
+This method should only be used with requests that have a payload.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>ContentType</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>InitializeDelete</name>
+            <comment>Initializes the request and sets it to be a Http Delete method.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>URL</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>InitializePatch</name>
+            <comment>Initializes the request and sets it to be a Http Patch method.
+The specified InputStream will be read and added to the request.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>URL</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>InputStream</name>
+                <type>java.io.InputStream</type>
+            </parameter>
+            <parameter>
+                <name>Length</name>
+                <type>int</type>
+            </parameter>
+        </method>
+        <method>
+            <name>InitializePatch2</name>
+            <comment>Initializes the request and sets it to be a Http Patch method.
+The specified Data array will be added to the request.
+Unlike InitializePost this method will enable the request to retry and send the data several times in case of IO errors.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>URL</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>Data</name>
+                <type>byte[]</type>
+            </parameter>
+        </method>
+        <method>
+            <name>RemoveHeaders</name>
+            <comment>Removes all headers with the given name.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>Name</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>InitializeDelete2</name>
+            <comment>Initializes the request and sets it to be a Http Delete method with the given payload.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>URL</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>Data</name>
+                <type>byte[]</type>
+            </parameter>
+        </method>
+        <method>
+            <name>InitializeHead</name>
+            <comment>Initializes the request and sets it to be a Http Head method.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>URL</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>InitializeGet</name>
+            <comment>Initializes the request and sets it to be a Http Get method.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>URL</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>InitializePost</name>
+            <comment>Initializes the request and sets it to be a Http Post method.
+The specified InputStream will be read and added to the request.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>URL</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>InputStream</name>
+                <type>java.io.InputStream</type>
+            </parameter>
+            <parameter>
+                <name>Length</name>
+                <type>int</type>
+            </parameter>
+        </method>
+        <method>
+            <name>InitializePut2</name>
+            <comment>Initializes the request and sets it to be a Http Put method.
+The specified Data array will be added to the request.
+Unlike InitializePost this method will enable the request to retry and send the data several times in case of IO errors.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>URL</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>Data</name>
+                <type>byte[]</type>
+            </parameter>
+        </method>
+        <method>
+            <name>SetContentEncoding</name>
+            <comment>Sets the encoding header of the request.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>Encoding</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>SetHeader</name>
+            <comment>Sets the value of the header with the given name. If no such header exists then a new header will be added.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>Name</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>Value</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <property>
+            <name>Timeout</name>
+            <returntype>int</returntype>
+            <parameter>
+                <name>t</name>
+                <type>int</type>
+            </parameter>
+            <comment>Gets or sets the request timeout, measured in milliseconds. Default value is 30,000 (30 seconds).</comment>
+        </property>
+    </class>
+    <class>
+        <name>anywheresoftware.b4h.okhttp.OkHttpClientWrapper.OkHttpResponse</name>
+        <shortname>OkHttpResponse</shortname>
+        <comment>An object that holds the response returned from the server.
+The object is passed in the ResponseSuccess event.
+You can choose to read the response synchronously or asynchronously.
+It is important to release this object when it is not used anymore by calling Release.</comment>
+        <owner>process</owner>
+        <event>StreamFinish (Success As Boolean, TaskId As Int)</event>
+        <method>
+            <name>GetHeaders</name>
+            <comment>Returns a Map object with the response headers.
+Each elements is made of a key which is the header name and a value which is a list containing the values (one or more).
+Example:&lt;code&gt;
+Dim list1 As List
+list1 = response.GetHeaders.Get("Set-Cookie")
+For i = 0 To list1.Size - 1
+	Log(list1.Get(i))
+Next&lt;/code&gt;</comment>
+            <returntype>anywheresoftware.b4a.objects.collections.Map</returntype>
+        </method>
+        <method>
+            <name>GetAsynchronously</name>
+            <comment>Asynchronously reads the response and writes it to the given OutputStream.
+If there is a request with the same TaskId already running then this method will return False, and the response object will be released.
+The StreamFinish event will be raised after the response has been fully read.
+EventName - The sub that will handle the StreamFinish event.
+Output - The stream from the server will be written to this stream.
+CloseOutput - Whether to close the specified output stream when done.
+TaskId - The task id given to this task.
+Example:&lt;code&gt;
+Sub Http_ResponseSuccess (Response As OkHttpResponse, TaskId As Int)
+	Response.GetAsynchronously("ImageResponse", _ 
+		File.OpenOutput(File.DirInternalCache, "image.jpg", False), True, TaskId)
+End Sub
+
+Sub ImageResponse_StreamFinish (Success As Boolean, TaskId As Int)
+	If Success = False Then
+		Msgbox(LastException.Message, "Error")
+		Return
+	End If
+	ImageView1.Bitmap = LoadBitmap(File.DirInternalCache, "image.jpg")
+End Sub&lt;/code&gt;</comment>
+            <returntype>boolean</returntype>
+            <parameter>
+                <name>ba</name>
+                <type>anywheresoftware.b4a.BA</type>
+            </parameter>
+            <parameter>
+                <name>EventName</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>Output</name>
+                <type>java.io.OutputStream</type>
+            </parameter>
+            <parameter>
+                <name>CloseOutput</name>
+                <type>boolean</type>
+            </parameter>
+            <parameter>
+                <name>TaskId</name>
+                <type>int</type>
+            </parameter>
+        </method>
+        <method>
+            <name>Release</name>
+            <comment>Frees resources allocated for this object.</comment>
+            <returntype>void</returntype>
+        </method>
+        <property>
+            <name>ContentType</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the Content-Type header.</comment>
+        </property>
+        <property>
+            <name>ContentEncoding</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the Content-Encoding header.</comment>
+        </property>
+        <property>
+            <name>ContentLength</name>
+            <returntype>long</returntype>
+            <comment>Returns the response body length.</comment>
+        </property>
+        <property>
+            <name>StatusCode</name>
+            <returntype>int</returntype>
+            <comment>Returns the response Http code.
+Returns -1 is the status code is not available.</comment>
+        </property>
+        <property>
+            <name>ErrorResponse</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the server response as a string (for failed responses only).</comment>
+        </property>
+    </class>
+    <version>1.31</version>
+    <dependsOn>okhttp-3.12.12</dependsOn>
+    <dependsOn>okio-1.17.5</dependsOn>
+</root>

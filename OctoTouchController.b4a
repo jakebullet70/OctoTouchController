@@ -1,0 +1,217 @@
+﻿Build1=Default,sadLogic.OctoTouchController
+File1=btn_large_disabled.png
+File10=menuheating.png
+File11=menumovement.png
+File12=menuprint.png
+File13=no_thumbnail.jpg
+File14=pageFilament.bal
+File15=pageFiles.bal
+File16=pageHeater.bal
+File17=pageMenu.bal
+File18=pageMovement.bal
+File19=pagePrinting.bal
+File2=btn_large_normal.png
+File20=pagesetup.bal
+File21=splash.jpg
+File22=viewfiles.bal
+File3=btn_large_pressed.png
+File4=dlgLogging.json
+File5=dlgPower.json
+File6=MainPage.bal
+File7=menucard.bal
+File8=menufilament.png
+File9=menufiles.png
+FileGroup1=Default Group
+FileGroup10=MAIN_MENU
+FileGroup11=MAIN_MENU
+FileGroup12=MAIN_MENU
+FileGroup13=MISC
+FileGroup14=VIEWS_PAGES
+FileGroup15=VIEWS_PAGES
+FileGroup16=VIEWS_PAGES
+FileGroup17=VIEWS_PAGES
+FileGroup18=VIEWS_PAGES
+FileGroup19=VIEWS_PAGES
+FileGroup2=Default Group
+FileGroup20=B4XPages
+FileGroup21=MISC
+FileGroup22=VIEWS
+FileGroup3=Default Group
+FileGroup4=JSON_CONFIGS
+FileGroup5=JSON_CONFIGS
+FileGroup6=B4XPages
+FileGroup7=VIEWS
+FileGroup8=MAIN_MENU
+FileGroup9=MAIN_MENU
+Group=Default Group
+Library1=b4xpages
+Library10=b4xpreferencesdialog
+Library2=bctoast
+Library3=byteconverter
+Library4=core
+Library5=dateutils
+Library6=javaobject
+Library7=json
+Library8=okhttputils2
+Library9=xui views
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~
+Module1=|relative|src\custom_controls\ASPopupMenu
+Module10=|relative|src\dialogs\dlgLogging
+Module11=|relative|src\dialogs\dlgPower
+Module12=|relative|src\generic\fileHelpers
+Module13=|relative|src\generic\fnc
+Module14=|relative|src\generic\gblConst
+Module15=|relative|src\generic\guiHelpers
+Module16=|relative|src\octoPrint\HttpOctoRestAPI
+Module17=|relative|src\octoPrint\JSONparsors\JsonParserFiles
+Module18=|relative|src\octoPrint\JSONparsors\JsonParserMasterPrinterSettings
+Module19=|relative|src\octoPrint\JSONparsors\JsonParsorMain
+Module2=|relative|src\custom_controls\AutoTextSizeLabel
+Module20=|relative|src\custom_controls\lmB4XImageViewX
+Module21=|relative|src\generic\logMe
+Module22=|relative|src\MasterController
+Module23=|relative|src\dialogs\mnuHeaterBed
+Module24=|relative|src\dialogs\mnuHeatersAll
+Module25=|relative|src\dialogs\mnuHeaterTool
+Module26=|relative|src\helperClasses\mnuPopup
+Module27=|relative|src\octoPrint\oc
+Module28=|relative|src\pageViews\pageFilament
+Module29=|relative|src\pageViews\pageFiles
+Module3=|relative|src\B4XPages\B4XMainPage
+Module30=|relative|src\pageViews\pageHeater
+Module31=|relative|src\pageViews\pageMenu
+Module32=|relative|src\pageViews\pageMovement
+Module33=|relative|src\pageViews\pagePrinting
+Module34=|relative|src\octoPrint\RequestApiKey
+Module35=Starter
+Module36=|relative|src\generic\strHelpers
+Module4=|relative|src\B4XPages\B4XSetupPage
+Module5=|relative|src\helperClasses\CallSubUtils
+Module6=|relative|src\octoPrint\CheckOctoConnection
+Module7=|relative|src\generic\clrTheme
+Module8=|relative|src\helperClasses\clvSelectionsX
+Module9=|relative|src\generic\config
+NumberOfFiles=22
+NumberOfLibraries=10
+NumberOfModules=36
+Version=11.8
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: OctoTC
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: landscape
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: True
+	#IncludeTitle: False
+	#DebuggerForceFullDeployment: true
+	#DebuggerForceStandardAssets: true
+#End Region
+
+'#BridgeLogger: True
+'open project objects folder: ide://run?File=%WINDIR%\explorer.exe&Args=%PROJECT%
+
+
+Sub Process_Globals
+	
+	Public ActionBarHomeClicked As Boolean
+	
+	'--- timers need to be in 'Process_Globals'
+	Private tmrSplash As Timer
+	Private tmrMain As Timer
+	Private tmrFilesCheckChange As Timer
+	
+End Sub
+
+
+Sub Globals
+End Sub
+
+
+Sub Activity_Create(FirstTime As Boolean)
+	
+	If FirstTime Then
+		tmrSplash.Initialize("tmrSplash",3200)  '--- just a splash screen
+		tmrFilesCheckChange.Initialize("tmrFilesCheckChange",8000) '--- octo files check
+		tmrMain.Initialize("tmrMain",1500)        '--- main loop
+		tmrSplash.Enabled = True
+	End If
+	
+	Dim pm As B4XPagesManager
+	pm.Initialize(Activity)
+	
+End Sub
+
+Private Sub tmrMain_Tick
+	'--- master loop timer
+	CallSub(B4XPages.MainPage.MasterCtrlr,"tmrMain_Tick")
+End Sub
+
+Private Sub tmrFilesCheckChange_Tick
+	CallSub(B4XPages.MainPage.MasterCtrlr,"tmrFilesCheckChange_Tick")
+End Sub
+
+Public Sub TurnOn_MainTmr
+	tmrMain.Enabled = True
+End Sub
+
+Public Sub TurnOnOff_FilesCheckChangeTmr(EnableDisable As Boolean)
+	tmrFilesCheckChange.Enabled = EnableDisable
+End Sub
+
+'===================================================================================
+
+Private Sub tmrSplash_Tick
+	
+	tmrSplash.Enabled = False
+	CallSubDelayed(B4XPages.MainPage,"HideSplash_StartUp")
+	
+End Sub
+
+'==================================================================================
+'==================================================================================
+
+
+'Template version: B4A-1.01
+#Region Delegates
+
+Sub Activity_ActionBarHomeClick
+	ActionBarHomeClicked = True
+	B4XPages.Delegate.Activity_ActionBarHomeClick
+	ActionBarHomeClicked = False
+End Sub
+
+Sub Activity_KeyPress (KeyCode As Int) As Boolean
+	Return B4XPages.Delegate.Activity_KeyPress(KeyCode)
+End Sub
+
+Sub Activity_Resume
+	B4XPages.Delegate.Activity_Resume
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+	B4XPages.Delegate.Activity_Pause
+End Sub
+
+Sub Activity_PermissionResult (Permission As String, Result As Boolean)
+	B4XPages.Delegate.Activity_PermissionResult(Permission, Result)
+End Sub
+
+Sub Create_Menu (Menu As Object)
+	B4XPages.Delegate.Create_Menu(Menu)
+End Sub
+
+#if Java
+public boolean _onCreateOptionsMenu(android.view.Menu menu) {
+	 processBA.raiseEvent(null, "create_menu", menu);
+	 return true;
+	
+}
+#End If
+#End Region
+
+'Program code should go into B4XMainPage and other pages.

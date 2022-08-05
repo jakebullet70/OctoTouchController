@@ -43,7 +43,7 @@ private Sub TempsMaster_Closed (index As Int, tag As Object)
 	
 		Select Case True
 			Case SelectedMsg = "alloff" '--- all off
-				CallSub(mainObj,"AllHeaters_Off")
+				CallSub(mainObj.MasterCtrlr,"AllHeaters_Off")
 				msg = "Tool / Bed Off"
 			
 			Case Else

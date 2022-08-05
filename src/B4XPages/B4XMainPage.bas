@@ -122,23 +122,19 @@ End Sub
 
 
 Public Sub Update_Printer_Btns
-	Try
-		'--- see if the current page has the proper event
-		If SubExists(oPageCurrent,"Update_Printer_Btns") Then
-			CallSub(oPageCurrent,"Update_Printer_Btns")
-		End If
-		
-	Catch
-		Log(LastException)
-	End Try
 	
+	'--- see if the current page has the proper event
+	If SubExists(oPageCurrent,"Update_Printer_Btns") Then
+		CallSub(oPageCurrent,"Update_Printer_Btns")
+	End If
+		
 End Sub
 #end region
 
 Private Sub Build_GUI
 	
 	'--- hide all page views
-	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles))
+	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlFilament,pnlHeater,pnlMovement))
 	
 	'btnPageAction.TextSize = 48 'guiHelpers.btnResizeText(btnPageAction,False,28) + 2
 	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
@@ -181,7 +177,7 @@ Public Sub Switch_Pages(action As String)
 			
 		Case gblConst.PAGE_PRINTING
 			If oPagePrinting.IsInitialized = False Then oPagePrinting.Initialize(pnlPrinting,"")
-			oPageCurrent = oPageFiles
+			oPageCurrent = oPagePrinting
 			
 		Case gblConst.PAGE_HEATING
 			If oPageHeater.IsInitialized = False Then oPageHeater.Initialize(pnlHeater,"")
@@ -209,32 +205,26 @@ Public Sub Show_toast(msg As String, ms As Int)
 	toast.Show(msg)
 End Sub
 
-public Sub AllHeaters_Off
-	
-	If oc.PrinterProfileNozzleCount > 1 Then
-		'TODO  2 tool support
-		'TODO  needs to move this from this page
-	End If
-	oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
-	oMasterController.cn.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",0))
-	
-End Sub
+
 
 Private Sub PopupMainMenu
-
-	If oc.isPrinting Or oc.IsPaused2 Then
-		Show_toast("Cannot Change Setting While Printing",2500)
-		Return
-	End If
 	
 	Dim o As mnuPopup
 	Dim popUpMemuItems As Map = CreateMap("Power Settings":"pw","Octoprint Connection":"oc","Logging - Debuging":"log")
+	If oc.isPrinting Or oc.IsPaused2 Then
+		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
+		popUpMemuItems.Remove("Octoprint Connection")
+	End If
+	Sleep(400)
+	 
 	o.Initialize(Me,"Setup",Me,popUpMemuItems,btnPageAction,"Options")
 	o.MenuWidth = 260dip '--- defaults to 100
 	o.aspm_main.OrientationVertical = o.aspm_main.OrientationHorizontal_LEFT '--- change menu position
 	o.Show
 	
 End Sub
+
+
 
 Private Sub Setup_Closed (index As Int, tag As Object)
 	

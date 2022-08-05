@@ -334,11 +334,40 @@ End Sub
 
 private Sub Click_Animation
 	'--- just dim the view, need to be replaced with something better
-	pnlOver.Color = xui.Color_ARGB(127,196,165,165)
-	Sleep(400)
-	pnlOver.Color = xui.Color_Transparent
+'	pnlOver.Color = xui.Color_ARGB(127,196,165,165)
+'	Sleep(400)
+'	pnlOver.Color = xui.Color_Transparent
+	'--- try this
+	CreateHaloEffect(pnlOver,xui.Color_ARGB(152,255,255,255))
 End Sub
 
+Private Sub CreateHaloEffect (Parent As B4XView,clr As Int)
+	Dim cvs As B4XCanvas
+	Dim p As B4XView = xui.CreatePanel("")
+	Dim radius As Int = 220dip
+	p.SetLayoutAnimated(0, 0, 0, radius * 2, radius * 2)
+	cvs.Initialize(p)
+	cvs.DrawCircle(cvs.TargetRect.CenterX, cvs.TargetRect.CenterY, cvs.TargetRect.Width / 2, clr, True, 0)
+	Dim bmp As B4XBitmap = cvs.CreateBitmap
+	
+	CreateHaloEffectHelper(Parent,bmp, radius)
+
+End Sub
+
+Private Sub CreateHaloEffectHelper (Parent As B4XView,bmp As B4XBitmap, radius As Int)
+	Dim x As Float = Parent.Width/2
+	Dim y As Float = Parent.Height/2
+	Dim iv1 As ImageView
+	iv1.Initialize("")
+	Dim p As B4XView = iv1
+	p.SetBitmap(bmp)
+	Parent.AddView(p, x, y, 0, 0)
+	Dim duration As Int = 660
+	p.SetLayoutAnimated(duration, x - radius, y - radius, 2 * radius, 2 * radius)
+	p.SetVisibleAnimated(duration, False)
+	Sleep(duration)
+	p.RemoveViewFromParent
+End Sub
 
 
 #End Region

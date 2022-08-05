@@ -15,8 +15,8 @@ Sub Class_Globals
 	Private mCallBackEvent As String 'ignore
 	Private  mMainObj As B4XMainPage'ignore
 	
-	Private mTempatureUpdatingByRestAPI As Boolean = False
-	Private mTempatureCboUpdatedByRestAPI As Boolean = False
+	'Private mTempatureUpdatingByRestAPI As Boolean = False
+	'Private mTempatureCboUpdatedByRestAPI As Boolean = False
 	Private mapBedHeatingOptions, mapToolHeatingOptions,mapAllHeatingOptions As Map
 
 End Sub
@@ -51,7 +51,7 @@ End Sub
 
 
 public Sub Update_Printer_Btns
-	'--- sets enable, disable
+	'--- sets enable, disable - 
 	
 End Sub
 
@@ -61,10 +61,6 @@ End Sub
 
 public Sub Set_HeatingCBOoptions(mapOfOptions As Map)
 	
-	'--- can also be called from the REST API, populates the pre-heaters options
-	
-	If mTempatureCboUpdatedByRestAPI = True Then Return '--- allready happened, just is case ;)
-
 	'--- clear them out
 	mapBedHeatingOptions.Initialize
 	mapToolHeatingOptions.Initialize
@@ -120,8 +116,6 @@ public Sub Set_HeatingCBOoptions(mapOfOptions As Map)
 		logMe.LogIt(LastException,mModule)
 		
 	End Try
-	
-	mTempatureCboUpdatedByRestAPI = True
 	
 End Sub
 

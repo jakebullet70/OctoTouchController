@@ -226,6 +226,7 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 		
 	Else
 		ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
+		
 	End If
 	
 	If Value = oc.JobFileName And oc.isPrinting Then
@@ -235,6 +236,8 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	End If
 
 End Sub
+
+
 
 #region "FILES_CHANGED_CHECK"
 

@@ -41,17 +41,12 @@ private Sub TempsTool_Closed (index As Int, tag As Object)
 	Dim msg As String
 	Dim SelectedMsg As String = tag.As(String)
 	Dim ShortMsg As Boolean = False
-
-	#if b4j
-	If config.AllowDesktopStyleTabControlFLAG = False Then gPnl.RequestFocus '--- move focus from btn
-	#end if
-	
 	
 	Try
 		
 		Select Case True
 			Case SelectedMsg = "alloff" '--- all off
-				CallSub(mainObj,"AllHeaters_Off")
+				CallSub(mainObj.MasterCtrlr,"AllHeaters_Off")
 				msg = "Tool / Bed Off"
 			
 			Case index = 1  '--- bed off

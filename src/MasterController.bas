@@ -16,28 +16,29 @@ Sub Class_Globals
 	Private oCN As HttpOctoRestAPI
 	Public parser As JsonParsorMain
 	
-	Public gMapOctoFilesList As Map '--- populated by a REST call
-	Public gMapOctoTempSettings As Map '--- populated by a REST call
+	'--- populated by a REST calls, will be grabbed by their pages
+	Public gMapOctoTempSettings, gMapOctoFilesList As Map
 	
 	#region "TIMER FLAGS"
 	Private mGotProfileInfoFLAG As Boolean = False
 	Private mGotProfileInfoFLAG_IsBusy As Boolean = False
-'	'--
+	'--
 	Private mGotOctoSettingFLAG As Boolean = False
 	Private mGotOctoSettingFLAG_IsBusy As Boolean = False
-'	'---
+	'---
 	Private mGotFilesListFLAG As Boolean = False
 	Private mGotFilesListFLAG_IsBusy As Boolean = False
-#end region
+	#end region
 	
 End Sub
+
 
 
 Public Sub getCN() As HttpOctoRestAPI
 	Return oCN
 End Sub
 
-
+#Region "CLASS CRAP"
 Public Sub Initialize
 	
 	mainObj = B4XPages.MainPage
@@ -49,7 +50,6 @@ Public Sub Start
 	GetConnectionPrinterStatus
 End Sub
 
-
 Public Sub SetCallbackObj(CallBack As Object,EventNameTemp As String, _
 																EventNameStatus As String, _
 																EventNameBtns As String)
@@ -59,12 +59,11 @@ Public Sub SetCallbackObj(CallBack As Object,EventNameTemp As String, _
 	mCallBack = CallBack
 	
 End Sub
-
+#end region
 
 '============================================================================================
-'============================================================================================
-'============================================================================================
 
+#Region "TIMERS"
 Public Sub tmrFilesCheckChange_Tick
 	
 	'--- check for added, deleted files
@@ -75,7 +74,6 @@ Public Sub tmrFilesCheckChange_Tick
 	End If
 
 End Sub
-
 
 Public Sub tmrMain_Tick
 
@@ -106,9 +104,11 @@ Public Sub tmrMain_Tick
 	End If
 
 End Sub
+#end region
 
+'============================================================================================
 
-
+#Region "OCTO API CALLS"
 Private Sub GetAllOctoSettingInfo
 	
 	If mGotOctoSettingFLAG_IsBusy = True Then
@@ -245,24 +245,6 @@ Private Sub GetConnectionPrinterStatus
 	
 End Sub
 
-public Sub Download_ThumbnailAndCache2File(JobFileName As String,outFileName As String)
-	
-	Try
-		
-		Dim link As String
-		''http://192.168.1.236:5003/plugin/prusaslicerthumbnails/thumbnail/asus_eee_pad_bracket_fixed (2).png
-		link  = $"http://${oCN.gIP}:${oCN.gPort}/"$ & JobFileName'oc.JobPrintThumbnail.SubString2(0,oc.JobPrintThumbnail.IndexOf("?"))
-		'Dim fname As String = gbl.BuildThumbnailTempFilename(gbl.GetFilenameFromHTTP(link))
-		oCN.Download_AndSaveFile(link,outFileName)
-		
-	Catch
-		
-		logMe.LogIt(LastException,mModule)
-		Log(LastException)
-	End Try
-
-	
-End Sub
 
 
 public Sub GetAllOctoFilesInfo
@@ -298,9 +280,40 @@ public Sub GetAllOctoFilesInfo
 	End If
 	
 End Sub
+#end region
+
+'============================================================================================
+
+#Region "PUBLIC METHODS"
 
 
+public Sub AllHeaters_Off
+	
+	If oc.PrinterProfileNozzleCount > 1 Then
+		'TODO  2 tool support
+	End If
+	oCN.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
+	oCN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",0))
+	
+End Sub
 
 
+public Sub Download_ThumbnailAndCache2File(JobFileName As String,outFileName As String)
+	
+	Try
+		
+		Dim link As String
+		''http://192.168.1.236:5003/plugin/prusaslicerthumbnails/thumbnail/asus_eee_pad_bracket_fixed (2).png
+		link  = $"http://${oCN.gIP}:${oCN.gPort}/"$ & JobFileName'oc.JobPrintThumbnail.SubString2(0,oc.JobPrintThumbnail.IndexOf("?"))
+		'Dim fname As String = gbl.BuildThumbnailTempFilename(gbl.GetFilenameFromHTTP(link))
+		oCN.Download_AndSaveFile(link,outFileName)
+		
+	Catch
+		
+		logMe.LogIt(LastException,mModule)
+		Log(LastException)
+	End Try
 
-
+	
+End Sub
+#end region

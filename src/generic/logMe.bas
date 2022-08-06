@@ -119,12 +119,12 @@ End Sub
 
 
 private Sub Write2Disk2(strToLog As String,filename As String)
-	
+		
 	Dim TextWriter1 As TextWriter
 	strToLog = "********  " & GetDateTime4LogMsg &  "  ********" & CRLF & strToLog
 	TextWriter1.Initialize(File.OpenOutput( mLogFilePath, filename, True))
 	TextWriter1.WriteLine(strToLog)
-	Log("*" & strToLog) '--- in debug mode will log to debug window
+	'Log("*" & strToLog) '--- in debug mode will log to debug window
 	TextWriter1.Close
 	
 End Sub
@@ -139,7 +139,9 @@ End Sub
 
 
 public Sub Write2Disk(strToLog As String)
-	
+	If strToLog = "" Then
+		Log("dd")
+	End If
 	Write2Disk2(strToLog,mLogFileName)
 	
 End Sub

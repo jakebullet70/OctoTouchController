@@ -30,6 +30,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	mCallBackEvent = callBackEvent
 	mMainObj = B4XPages.MainPage
 	
+	mPnlMain.SetLayoutAnimated(0,0,masterPanel.top,masterPanel.Width,masterPanel.Height)
 	mPnlMain.LoadLayout("pageMenu")
 	
 	CallSubDelayed(Me,"Build_GUI")
@@ -47,25 +48,18 @@ End Sub
 Private Sub Build_GUI
 	
 	'--- build the main menu screen
-	mnuMovement.LoadLayout("menuCard")
 	BuildMenuCard(mnuMovement,"menuMovement.png","Move",gblConst.PAGE_MOVEMENT)
-	
-	mnuHeater.LoadLayout("menuCard")
 	BuildMenuCard(mnuHeater,"menuHeating.png","Heater",gblConst.PAGE_HEATING	)
-	
-	mnuFiles.LoadLayout("menuCard")
 	BuildMenuCard(mnuFiles,"menuFiles.png","Files",gblConst.PAGE_FILES)
-
-	mnuPrinting.LoadLayout("menuCard")
 	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
-	
-	mnuFillament.LoadLayout("menuCard")
 	BuildMenuCard(mnuFillament,"menuFilament.png","Filament",gblConst.PAGE_FILAMENT)
 	
 End Sub
 
 Private Sub BuildMenuCard(mnuPanel As Panel,imgFile As String, Text As String, mnuAction As String)
 	
+	'mnuPanel.SetLayoutAnimated(0,0,0,mnuPanel.Width,mnuPanel.Height)
+	mnuPanel.LoadLayout("menuCard")
 	For Each v As View In mnuPanel.GetAllViewsRecursive
 		
 		If v.Tag <> Null Then

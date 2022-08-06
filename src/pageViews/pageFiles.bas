@@ -42,6 +42,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	mCallBackEvent = callBackEvent
 	mMainObj = B4XPages.MainPage
 	
+	mPnlMain.SetLayoutAnimated(0,0,0,masterPanel.Width,masterPanel.Height)
 	mPnlMain.LoadLayout("pageFiles")
 		
 	CallSubDelayed(Me,"Build_GUI")
@@ -56,7 +57,7 @@ public Sub Set_focus()
 		tmrFilesCheckChange_Tick '--- call the check change, it will turn on the timer
 	Else
 		'--- 1st showing of tab page
-		logMe.Logit(firstRun,mModule)
+		'logMe.Logit(firstRun,mModule)
 		If clvFiles.Size > 0 Then 
 			clvFiles_ItemClick(0,mMainObj.MasterCtrlr.gMapOctoFilesList.GetKeyAt(0))
 		End If
@@ -100,7 +101,7 @@ Public Sub tmrFilesCheckChange_Tick
 	
 	If mPnlMain.Visible = False Then
 		'--- we  do not have focus so just disable files check
-		logMe.Logit("tmrFilesCheckChange_Tick - pnl not visible",mModule)
+		'logMe.Logit("tmrFilesCheckChange_Tick - pnl not visible",mModule)
 		CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 		Return
 	End If
@@ -161,24 +162,26 @@ Public Sub Build_ListViewFileList()
 
 	clvFiles.Clear
 	clvLastIndexClicked = cNO_SELECTION
-	
+		
 	CSelections.Initialize(clvFiles) '--- adds new selection modes
 	CSelections.Mode = CSelections.MODE_SINGLE_ITEM_PERMANENT
 	
 	For ndx = 0 To mMainObj.MasterCtrlr.gMapOctoFilesList.Size - 1
 	
 		Dim o As typOctoFileInfo  = mMainObj.MasterCtrlr.gMapOctoFilesList.GetValueAt(ndx)
-		clvFiles.InsertAt(ndx, CreateListItem(o, clvFiles.AsView.Width, 60dip), mMainObj.MasterCtrlr.gMapOctoFilesList.GetKeyAt(ndx))
+		clvFiles.InsertAt(ndx, _
+					CreateListItem(o, clvFiles.AsView.Width, 60dip), mMainObj.MasterCtrlr.gMapOctoFilesList.GetKeyAt(ndx))
 		
 	Next
 	
-	CSelections.SelectionColor = clrTheme.txtAccent
-	
+	clvFiles.PressedColor = 0x721F1C1C  '--- alpha sat to 128
+	CSelections.SelectionColor = clvFiles.PressedColor
+	clvFiles.DefaultTextColor =  clrTheme.txtNormal
+	clvFiles.DefaultTextBackgroundColor = xui.Color_Transparent
 	
 	If clvFiles.Size > 0 Then
 		'--- if we have data select the 1st one
 		CSelections.ItemClicked(0)
-		
 	End If
 	
 End Sub
@@ -186,6 +189,7 @@ End Sub
 Sub CreateListItem(oData As typOctoFileInfo, Width As Int, Height As Int) As B4XView
 	
 	Dim p As B4XView = xui.CreatePanel("")
+	'p.Color = xui.Color_Transparent
 	p.SetLayoutAnimated(0, 0, 0, Width, Height)
 	p.LoadLayout("viewFiles")
 	lblpnlFileViewTop.Text = fileHelpers.RemoveExtFromeFileName( oData.Name)
@@ -237,8 +241,6 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 
 End Sub
 
-
-
 #region "FILES_CHANGED_CHECK"
 
 Public Sub CheckIfFilesChanged
@@ -250,8 +252,7 @@ Public Sub CheckIfFilesChanged
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	FilesCheckChangeIsBusyFLAG = True
 	
-	logMe.Logit("tmrFilesCheckChange.Enabled = False  -->  START CHECK",mModule)
-
+	'logMe.Logit("tmrFilesCheckChange.Enabled = False  -->  START CHECK",mModule)
 
 	'--- grab a list of files
 	Dim rs As ResumableSub =  mMainObj.MasterCtrlr.cn.SendRequestGetInfo( oc.cFILES)
@@ -272,7 +273,7 @@ Public Sub CheckIfFilesChanged
 			
 			'--- refresh the old list with new changes
 			mMainObj.MasterCtrlr.gMapOctoFilesList = o.GetAllFiles(Result)
-			logMe.Logit("refresh original File list",mModule)
+			'logMe.Logit("refresh original File list",mModule)
 			
 			Build_ListViewFileList
 	
@@ -297,7 +298,7 @@ Public Sub CheckIfFilesChanged
 	
 	FilesCheckChangeIsBusyFLAG = False
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
-	logMe.Logit("tmrFilesCheckChange.Enabled = True  -->  END CHECK",mModule)
+	'logMe.Logit("tmrFilesCheckChange.Enabled = True  -->  END CHECK",mModule)
 	
 	If oldListViewSize <> clvFiles.Size Then
 		'--- highllight the first row

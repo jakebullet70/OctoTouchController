@@ -139,17 +139,24 @@ private Sub Parse(jsonTXT As String)
 			'Dim download As String = refs.Get("download")
 			'Dim resource As String = refs.Get("resource")
 			'Dim name As String = colfiles.Get("name")
-			Dim gcodeAnalysis As Map = colfiles.Get("gcodeAnalysis")
-			'Dim estimatedPrintTime As Double = gcodeAnalysis.Get("estimatedPrintTime")
-			Dim filament As Map = gcodeAnalysis.Get("filament")
-			Dim tool0 As Map = filament.Get("tool0")
-			ff.Volume = tool0.Get("volume")
-			ff.Length = tool0.Get("length")
+			Try
+				Dim gcodeAnalysis As Map = colfiles.Get("gcodeAnalysis")
+				'Dim estimatedPrintTime As Double = gcodeAnalysis.Get("estimatedPrintTime")
+				Dim filament As Map = gcodeAnalysis.Get("filament")
+				Dim tool0 As Map = filament.Get("tool0")
+				ff.Volume = tool0.Get("volume")
+				ff.Length = tool0.Get("length")
 		
-			Dim dimensions As Map = gcodeAnalysis.Get("dimensions")
-			ff.Depth = dimensions.Get("depth")
-			ff.Width = dimensions.Get("width")
-			ff.Height = dimensions.Get("height")
+				Dim dimensions As Map = gcodeAnalysis.Get("dimensions")
+				ff.Depth = dimensions.Get("depth")
+				ff.Width = dimensions.Get("width")
+				ff.Height = dimensions.Get("height")
+			Catch
+				'--- thinking if we error out here - octoprint has notfinished parsing the newly
+				'--- added file so its incomplete
+				Log("ParseFile 1: " & LastException)
+			End Try
+				
 '		Dim printingArea As Map = gcodeAnalysis.Get("printingArea")
 '		Dim minY As Double = printingArea.Get("minY")
 '		Dim maxZ As Double = printingArea.Get("maxZ")
@@ -165,9 +172,8 @@ private Sub Parse(jsonTXT As String)
 '		Dim _default As Double = averagePrintTime.Get("_default")
 	
 		Catch
-			Log(LastException)
+			Log("ParseFile 2: " & LastException)
 		End Try
-		
 		
 		If mDownloadThumbnails And  ff.Thumbnail.Length <> 0 Then
 			CallSub3(B4XPages.MainPage.MasterCtrlr,"Download_ThumbnailAndCache2File",ff.Thumbnail,ff.myThumbnail_filename_disk)

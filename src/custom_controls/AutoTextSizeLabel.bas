@@ -4,7 +4,7 @@ ModulesStructureVersion=1
 Type=Class
 Version=8.5
 @EndOfDesignText@
-'Version 1.3
+'Version 1.3 - Alexander Stolte
 #IF B4A or B4I
 #Event: Click
 #Event: LongClick

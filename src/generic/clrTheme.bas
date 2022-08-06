@@ -39,6 +39,7 @@ Sub Process_Globals
 	Public Go As Int
 	Public NoGo As Int
 	
+	Public clvSelectedColor As Int
 	
 	
 End Sub
@@ -46,7 +47,6 @@ End Sub
 '--- TODO, move all out to config files an add a color picker, theme builder  (LONG TERM)
 
 Public Sub Init
-	
 	
 	Go = 0xFF81F266
 	NoGo = 0xFFE14349

@@ -54,7 +54,7 @@ Library6=javaobject
 Library7=json
 Library8=okhttputils2
 Library9=xui views
-ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~
 Module1=|relative|src\custom_controls\ASPopupMenu
 Module10=|relative|src\dialogs\dlgLogging
 Module11=|relative|src\dialogs\dlgPower
@@ -135,7 +135,11 @@ End Sub
 Sub Activity_Create(FirstTime As Boolean)
 	
 	If FirstTime Then
-		tmrSplash.Initialize("tmrSplash",3200)  '--- just a splash screen
+		#if debug
+		tmrSplash.Initialize("tmrSplash",1000)  '--- just a splash screen
+		#else
+		tmrSplash.Initialize("tmrSplash",3200)  '--- just a splash screen	
+		#End If
 		tmrFilesCheckChange.Initialize("tmrFilesCheckChange",8000) '--- octo files check
 		tmrMain.Initialize("tmrMain",1500)        '--- main loop
 		tmrSplash.Enabled = True

@@ -15,10 +15,40 @@ Sub Process_Globals
 	
 	Public gScreenSizeAprox As Double = 7 '--- asume a small tablet
 	Public gScreenSizeDPI As Int = 0
-	Public gScreenSizeDesktop As Boolean = True
 	Public gScreenSizeOriatation As String = ""  '---  P or L
 	
 	'Private su As StringUtils
+	
+End Sub
+
+public Sub SetShadow(btn As View,OnOrOff As Boolean)
+	'Old code, use to work in b4a 6.x
+	Try
+		Dim pnl As Panel = btn
+		Dim lbl As Label, v As B4XView
+		For i = 0 To pnl.NumberOfViews - 1
+			v = pnl.GetView(i)
+			If v Is Label Then
+				lbl = v
+				Dim x As Int
+				If OnOrOff Then x = 3 Else x = 0
+				SetTextShadow(lbl,x,3,3,Colors.DarkGray)
+			End If
+		Next
+		
+	Catch
+		Log(LastException)
+	End Try
+	
+End Sub
+Public Sub SetTextShadow(pView As View, pRadius As Float, pDx As Float, pDy As Float, pColor As Int)
+	Dim ref As Reflector
+	Try
+		ref.Target = pView
+		ref.RunMethod4("setShadowLayer", Array As Object(pRadius, pDx, pDy, pColor), Array As String("java.lang.float", "java.lang.float", "java.lang.float", "java.lang.int"))
+	Catch
+		Log(LastException)
+	End Try
 	
 End Sub
 
@@ -46,83 +76,62 @@ End Sub
 
 'public Sub ReSkinB4XComboBox(cb() As B4XComboBox)
 '	
-'	
 '	For Each v As B4XComboBox In cb
-'	Try
-'			'v.mBase.Color = clrTheme.DialogButtonsColor '--- his is the arrow
+'		Try
+'			'v.mBase.Color = clrTheme.DialogButtonsColor '---this is the arrow
 '			'v.cmbBox.Color = clrTheme.PanelBG '--- NOPE
-'''			
-'''			v.cmbBox.DropdownBackgroundColor=clrTheme.PanelBG
-'''			v.cmbBox.DropdownTextColor= clrTheme.txtNormal
-'''			v.cmbBox.TextColor = clrTheme.txtNormal
-'''			v.cmbBox.Prompt = "PROMT!" '--- NOTHING
-'''			
-'''	'			Dim bb As B4XView
-'''	'			bb = v.mBase.GetView(0)
-'''			'Dim oo As B4XFont = xui.CreateDefaultFont(22)
-'''			v.cmbBox.TextSize = 22
-'''	'			'bb.TextColor = xui.Color_Green
-'''			'--- TODO - HOW TO CHANGE SIZE-COLOR OF CBO - SPINNER ARROW			
-'''			
+'			''
+'			''			v.cmbBox.DropdownBackgroundColor=clrTheme.PanelBG
+'			''			v.cmbBox.DropdownTextColor= clrTheme.txtNormal
+'			''			v.cmbBox.TextColor = clrTheme.txtNormal
+'			''			v.cmbBox.Prompt = "PROMT!" '--- NOTHING
+'			''
+'			''	'			Dim bb As B4XView
+'			''	'			bb = v.mBase.GetView(0)
+'			''			'Dim oo As B4XFont = xui.CreateDefaultFont(22)
+'			''			v.cmbBox.TextSize = 22
+'			''	'			'bb.TextColor = xui.Color_Green
+'			''			'--- TODO - HOW TO CHANGE SIZE-COLOR OF CBO - SPINNER ARROW
+'			''
 '			'v.mBase.GetView(0).TextColor
-'	Catch
-'		Log(LastException)
-'	End Try
-'		
-'		
+'		Catch
+'			Log(LastException)
+'		End Try
 '	Next
-'	
-'	
 'End Sub
 
 
 
-'public Sub ReSkinPlusMinusControl(pm As B4XPlusMinus)
-'	
-'	Try
-'
-'	#if b4j
-'
-'		pm.ArrowsSize = 50
-'		pm.Base_Resize(pm.mBase.Width, pm.mBase.Height)
-'		pm.lblPlus.TextSize = 50
-'		pm.lblMinus.TextSize = 50
-'		
-'		pm.MainLabel.As(Label).Style = ""
-'		pm.MainLabel.Font = xui.CreateDefaultFont(20)
-'		
-'	
-'	#else
-'	
-''		pm.ArrowsSize = 22
-''		pm.Base_Resize(pm.mBase.Width, pm.mBase.Height)
-''		pm.lblPlus.TextSize = 22
-''		pm.lblMinus.TextSize = 22
-'		
-'		'pm.MainLabel.As(Label).Style = ""
-'		'pm.MainLabel.As(Label).sty
-'		pm.MainLabel.Font = xui.CreateDefaultFont(18)
-'		
-'	#end if
-'	
-'		pm.lblMinus.Color = xui.Color_Transparent
-'		pm.lblPlus.Color = xui.Color_Transparent
-'		
-'		pm.lblMinus.textColor = clrTheme.DialogButtonstextColor
-'		pm.lblPlus.textColor = clrTheme.DialogButtonstextColor
-'		pm.MainLabel.Color = xui.Color_Transparent
-'		pm.MainLabel.textColor = clrTheme.txtNormal
-'		
-'		pm.Base_Resize(pm.mBase.Width, pm.mBase.Height)
-'	
-'	
-'	Catch
-'		
-'		logMe.LogIt(LastException,mModule)
-'		
-'	End Try
-'	
-'End Sub
+public Sub ReSkinPlusMinusControl(pm As B4XPlusMinus)
+	
+	Try
+	
+		'pm.ArrowsSize = 22
+		'pm.Base_Resize(pm.mBase.Width, pm.mBase.Height)
+		pm.lblPlus.TextSize = 42
+		pm.lblMinus.TextSize = 42
+		pm.lblMinus.Top = pm.lblMinus.Top - 12dip
+		'pm.MainLabel.As(Label).Style = ""
+		'pm.MainLabel.As(Label).sty
+		pm.MainLabel.Font = xui.CreateDefaultFont(32)
+	
+		pm.lblMinus.Color = xui.Color_Transparent
+		pm.lblPlus.Color = xui.Color_Transparent
+		
+		pm.lblMinus.textColor = clrTheme.txtNormal
+		pm.lblPlus.textColor = clrTheme.txtNormal
+		pm.MainLabel.Color = xui.Color_Transparent
+		pm.MainLabel.textColor = clrTheme.txtNormal
+		
+		'pm.Base_Resize(pm.mBase.Width, pm.mBase.Height)
+	
+	Catch
+		
+		logMe.LogIt(LastException,mModule)
+		
+	End Try
+	
+End Sub
 
 
 

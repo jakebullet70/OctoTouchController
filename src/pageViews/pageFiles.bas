@@ -42,7 +42,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	mCallBackEvent = callBackEvent
 	mMainObj = B4XPages.MainPage
 	
-	mPnlMain.SetLayoutAnimated(0,0,0,masterPanel.Width,masterPanel.Height)
+	mPnlMain.SetLayoutAnimated(0,0,masterPanel.top,masterPanel.Width,masterPanel.Height)
 	mPnlMain.LoadLayout("pageFiles")
 		
 	CallSubDelayed(Me,"Build_GUI")

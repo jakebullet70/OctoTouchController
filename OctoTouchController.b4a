@@ -14,6 +14,7 @@ File2=btn_large_normal.png
 File20=pagesetup.bal
 File21=splash.jpg
 File22=viewfiles.bal
+File23=viewSetTemps.bal
 File3=btn_large_pressed.png
 File4=dlgLogging.json
 File5=dlgPower.json
@@ -36,6 +37,7 @@ FileGroup2=Default Group
 FileGroup20=B4XPages
 FileGroup21=MISC
 FileGroup22=VIEWS
+FileGroup23=VIEWS
 FileGroup3=Default Group
 FileGroup4=JSON_CONFIGS
 FileGroup5=JSON_CONFIGS
@@ -45,15 +47,16 @@ FileGroup8=MAIN_MENU
 FileGroup9=MAIN_MENU
 Group=Default Group
 Library1=b4xpages
-Library10=b4xpreferencesdialog
-Library2=bctoast
-Library3=byteconverter
-Library4=core
-Library5=dateutils
-Library6=javaobject
-Library7=json
-Library8=okhttputils2
-Library9=xui views
+Library10=xui views
+Library11=reflection
+Library2=b4xpreferencesdialog
+Library3=bctoast
+Library4=byteconverter
+Library5=core
+Library6=dateutils
+Library7=javaobject
+Library8=json
+Library9=okhttputils2
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~
 Module1=|relative|src\custom_controls\ASPopupMenu
 Module10=|relative|src\dialogs\dlgLogging
@@ -91,8 +94,8 @@ Module6=|relative|src\octoPrint\CheckOctoConnection
 Module7=|relative|src\generic\clrTheme
 Module8=|relative|src\helperClasses\clvSelectionsX
 Module9=|relative|src\generic\config
-NumberOfFiles=22
-NumberOfLibraries=10
+NumberOfFiles=23
+NumberOfLibraries=11
 NumberOfModules=36
 Version=11.8
 @EndOfDesignText@
@@ -115,7 +118,6 @@ Version=11.8
 '#BridgeLogger: True
 'open project objects folder: ide://run?File=%WINDIR%\explorer.exe&Args=%PROJECT%
 
-
 Sub Process_Globals
 	
 	Public ActionBarHomeClicked As Boolean
@@ -127,10 +129,10 @@ Sub Process_Globals
 	
 End Sub
 
-
 Sub Globals
 End Sub
 
+'===================================================================================
 
 Sub Activity_Create(FirstTime As Boolean)
 	
@@ -145,17 +147,65 @@ Sub Activity_Create(FirstTime As Boolean)
 		tmrSplash.Enabled = True
 	End If
 	
+	GetScreenInfo
+	
 	Dim pm As B4XPagesManager
 	pm.Initialize(Activity)
 	
 End Sub
 
+'===================================================================================
+
+#Region "SCREEN_INFO"
+Private Sub GetScreenInfo
+	
+	If 100%x > 100%y Then
+		guiHelpers.gScreenSizeOriatation = "L"
+	Else
+		guiHelpers.gScreenSizeOriatation = "P"
+	End If
+	
+	Dim lv As LayoutValues = GetRealSize
+	'--- will set the screen size WITHOUT taskbar
+'	Dim jo As JavaObject = Activity
+'	jo.RunMethod("setBottom", Array(lv.Height))
+'	jo.RunMethod("setRight", Array(lv.Width))
+'	Activity.Height = lv.Height
+'	Activity.Width = lv.Width
+
+	'--- size WITH taskbar
+	Dim lv As LayoutValues = GetDeviceLayoutValues
+	guiHelpers.gScreenSizeAprox = lv.ApproximateScreenSize
+	
+End Sub
+
+
+Private Sub GetRealSize As LayoutValues
+	Dim lv As LayoutValues
+	Dim ctxt As JavaObject
+	ctxt.InitializeContext
+	Dim WindowManager As JavaObject = ctxt.RunMethodJO("getSystemService", Array("window"))
+	Dim display As JavaObject = WindowManager.RunMethod("getDefaultDisplay", Null)
+	Dim point As JavaObject
+	point.InitializeNewInstance("android.graphics.Point", Null)
+	display.RunMethod("getRealSize", Array(point))
+	lv.Width = point.GetField("x")
+	lv.Height = point.GetField("y")
+	'Log(lv.Height)
+	lv.Scale = 100dip / 100
+	Return lv
+End Sub
+#end region
+
+
+#region "TIMERS"
 Private Sub tmrMain_Tick
 	'--- master loop timer
 	CallSub(B4XPages.MainPage.MasterCtrlr,"tmrMain_Tick")
 End Sub
 
 Private Sub tmrFilesCheckChange_Tick
+	'--- when files page is in focus, check files
 	CallSub(B4XPages.MainPage.MasterCtrlr,"tmrFilesCheckChange_Tick")
 End Sub
 
@@ -166,8 +216,10 @@ End Sub
 Public Sub TurnOnOff_FilesCheckChangeTmr(EnableDisable As Boolean)
 	tmrFilesCheckChange.Enabled = EnableDisable
 End Sub
+#end region
 
 '===================================================================================
+'==================================================================================
 
 Private Sub tmrSplash_Tick
 	
@@ -178,7 +230,6 @@ End Sub
 
 '==================================================================================
 '==================================================================================
-
 
 'Template version: B4A-1.01
 #Region Delegates
@@ -218,4 +269,3 @@ public boolean _onCreateOptionsMenu(android.view.Menu menu) {
 #End If
 #End Region
 
-'Program code should go into B4XMainPage and other pages.

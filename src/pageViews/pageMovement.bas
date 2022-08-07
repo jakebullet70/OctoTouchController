@@ -22,8 +22,9 @@ Sub Class_Globals
 	
 	Private pnlJogMovement As B4XView
 	Private pnlZ As B4XView
-	Private pnlExtrusion As B4XView
+	Private pnlGeneral As B4XView
 	
+	Private btnMOff As Button
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
@@ -49,11 +50,13 @@ End Sub
 
 
 Private Sub Build_GUI
+	
 	'--- movement / jog sizes
 	Dim options As List : options.initialize2(Array As String("0.1mm","1.0mm","10mm","100mm"))
 	cboMovementSize.setitems(options)
 	cboMovementSize.SelectedIndex = 1
 	MoveJogSize = "1.0"
+	
 End Sub
 
 

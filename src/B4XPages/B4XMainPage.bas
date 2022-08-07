@@ -14,6 +14,7 @@ Sub Class_Globals
 	Private xui As XUI
 	Private oMasterController As MasterController
 	Private toast As BCToast
+	Private pageSetup As B4XSetupPage
 	
 	'--- splash screen
 	Private ivSpash As B4XView
@@ -24,8 +25,7 @@ Sub Class_Globals
 	'--- header
 	Private pnlHeader As B4XView, lblStatus As Label,  lblTemp As Label, btnPageAction As B4XView
 	
-	'--- pages
-	Private pageSetup As B4XSetupPage
+	'--- page-panel classes
 	Public oPageCurrent As Object = Null
 	Private pnlMenu As B4XView,       oPageMenu As pageMenu
 	Private pnlFiles As B4XView,        oPageFiles As pageFiles
@@ -35,6 +35,13 @@ Sub Class_Globals
 	Private pnlFilament As B4XView,   oPageFilament As pageFilament
 	
 End Sub
+
+'======================================================================================
+'
+' --- main page (displays panels, has public utility classes)
+' --- just shows panel-classes
+'
+'======================================================================================
 
 Public Sub getMasterCtrlr() As MasterController
 	Return oMasterController
@@ -105,6 +112,12 @@ End Sub
 
 Public Sub Update_Printer_Temps
 	lblTemp.Text = oc.FormatedTemps
+	
+	'--- see if the current page has the proper event
+	If SubExists(oPageCurrent,"Update_Printer_Temps") Then
+		CallSub(oPageCurrent,"Update_Printer_Temps")
+	End If
+	
 End Sub
 
 Public Sub Update_Printer_Status
@@ -118,7 +131,6 @@ Public Sub Update_Printer_Status
 	End If
 	
 End Sub
-
 
 
 Public Sub Update_Printer_Btns
@@ -199,14 +211,12 @@ Public Sub Switch_Pages(action As String)
 End Sub
 #end region
 
-
 Public Sub Show_toast(msg As String, ms As Int)
 	toast.DurationMs = ms
 	toast.Show(msg)
 End Sub
 
-
-
+#Region "POPUP_MAIN_MENU"
 Private Sub PopupMainMenu
 	
 	Dim o As mnuPopup
@@ -223,8 +233,6 @@ Private Sub PopupMainMenu
 	o.Show
 	
 End Sub
-
-
 
 Private Sub Setup_Closed (index As Int, tag As Object)
 	
@@ -261,7 +269,6 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 	
 End Sub
 
-
 '--- callled from B4XSetupPage on exit
 Public Sub PrinterSetup_Closed(NewConfig As Boolean)
 
@@ -271,3 +278,5 @@ Public Sub PrinterSetup_Closed(NewConfig As Boolean)
 	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	
 End Sub
+#end region
+

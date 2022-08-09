@@ -1,17 +1,18 @@
 ﻿Build1=Default,sadLogic.OctoTouchController
 File1=dlgLogging.json
 File10=no_thumbnail.jpg
-File11=pageFilament.bal
-File12=pageFiles.bal
-File13=pageHeater.bal
-File14=pageMenu.bal
-File15=pageMovement.bal
-File16=pagePrinting.bal
-File17=pagesetup.bal
-File18=splash.jpg
-File19=viewfiles.bal
+File11=octopus.png
+File12=pageFilament.bal
+File13=pageFiles.bal
+File14=pageHeater.bal
+File15=pageMenu.bal
+File16=pageMovement.bal
+File17=pagePrinting.bal
+File18=pagesetup.bal
+File19=splash.jpg
 File2=dlgPower.json
-File20=viewSetTemps.bal
+File20=viewfiles.bal
+File21=viewSetTemps.bal
 File3=MainPage.bal
 File4=menucard.bal
 File5=menufilament.png
@@ -21,17 +22,18 @@ File8=menumovement.png
 File9=menuprint.png
 FileGroup1=JSON_CONFIGS
 FileGroup10=MISC
-FileGroup11=VIEWS_PAGES
+FileGroup11=MISC
 FileGroup12=VIEWS_PAGES
 FileGroup13=VIEWS_PAGES
 FileGroup14=VIEWS_PAGES
 FileGroup15=VIEWS_PAGES
 FileGroup16=VIEWS_PAGES
-FileGroup17=B4XPages
-FileGroup18=MISC
-FileGroup19=VIEWS
+FileGroup17=VIEWS_PAGES
+FileGroup18=B4XPages
+FileGroup19=MISC
 FileGroup2=JSON_CONFIGS
 FileGroup20=VIEWS
+FileGroup21=VIEWS
 FileGroup3=B4XPages
 FileGroup4=VIEWS
 FileGroup5=MAIN_MENU
@@ -51,7 +53,7 @@ Library6=dateutils
 Library7=javaobject
 Library8=json
 Library9=okhttputils2
-ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~
 Module1=|relative|src\custom_controls\ASPopupMenu
 Module10=|relative|src\generic\config
 Module11=|relative|src\dialogs\dlgLogging
@@ -81,17 +83,18 @@ Module32=|relative|src\pageViews\pageMenu
 Module33=|relative|src\pageViews\pageMovement
 Module34=|relative|src\pageViews\pagePrinting
 Module35=|relative|src\octoPrint\RequestApiKey
-Module36=Starter
-Module37=|relative|src\generic\strHelpers
+Module36=|relative|src\generic\ScaleMe
+Module37=Starter
+Module38=|relative|src\generic\strHelpers
 Module4=|relative|src\helperClasses\B4XPlusMinusEdt
 Module5=|relative|src\B4XPages\B4XSetupPage
 Module6=|relative|src\helperClasses\CallSubUtils
 Module7=|relative|src\octoPrint\CheckOctoConnection
 Module8=|relative|src\generic\clrTheme
 Module9=|relative|src\helperClasses\clvSelectionsX
-NumberOfFiles=20
+NumberOfFiles=21
 NumberOfLibraries=11
-NumberOfModules=37
+NumberOfModules=38
 Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
@@ -149,7 +152,7 @@ Sub Activity_Create(FirstTime As Boolean)
 		tmrSplash.Enabled = True
 	End If
 	
-	GetScreenInfo
+	'GetScreenInfo
 	
 	Dim pm As B4XPagesManager
 	pm.Initialize(Activity)

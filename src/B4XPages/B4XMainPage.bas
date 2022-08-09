@@ -56,14 +56,16 @@ End Sub
 Private Sub B4XPage_Created (Root1 As B4XView)
 
 	Root = Root1
+	Root.SetLayoutAnimated(0,0,0,Root.Width,Root.Height)
 	Root.LoadLayout("MainPage")
+	
 	toast.Initialize(Root)
 	
 	'--- splash screen
 	pnlMaster.Visible = False
 	ivSpash.Visible = True
-		
-	CallSub(Me,"Build_GUI")
+	
+	Build_GUI
 	
 End Sub
 
@@ -144,6 +146,9 @@ End Sub
 #end region
 
 Private Sub Build_GUI
+	
+	pnlMaster.Color = clrTheme.Background
+	pnlHeader.Color	 = clrTheme.BackgroundHeader
 	
 	'--- hide all page views
 	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlFilament,pnlHeater,pnlMovement))
@@ -229,8 +234,9 @@ Private Sub PopupMainMenu
 	 
 	o.Initialize(Me,"Setup",Me,popUpMemuItems,btnPageAction,"Options")
 	o.MenuWidth = 260dip '--- defaults to 100
-	o.aspm_main.OrientationVertical = o.aspm_main.OrientationHorizontal_LEFT '--- change menu position
-	o.Show
+	o.ItemHeight = 56dip
+	o.MenuObj.OrientationVertical = o.MenuObj.OrientationHorizontal_LEFT '--- change menu position
+	o.MenuObj.OpenMenuAdvanced((50%x - 130dip) ,33%y,260dip)
 	
 End Sub
 

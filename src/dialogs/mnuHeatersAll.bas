@@ -25,7 +25,7 @@ Public Sub Show
 	Dim o As mnuPopup
 	o.Initialize( Me,"TempsMaster",mainObj,mMenuItems, mCallingView,"All Heaters")
 	o.MenuWidth = 300dip '--- defaults to 100
-	o.aspm_main.OrientationVertical = o.aspm_main.OrientationHorizontal_MIDDLE '--- change menu position
+	o.MenuObj.OrientationVertical = o.MenuObj.OrientationHorizontal_MIDDLE '--- change menu position
 	Sleep(0)
 	o.Show
 

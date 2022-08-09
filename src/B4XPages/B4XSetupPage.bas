@@ -50,7 +50,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	Root.LoadLayout("pageSetup")
 	toast.Initialize(Root)
 	pnlMain.Color = xui.Color_Transparent
-	CallSubDelayed(Me,"Build_GUI") 
+	Build_GUI
 		
 End Sub
 
@@ -64,6 +64,7 @@ End Sub
 
 private Sub Build_GUI
 	
+	pnlMain.Color = clrTheme.Background
 	guiHelpers.SetTextColorB4XFloatTextField( _
 			Array As B4XFloatTextField(txtOctoKey,txtPrinterDesc,txtPrinterIP,txtPrinterPort))
 	

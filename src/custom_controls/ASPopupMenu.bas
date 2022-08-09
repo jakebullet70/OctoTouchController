@@ -85,7 +85,7 @@ Sub Class_Globals
 	Private background As B4XView
 	Private xpnl_Triangle As B4XView
 	
-	Private item_height As Float = 40dip
+	Public item_height As Float = 40dip
 	Private max_x,max_y As Float
 	Private max_endlessloop As Int = 0
 	
@@ -264,7 +264,8 @@ Private Sub UpdateViews(width As Float)
 		If xpnl_item_background.Tag = "item" Then
 			Dim xlbl_text As B4XView = xpnl_item_background.GetView(0)
 			
-			xpnl_item_background.SetLayoutAnimated(0,0,tmp_item_padding + IIF2(HasTitle = False,0,tmp_divider_padding) + (i - tmp_index_padding) * (item_height + tmp_divider_padding),width,item_height)
+			xpnl_item_background.SetLayoutAnimated(0,0,tmp_item_padding + _
+						IIF2(HasTitle = False,0,tmp_divider_padding) + (i - tmp_index_padding) * (item_height + tmp_divider_padding),width,item_height)
 '			If (i - tmp_index_padding) = 0 And g_DividerEnabled Then
 '				xpnl_item_background.Top = xpnl_item_background.Top + tmp_divider_padding
 '			End If
@@ -336,6 +337,7 @@ Public Sub OpenMenu(view As B4XView,width As Float)
 	
 		'xpnl_background.SetLayoutAnimated(0,0,view.Top - 50dip,width,tmp_item_padding + g_item_count*item_height)
 		xpnl_background.SetLayoutAnimated(0,0,view.Top - 50dip,width,total_height)
+		
 
 		Dim ff() As Int = ViewScreenPosition(view)
 
@@ -548,6 +550,8 @@ Private Sub xpnl_touch_Click
 	CloseMenu
 End Sub
 #End If
+
+
 
 Public Sub setMenuCornerRadius(radius As Int)
 	xpnl_background.SetColorAndBorder(xpnl_background.Color,0,0,radius)

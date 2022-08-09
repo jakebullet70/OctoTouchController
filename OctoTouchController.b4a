@@ -1,54 +1,48 @@
 ﻿Build1=Default,sadLogic.OctoTouchController
-File1=btn_large_disabled.png
-File10=menuheating.png
-File11=menumovement.png
-File12=menuprint.png
-File13=no_thumbnail.jpg
-File14=pageFilament.bal
-File15=pageFiles.bal
-File16=pageHeater.bal
-File17=pageMenu.bal
-File18=pageMovement.bal
-File19=pagePrinting.bal
-File2=btn_large_normal.png
-File20=pagesetup.bal
-File21=splash.jpg
-File22=viewfiles.bal
-File23=viewSetTemps.bal
-File3=btn_large_pressed.png
-File4=dlgLogging.json
-File5=dlgPower.json
-File6=MainPage.bal
-File7=menucard.bal
-File8=menufilament.png
-File9=menufiles.png
-FileGroup1=Default Group
-FileGroup10=MAIN_MENU
-FileGroup11=MAIN_MENU
-FileGroup12=MAIN_MENU
-FileGroup13=MISC
+File1=dlgLogging.json
+File10=no_thumbnail.jpg
+File11=pageFilament.bal
+File12=pageFiles.bal
+File13=pageHeater.bal
+File14=pageMenu.bal
+File15=pageMovement.bal
+File16=pagePrinting.bal
+File17=pagesetup.bal
+File18=splash.jpg
+File19=viewfiles.bal
+File2=dlgPower.json
+File20=viewSetTemps.bal
+File3=MainPage.bal
+File4=menucard.bal
+File5=menufilament.png
+File6=menufiles.png
+File7=menuheating.png
+File8=menumovement.png
+File9=menuprint.png
+FileGroup1=JSON_CONFIGS
+FileGroup10=MISC
+FileGroup11=VIEWS_PAGES
+FileGroup12=VIEWS_PAGES
+FileGroup13=VIEWS_PAGES
 FileGroup14=VIEWS_PAGES
 FileGroup15=VIEWS_PAGES
 FileGroup16=VIEWS_PAGES
-FileGroup17=VIEWS_PAGES
-FileGroup18=VIEWS_PAGES
-FileGroup19=VIEWS_PAGES
-FileGroup2=Default Group
-FileGroup20=B4XPages
-FileGroup21=MISC
-FileGroup22=VIEWS
-FileGroup23=VIEWS
-FileGroup3=Default Group
-FileGroup4=JSON_CONFIGS
-FileGroup5=JSON_CONFIGS
-FileGroup6=B4XPages
-FileGroup7=VIEWS
+FileGroup17=B4XPages
+FileGroup18=MISC
+FileGroup19=VIEWS
+FileGroup2=JSON_CONFIGS
+FileGroup20=VIEWS
+FileGroup3=B4XPages
+FileGroup4=VIEWS
+FileGroup5=MAIN_MENU
+FileGroup6=MAIN_MENU
+FileGroup7=MAIN_MENU
 FileGroup8=MAIN_MENU
 FileGroup9=MAIN_MENU
 Group=Default Group
 Library1=b4xpages
-Library10=xui views
-Library11=reflection
+Library10=reflection
+Library11=xui views
 Library2=b4xpreferencesdialog
 Library3=bctoast
 Library4=byteconverter
@@ -59,44 +53,45 @@ Library8=json
 Library9=okhttputils2
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~
 Module1=|relative|src\custom_controls\ASPopupMenu
-Module10=|relative|src\dialogs\dlgLogging
-Module11=|relative|src\dialogs\dlgPower
-Module12=|relative|src\generic\fileHelpers
-Module13=|relative|src\generic\fnc
-Module14=|relative|src\generic\gblConst
-Module15=|relative|src\generic\guiHelpers
-Module16=|relative|src\octoPrint\HttpOctoRestAPI
-Module17=|relative|src\octoPrint\JSONparsors\JsonParserFiles
-Module18=|relative|src\octoPrint\JSONparsors\JsonParserMasterPrinterSettings
-Module19=|relative|src\octoPrint\JSONparsors\JsonParsorMain
+Module10=|relative|src\generic\config
+Module11=|relative|src\dialogs\dlgLogging
+Module12=|relative|src\dialogs\dlgPower
+Module13=|relative|src\generic\fileHelpers
+Module14=|relative|src\generic\fnc
+Module15=|relative|src\generic\gblConst
+Module16=|relative|src\generic\guiHelpers
+Module17=|relative|src\octoPrint\HttpOctoRestAPI
+Module18=|relative|src\octoPrint\JSONparsors\JsonParserFiles
+Module19=|relative|src\octoPrint\JSONparsors\JsonParserMasterPrinterSettings
 Module2=|relative|src\custom_controls\AutoTextSizeLabel
-Module20=|relative|src\custom_controls\lmB4XImageViewX
-Module21=|relative|src\generic\logMe
-Module22=|relative|src\MasterController
-Module23=|relative|src\dialogs\mnuHeaterBed
-Module24=|relative|src\dialogs\mnuHeatersAll
-Module25=|relative|src\dialogs\mnuHeaterTool
-Module26=|relative|src\helperClasses\mnuPopup
-Module27=|relative|src\octoPrint\oc
-Module28=|relative|src\pageViews\pageFilament
-Module29=|relative|src\pageViews\pageFiles
+Module20=|relative|src\octoPrint\JSONparsors\JsonParsorMain
+Module21=|relative|src\custom_controls\lmB4XImageViewX
+Module22=|relative|src\generic\logMe
+Module23=|relative|src\MasterController
+Module24=|relative|src\dialogs\mnuHeaterBed
+Module25=|relative|src\dialogs\mnuHeatersAll
+Module26=|relative|src\dialogs\mnuHeaterTool
+Module27=|relative|src\helperClasses\mnuPopup
+Module28=|relative|src\octoPrint\oc
+Module29=|relative|src\pageViews\pageFilament
 Module3=|relative|src\B4XPages\B4XMainPage
-Module30=|relative|src\pageViews\pageHeater
-Module31=|relative|src\pageViews\pageMenu
-Module32=|relative|src\pageViews\pageMovement
-Module33=|relative|src\pageViews\pagePrinting
-Module34=|relative|src\octoPrint\RequestApiKey
-Module35=Starter
-Module36=|relative|src\generic\strHelpers
-Module4=|relative|src\B4XPages\B4XSetupPage
-Module5=|relative|src\helperClasses\CallSubUtils
-Module6=|relative|src\octoPrint\CheckOctoConnection
-Module7=|relative|src\generic\clrTheme
-Module8=|relative|src\helperClasses\clvSelectionsX
-Module9=|relative|src\generic\config
-NumberOfFiles=23
+Module30=|relative|src\pageViews\pageFiles
+Module31=|relative|src\pageViews\pageHeater
+Module32=|relative|src\pageViews\pageMenu
+Module33=|relative|src\pageViews\pageMovement
+Module34=|relative|src\pageViews\pagePrinting
+Module35=|relative|src\octoPrint\RequestApiKey
+Module36=Starter
+Module37=|relative|src\generic\strHelpers
+Module4=|relative|src\helperClasses\B4XPlusMinusEdt
+Module5=|relative|src\B4XPages\B4XSetupPage
+Module6=|relative|src\helperClasses\CallSubUtils
+Module7=|relative|src\octoPrint\CheckOctoConnection
+Module8=|relative|src\generic\clrTheme
+Module9=|relative|src\helperClasses\clvSelectionsX
+NumberOfFiles=20
 NumberOfLibraries=11
-NumberOfModules=36
+NumberOfModules=37
 Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
@@ -117,6 +112,7 @@ Version=11.8
 
 '#BridgeLogger: True
 'open project objects folder: ide://run?File=%WINDIR%\explorer.exe&Args=%PROJECT%
+'Ctrl + click to export as zip: ide://run?=&File=%B4X%\Zipper.jar&Args=Project.zip
 
 Sub Process_Globals
 	
@@ -126,6 +122,7 @@ Sub Process_Globals
 	Private tmrSplash As Timer
 	Private tmrMain As Timer
 	Private tmrFilesCheckChange As Timer
+	Private tmrTimerCallSub As CallSubUtils
 	
 End Sub
 
@@ -134,9 +131,14 @@ End Sub
 
 '===================================================================================
 
+Public Sub getTmrCallSub() As CallSubUtils
+	Return tmrTimerCallSub
+End Sub
+
 Sub Activity_Create(FirstTime As Boolean)
 	
 	If FirstTime Then
+		tmrTimerCallSub.Initialize
 		#if debug
 		tmrSplash.Initialize("tmrSplash",1000)  '--- just a splash screen
 		#else

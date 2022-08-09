@@ -45,7 +45,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	mPnlMain.SetLayoutAnimated(0,0,masterPanel.top,masterPanel.Width,masterPanel.Height)
 	mPnlMain.LoadLayout("pageFiles")
 		
-	CallSubDelayed(Me,"Build_GUI")
+	Build_GUI
 	
 End Sub
 
@@ -86,7 +86,7 @@ public Sub Update_Printer_Btns
 		clr = clrTheme.btnDisableText
 	Else
 		enableDisable = True
-		clr = clrTheme.DialogButtonsTextColor
+		clr = clrTheme.txtNormal
 	End If
 	
 	

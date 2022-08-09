@@ -21,7 +21,9 @@ Sub Class_Globals
 	Private mapBedHeatingOptions, mapToolHeatingOptions,mapAllHeatingOptions As Map
 
 	Private pnlMisc,pnlBed,pnlTool As B4XView
+	
 	Private spnrBedActualTarget, spnrToolActualTarget As B4XPlusMinus
+	Private oSpnrBedEdit, oSpnrToolEdit As B4XPlusMinusEdt
 	
 	
 End Sub
@@ -38,7 +40,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	
 	mTmrTempatureTabUserClick.Initialize("tmrTempTabUserClick",9000)
 	
-	CallSubDelayed(Me,"Build_GUI")
+	Build_GUI
 	
 End Sub
 
@@ -56,13 +58,17 @@ Private Sub Build_GUI
 
 	Set_HeatingCBOoptions(mMainObj.MasterCtrlr.gMapOctoTempSettings)
 	
-	BuildHeaterPanel(pnlTool,"Tool")
+	BuildHeaterPanel(pnlTool,"Hotend")
 	BuildHeaterPanel(pnlBed,"Bed")
+	
+	oSpnrToolEdit.Initialize(spnrToolActualTarget)
+	oSpnrBedEdit.Initialize(spnrBedActualTarget)
 	
 End Sub
 
-Private Sub BuildHeaterPanel(mnuPanel As Panel, Text As String)
+Private Sub BuildHeaterPanel(mnuPanel As B4XView, Text As String)
 	
+	'mnuPanel.SetLayoutAnimated(0, mnuPanel.Left ,0,mnuPanel.Width,mnuPanel.Height)
 	mnuPanel.LoadLayout("viewSetTemps")
 	For Each v As View In mnuPanel.GetAllViewsRecursive
 		
@@ -110,6 +116,7 @@ Private Sub tmrTempTabUserClick_Tick
 	
 	mTmrTempatureTabUserClick.Enabled = False
 	logMe.LogIt("tmrTempatureTabUserClick OFF",mModule)
+	
 	
 End Sub
 
@@ -174,29 +181,46 @@ public Sub Set_HeatingCBOoptions(mapOfOptions As Map)
 End Sub
 
 Private Sub btnSetTemp_Click
-	Dim o As Button : o = Sender
-	If o.Tag = "Bed" Then
-		
-	Else '--- tool`
-		
-	End If
+	'--- this is the SET button for both TOOL and BED
 	
+	tmrTempTabUserClick_Tick '--- will turn timer off if its on
+	
+	Dim o As Button : o = Sender
+	Dim msg As String
+	
+	If o.Tag = "Bed" Then
+		Dim v1 As Int = spnrBedActualTarget.SelectedValue
+		mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",v1))
+		'spnrBedActualTarget.SelectedValue = v1
+		msg = "Bed Temp Change"
+	Else '--- hotend
+		'--- use cCMD_SET_TOOL_TEMP2 if you have 2 print heads
+		Dim v0 As Int = spnrToolActualTarget.SelectedValue
+		mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",v0).Replace("!VAL1!",0))
+		'spnrToolActualTarget.SelectedValue = v0
+		msg = "Hotend Temp Change"
+	End If
+		
+	guiHelpers.Show_toast($"Sending Command (${msg})"$,2000)
+	
+	'--- turn off timer if its on
+	mTmrTempatureTabUserClick.Enabled = False
+	
+	CallSub(mMainObj.MasterCtrlr,"tmrMain_Tick")
+			
 End Sub
-
 
 Private Sub btnPresetTemp_Click
 	Dim o As Button : o = Sender
 	If o.Tag = "Bed" Then
 		
-	Else '--- tool
+	Else '--- hotend
 		
 	End If
 End Sub
 
-
 Private Sub spnrTemp_ValueChanged (Value As Object)
-	Dim v As B4XPlusMinus : v = Sender
-	Log("spnr - " & v.Tag)
+	'Dim v As B4XPlusMinus : v = Sender
 	
 	If mTempatureUpdatingByRestAPI = True Then
 		mTempatureUpdatingByRestAPI = False '--- triggered by a REST API call, we dont care
@@ -205,13 +229,11 @@ Private Sub spnrTemp_ValueChanged (Value As Object)
 
 	'--- user is printing, set the timer (8 seconds) so we can get user input without updating
 	'--- the screen with the actual temps, reset the 8 seconds everytime the user changes it
-	mTmrTempatureTabUserClick.Enabled = False : mTmrTempatureTabUserClick.Enabled = True
+	mTmrTempatureTabUserClick.Enabled = False : 	mTmrTempatureTabUserClick.Enabled = True
 	
 	logMe.LogIt("spnrBedActualTarget_ValueChanged - tmrTempatureTabUserClick ON",mModule)
 	
 End Sub
-
-
 
 public Sub Update_Printer_Temps()
 	
@@ -224,6 +246,10 @@ public Sub Update_Printer_Temps()
 			spnrBedActualTarget.MainLabel.Text = ( Abs(oc.BedTarget.Replace("C","").Replace("c","").Replace(gblConst.DEGREE_SYMBOL,"")).As(String) )
 			spnrToolActualTarget.MainLabel.Text = ( Abs(oc.Tool1Target.Replace("C","").Replace("c","").Replace(gblConst.DEGREE_SYMBOL,"")).As(String) )
 			
+			'--- reset the internal spinner tracker 
+			spnrBedActualTarget.SelectedValue = spnrBedActualTarget.MainLabel.Text
+			spnrToolActualTarget.SelectedValue = spnrToolActualTarget.MainLabel.Text
+			
 		Catch
 		
 			logMe.LogIt(LastException,mModule)
@@ -231,10 +257,16 @@ public Sub Update_Printer_Temps()
 		End Try
 		
 	End If
-		
+	
 End Sub
 
 
 Private Sub btnPresetMaster_Click
 	
 End Sub
+
+
+
+
+
+

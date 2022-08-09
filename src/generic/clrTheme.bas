@@ -22,6 +22,8 @@ Sub Process_Globals
 	Public PopupMenuBG As Int
 	Public txtBright As Int,txtBrightBBlbl As String
 	Public txtNormal As Int,txtNormalBBlbl As String
+	Public Background As Int
+	Public BackgroundHeader,BackgroundMenu As Int
 	
 	Public txtAccent As Int
 	Public btnDisableText As Int
@@ -51,19 +53,17 @@ Public Sub Init
 	Go = 0xFF81F266
 	NoGo = 0xFFE14349
 
-'	PanelBorderThick = xui.Color_White
-'	PanelBorderThin = 0xFFFAF0E6
-'	PanelBG  =0xFF494646
-'	PanelTabBG = 0xFF393A47
-
-
 	txtBright = xui.Color_Cyan
 	txtNormal = xui.Color_White
-	btnDisableText =0x80778696
+	btnDisableText = 0xFFADD8E6
 	
-	PopupMenuBG = xui.Color_Gray
+	Background =  0xFF222651
+	BackgroundHeader = 0xFF22263D
+	BackgroundMenu = 0xFF222633
 	
-	DividerColor = xui.Color_White
+	'PopupMenuBG = xui.Color_Gray
+	
+	DividerColor = xui.Color_LightGray
 	'DividerColor = 0xFF464646
 	'TabSelected = 0xFF746FD5
 	txtAccent = 0xFF746FD5

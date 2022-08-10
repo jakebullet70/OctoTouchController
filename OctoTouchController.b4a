@@ -45,6 +45,7 @@ Group=Default Group
 Library1=b4xpages
 Library10=reflection
 Library11=xui views
+Library12=phone
 Library2=b4xpreferencesdialog
 Library3=bctoast
 Library4=byteconverter
@@ -93,7 +94,7 @@ Module7=|relative|src\octoPrint\CheckOctoConnection
 Module8=|relative|src\generic\clrTheme
 Module9=|relative|src\helperClasses\clvSelectionsX
 NumberOfFiles=21
-NumberOfLibraries=11
+NumberOfLibraries=12
 NumberOfModules=38
 Version=11.8
 @EndOfDesignText@

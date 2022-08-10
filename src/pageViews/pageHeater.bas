@@ -11,6 +11,7 @@ Version=11.8
 Sub Class_Globals
 	
 	Private Const mModule As String = "pageHeater" 'ignore
+	Private xui as XUI
 	Private mPnlMain As B4XView
 	Private mCallBackEvent As String 'ignore
 	Private  mMainObj As B4XMainPage'ignore
@@ -58,8 +59,8 @@ Private Sub Build_GUI
 
 	Set_HeatingCBOoptions(mMainObj.MasterCtrlr.gMapOctoTempSettings)
 	
-	BuildHeaterPanel(pnlTool,"Hotend")
-	BuildHeaterPanel(pnlBed,"Bed")
+	'BuildHeaterPanel(pnlTool,"Hotend")
+	'BuildHeaterPanel(pnlBed,"Bed")
 	
 	oSpnrToolEdit.Initialize(spnrToolActualTarget)
 	oSpnrBedEdit.Initialize(spnrBedActualTarget)
@@ -68,7 +69,7 @@ End Sub
 
 Private Sub BuildHeaterPanel(mnuPanel As B4XView, Text As String)
 	
-	'mnuPanel.SetLayoutAnimated(0, mnuPanel.Left ,0,mnuPanel.Width,mnuPanel.Height)
+	'mnuPanel.SetLayoutAnimated(0, mnuPanel.Width / 2 ,mnuPanel.Height /2 ,mnuPanel.Width,mnuPanel.Height)
 	mnuPanel.LoadLayout("viewSetTemps")
 	For Each v As View In mnuPanel.GetAllViewsRecursive
 		
@@ -93,6 +94,10 @@ Private Sub BuildHeaterPanel(mnuPanel As B4XView, Text As String)
 			Else If v.Tag = "btn" Then
 				Dim o3 As Button = v
 				o3.Tag = Text
+				
+			Else if v.Tag = "bg" Then
+				Dim o4 As Panel = v
+				o4.Color = xui.Color_Transparent
 				
 			End If
 		End If

@@ -55,6 +55,10 @@ Private Sub Build_GUI
 	Dim options As List : options.initialize2(Array As String("0.1mm","1.0mm","10mm","100mm"))
 	cboMovementSize.setitems(options)
 	cboMovementSize.SelectedIndex = 1
+	cboMovementSize.cmbBox.TextColor = clrTheme.txtNormal
+	cboMovementSize.cmbBox.Color = clrTheme.BackgroundHeader
+	cboMovementSize.cmbBox.DropdownBackgroundColor = clrTheme.BackgroundHeader
+	cboMovementSize.cmbBox.DropdownTextColor = clrTheme.txtNormal
 	MoveJogSize = "1.0"
 	
 End Sub

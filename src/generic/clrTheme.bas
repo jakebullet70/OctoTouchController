@@ -13,12 +13,6 @@ Sub Process_Globals
 	Private xui As XUI
 	Private Const mModule As String = "clrTheme" 'ignore
 	
-'	Public PanelBorderThick As Int
-'	Public PanelBorderThin As Int
-'	Public PanelBG As Int
-'	Public PanelTabBG As Int
-'	Public TabSelected As Int
-	
 	Public PopupMenuBG As Int
 	Public txtBright As Int,txtBrightBBlbl As String
 	Public txtNormal As Int,txtNormalBBlbl As String
@@ -48,7 +42,7 @@ End Sub
 
 '--- TODO, move all out to config files an add a color picker, theme builder  (LONG TERM)
 
-Public Sub Init
+Public Sub Init(theme As String)
 	
 	Go = 0xFF81F266
 	NoGo = 0xFFE14349
@@ -57,11 +51,28 @@ Public Sub Init
 	txtNormal = xui.Color_White
 	btnDisableText = 0xFFADD8E6
 	
-	Background =  0xFF222651
-	BackgroundHeader = 0xFF22263D
-	BackgroundMenu = 0xFF222633
+	Select Case theme
+		Case "blue"
+'			Background = xui.Color_ARGB(255,40, 94, 18)
+'			BackgroundHeader = xui.Color_ARGB(255,136, 203, 65)
+'			BackgroundMenu = xui.Color_ARGB(255,136, 203, 65)
+			
+		Case "red"
+			Background = xui.Color_ARGB(255,124,30,9)
+			BackgroundHeader = xui.Color_ARGB(255,162,30,25)
+			BackgroundMenu = xui.Color_ARGB(255,162, 30, 25)
+			
+		Case "green"
+			Background = xui.Color_ARGB(255,40, 94, 18)
+			BackgroundHeader = xui.Color_ARGB(255,136, 203, 65)
+			BackgroundMenu = xui.Color_ARGB(255,136, 203, 65)
 	
-	'PopupMenuBG = xui.Color_Gray
+		Case "gray"
+			Background = xui.Color_ARGB(255,40, 94, 18)
+			BackgroundHeader = xui.Color_ARGB(255,136, 203, 65)
+			BackgroundMenu = xui.Color_ARGB(255,136, 203, 65)
+			
+	End Select
 	
 	DividerColor = xui.Color_LightGray
 	'DividerColor = 0xFF464646

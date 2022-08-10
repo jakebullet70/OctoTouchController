@@ -28,10 +28,10 @@ Sub Class_Globals
 	'--- page-panel classes
 	Public oPageCurrent As Object = Null
 	Private pnlMenu As B4XView,       oPageMenu As pageMenu
-	Private pnlFiles As B4XView,        oPageFiles As pageFiles
-	Private pnlPrinting As B4XView,    oPagePrinting As pagePrinting
+	Private pnlFiles As B4XView,      oPageFiles As pageFiles
+	Private pnlPrinting As B4XView,   oPagePrinting As pagePrinting
 	Private pnlHeater As B4XView,     oPageHeater As pageHeater
-	Private pnlMovement As B4XView, oPageMovement As pageMovement
+	Private pnlMovement As B4XView,   oPageMovement As pageMovement
 	Private pnlFilament As B4XView,   oPageFilament As pageFilament
 	
 End Sub
@@ -50,7 +50,7 @@ End Sub
 Public Sub Initialize
 	config.Load
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
-	clrTheme.Init
+	clrTheme.Init("gray")
 End Sub
 
 Private Sub B4XPage_Created (Root1 As B4XView)
@@ -279,7 +279,7 @@ End Sub
 Public Sub PrinterSetup_Closed(NewConfig As Boolean)
 
 	If oc.IsOctoConnectionVarsValid Then
-		StartMasterControler
+		TryOctoConnection
 	End If
 	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	

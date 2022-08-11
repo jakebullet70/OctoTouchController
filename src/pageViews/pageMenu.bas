@@ -52,7 +52,6 @@ Private Sub Build_GUI
 	BuildMenuCard(mnuHeater,"menuHeating.png","Heater",gblConst.PAGE_HEATING	)
 	BuildMenuCard(mnuFiles,"menuFiles.png","Files",gblConst.PAGE_FILES)
 	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
-	BuildMenuCard(mnuFillament,"menuFilament.png","Filament",gblConst.PAGE_FILAMENT)
 	
 End Sub
 

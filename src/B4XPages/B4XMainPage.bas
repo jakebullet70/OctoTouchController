@@ -33,7 +33,6 @@ Sub Class_Globals
 	Private pnlPrinting As B4XView,   oPagePrinting As pagePrinting
 	Private pnlHeater As B4XView,     oPageHeater As pageHeater
 	Private pnlMovement As B4XView,   oPageMovement As pageMovement
-	Private pnlFilament As B4XView,   oPageFilament As pageFilament
 	
 	
 End Sub
@@ -54,7 +53,6 @@ Public Sub Initialize
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
 	clrTheme.Init("red")
 End Sub
-
 
 #Region "PAGE EVENTS"
 Private Sub B4XPage_Created (Root1 As B4XView)
@@ -94,8 +92,6 @@ Private Sub B4APage_Disappear
 End Sub
 
 #end region
-
-
 
 Public Sub HideSplash_StartUp
 	
@@ -168,7 +164,7 @@ Private Sub Build_GUI
 	pnlHeader.Color	 = clrTheme.BackgroundHeader
 	
 	'--- hide all page views
-	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlFilament,pnlHeater,pnlMovement))
+	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlHeater,pnlMovement))
 	
 	'btnPageAction.TextSize = 48 'guiHelpers.btnResizeText(btnPageAction,False,28) + 2
 	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
@@ -221,9 +217,6 @@ Public Sub Switch_Pages(action As String)
 			If oPageMovement.IsInitialized = False Then oPageMovement.Initialize(pnlMovement,"")
 			oPageCurrent = oPageMovement
 			
-		Case gblConst.PAGE_FILAMENT
-			If oPageFilament.IsInitialized = False Then oPageFilament.Initialize(pnlFilament,"")
-			oPageCurrent = oPageFilament
 			
 	End Select
 	
@@ -242,7 +235,7 @@ End Sub
 Private Sub PopupMainMenu
 	
 	Dim o As mnuPopup
-	Dim popUpMemuItems As Map = CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc","Logging - Debuging":"log")
+	Dim popUpMemuItems As Map = CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc","Logging - Debuging":"log","About":"ab")
 	If oc.isPrinting Or oc.IsPaused2 Then
 		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
 		popUpMemuItems.Remove("Octoprint Connection") 
@@ -256,9 +249,9 @@ Private Sub PopupMainMenu
 	
 	Dim top As Float
 	If guiHelpers.gScreenSizeAprox >= 6 Then
-		top = 33%y
+		top = 31%y
 	Else
-		top = 16%y
+		top = 8%y
 	End If
 	
 	o.MenuObj.OpenMenuAdvanced((50%x - 130dip) ,top,260dip)
@@ -269,6 +262,13 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 	
 	Try
 		Select Case tag.As(String)
+			
+			Case "ab" '--- about
+				Dim msg As String = guiHelpers.GetAboutText()
+				Dim sf As Object = xui.Msgbox2Async(msg, "About", "OK", "", "", Null)
+				Wait For (sf) Msgbox_Result (result1 As Int)
+				' TODO, change to a panel with more info
+				
 		
 			Case "gn"  '--- general settings
 				toast.Show("Not done")

@@ -29,7 +29,6 @@ Sub Process_Globals
 	Public Const PAGE_SETUP As String = "stp"
 	Public Const PAGE_MOVEMENT As String = "mve"
 	Public Const PAGE_HEATING As String = "het"
-	Public Const PAGE_FILAMENT As String = "fil"
 	Public Const PAGE_MENU As String = "mnu"
 	
 End Sub

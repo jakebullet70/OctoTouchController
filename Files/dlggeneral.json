@@ -3,12 +3,6 @@
     "Theme": "Dark Theme",
     "Items": [
         {
-            "title": "Colors",
-            "type": "Separator",
-            "key": "",
-            "required": false
-        },
-        {
             "options": [
                 "Green",
                 "Blue",
@@ -18,13 +12,22 @@
             ],
             "title": "Theme",
             "type": "Options",
-            "key": "color",
+            "key": "themeclr",
             "required": false
         },
         {
-            "title": "",
-            "type": "Separator",
+            "options": [
+                "Immersive mode is a way to allow Android to run in a type of kiosk mode with no taskbar. Versions of Android before V4.4 do not support it. In this case we DIM the taksbar. Use this if you are only going to ONLY run OctoTouchContriller and no other programs."
+            ],
+            "title": "Immersive mode (About)",
+            "type": "Explanation",
             "key": "",
+            "required": false
+        },
+        {
+            "title": "Immersive mode",
+            "type": "Boolean",
+            "key": "imode",
             "required": false
         }
     ]

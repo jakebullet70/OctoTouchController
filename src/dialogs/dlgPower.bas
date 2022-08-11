@@ -14,7 +14,7 @@ Sub Class_Globals
 	Private const mModule As String = "dlgPower"' 'ignore
 	Private mainObj As B4XMainPage
 	Private xui As XUI
-	Private  pdlgPower As PreferencesDialog
+	Private mPowerDlg As PreferencesDialog
 	
 End Sub
 
@@ -40,13 +40,13 @@ Public Sub Show
 	CreateDefaultFile
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE)
 	
-	pdlgPower.Initialize(mainObj.root, "Power Option", 360dip, mainObj.Root.Height - 50dip)
-	pdlgPower.LoadFromJson(File.ReadString(File.DirAssets, "dlgPower.json"))
-	pdlgPower.SetEventsListener(Me,"dlgPower")
+	mPowerDlg.Initialize(mainObj.root, "Power Option", 360dip, mainObj.Root.Height - 50dip)
+	mPowerDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgPower.json"))
+	mPowerDlg.SetEventsListener(Me,"dlgPower")
 	'pdlgPower.Dialog.OverlayColor = xui.Color_ARGB(128, 0, 10, 40)
 	'pdlgPower.Dialog.TitleBarHeight = 50dip
 	
-	Wait For (pdlgPower.ShowDialog(Data, "OK", "CANCEL")) Complete (Result As Int)
+	Wait For (mPowerDlg.ShowDialog(Data, "OK", "CANCEL")) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
 		guiHelpers.Show_toast("Power Data Saved",1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE,Data)

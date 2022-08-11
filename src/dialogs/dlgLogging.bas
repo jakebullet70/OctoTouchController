@@ -14,7 +14,7 @@ Sub Class_Globals
 	Private const mModule As String = "dlgLogging"' 'ignore
 	Private mainObj As B4XMainPage
 	Private xui As XUI
-	Private  pdlgLogging As PreferencesDialog
+	Private mLoggingDlg As PreferencesDialog
 	
 End Sub
 
@@ -38,13 +38,13 @@ Public Sub Show
 	CreateDefaultFile
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.LOGGING_OPTIONS_FILE)
 	
-	pdlgLogging.Initialize(mainObj.root, "Logging", 360dip, 290dip)
-	pdlgLogging.LoadFromJson(File.ReadString(File.DirAssets, "dlgLogging.json"))
-	pdlgLogging.SetEventsListener(Me,"dlgLogging")
+	mLoggingDlg.Initialize(mainObj.root, "Logging", 360dip, 290dip)
+	mLoggingDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgLogging.json"))
+	mLoggingDlg.SetEventsListener(Me,"dlgLogging")
 	'pdlgLogging.Dialog.OverlayColor = xui.Color_ARGB(128, 0, 10, 40)
 	'pdlgLogging.Dialog.TitleBarHeight = 50dip
 	
-	Wait For (pdlgLogging.ShowDialog(Data, "OK", "CANCEL")) Complete (Result As Int)
+	Wait For (mLoggingDlg.ShowDialog(Data, "OK", "CANCEL")) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
 		guiHelpers.Show_toast("Logging Data Saved",1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.LOGGING_OPTIONS_FILE,Data)

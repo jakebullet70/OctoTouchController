@@ -14,10 +14,9 @@ Sub Process_Globals
 	Private Const mModule As String = "clrTheme" 'ignore
 	
 	Public PopupMenuBG As Int
-	Public txtBright As Int,txtBrightBBlbl As String
-	Public txtNormal As Int,txtNormalBBlbl As String
-	Public Background As Int
-	Public BackgroundHeader,BackgroundMenu As Int
+	Public txtBright As Int
+	Public txtNormal As Int
+	Public Background,BackgroundHeader,BackgroundMenu As Int
 	
 	Public txtAccent As Int
 	Public btnDisableText As Int
@@ -40,7 +39,6 @@ Sub Process_Globals
 	
 End Sub
 
-'--- TODO, move all out to config files an add a color picker, theme builder  (LONG TERM)
 
 Public Sub Init(theme As String)
 	
@@ -51,7 +49,7 @@ Public Sub Init(theme As String)
 	txtNormal = xui.Color_White
 	btnDisableText = 0xFFADD8E6
 	
-	Select Case theme
+	Select Case theme.ToLowerCase
 		
 		Case "blue"
 			Background = xui.Color_ARGB(255,53, 69, 85)
@@ -81,9 +79,6 @@ Public Sub Init(theme As String)
 	End Select
 	
 	DividerColor = xui.Color_LightGray
-	'DividerColor = 0xFF464646
-	'TabSelected = 0xFF746FD5
-	txtAccent = 0xFF746FD5
 	
 	'btnText = xui.Color_White
 
@@ -93,24 +88,20 @@ Public Sub Init(theme As String)
 	DialogButtonsTextColor = 0xFF89D5FF
 
 	ItemsBackgroundColor = 0xFF626262
-	
-	'--- converted for BBLabel
-	txtNormalBBlbl = ColorToHex4BBLabel(txtNormal)
-	txtBrightBBlbl = ColorToHex4BBLabel(txtBright)
-	
+			
 End Sub
 
 
-public Sub ColorToHex4BBLabel(clr As Int) As String
+public Sub ColorToHex4BBLabel(clr As Int) As String 'ignore
 	Return "0x" & ColorToHex(clr)
 End Sub
 
 public Sub ColorToHex(clr As Int) As String
 	Dim bc As ByteConverter
-	Return bc.HexFromBytes(bc.IntsToBytes(Array As Int(clr)))
+	Return bc.HexFromBytes(bc.IntsToBytes(Array As Int(clr))) 'ignore
 End Sub
 
-public Sub HexToColor(Hex As String) As Int
+public Sub HexToColor(Hex As String) As Int 'ignore
 	Dim bc As ByteConverter
 	If Hex.StartsWith("#") Then
 		Hex = Hex.SubString(1)

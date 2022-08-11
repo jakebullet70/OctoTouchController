@@ -6,8 +6,9 @@ Version=9.5
 @EndOfDesignText@
 ' Author:  B4X, sadLogic
 #Region VERSIONS 
-' V  1.0 	No Idea
-' V  1.1     Original, will un-select a prev selected row if it is the current row, we ALWAYS want one row selected
+' V1.1  Jun/4/2022	Original, will un-select a prev selected row if it is the current row, 
+'					we ALWAYS want one row selected
+' V1.0 	No Idea
 #End Region
 
 Sub Class_Globals

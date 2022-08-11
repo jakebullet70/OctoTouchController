@@ -4,6 +4,10 @@ ModulesStructureVersion=1
 Type=Class
 Version=11.5
 @EndOfDesignText@
+' Author:  sadLogic
+#Region VERSIONS 
+' V. 1.0 	July/11/2022
+#End Region
 Sub Class_Globals
 	
 	Private Root As B4XView 'ignore

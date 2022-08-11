@@ -6,8 +6,8 @@ Version=8.8
 @EndOfDesignText@
 ' Author:  sadLogic
 #Region VERSIONS 
-' V.1.1    Aug/3/2022     --  Code cleanup
-' V. 1.0 	June/7/2022
+' V1.1	Aug/3/2022		Code cleanup
+' V1.0 	June/7/2022
 #End Region
 Sub Class_Globals
 

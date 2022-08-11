@@ -165,7 +165,7 @@ Sub Activity_Create(FirstTime As Boolean)
 End Sub
 
 
-Public Sub RestartActivity
+Public Sub Restart_program
 	Activity.Finish
 	StartActivity(Me)
 End Sub

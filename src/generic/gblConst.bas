@@ -21,6 +21,7 @@ Sub Process_Globals
 	
 	Public Const LOGGING_OPTIONS_FILE As String = "logging_options.map"
 	Public Const POWER_OPTIONS_FILE As String = "power_options.map"
+	Public Const GENERAL_OPTIONS_FILE As String = "general_options.map"
 	
 	Public Const PAGE_PRINTING As String = "ppr"
 	Public Const PAGE_FILES As String = "pfi"

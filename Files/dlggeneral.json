@@ -1,0 +1,31 @@
+{
+    "Version": 1.66,
+    "Theme": "Dark Theme",
+    "Items": [
+        {
+            "title": "Colors",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
+            "options": [
+                "Green",
+                "Blue",
+                "Dark",
+                "Red",
+                "Gray"
+            ],
+            "title": "Theme",
+            "type": "Options",
+            "key": "color",
+            "required": false
+        },
+        {
+            "title": "",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        }
+    ]
+}

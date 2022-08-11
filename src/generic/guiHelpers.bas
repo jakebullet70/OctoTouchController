@@ -52,6 +52,14 @@ Public Sub SetTextShadow(pView As View, pRadius As Float, pDx As Float, pDy As F
 	
 End Sub
 
+Public Sub GetAboutText() As String
+	Dim msg As StringBuilder : msg.Initialize
+	msg.Append("OctoTouchController " & Main.Version).Append(CRLF)
+	msg.Append("A dedicated touch screen controller").Append(CRLF).Append("for Octoprint using older Android devices").Append(CRLF)
+	msg.Append(CRLF).Append("(c)sadLogic 2022 - Open Source - Freeware").Append(CRLF)
+	Return msg.ToString
+End Sub
+
 '--- just an easy wat to Toast!!!!
 public Sub Show_toast(msg As String, ms As Int)
 	CallSub3(B4XPages.MainPage,"Show_Toast", msg, ms)

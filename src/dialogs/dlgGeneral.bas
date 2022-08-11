@@ -25,6 +25,10 @@ Public Sub Initialize(mobj As B4XMainPage)
 End Sub
 
 public Sub CreateDefaultFile
+	
+	'themeclr
+	'imode
+	
 
 '	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
 '		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE, _

@@ -15,13 +15,12 @@ Sub Class_Globals
 	Private Const mModule As String = "pageMovement" 'ignore
 	Private mPnlMain As B4XView
 	Private mCallBackEvent As String 'ignore
-	Private  mMainObj As B4XMainPage'ignore
+	Private mMainObj As B4XMainPage
 
 	Private cboMovementSize As B4XComboBox
 	Private MoveJogSize As String
 	
 	Private pnlJogMovement As B4XView
-	Private pnlZ As B4XView
 	Private pnlGeneral As B4XView
 	
 	Private btnMOff As Button
@@ -36,7 +35,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	mPnlMain.SetLayoutAnimated(0,0,masterPanel.top,masterPanel.Width,masterPanel.Height)
 	mPnlMain.LoadLayout("pageMovement")
 	
-	CallSubDelayed(Me,"Build_GUI")
+	Build_GUI
 	
 End Sub
 

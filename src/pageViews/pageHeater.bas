@@ -11,7 +11,7 @@ Version=11.8
 Sub Class_Globals
 	
 	Private Const mModule As String = "pageHeater" 'ignore
-	Private xui as XUI
+	Private xui As XUI
 	Private mPnlMain As B4XView
 	Private mCallBackEvent As String 'ignore
 	Private  mMainObj As B4XMainPage'ignore
@@ -68,42 +68,42 @@ Private Sub Build_GUI
 End Sub
 
 Private Sub BuildHeaterPanel(mnuPanel As B4XView, Text As String)
-	
-	'mnuPanel.SetLayoutAnimated(0, mnuPanel.Width / 2 ,mnuPanel.Height /2 ,mnuPanel.Width,mnuPanel.Height)
-	mnuPanel.LoadLayout("viewSetTemps")
-	For Each v As View In mnuPanel.GetAllViewsRecursive
-		
-		If v.Tag <> Null Then
-			If v.Tag Is B4XPlusMinus Then
-				If Text = "Bed" Then
-					spnrBedActualTarget = v.tag
-					guiHelpers.ReSkinPlusMinusControl(spnrBedActualTarget)
-					spnrBedActualTarget.SetNumericRange(0,140,1)
-					spnrBedActualTarget.Tag = Text
-				Else
-					spnrToolActualTarget = v.tag
-					guiHelpers.ReSkinPlusMinusControl(spnrToolActualTarget)
-					spnrToolActualTarget.SetNumericRange(0,300,1)
-					spnrToolActualTarget.Tag = Text
-				End If
-				
-			Else If v.Tag = "hdr" Then
-				Dim o2 As Label = v
-				o2.Text = Text
-				
-			Else If v.Tag = "btn" Then
-				Dim o3 As Button = v
-				o3.Tag = Text
-				
-			Else if v.Tag = "bg" Then
-				Dim o4 As Panel = v
-				o4.Color = xui.Color_Transparent
-				
-			End If
-		End If
-		
-	Next
-	
+'	
+'	'mnuPanel.SetLayoutAnimated(0, mnuPanel.Width / 2 ,mnuPanel.Height /2 ,mnuPanel.Width,mnuPanel.Height)
+'	mnuPanel.LoadLayout("viewSetTemps")
+'	For Each v As View In mnuPanel.GetAllViewsRecursive
+'		
+'		If v.Tag <> Null Then
+'			If v.Tag Is B4XPlusMinus Then
+'				If Text = "Bed" Then
+'					spnrBedActualTarget = v.tag
+'					guiHelpers.ReSkinPlusMinusControl(spnrBedActualTarget)
+'					spnrBedActualTarget.SetNumericRange(0,140,1)
+'					spnrBedActualTarget.Tag = Text
+'				Else
+'					spnrToolActualTarget = v.tag
+'					guiHelpers.ReSkinPlusMinusControl(spnrToolActualTarget)
+'					spnrToolActualTarget.SetNumericRange(0,300,1)
+'					spnrToolActualTarget.Tag = Text
+'				End If
+'				
+'			Else If v.Tag = "hdr" Then
+'				Dim o2 As Label = v
+'				o2.Text = Text
+'				
+'			Else If v.Tag = "btn" Then
+'				Dim o3 As Button = v
+'				o3.Tag = Text
+'				
+'			Else if v.Tag = "bg" Then
+'				Dim o4 As Panel = v
+'				o4.Color = xui.Color_Transparent
+'				
+'			End If
+'		End If
+'		
+'	Next
+'	
 End Sub
 
 

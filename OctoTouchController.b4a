@@ -7,12 +7,13 @@ File13=pageFiles.bal
 File14=pageHeater.bal
 File15=pageMenu.bal
 File16=pageMovement.bal
-File17=pagePrinting.bal
-File18=pagesetup.bal
-File19=splash.jpg
+File17=pageMovement2.bal
+File18=pagePrinting.bal
+File19=pagesetup.bal
 File2=dlgPower.json
-File20=viewfiles.bal
-File21=viewSetTemps.bal
+File20=splash.jpg
+File21=viewfiles.bal
+File22=viewSetTemps.bal
 File3=MainPage.bal
 File4=menucard.bal
 File5=menufilament.png
@@ -28,12 +29,13 @@ FileGroup13=VIEWS_PAGES
 FileGroup14=VIEWS_PAGES
 FileGroup15=VIEWS_PAGES
 FileGroup16=VIEWS_PAGES
-FileGroup17=VIEWS_PAGES
-FileGroup18=B4XPages
-FileGroup19=MISC
+FileGroup17=Default Group
+FileGroup18=VIEWS_PAGES
+FileGroup19=B4XPages
 FileGroup2=JSON_CONFIGS
-FileGroup20=VIEWS
+FileGroup20=MISC
 FileGroup21=VIEWS
+FileGroup22=VIEWS
 FileGroup3=B4XPages
 FileGroup4=VIEWS
 FileGroup5=MAIN_MENU
@@ -93,7 +95,7 @@ Module6=|relative|src\helperClasses\CallSubUtils
 Module7=|relative|src\octoPrint\CheckOctoConnection
 Module8=|relative|src\generic\clrTheme
 Module9=|relative|src\helperClasses\clvSelectionsX
-NumberOfFiles=21
+NumberOfFiles=22
 NumberOfLibraries=12
 NumberOfModules=38
 Version=11.8
@@ -153,7 +155,7 @@ Sub Activity_Create(FirstTime As Boolean)
 		tmrSplash.Enabled = True
 	End If
 	
-	'GetScreenInfo
+	GetScreenInfo
 	
 	Dim pm As B4XPagesManager
 	pm.Initialize(Activity)
@@ -171,7 +173,7 @@ Private Sub GetScreenInfo
 		guiHelpers.gScreenSizeOriatation = "P"
 	End If
 	
-	Dim lv As LayoutValues = GetRealSize
+'	Dim lv As LayoutValues = GetRealSize
 	'--- will set the screen size WITHOUT taskbar
 '	Dim jo As JavaObject = Activity
 '	jo.RunMethod("setBottom", Array(lv.Height))
@@ -187,6 +189,9 @@ End Sub
 
 
 Private Sub GetRealSize As LayoutValues
+	
+	'  TODO, Android 4.x compatitble?
+	
 	Dim lv As LayoutValues
 	Dim ctxt As JavaObject
 	ctxt.InitializeContext

@@ -225,10 +225,10 @@ End Sub
 Private Sub PopupMainMenu
 	
 	Dim o As mnuPopup
-	Dim popUpMemuItems As Map = CreateMap("Power Settings":"pw","Octoprint Connection":"oc","Logging - Debuging":"log")
+	Dim popUpMemuItems As Map = CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc","Logging - Debuging":"log")
 	If oc.isPrinting Or oc.IsPaused2 Then
 		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
-		popUpMemuItems.Remove("Octoprint Connection")
+		popUpMemuItems.Remove("Octoprint Connection") 
 	End If
 	Sleep(400)
 	 
@@ -236,7 +236,15 @@ Private Sub PopupMainMenu
 	o.MenuWidth = 260dip '--- defaults to 100
 	o.ItemHeight = 56dip
 	o.MenuObj.OrientationVertical = o.MenuObj.OrientationHorizontal_LEFT '--- change menu position
-	o.MenuObj.OpenMenuAdvanced((50%x - 130dip) ,33%y,260dip)
+	
+	Dim top As Float
+	If guiHelpers.gScreenSizeAprox >= 6 Then
+		top = 33%y
+	Else
+		top = 20%y
+	End If
+	
+	o.MenuObj.OpenMenuAdvanced((50%x - 130dip) ,top,260dip)
 	
 End Sub
 
@@ -285,4 +293,14 @@ Public Sub PrinterSetup_Closed(NewConfig As Boolean)
 	
 End Sub
 #end region
+
+
+
+
+
+
+
+
+
+
 

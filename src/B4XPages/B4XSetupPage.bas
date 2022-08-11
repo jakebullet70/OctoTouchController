@@ -9,6 +9,7 @@ Sub Class_Globals
 	Private Root As B4XView 'ignore
 	Private xui As XUI 'ignore
 	Private Const mModule As String = "B4XSetupPage" 'ignore
+	'Private IME1 As IME
 	
 	Private B4XLoadingIndicator1 As B4XLoadingIndicator
 	Private btnCheckConnection As B4XView
@@ -49,6 +50,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	Root = Root1
 	Root.LoadLayout("pageSetup")
 	toast.Initialize(Root)
+	'IME1.Initialize("IME1")
 	pnlMain.Color = xui.Color_Transparent
 	Build_GUI
 		
@@ -70,10 +72,13 @@ private Sub Build_GUI
 	
 	txtPrinterDesc.HintText = "Printer Description"
 	txtPrinterDesc.NextField = txtPrinterIP
+	
 	txtPrinterIP.HintText = "Octoprint IP"
 	txtPrinterIP.NextField = txtPrinterPort
+	
 	txtPrinterPort.HintText = "Octoprint Port"
 	txtPrinterPort.NextField = txtOctoKey
+	
 	txtOctoKey.HintText = "Octoprint API Key"
 
 	btnCheckConnection.Text= "Validate Connection"

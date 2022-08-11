@@ -18,6 +18,7 @@ Sub Class_Globals
 	
 	'--- splash screen
 	Private ivSpash As B4XView
+	Private pnlSplash As Panel
 	
 	'--- master base panel
 	Private pnlMaster As B4XView 
@@ -33,6 +34,7 @@ Sub Class_Globals
 	Private pnlHeater As B4XView,     oPageHeater As pageHeater
 	Private pnlMovement As B4XView,   oPageMovement As pageMovement
 	Private pnlFilament As B4XView,   oPageFilament As pageFilament
+	
 	
 End Sub
 
@@ -50,9 +52,11 @@ End Sub
 Public Sub Initialize
 	config.Load
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
-	clrTheme.Init("gray")
+	clrTheme.Init("green")
 End Sub
 
+
+#Region "PAGE EVENTS"
 Private Sub B4XPage_Created (Root1 As B4XView)
 
 	Root = Root1
@@ -63,7 +67,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	
 	'--- splash screen
 	pnlMaster.Visible = False
-	ivSpash.Visible = True
+	pnlSplash.Visible = True
 	
 	Build_GUI
 	
@@ -80,9 +84,22 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	Return True '--- exit app
 End Sub
 
+
+Private Sub B4XPage_Appear
+		
+End Sub
+
+Private Sub B4APage_Disappear
+	
+End Sub
+
+#end region
+
+
+
 Public Sub HideSplash_StartUp
 	
-	ivSpash.Visible = False
+	pnlSplash.Visible = False
 	pnlMaster.Visible = True
 	TryOctoConnection
 	
@@ -241,7 +258,7 @@ Private Sub PopupMainMenu
 	If guiHelpers.gScreenSizeAprox >= 6 Then
 		top = 33%y
 	Else
-		top = 20%y
+		top = 16%y
 	End If
 	
 	o.MenuObj.OpenMenuAdvanced((50%x - 130dip) ,top,260dip)

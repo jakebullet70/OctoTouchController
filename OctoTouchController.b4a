@@ -1,44 +1,44 @@
 ﻿Build1=Default,sadLogic.OctoTouchController
-File1=dlgLogging.json
-File10=no_thumbnail.jpg
-File11=octopus.png
-File12=pageFilament.bal
-File13=pageFiles.bal
-File14=pageHeater.bal
-File15=pageMenu.bal
-File16=pageMovement.bal
-File17=pageMovement2.bal
-File18=pagePrinting.bal
-File19=pagesetup.bal
-File2=dlgPower.json
-File20=splash.jpg
+File1=dlggeneral.json
+File10=menuprint.png
+File11=no_thumbnail.jpg
+File12=octopus.png
+File13=pageFilament.bal
+File14=pageFiles.bal
+File15=pageHeater.bal
+File16=pageMenu.bal
+File17=pageMovement.bal
+File18=pageMovement2.bal
+File19=pagePrinting.bal
+File2=dlgLogging.json
+File20=pagesetup.bal
 File21=viewfiles.bal
 File22=viewSetTemps.bal
-File3=MainPage.bal
-File4=menucard.bal
-File5=menufilament.png
-File6=menufiles.png
-File7=menuheating.png
-File8=menumovement.png
-File9=menuprint.png
+File3=dlgPower.json
+File4=MainPage.bal
+File5=menucard.bal
+File6=menufilament.png
+File7=menufiles.png
+File8=menuheating.png
+File9=menumovement.png
 FileGroup1=JSON_CONFIGS
-FileGroup10=MISC
+FileGroup10=MAIN_MENU
 FileGroup11=MISC
-FileGroup12=VIEWS_PAGES
+FileGroup12=MISC
 FileGroup13=VIEWS_PAGES
 FileGroup14=VIEWS_PAGES
 FileGroup15=VIEWS_PAGES
 FileGroup16=VIEWS_PAGES
-FileGroup17=Default Group
-FileGroup18=VIEWS_PAGES
-FileGroup19=B4XPages
+FileGroup17=VIEWS_PAGES
+FileGroup18=Default Group
+FileGroup19=VIEWS_PAGES
 FileGroup2=JSON_CONFIGS
-FileGroup20=MISC
+FileGroup20=B4XPages
 FileGroup21=VIEWS
 FileGroup22=VIEWS
-FileGroup3=B4XPages
-FileGroup4=VIEWS
-FileGroup5=MAIN_MENU
+FileGroup3=JSON_CONFIGS
+FileGroup4=B4XPages
+FileGroup5=VIEWS
 FileGroup6=MAIN_MENU
 FileGroup7=MAIN_MENU
 FileGroup8=MAIN_MENU
@@ -106,7 +106,7 @@ Version=11.8
 	#VersionName: 
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: landscape
-	#CanInstallToExternalStorage: False
+	#CanInstallToExternalStorage: true
 #End Region
 
 #Region  Activity Attributes 
@@ -114,6 +114,7 @@ Version=11.8
 	#IncludeTitle: False
 	'#DebuggerForceFullDeployment: true
 	'#DebuggerForceStandardAssets: true
+	#BridgeLogger: True
 #End Region
 
 '#BridgeLogger: True
@@ -161,6 +162,13 @@ Sub Activity_Create(FirstTime As Boolean)
 	pm.Initialize(Activity)
 	
 End Sub
+
+
+Public Sub RestartActivity
+	Activity.Finish
+	StartActivity(Me)
+End Sub
+
 
 '===================================================================================
 

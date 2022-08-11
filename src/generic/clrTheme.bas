@@ -52,10 +52,11 @@ Public Sub Init(theme As String)
 	btnDisableText = 0xFFADD8E6
 	
 	Select Case theme
+		
 		Case "blue"
-'			Background = xui.Color_ARGB(255,40, 94, 18)
-'			BackgroundHeader = xui.Color_ARGB(255,136, 203, 65)
-'			BackgroundMenu = xui.Color_ARGB(255,136, 203, 65)
+			Background = xui.Color_ARGB(255,53, 69, 85)
+			BackgroundHeader = xui.Color_ARGB(255,41, 57, 73)
+			BackgroundMenu = xui.Color_ARGB(255,46, 62, 78)
 			
 		Case "red"
 			Background = xui.Color_ARGB(255,124,30,9)
@@ -63,14 +64,19 @@ Public Sub Init(theme As String)
 			BackgroundMenu = xui.Color_ARGB(255,162, 30, 25)
 			
 		Case "green"
-			Background = xui.Color_ARGB(255,40, 94, 18)
-			BackgroundHeader = xui.Color_ARGB(255,136, 203, 65)
-			BackgroundMenu = xui.Color_ARGB(255,136, 203, 65)
+			Background = xui.Color_ARGB(255,19, 62, 11)
+			BackgroundHeader = xui.Color_ARGB(255,14, 57, 6)
+			BackgroundMenu = xui.Color_ARGB(255,24, 67, 16)
 	
 		Case "gray"
-			Background = xui.Color_ARGB(255,40, 94, 18)
-			BackgroundHeader = xui.Color_ARGB(255,136, 203, 65)
-			BackgroundMenu = xui.Color_ARGB(255,136, 203, 65)
+			Background = xui.Color_ARGB(255,90, 90, 90)
+			BackgroundHeader = xui.Color_ARGB(255,73, 73, 73)
+			BackgroundMenu = xui.Color_ARGB(255,90, 90, 90)
+			
+		Case "dark"
+			Background = xui.Color_ARGB(255,18, 18, 18)
+			BackgroundHeader = xui.Color_ARGB(255,11, 11, 11)
+			BackgroundMenu = xui.Color_ARGB(255,22, 22, 22)
 			
 	End Select
 	

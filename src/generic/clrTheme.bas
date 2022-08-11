@@ -49,16 +49,35 @@ Public Sub Init(theme As String)
 	txtNormal = xui.Color_White
 	btnDisableText = 0xFFADD8E6
 	
+	InitTheme(theme)
+	
+	DividerColor = xui.Color_LightGray
+	
+	'btnText = xui.Color_White
+
+	DialogBG = 0xFF555555
+	DialogButtonsColor = 0xFF555555
+	DialogBorderColor = 0xff000000
+	DialogButtonsTextColor = 0xFF89D5FF
+
+	ItemsBackgroundColor = 0xFF626262
+			
+End Sub
+
+
+
+Public Sub InitTheme(theme As String)
+	
 	Select Case theme.ToLowerCase
 		
 		Case "blue"
 			Background = xui.Color_ARGB(255,53, 69, 85)
 			BackgroundHeader = xui.Color_ARGB(255,41, 57, 73)
-			BackgroundMenu = xui.Color_ARGB(255,46, 62, 78)
+			BackgroundMenu = xui.Color_ARGB(255,135, 25, 29)
 			
 		Case "red"
-			Background = xui.Color_ARGB(255,124,30,9)
-			BackgroundHeader = xui.Color_ARGB(255,162,30,25)
+			Background = xui.Color_ARGB(255,131, 21, 25)
+			BackgroundHeader = xui.Color_ARGB(255,124, 14, 18)
 			BackgroundMenu = xui.Color_ARGB(255,162, 30, 25)
 			
 		Case "green"
@@ -77,18 +96,6 @@ Public Sub Init(theme As String)
 			BackgroundMenu = xui.Color_ARGB(255,22, 22, 22)
 			
 	End Select
-	
-	DividerColor = xui.Color_LightGray
-	
-	'btnText = xui.Color_White
-
-	DialogBG = 0xFF555555
-	DialogButtonsColor = 0xFF555555
-	DialogBorderColor = 0xff000000
-	DialogButtonsTextColor = 0xFF89D5FF
-
-	ItemsBackgroundColor = 0xFF626262
-			
 End Sub
 
 

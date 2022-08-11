@@ -52,7 +52,7 @@ End Sub
 Public Sub Initialize
 	config.Load
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
-	clrTheme.Init("green")
+	clrTheme.Init("red")
 End Sub
 
 
@@ -272,7 +272,6 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 		
 			Case "gn"  '--- general settings
 				toast.Show("Not done")
-				CallSubDelayed(Main,"Restart_program")
 				'https://www.b4x.com/android/forum/threads/immersive-mode-hide-the-navigation-bar.90882/
 				'V4.4 and above, add it to the general settings
 				'V4.0-3  just dim the bar

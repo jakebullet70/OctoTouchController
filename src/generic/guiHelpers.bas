@@ -168,3 +168,41 @@ End Sub
 
 
 
+
+Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
+
+	'--- resize buttons
+	Dim btnCancel As B4XView = dlg.GetButton(xui.DialogResponse_Cancel)
+	btnCancel.Width = btnCancel.Width + 20dip
+	btnCancel.Left = btnCancel.Left - 28dip
+	btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,5dip)
+
+	Dim btnOk As B4XView = dlg.GetButton(xui.DialogResponse_Positive)
+	btnOk.Width = btnOk.Width + 20dip
+	btnOk.Left = btnOk.Left - 48dip
+	btnOk.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,5dip)
+	
+End Sub
+
+Public Sub ThemeInputDialogForm(dlg As B4XDialog,intmp As B4XInputTemplate, et As EditText)
+	
+	et.TextSize = 18
+		
+	et.TextColor = clrTheme.txtNormal
+	et.Gravity = Gravity.CENTER
+		
+	intmp.mBase.Color = clrTheme.BackgroundMenu
+				
+	dlg.ButtonsTextColor = clrTheme.txtNormal
+	dlg.BorderColor = clrTheme.txtNormal
+	dlg.BackgroundColor = clrTheme.BackgroundMenu
+	dlg.ButtonsFont = xui.CreateDefaultFont(22)
+	dlg.ButtonsHeight = 60dip
+	
+	intmp.lblTitle.Font = xui.CreateDefaultFont(22)
+
+End Sub
+
+
+
+

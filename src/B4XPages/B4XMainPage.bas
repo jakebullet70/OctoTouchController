@@ -188,11 +188,11 @@ Public Sub Switch_Pages(action As String)
 	'--- called from menu page class and back button
 	
 	'--- fire the lost focus event
-	If  oPageCurrent <> Null Then
+	If oPageCurrent <> Null Then
 		CallSub(oPageCurrent,"Lost_Focus")
 	End If
 	
-	'--- set defualts
+	'--- set defaults
 	btnPageAction.Text = Chr(0xE5C4)  '--- back button
 	
 	Select Case action
@@ -258,6 +258,7 @@ Private Sub PopupMainMenu
 	
 End Sub
 
+
 Private Sub Setup_Closed (index As Int, tag As Object)
 	
 	Try
@@ -287,10 +288,11 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 				o1.Initialize(Me)
 				o1.Show
 			
-'		Case "log"  '--- logging
-'			Dim o As dlgLogging
-'			o.Initialize(Me)
-'			o.Show
+			Case "log"  '--- logging
+				toast.Show("Needs work")
+				'Dim o As dlgLogging
+				'o.Initialize(Me)
+				'o.Show
 			
 		End Select
 		

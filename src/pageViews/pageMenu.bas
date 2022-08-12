@@ -17,7 +17,6 @@ Sub Class_Globals
 	
 	'--- menus
 	Private mnuFiles As B4XView
-	Private mnuFillament As B4XView
 	Private mnuHeater As B4XView
 	Private mnuMovement As B4XView
 	Private mnuPrinting As B4XView

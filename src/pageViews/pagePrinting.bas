@@ -19,6 +19,9 @@ Sub Class_Globals
 	Private lblToolTemp, lblBedTemp As Label
 	Private mapBedHeatingOptions, mapToolHeatingOptions,mapAllHeatingOptions As Map
 	
+	Private btnPresetMaster As B4XView
+	Private btnPresetBed As Button
+	Private btnPresetTool As Button
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
@@ -72,6 +75,11 @@ End Sub
 
 Private Sub btnPresetMaster_Click
 	
+	If oc.isConnected = False Then Return
+	Dim o As mnuHeatersAll
+	o.Initialize(mMainObj,mapAllHeatingOptions,btnPresetMaster)
+	o.Show
+	
 End Sub
 
 
@@ -79,12 +87,23 @@ End Sub
 Private Sub btnPresetTemp_Click
 	Dim o As Button : o = Sender
 	If o.Tag = "bed" Then
+
+		If oc.isConnected = False Then Return
+		Dim o1 As mnuHeaterBed
+		o1.Initialize(mMainObj,mapBedHeatingOptions,btnPresetBed)
+		o1.Show
 		
 	Else '--- tool
+
+		If oc.isConnected = False Then Return
+		Dim o2 As mnuHeaterTool
+		o2.Initialize(mMainObj,mapToolHeatingOptions,btnPresetTool)
+		o2.Show
 		
 	End If
 	
 End Sub
+
 
 Private Sub lblTempChange_Click
 	

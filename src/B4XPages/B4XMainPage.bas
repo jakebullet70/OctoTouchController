@@ -50,7 +50,8 @@ End Sub
 Public Sub Initialize
 	config.Load
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
-	clrTheme.Init("red")
+	clrTheme.Init("dark")
+	logMe.Clean_OldLogs
 End Sub
 
 #Region "PAGE EVENTS"
@@ -125,6 +126,8 @@ End Sub
 '--- events called from the masterController
 
 Public Sub Update_Printer_Temps
+
+	'---  update the main header
 	lblTemp.Text = oc.FormatedTemps
 	
 	'--- see if the current page has the proper event

@@ -24,10 +24,18 @@ Public Sub Show
 	
 	Dim o As mnuPopup
 	o.Initialize( Me,"TempsMaster",mainObj,mMenuItems, mCallingView,"All Heaters")
-	o.MenuWidth = 300dip '--- defaults to 100
-	o.MenuObj.OrientationVertical = o.MenuObj.OrientationHorizontal_MIDDLE '--- change menu position
-	Sleep(0)
-	o.Show
+	o.MenuWidth = 460dip '--- defaults to 100
+	'o.MenuObj.OrientationVertical = o.MenuObj.OrientationHorizontal_LEFT '--- change menu position
+	
+	Dim top As Float
+	If guiHelpers.gScreenSizeAprox >= 6 Then
+		top = 31%y
+	Else
+		top = 9%y
+	End If
+	
+	Dim w As Float = 460dip
+	o.MenuObj.OpenMenuAdvanced((50%x - w / 2),top,w)
 
 End Sub
 
@@ -54,12 +62,11 @@ private Sub TempsMaster_Closed (index As Int, tag As Object)
 				Dim startNDX As Int = toolMSG.IndexOf(": ")
 				Dim endNDX As Int = toolMSG.IndexOf(gblConst.DEGREE_SYMBOL)
 				Dim getTemp As String = toolMSG.SubString2(startNDX + 2,endNDX).Trim
-				'mainObj.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
+				mainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
 				
 				Dim startNDX As Int = bedMSG.IndexOf(": ")
 				Dim endNDX As Int = bedMSG.IndexOf(gblConst.DEGREE_SYMBOL)
 				Dim getTemp As String = bedMSG.SubString2(startNDX + 2,endNDX).Trim
-				
 				mainObj.MasterCtrlr.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
 				ShortMsg = True
 		

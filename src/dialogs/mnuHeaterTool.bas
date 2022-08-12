@@ -25,10 +25,20 @@ Public Sub Show
 	
 	Dim o As mnuPopup
 	o.Initialize( Me,"TempsTool",mainObj,mMenuItems, mCallingView,"Tool Heater")
-	o.MenuWidth = 300dip '--- defaults to 100
-	o.MenuObj.OrientationVertical = o.MenuObj.OrientationHorizontal_MIDDLE '--- change menu position
-	Sleep(0)
-	o.Show
+	'o.MenuWidth = 300dip '--- defaults to 100
+	'o.MenuObj.OrientationVertical = o.MenuObj.OrientationHorizontal_MIDDLE '--- change menu position
+	'Sleep(0)
+	'o.Show
+	
+	Dim top As Float
+	If guiHelpers.gScreenSizeAprox >= 6 Then
+		top = 31%y
+	Else
+		top = 9%y
+	End If
+	
+	Dim w As Float = 300dip
+	o.MenuObj.OpenMenuAdvanced((50%x - w / 2),top,w)
 
 End Sub
 

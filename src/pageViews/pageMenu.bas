@@ -17,7 +17,6 @@ Sub Class_Globals
 	
 	'--- menus
 	Private mnuFiles As B4XView
-	Private mnuHeater As B4XView
 	Private mnuMovement As B4XView
 	Private mnuPrinting As B4XView
 	
@@ -48,7 +47,6 @@ Private Sub Build_GUI
 	
 	'--- build the main menu screen
 	BuildMenuCard(mnuMovement,"menuMovement.png","Move",gblConst.PAGE_MOVEMENT)
-	BuildMenuCard(mnuHeater,"menuHeating.png","Heater",gblConst.PAGE_HEATING	)
 	BuildMenuCard(mnuFiles,"menuFiles.png","Files",gblConst.PAGE_FILES)
 	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
 	

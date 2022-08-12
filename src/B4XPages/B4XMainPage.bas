@@ -31,7 +31,6 @@ Sub Class_Globals
 	Private pnlMenu As B4XView,       oPageMenu As pageMenu
 	Private pnlFiles As B4XView,      oPageFiles As pageFiles
 	Private pnlPrinting As B4XView,   oPagePrinting As pagePrinting
-	Private pnlHeater As B4XView,     oPageHeater As pageHeater
 	Private pnlMovement As B4XView,   oPageMovement As pageMovement
 	
 	
@@ -164,7 +163,7 @@ Private Sub Build_GUI
 	pnlHeader.Color	 = clrTheme.BackgroundHeader
 	
 	'--- hide all page views
-	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlHeater,pnlMovement))
+	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlMovement))
 	
 	'btnPageAction.TextSize = 48 'guiHelpers.btnResizeText(btnPageAction,False,28) + 2
 	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
@@ -208,10 +207,6 @@ Public Sub Switch_Pages(action As String)
 		Case gblConst.PAGE_PRINTING
 			If oPagePrinting.IsInitialized = False Then oPagePrinting.Initialize(pnlPrinting,"")
 			oPageCurrent = oPagePrinting
-			
-		Case gblConst.PAGE_HEATING
-			If oPageHeater.IsInitialized = False Then oPageHeater.Initialize(pnlHeater,"")
-			oPageCurrent = oPageHeater
 			
 		Case gblConst.PAGE_MOVEMENT
 			If oPageMovement.IsInitialized = False Then oPageMovement.Initialize(pnlMovement,"")

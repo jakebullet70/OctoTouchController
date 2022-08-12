@@ -6,9 +6,11 @@ Version=11.5
 @EndOfDesignText@
 ' Author:  LucaMS
 #Region VERSIONS 
+' V. 1.2	Aug/12/2022 - JakeBullet790
+'			Added optionial callback event on edit request
 ' V. 1.1 	Aug/07/2022 - Jakebullet70
 '			Added support for Vertical and Horizonal formation, misc bug fixes
-' V. 1.0 	Jun/27/2022 
+' V. 1.0 	Jun/27/2022 - LucaMS
 '			Proof Of Concept - 1st working version
 #End Region
 
@@ -16,11 +18,13 @@ Version=11.5
 Sub Class_Globals
 	Private xui As XUI
 	Private mPlusMinus As B4XPlusMinus
+	Private mCallback As Object
+	Private mEventName As String
 	
 	#IF B4A
 	Private IME1 As IME
 	Private mPnlOver As Panel
-	Private mEditText As EditText
+	Private mEditText As EditText	
 	#ELSE IF B4J
 	Private mPnlOver As Pane
 	Private mEditText As TextField
@@ -29,12 +33,19 @@ Sub Class_Globals
 End Sub
 
 
-Public Sub Initialize(PlusMinus As B4XPlusMinus)
+Public Sub Initialize(PlusMinus As B4XPlusMinus,Callback As Object, EventName As String)
+	
 	mPlusMinus = PlusMinus
 	mPnlOver.Initialize("pnlOver")
 	
+	'--- If callback, event name is passed in then when requesting and edit
+	'--- and event will be fired so user can popup a input box
+	mCallback = Callback
+	mEventName = EventName
+	
 	'--- Initilize cannot be a resumable, so...
 	CallSubDelayed2(Me, "Init2", PlusMinus)
+	
 End Sub
 
 
@@ -49,10 +60,10 @@ Private Sub Init2(PlusMinus As B4XPlusMinus)
 		PlusMinus.mBase.AddView(mPnlOver, PlusMinus.pnlMinus.Width * 2, 0, _
 				PlusMinus.mBase.Width - PlusMinus.pnlMinus.Width * 4, _
 				PlusMinus.MainLabel.Height)
-	Else
+	Else '--- bottom
 		PlusMinus.mBase.AddView(mPnlOver, _
-				PlusMinus.MainLabel.Left , 0,	PlusMinus.MainLabel.Width , _
-				PlusMinus.pnlMinus.Height * 3 )
+				PlusMinus.MainLabel.Left , 0, PlusMinus.MainLabel.Width , _
+				PlusMinus.mBase.Height / 2)
 	End If
 	
 	'--- LucaMS, Not sure what this does ---
@@ -89,6 +100,15 @@ Private Sub pnlOver_Click
 	'--- Don't care about the error message in the log window, it doesn't matter.
 Private Sub pnlOver_MouseClicked(EventData As MouseEvent)
 #End If
+
+	If mEventName.Length <> 0 Then
+		If SubExists(mCallback,mEventName) Then
+			CallSub2(mCallback,mEventName,mPlusMinus.MainLabel.Text)
+		Else
+			Log("Cannot find event - B4XPlusMinusEdt")
+		End If
+		Return
+	End If
 
 	mEditText.SelectAll
 	mPlusMinus.MainLabel.Visible = False

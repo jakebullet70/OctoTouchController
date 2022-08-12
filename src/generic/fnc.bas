@@ -243,6 +243,24 @@ public Sub WriteTxt2Disk(str As String,folder As String, filename As String) 'ig
 End Sub
 
 
+Public Sub CheckTempRange(what As String, value As Int) As Boolean
+	
+	If what = "bed" Then
+		If value > 130 Then
+			Return False			
+		End If
+	Else
+		If value > 300 Then
+			Return False
+		End If
+	End If
+	
+	Return True
+	
+End Sub
+
+
+
 
 
 

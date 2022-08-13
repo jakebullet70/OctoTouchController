@@ -122,7 +122,7 @@ Private Sub btnXYZ_Click
 			mMainObj.MasterCtrlr.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!","" & MoveJogSize).Replace("!DIR!","y"))
 	
 	End Select
-
+	guiHelpers.Show_toast("Command Sent",1200)
 End Sub
 
 Private Sub cboMovementSize_SelectedIndexChanged (Index As Int)
@@ -234,6 +234,7 @@ End Sub
 Private Sub MotorsOff
 	Private const DISABLE_ALL_STEPPERS As String = "M18"
 	mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",DISABLE_ALL_STEPPERS))
+	guiHelpers.Show_toast("Command sent: Motors Off",1800)
 End Sub
 
 

@@ -308,6 +308,7 @@ Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
 	
 	mapToolHeatingOptions.Put(allOff,"alloff")
 	mapToolHeatingOptions.Put("Tool Off","tooloff")
+	mapToolHeatValuesOnly.Put("Tool Off","tooloff")
 		
 	mapAllHeatingOptions.Put(allOff,"alloff")
 	
@@ -327,7 +328,7 @@ Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
 			'--- build string for CBO
 			cboStr = $"Set ${FilamentType} (Tool: ${ToolTemp}${gblConst.DEGREE_SYMBOL}C )"$
 			mapToolHeatingOptions.Put(cboStr,cboStr)
-			mapToolHeatValuesOnly.Put(ToolTemp,$"${ToolTemp}${gblConst.DEGREE_SYMBOL}C"$)
+			mapToolHeatValuesOnly.Put($"${ToolTemp}${gblConst.DEGREE_SYMBOL}C"$,ToolTemp)
 			
 			cboStr = $"Set ${FilamentType} (Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
 			mapBedHeatingOptions.Put(cboStr,cboStr)
@@ -337,7 +338,7 @@ Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
 		
 		Next
 		
-		mapToolHeatValuesOnly.Put("ev","Enter Value")
+		mapToolHeatValuesOnly.Put("Enter Value","ev")
 		
 	Catch
 		

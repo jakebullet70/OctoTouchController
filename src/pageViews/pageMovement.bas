@@ -136,9 +136,11 @@ End Sub
 Private Sub TypeInHeatChangeRequest
 		
 	Dim o1 As dlgNumericInput
-	o1.Initialize(mMainObj,"Tool Temperature","Enter Temperature",Me,"HeatTempChange_Tool")
+	o1.Initialize(mMainObj,"Tool Temperature","Enter Temperature",Me,"HeatTempChange_ToolEdit")
 	o1.Show
+	
 End Sub
+
 	
 Private Sub HeatChangeRequest
 	
@@ -146,20 +148,29 @@ Private Sub HeatChangeRequest
 	
 	Dim o1 As dlgListbox
 	o1.Initialize(mMainObj,"Tool Presets",Me,"HeatTempChange_Tool")
-	o1.Show(220dip,450dip,mMainObj.MasterCtrlr.mapToolHeatValuesOnly)
+	o1.Show(250dip,220dip,mMainObj.MasterCtrlr.mapToolHeatValuesOnly)
 	
 End Sub
 
-Private Sub HeatTempChange_Tool(value As String)
+
+Private Sub HeatTempChange_ToolEdit(value As String)
+	'--- callback for TypeInHeatChangeRequest
+	HeatTempChange_Tool(value,"")
+End Sub
+
+
+Private Sub HeatTempChange_Tool(value As String, tag As String)
 	
 	'--- callback for HeatChangeRequest
 	If value.Length = 0 Then Return
 	
-	If value = "" Then
-		'mapToolHeatValuesOnly.Put("ev","Enter Value")
+	If value = "ev" Then
+		'--- type in a value
 		TypeInHeatChangeRequest
 		Return
 	End If
+	
+	If value.EndsWith("off") Then value = 0 '--- tool off
 	
 	If fnc.CheckTempRange("tool", value) = False Then
 		guiHelpers.Show_toast("Invalid Temperature",1800)

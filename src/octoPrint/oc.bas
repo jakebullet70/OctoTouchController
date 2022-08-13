@@ -36,11 +36,11 @@ Sub Process_Globals
 	
 	Public OctoVersion As String = "N/A"
 	Public BedTarget As String 
-	Public BedActual As String  
+	Public BedActual As String
 	Public Tool1Target As String
-	Public Tool1Actual As String
+	Public Tool1Actual As String, Tool1ActualReal As Float
 	Public Tool2Target As String
-	Public Tool2Actual As String
+	Public Tool2Actual As String, Tool2ActualReal As Float
 	
 	Public PrinterState As String
 	Public PrinterBaud As String
@@ -415,6 +415,8 @@ Public Sub ResetTempVars
 	Tool1Actual   = "0.0" & Chr(248) & "C"
 	Tool2Target  =  "0.0" & Chr(248) & "C"
 	Tool2Actual   = "0.0" & Chr(248) & "C"
+	Tool1ActualReal = 0.0
+	Tool2ActualReal = 0.0
 	isHeating = False
 	
 End Sub

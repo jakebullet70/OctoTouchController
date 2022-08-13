@@ -143,7 +143,11 @@ End Sub
 Public Sub Update_Printer_Status
 	
 	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
-	lblStatus.Text = oc.FormatedStatus
+	If oc.isConnected Then
+		lblStatus.Text = oc.FormatedStatus
+	Else
+		lblStatus.Text = "No Connection"
+	End If
 	
 	'--- see if the current page has the proper event
 	If SubExists(oPageCurrent,"Update_Printer_Stats") Then

@@ -74,12 +74,14 @@ Public Sub Update_Printer_Temps
 End Sub
 
 
+#Region "HEATER_PRESETS"
 Private Sub btnPresetMaster_Click
 	
 	If oc.isConnected = False Then Return
-	Dim o As mnuHeatersAll
-	o.Initialize(mMainObj,mapAllHeatingOptions,btnPresetMaster)
-	o.Show
+	
+	Dim o1 As dlgListbox
+	o1.Initialize(mMainObj,"Heater Presets",Me,"TempChange_Presets")
+	o1.Show(IIf(guiHelpers.gScreenSizeAprox >= 6,280dip,280dip),440dip,mapAllHeatingOptions)
 	
 End Sub
 
@@ -102,6 +104,7 @@ End Sub
 Private Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	
 	'--- callback for btnPresetTemp_Click
+	
 	If selectedMsg.Length = 0 Then Return
 	
 	If selectedMsg = "alloff" Then
@@ -140,12 +143,29 @@ Private Sub TempChange_Presets(selectedMsg As String, tag As Object)
 			Dim getTemp As String = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
 			mMainObj.MasterCtrlr.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
 			msg = selectedMsg.Replace("Set","Setting")
-		
+			
+		Case Else
+			'--- Example, Set ABS (Tool: 240øC  / (Bed: 105øC )
+			Dim toolMSG As String  = Regex.Split("/",selectedMsg)(0)
+			Dim bedMSG As String  = Regex.Split("/",selectedMsg)(1)
+				
+			Dim startNDX As Int = toolMSG.IndexOf(": ")
+			Dim endNDX As Int = toolMSG.IndexOf(gblConst.DEGREE_SYMBOL)
+			Dim getTemp As String = toolMSG.SubString2(startNDX + 2,endNDX).Trim
+			mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
+				
+			Dim startNDX As Int = bedMSG.IndexOf(": ")
+			Dim endNDX As Int = bedMSG.IndexOf(gblConst.DEGREE_SYMBOL)
+			Dim getTemp As String = bedMSG.SubString2(startNDX + 2,endNDX).Trim
+			mMainObj.MasterCtrlr.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
+			msg = selectedMsg.Replace("Set","Setting")
+			
 	End Select
 	
 	guiHelpers.Show_toast(msg,3000)
 	
 End Sub
+#end region
 
 #region "TEMP_CHANGE_EDIT"
 Private Sub lblTempChange_Click

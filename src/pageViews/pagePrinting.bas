@@ -17,12 +17,13 @@ Sub Class_Globals
 	Private mMainObj As B4XMainPage'ignore
 
 	Private lblToolTemp, lblBedTemp As Label
-	Private mapBedHeatingOptions, mapToolHeatingOptions,mapAllHeatingOptions As Map
 	
 	Private btnPresetMaster As B4XView
 	Private btnPresetBed As Button
 	Private btnPresetTool As Button
+	
 End Sub
+
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	
@@ -48,11 +49,7 @@ End Sub
 
 Private Sub Build_GUI
 	
-	If mMainObj.MasterCtrlr.gMapOctoTempSettings.IsInitialized = False Then
-		Log("gMapOctoTempSettings IS NOT SET!")
-	Else
-		Build_PresetHeaterOption(mMainObj.MasterCtrlr.gMapOctoTempSettings)
-	End If
+
 	
 End Sub
 
@@ -81,7 +78,7 @@ Private Sub btnPresetMaster_Click
 	
 	Dim o1 As dlgListbox
 	o1.Initialize(mMainObj,"Heater Presets",Me,"TempChange_Presets")
-	o1.Show(IIf(guiHelpers.gScreenSizeAprox >= 6,280dip,280dip),440dip,mapAllHeatingOptions)
+	o1.Show(220dip,450dip,mMainObj.MasterCtrlr.mapAllHeatingOptions)
 	
 End Sub
 
@@ -96,7 +93,7 @@ Private Sub btnPresetTemp_Click
 	o1.Initialize(mMainObj,IIf(o.tag = "tool","Tool Presets","Bed Presets"),Me,"TempChange_Presets")
 	o1.Tag = o.tag
 	o1.Show(IIf(guiHelpers.gScreenSizeAprox >= 6,280dip,280dip),290dip, _
-	    	IIf(o.Tag = "tool",mapToolHeatingOptions,mapBedHeatingOptions))
+	IIf(o.Tag = "tool",mMainObj.MasterCtrlr.mapToolHeatingOptions,mMainObj.MasterCtrlr.mapBedHeatingOptions))
 	
 End Sub
 
@@ -211,55 +208,6 @@ Private Sub TempChange_Tool1(value As String)
 	
 End Sub
 #end region
-
-public Sub Build_PresetHeaterOption(mapOfOptions As Map)
-	
-	'--- clear them out
-	mapBedHeatingOptions.Initialize
-	mapToolHeatingOptions.Initialize
-	mapAllHeatingOptions.Initialize
-		
-	Dim allOff As String = "** All Off **"
-
-	mapBedHeatingOptions.Put(allOff,"alloff")
-	mapBedHeatingOptions.Put("Bed Off","bedoff")
-	
-	mapToolHeatingOptions.Put(allOff,"alloff")
-	mapToolHeatingOptions.Put("Tool Off","tooloff")
-		
-	mapAllHeatingOptions.Put(allOff,"alloff")
-	
-	Dim cboStr As String
-	Dim FilamentType As String
-	Dim tmp,ToolTemp As String
-	Dim BedTemp As String
-	
-	Try
-		For x  = 0 To mapOfOptions.Size - 1
-		
-			FilamentType = mapOfOptions.GetKeyAt(x)
-			tmp = mapOfOptions.GetValueAt(x)
-			ToolTemp = Regex.Split("!!",tmp)(0)
-			BedTemp = Regex.Split("!!",tmp)(1)
-			
-			'--- build string for CBO
-			cboStr = $"Set ${FilamentType} (Tool: ${ToolTemp}${gblConst.DEGREE_SYMBOL}C )"$
-			mapToolHeatingOptions.Put(cboStr,cboStr)
-			
-			cboStr = $"Set ${FilamentType} (Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
-			mapBedHeatingOptions.Put(cboStr,cboStr)
-			
-			cboStr = $"Set ${FilamentType} (Tool: ${ToolTemp}${gblConst.DEGREE_SYMBOL}C  / (Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
-			mapAllHeatingOptions.Put(cboStr,cboStr)
-		
-		Next
-	Catch
-		
-		logMe.LogIt(LastException,mModule)
-		
-	End Try
-	
-End Sub
 
 
 

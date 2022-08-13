@@ -16,14 +16,16 @@ Sub Class_Globals
 	Private mPnlMain As B4XView
 	Private mCallBackEvent As String 'ignore
 	Private mMainObj As B4XMainPage
-
+	
 	Private cboMovementSize As B4XComboBox
 	Private MoveJogSize As String
+	Private ExtruderLengthSize As Int = 10
 	
 	Private pnlJogMovement As B4XView
 	Private pnlGeneral As B4XView
 	
-	Private btnMOff As Button
+	'Private btnMOff As Button
+	Private btnLength As B4XView
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
@@ -73,6 +75,7 @@ End Sub
 
 Private Sub btnGeneral_Click
 	
+	If oc.isConnected = False Then Return
 	If oc.JobPrintState <> "Operational" Then
 		guiHelpers.Show_toast(oc.cPRINTER_BUSY_MSG,2000)
 		Return
@@ -80,8 +83,11 @@ Private Sub btnGeneral_Click
 	
 	Dim o As B4XView : o = Sender
 	Select Case o.Tag
-		Case "moff"
-		Case "fon"
+		Case "heat" 
+			HeatChangeRequest
+		Case "elength"
+			SetExtruderLength
+			
 		Case "foff"
 	End Select
 End Sub
@@ -123,5 +129,71 @@ End Sub
 Private Sub cboMovementSize_SelectedIndexChanged (Index As Int)
 	MoveJogSize = cboMovementSize.SelectedItem.Replace("mm","")
 End Sub
+
+
+
+#region "HEAT_CHANGE_EDIT"
+Private Sub TypeInHeatChangeRequest
+		
+	Dim o1 As dlgNumericInput
+	o1.Initialize(mMainObj,"Tool Temperature","Enter Temperature",Me,"HeatTempChange_Tool")
+	o1.Show
+End Sub
+	
+Private Sub HeatChangeRequest
+	
+	If oc.isConnected = False Then Return
+	
+	Dim o1 As dlgListbox
+	o1.Initialize(mMainObj,"Tool Presets",Me,"HeatTempChange_Tool")
+	o1.Show(220dip,450dip,mMainObj.MasterCtrlr.mapToolHeatValuesOnly)
+	
+End Sub
+
+Private Sub HeatTempChange_Tool(value As String)
+	
+	'--- callback for HeatChangeRequest
+	If value.Length = 0 Then Return
+	
+	If value = "" Then
+		'mapToolHeatValuesOnly.Put("ev","Enter Value")
+		TypeInHeatChangeRequest
+		Return
+	End If
+	
+	If fnc.CheckTempRange("tool", value) = False Then
+		guiHelpers.Show_toast("Invalid Temperature",1800)
+		Return
+	End If
+		
+	mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))
+		
+	guiHelpers.Show_toast("Tool Temperature Change",1400)
+	
+End Sub
+#end region
+
+
+
+#region "EXTRUDER_LENGTH_EDIT"
+Private Sub SetExtruderLength
+		
+	Dim o1 As dlgNumericInput
+	o1.Initialize(mMainObj,"Extruder Length","Enter Length",Me,"ExtruderLength_Set")
+	o1.Show
+	
+End Sub
+
+Private Sub ExtruderLength_Set(value As String)
+	
+	'--- callback for SetExtruderLength
+	If value.Length = 0 Then Return
+	
+	ExtruderLengthSize = value
+	btnLength.Text = ExtruderLengthSize.As(String) & "mm"
+		
+End Sub
+#end region
+
 
 

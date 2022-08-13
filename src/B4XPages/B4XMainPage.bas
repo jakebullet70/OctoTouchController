@@ -32,7 +32,8 @@ Sub Class_Globals
 	Private pnlPrinting As B4XView,   oPagePrinting As pagePrinting
 	Private pnlMovement As B4XView,   oPageMovement As pageMovement
 	
-	Public Dialog As B4XDialog
+	'--- master parent used for all templates dialogs
+	Public Dialog As B4XDialog 
 	
 End Sub
 
@@ -44,8 +45,10 @@ End Sub
 '======================================================================================
 
 Public Sub getMasterCtrlr() As MasterController
+	'--- master Octo controller / methods
 	Return oMasterController
 End Sub
+
 
 Public Sub Initialize
 	config.Load
@@ -310,7 +313,6 @@ Public Sub PrinterSetup_Closed(NewConfig As Boolean)
 	
 End Sub
 #end region
-
 
 
 

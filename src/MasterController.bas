@@ -17,7 +17,8 @@ Sub Class_Globals
 	Public parser As JsonParsorMain
 	
 	'--- populated by a REST calls, will be grabbed by their pages
-	Public gMapOctoTempSettings, gMapOctoFilesList As Map
+	Public gMapOctoFilesList As Map
+	Private mapMasterOctoTempSettings As Map
 	
 	#region "TIMER FLAGS"
 	Private mGotProfileInfoFLAG As Boolean = False
@@ -29,6 +30,9 @@ Sub Class_Globals
 	Private mGotFilesListFLAG As Boolean = False
 	Private mGotFilesListFLAG_IsBusy As Boolean = False
 	#end region
+	
+	'--- maps for popup listboxes - formated!
+	Public mapBedHeatingOptions, mapToolHeatingOptions,mapAllHeatingOptions,mapToolHeatValuesOnly As Map
 	
 End Sub
 
@@ -124,13 +128,11 @@ Private Sub GetAllOctoSettingInfo
 	If Result.Length <> 0 Then
 	
 		Dim o As JsonParserMasterPrinterSettings  : o.Initialize
-		gMapOctoTempSettings.Initialize
-		gMapOctoTempSettings = o.GetPresetHeaterSettings(Result)
+		mapMasterOctoTempSettings.Initialize
+		mapMasterOctoTempSettings = o.GetPresetHeaterSettings(Result)
 		mGotOctoSettingFLAG = True '--- will stop it from firing in the main loop
 		
-'		If oTabHome.oSubTab.oSubTabHeater.IsInitialized Then
-'			CallSubDelayed2(oTabHome.oSubTab.oSubTabHeater,"Build_PresetHeaterOption",gMapOctoTempSettings)
-'		End If
+		Build_PresetHeaterOption(mapMasterOctoTempSettings)
 	
 		mGotOctoSettingFLAG_IsBusy = False
 	Else
@@ -273,6 +275,7 @@ public Sub GetAllOctoFilesInfo
 		'If oTabHome.oSubTab.oSubTabHeater.IsInitialized Then
 		'	CallSubDelayed(oTabHome.oSubTab.oSubTabHeater,"Build_PresetHeaterOption")
 		'End If
+		
 	
 		mGotFilesListFLAG = True '--- will stop it from firing in the main loop
 		mGotFilesListFLAG_IsBusy = False '--- reset the is busy flag
@@ -287,6 +290,64 @@ End Sub
 #end region
 
 '============================================================================================
+
+
+
+Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
+	
+	'--- clear them out
+	mapBedHeatingOptions.Initialize
+	mapToolHeatingOptions.Initialize
+	mapAllHeatingOptions.Initialize
+	mapToolHeatValuesOnly.Initialize
+		
+	Dim allOff As String = "** All Off **"
+
+	mapBedHeatingOptions.Put(allOff,"alloff")
+	mapBedHeatingOptions.Put("Bed Off","bedoff")
+	
+	mapToolHeatingOptions.Put(allOff,"alloff")
+	mapToolHeatingOptions.Put("Tool Off","tooloff")
+		
+	mapAllHeatingOptions.Put(allOff,"alloff")
+	
+	Dim cboStr As String
+	Dim FilamentType As String
+	Dim tmp,ToolTemp As String
+	Dim BedTemp As String
+	
+	Try
+		For x  = 0 To mapOfOptions.Size - 1
+		
+			FilamentType = mapOfOptions.GetKeyAt(x)
+			tmp = mapOfOptions.GetValueAt(x)
+			ToolTemp = Regex.Split("!!",tmp)(0)
+			BedTemp = Regex.Split("!!",tmp)(1)
+			
+			'--- build string for CBO
+			cboStr = $"Set ${FilamentType} (Tool: ${ToolTemp}${gblConst.DEGREE_SYMBOL}C )"$
+			mapToolHeatingOptions.Put(cboStr,cboStr)
+			mapToolHeatValuesOnly.Put(ToolTemp,$"${ToolTemp}${gblConst.DEGREE_SYMBOL}C"$)
+			
+			cboStr = $"Set ${FilamentType} (Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
+			mapBedHeatingOptions.Put(cboStr,cboStr)
+			
+			cboStr = $"Set ${FilamentType} (Tool: ${ToolTemp}${gblConst.DEGREE_SYMBOL}C  / (Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
+			mapAllHeatingOptions.Put(cboStr,cboStr)
+		
+		Next
+		
+		mapToolHeatValuesOnly.Put("ev","Enter Value")
+		
+	Catch
+		
+		logMe.LogIt(LastException,mModule)
+		
+	End Try
+	
+End Sub
+
+
 
 #Region "PUBLIC METHODS"
 

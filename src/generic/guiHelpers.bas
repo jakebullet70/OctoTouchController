@@ -171,36 +171,37 @@ End Sub
 
 Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
 
-	'--- resize buttons
-	Dim btnCancel As B4XView = dlg.GetButton(xui.DialogResponse_Cancel)
-	btnCancel.Width = btnCancel.Width + 20dip
-	btnCancel.Left = btnCancel.Left - 28dip
-	btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,5dip)
+	Try
+		'--- resize buttons, will error if btn does not exist
+		'--- but we do not care
+		Dim btnCancel As B4XView = dlg.GetButton(xui.DialogResponse_Cancel)
+		btnCancel.Width = btnCancel.Width + 20dip
+		btnCancel.Left = btnCancel.Left - 28dip
+		btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,5dip)
 
-	Dim btnOk As B4XView = dlg.GetButton(xui.DialogResponse_Positive)
-	btnOk.Width = btnOk.Width + 20dip
-	btnOk.Left = btnOk.Left - 48dip
-	btnOk.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,5dip)
+		Dim btnOk As B4XView = dlg.GetButton(xui.DialogResponse_Positive)
+		btnOk.Width = btnOk.Width + 20dip
+		btnOk.Left = btnOk.Left - 48dip
+		btnOk.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,5dip)
+		
+	Catch
+		'Log(LastException)
+	End Try 'ignore
 	
 End Sub
 
-Public Sub ThemeInputDialogForm(dlg As B4XDialog,intmp As B4XInputTemplate, et As EditText)
+
+
+Public Sub ThemeDialogForm(dlg As B4XDialog,title As String)
 	
-	et.TextSize = 18
-		
-	et.TextColor = clrTheme.txtNormal
-	et.Gravity = Gravity.CENTER
-		
-	intmp.mBase.Color = clrTheme.BackgroundMenu
-				
+	dlg.Title = title
+	dlg.TitleBarFont = xui.CreateDefaultFont(22)
 	dlg.ButtonsTextColor = clrTheme.txtNormal
 	dlg.BorderColor = clrTheme.txtNormal
 	dlg.BackgroundColor = clrTheme.BackgroundMenu
 	dlg.ButtonsFont = xui.CreateDefaultFont(22)
 	dlg.ButtonsHeight = 60dip
 	
-	intmp.lblTitle.Font = xui.CreateDefaultFont(22)
-
 End Sub
 
 

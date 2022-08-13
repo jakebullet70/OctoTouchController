@@ -105,56 +105,48 @@ Private Sub btnPresetTemp_Click
 End Sub
 
 
+#region "TEMP_CHANGE_EDIT"
 Private Sub lblTempChange_Click
 	
+	If oc.isConnected = False Then Return
 	Dim o As Label : o = Sender
-	Dim Dialog As B4XDialog, inputTemplate As B4XInputTemplate
 	
-	'--- init
-	Dialog.Initialize(mMainObj.Root)
-	inputTemplate.Initialize
-	Dim et As EditText = inputTemplate.TextField1
-	et.InputType = et.INPUT_TYPE_NUMBERS
-	inputTemplate.ConfigureForNumbers(False, False) 'AllowDecimals, AllowNegative
+	Dim o1 As dlgNumericInput
+	o1.Initialize(mMainObj, _
+		IIf(o.Tag = "bed","Bed Temperature","Tool Temperature"),"Enter Temperature",Me, _
+		IIf(o.Tag = "bed","TempChange_Bed","TempChange_Tool1"))
+		
+	o1.Show
 	
-	If o.Tag = "bed" Then
-		inputTemplate.lblTitle.Text = "Enter Bed Temperture"
-	Else '--- tool
-		inputTemplate.lblTitle.Text = "Enter Tool Temperture"
-	End If
-
-	'--- make it pretty
-	guiHelpers.ThemeInputDialogForm(Dialog,inputTemplate,et)
-	Dim rs As ResumableSub = Dialog.ShowTemplate(inputTemplate, "Set", "", "Cancel")
-	guiHelpers.ThemeInputDialogBtnsResize(Dialog)
-	
-	'--- display dialog
-	Wait For(rs)complete(intResult As Int)
-	If intResult = xui.DialogResponse_Positive Then
-		
-		Dim msg As String, target As String
-		target = inputTemplate.Text
-		
-		If fnc.CheckTempRange(o.tag, target) = False Then
-			guiHelpers.Show_toast("Invalid Temperture",1800)
-			Return	
-		End If
-		
-		msg = IIf(o.Tag = "bed","Bed ","Tool ")
-		
-		If o.Tag = "bed" Then
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",target))
-		Else '--- tool
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",target).Replace("!VAL1!",0))
-		End If
-		
-		msg = msg & "Temp Change"
-		guiHelpers.Show_toast(msg,1400)
-		
-	End If
-
 End Sub
 
+Private Sub TempChange_Bed(value As String)
+	
+	If value = "" Then Return
+	If fnc.CheckTempRange("bed", value) = False Then
+		guiHelpers.Show_toast("Invalid Temperature",1800)
+		Return
+	End If
+		
+	mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",value))
+	guiHelpers.Show_toast("Bed Temperature Change",1400)
+	
+End Sub
+
+Private Sub TempChange_Tool1(value As String)
+	
+	If value = "" Then Return
+	If fnc.CheckTempRange("tool", value) = False Then
+		guiHelpers.Show_toast("Invalid Temperature",1800)
+		Return
+	End If
+		
+	mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))
+		
+	guiHelpers.Show_toast("Tool Temperature Change",1400)
+	
+End Sub
+#end region
 
 public Sub Set_HeatingCBOoptions(mapOfOptions As Map)
 	

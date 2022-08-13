@@ -17,8 +17,7 @@ Sub Class_Globals
 	Private pageSetup As B4XSetupPage
 	
 	'--- splash screen
-	Private ivSpash As B4XView
-	Private pnlSplash As Panel
+	Private ivSpash As B4XView, pnlSplash As Panel
 	
 	'--- master base panel
 	Private pnlMaster As B4XView 
@@ -33,6 +32,7 @@ Sub Class_Globals
 	Private pnlPrinting As B4XView,   oPagePrinting As pagePrinting
 	Private pnlMovement As B4XView,   oPageMovement As pageMovement
 	
+	Public Dialog As B4XDialog
 	
 End Sub
 

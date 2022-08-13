@@ -83,12 +83,12 @@ Private Sub btnGeneral_Click
 	
 	Dim o As B4XView : o = Sender
 	Select Case o.Tag
-		Case "heat" 
-			HeatChangeRequest
-		Case "elength"
-			SetExtruderLength
-			
-		Case "foff"
+		Case "heat" 	: HeatChangeRequest
+		Case "elength" 	: SetExtruderLength
+		Case "ext"		: ExtrudeRetract(True)
+		Case "ret"		: ExtrudeRetract(False)
+		Case "fmnu"		: FunctionMenu
+		Case "moff"		: MotorsOff
 	End Select
 End Sub
 
@@ -125,12 +125,9 @@ Private Sub btnXYZ_Click
 
 End Sub
 
-
 Private Sub cboMovementSize_SelectedIndexChanged (Index As Int)
 	MoveJogSize = cboMovementSize.SelectedItem.Replace("mm","")
 End Sub
-
-
 
 #region "HEAT_CHANGE_EDIT"
 Private Sub TypeInHeatChangeRequest
@@ -143,8 +140,6 @@ End Sub
 
 	
 Private Sub HeatChangeRequest
-	
-	If oc.isConnected = False Then Return
 	
 	Dim o1 As dlgListbox
 	o1.Initialize(mMainObj,"Tool Presets",Me,"HeatTempChange_Tool")
@@ -184,8 +179,6 @@ Private Sub HeatTempChange_Tool(value As String, tag As String)
 End Sub
 #end region
 
-
-
 #region "EXTRUDER_LENGTH_EDIT"
 Private Sub SetExtruderLength
 		
@@ -205,6 +198,45 @@ Private Sub ExtruderLength_Set(value As String)
 		
 End Sub
 #end region
+
+Private Sub ExtrudeRetract(Extrude As Boolean)
+	
+	If oc.Tool1ActualReal < 150 Then
+		guiHelpers.Show_toast("Tool is not hot enough",1600)
+		Return
+	End If
+	mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_TOOL_EXTRUDE_RETRACT.Replace("!LEN!", IIf(Extrude,"","-") & ExtruderLengthSize))
+	guiHelpers.Show_toast(IIf(Extrude,"Extrusion","Retraction") & ": " & ExtruderLengthSize & "mm",1200)
+	
+End Sub
+
+#Region "FUNCTION_MENU"
+private Sub FunctionMenu
+	
+	Dim mapOptions As Map = CreateMap("Load Filament":"lf","UnLoad Filament":"uf")
+	
+	Dim o1 As dlgListbox
+	o1.Initialize(mMainObj,"Function Menu",Me,"FunctionMenu_Event")
+	o1.Show(250dip,220dip,mapOptions)
+	
+End Sub
+
+Private Sub FunctionMenu_Event(value As String, tag As String)
+	
+	'--- callback for FunctionMenu
+	If value.Length = 0 Then Return
+	guiHelpers.Show_toast("TODO...",2000)
+	
+End Sub
+#end region
+
+
+Private Sub MotorsOff
+	
+End Sub
+
+
+
 
 
 

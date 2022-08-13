@@ -22,11 +22,11 @@ Sub Class_Globals
 	Private btnPresetBed As Button
 	Private btnPresetTool As Button
 	
-	
 	Private scrlblFileName As ScrollingLabel
 	Private lblPrintStats As B4XView, statTxt As StringBuilder
 	Private CircularProgressBar1 As CircularProgressBar
 	
+	Private btnCancel, btnPause, btnPrint As B4XView
 End Sub
 
 
@@ -46,7 +46,12 @@ End Sub
 public Sub Set_focus()
 	
 	mPnlMain.Visible = True
-	scrlblFileName.Text = " File: " & fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
+	If oc.isFileLoaded Then 
+		scrlblFileName.Text = " File: " & fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
+	Else
+		scrlblFileName.Text = " No file loaded"
+	End If
+	
 	Update_Printer_Stats
 	Update_Printer_Temps
 	Update_Printer_Btns
@@ -57,20 +62,80 @@ public Sub Lost_focus()
 	mPnlMain.Visible = False
 End Sub
 
-
 Private Sub Build_GUI
 	
 	CircularProgressBar1.ColorEmpty = clrTheme.txtNormal
 	CircularProgressBar1.ColorFull = clrTheme.BackgroundMenu
 	CircularProgressBar1.Value = 0
-	CircularProgressBar1.MainLabel.Font = xui.CreateDefaultFont(30)
 	CircularProgressBar1.ValueUnit = "%"
+	
+	If guiHelpers.gScreenSizeAprox > 9 Then
+		CircularProgressBar1.MainLabel.Font = xui.CreateDefaultFont(62)
+	Else
+		CircularProgressBar1.MainLabel.Font = xui.CreateDefaultFont(42)
+	End If
+	
 	
 End Sub
 
 
 public Sub Update_Printer_Btns
 	'--- sets enable, disable
+	
+	'--- rename printing buttons as needed
+	If oc.isPaused2 = True Then
+		btnPrint.Text = "Resume"
+		btnPrint.Tag = "resume"
+	Else
+		btnPrint.Text = "Print"
+		btnPrint.Tag = "print"
+	End If
+	
+	
+	'--- is a file loaded and ready?
+	If oc.isFileLoaded = False Then
+		
+		For Each btn As B4XView In Array As B4XView(btnPrint,btnPause,btnCancel)
+			btn.Enabled = False
+		Next
+		
+		guiHelpers.SetEnableDisableColor(Array As B4XView(btnPrint,btnPause,btnCancel))
+		Return
+	Else
+		
+		'If SubExists(B4XPages.MainPage.oPageCurrent,"PrintStarting_UpdateThumbnail") Then
+		'	CallSub(B4XPages.MainPage.oPageCurrent,"PrintStarting_UpdateThumbnail")
+		'End If
+			
+	End If
+	
+	'--- enable / disable printing buttons depending on printing status
+	If oc.isPrinting = True Then
+		
+		'--- we are printing or heating
+		btnCancel.Enabled = True
+		btnPause.Enabled = True
+		btnPrint.Enabled = False
+	
+	else if oc.isPrinting = False And oc.isPaused2 = True Then
+		
+		'--- job is paused
+		btnCancel.Enabled = True
+		btnPause.Enabled = False
+		btnPrint.Enabled = True
+				
+	Else
+		
+		'--- not printing anything
+		btnCancel.Enabled = False
+		btnPause.Enabled = False
+		btnPrint.Enabled = oc.isFileLoaded
+		
+	End If
+	
+	'--- change colors depending on what is enabled
+	guiHelpers.SetEnableDisableColor(Array As B4XView(btnPrint,btnPause,btnCancel))
+	
 	
 End Sub
 
@@ -91,13 +156,11 @@ Public Sub Update_Printer_Stats
 	
 End Sub
 
-
 Public Sub Update_Printer_Temps
 	'--- temps
 	lblToolTemp.Text = IIf(oc.tool1Target = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.tool1Target)
 	lblBedTemp.Text = IIf(oc.BedTarget = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.BedTarget)
 End Sub
-
 
 #Region "HEATER_PRESETS"
 Private Sub btnPresetMaster_Click
@@ -238,4 +301,62 @@ End Sub
 #end region
 
 
+
+
+
+Private Sub btnAction_Click
+	
+	If oc.isConnected = False Then Return
+	
+	Dim o As B4XView : o = Sender
+	
+	'---- turn off btns, they will get re-enabled later
+	For Each btn1 As B4XView In Array As B4XView(btnPrint,btnPause,btnCancel)
+		btn1.Enabled = False
+	Next
+	
+	guiHelpers.SetEnableDisableColor(Array As B4XView(btnPrint,btnPause,btnCancel))
+	
+	'--- what does the user want?
+	Select Case o.tag
+		Case "print"
+			If oc.isFileLoaded = False Then
+				
+				guiHelpers.Show_toast("No file loaded",2000)
+				
+			Else
+				
+				CallSub(B4XPages.MainPage.MasterCtrlr,"tmrMain_Tick")
+				Sleep(500) '--- do we need this?
+				
+				If oc.isCanceling = True Then
+					guiHelpers.Show_toast("Printer Is Canceling, Please Wait...",2000)
+					Return
+				End If
+				
+				guiHelpers.Show_toast("Starting Print...",2000)
+				mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_PRINT)
+
+			End If
+			
+		Case "cancel"
+			Dim sf As Object = xui.Msgbox2Async("Do you want to cancel this print?", "Question", "Yes - Cancel The Print", "No", "", Null)
+			Wait For (sf) Msgbox_Result (Result As Int)
+
+			If Result = xui.DialogResponse_Positive Then
+				guiHelpers.Show_toast("Canceling...",2000)
+				mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_CANCEL)
+			End If
+			
+		Case "pause"
+			guiHelpers.Show_toast("Pausing...",2000)
+			mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_PAUSE)
+			
+		Case "resume"
+			guiHelpers.Show_toast("Resuming...",2000)
+			mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_RESUME)
+			
+	End Select
+	
+End Sub
 

@@ -14,7 +14,6 @@ Sub Process_Globals
 	Private Const mModule As String = "clrTheme" 'ignore
 	
 	Public PopupMenuBG As Int
-	Public txtBright As Int
 	Public txtNormal As Int
 	Public Background,BackgroundHeader,BackgroundMenu As Int
 	
@@ -45,9 +44,8 @@ Public Sub Init(theme As String)
 	Go = 0xFF81F266
 	NoGo = 0xFFE14349
 
-	txtBright = xui.Color_Cyan
 	txtNormal = xui.Color_White
-	btnDisableText = 0xFFADD8E6
+	btnDisableText = xui.Color_LightGray
 	
 	InitTheme(theme)
 	

@@ -80,20 +80,17 @@ public Sub Update_Printer_Btns
 	'--- sets enable, disable
 	
 	Dim enableDisable As Boolean
-	Dim clr As Int
+
 	If oc.isPrinting Or oc.IsPaused2 Or oc.isHeating  Or (clvLastIndexClicked = cNO_SELECTION) Then
 		enableDisable = False
-		clr = clrTheme.btnDisableText
 	Else
 		enableDisable = True
-		clr = clrTheme.txtNormal
 	End If
-	
 	
 	For Each btn As B4XView In Array As B4XView(btnLoad,btnLoadAndPrint)
 		btn.Enabled = enableDisable
-		btn.TextColor = clr
 	Next
+	guiHelpers.SetEnableDisableColor(Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete))
 
 End Sub
 
@@ -153,6 +150,8 @@ Private Sub btnAction_Click
 			For Each btn As B4XView In Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete)
 				btn.Enabled = False
 			Next
+			guiHelpers.SetEnableDisableColor(Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete))
+			CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_PRINTING)
 			
 	End Select
 		

@@ -50,8 +50,8 @@ End Sub
 Public Sub Initialize
 	config.Load
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
-	clrTheme.Init("dark")
-	logMe.Clean_OldLogs
+	clrTheme.Init("red")
+	'logMe.Clean_OldLogs
 End Sub
 
 #Region "PAGE EVENTS"

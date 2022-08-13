@@ -22,6 +22,11 @@ Sub Class_Globals
 	Private btnPresetBed As Button
 	Private btnPresetTool As Button
 	
+	
+	Private scrlblFileName As ScrollingLabel
+	Private lblPrintStats As B4XView, statTxt As StringBuilder
+	Private CircularProgressBar1 As CircularProgressBar
+	
 End Sub
 
 
@@ -39,7 +44,13 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 End Sub
 
 public Sub Set_focus()
+	
 	mPnlMain.Visible = True
+	scrlblFileName.Text = " File: " & fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
+	Update_Printer_Stats
+	Update_Printer_Temps
+	Update_Printer_Btns
+	
 End Sub
 
 public Sub Lost_focus()
@@ -49,7 +60,11 @@ End Sub
 
 Private Sub Build_GUI
 	
-
+	CircularProgressBar1.ColorEmpty = clrTheme.txtNormal
+	CircularProgressBar1.ColorFull = clrTheme.BackgroundMenu
+	CircularProgressBar1.Value = 0
+	CircularProgressBar1.MainLabel.Font = xui.CreateDefaultFont(30)
+	CircularProgressBar1.ValueUnit = "%"
 	
 End Sub
 
@@ -60,9 +75,22 @@ public Sub Update_Printer_Btns
 End Sub
 
 Public Sub Update_Printer_Stats
+	
 	'--- update printer job
+	If IsNumber(oc.JobCompletion) Then
+		CircularProgressBar1.Value = oc.JobCompletion
+	Else
+		CircularProgressBar1.Reset
+	End If
+	
+	statTxt.Initialize
+	statTxt.Append($"File Size:${fileHelpers.BytesToReadableString(oc.JobFileSize)}"$).Append(CRLF)
+	statTxt.Append($"Job TTL Time:${fnc.ConvertSecondsToString(oc.JobPrintTime)}"$).Append(CRLF)
+	statTxt.Append($"Job Time Left:${fnc.ConvertSecondsToString(oc.JobPrintTimeLeft)}"$)
+	lblPrintStats.Text = statTxt.ToString
 	
 End Sub
+
 
 Public Sub Update_Printer_Temps
 	'--- temps

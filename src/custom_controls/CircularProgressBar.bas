@@ -4,8 +4,18 @@ ModulesStructureVersion=1
 Type=Class
 Version=7.3
 @EndOfDesignText@
-'Custom View class
-'version: 2.00
+#Region VERSIONS 
+'	2.1.1		08/13/2002 - sadLogic, Kherson Ukraine
+'				Added Color Full / Empty properties, code cleanup
+'				Added getMainLabel to allow changing of text property
+'	2.1.0		10/22/2017 - DV
+'				fixed radius, label position and dimension, Added visible property
+'				Added ValueUnit property to set a text after the value (i.e. %, ms)		
+'				Added a reset method to immediately clear the circular progressbar
+'	2.0.0		06/17/2017
+'				Original Version: 2.00 by Erel
+#End Region
+
 #DesignerProperty: Key: ColorFull, DisplayName: Color Full, FieldType: Color, DefaultValue: 0xFF06F96B, Description:
 #DesignerProperty: Key: ColorEmpty, DisplayName: Color Empty, FieldType: Color, DefaultValue: 0xFF868686, Description:
 #DesignerProperty: Key: StrokeWidth, DisplayName: Stroke Width, FieldType: Int, DefaultValue: 10, Description:
@@ -21,10 +31,45 @@ Sub Class_Globals
 	Private stroke As Float
 	Private clrFull, clrEmpty As Int
 	Private mBase As B4XView
-	Private currentValue As Float
+	Private currentValue As Float = 0
 	Private DurationFromZeroTo100 As Int
-	
+	Private mUnit As String=""
 End Sub
+
+#Region "PROPERTIES"
+public Sub setVisible(Visible As Boolean)
+	mBase.Visible=Visible
+End Sub
+public Sub getVisible As Boolean
+	Return mBase.Visible
+End Sub
+public Sub setValueUnit (Unit As String)
+	mUnit = Unit 	'--- Set the value measure unit as string (use short names like %, mV, A)
+	DrawValue(currentValue)
+End Sub
+Public Sub getMainLabel() As B4XView
+	Return mLbl
+End Sub
+Public Sub setColorFull(clr As Int)
+	clrFull = clr
+End Sub
+Public Sub getColorFull() As Int
+	Return clrFull
+End Sub
+Public Sub setColorEmpty(clr As Int)
+	clrEmpty = clr
+End Sub
+Public Sub getColorEmpty() As Int
+	Return clrEmpty
+End Sub
+Public Sub setValue(NewValue As Float)
+	AnimateValueTo(NewValue)
+End Sub
+Public Sub getValue As Float
+	Return currentValue
+End Sub
+#end region
+
 
 Public Sub Initialize (Callback As Object, EventName As String)
 	mEventName = EventName
@@ -41,10 +86,15 @@ Public Sub DesignerCreateView (Base As Object, Lbl As Label, Props As Map)
 	mLbl = Lbl
 	cx = mBase.Width / 2
 	cy = mBase.Height / 2
-	radius = cx - 10dip
+	
+	'--- 2017/10/22 radius is based on stroke width
+	radius = cx-stroke / 2
 	cvs.Initialize(mBase)
 	mLbl.SetTextAlignment("CENTER", "CENTER")
-	mBase.AddView(mLbl, 0, cy - 20dip, mBase.Width, 40dip)
+	
+	'--- 2017/10/22 center text
+	mBase.AddView(mLbl, stroke, stroke, mBase.Width-2*stroke,mBase.Height-2*stroke)
+	
 	cvs.Initialize(mBase)
 	DrawValue(currentValue)
 End Sub
@@ -59,12 +109,11 @@ Private Sub Base_Resize (Width As Double, Height As Double)
 	DrawValue(currentValue)
 End Sub
 
-Public Sub setValue(NewValue As Float)
-	AnimateValueTo(NewValue)
-End Sub
 
-Public Sub getValue As Float
-	Return currentValue
+public Sub Reset
+	'--- reset the circular progressbar
+	currentValue = 0
+	DrawValue(currentValue)
 End Sub
 
 Private Sub AnimateValueTo(NewValue As Float)
@@ -93,10 +142,12 @@ Private Sub ValueFromTimeEaseInOut(Time As Float, Start As Float, ChangeInValue 
 	End If
 End Sub
 
+
 Private Sub DrawValue(Value As Float)
+		
 	cvs.ClearRect(cvs.TargetRect)
 	cvs.DrawCircle(cx, cy, radius, clrEmpty, False, stroke)
-	mLbl.Text = $"$1.0{Value}"$
+	mLbl.Text = $"$1.0{Value}"$ & mUnit
 	Dim startAngle = -90, sweepAngle = Value / 100 * 360 As Float
 
 	If Value < 100 Then
@@ -109,6 +160,7 @@ Private Sub DrawValue(Value As Float)
 		cvs.DrawCircle(cx, cy, radius - 0.5dip, clrFull, False, stroke + 1dip)
 	End If
 	cvs.Invalidate
+	
 End Sub
 
 

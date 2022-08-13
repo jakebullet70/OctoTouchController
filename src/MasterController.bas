@@ -292,7 +292,6 @@ End Sub
 '============================================================================================
 
 
-
 Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
 	
 	'--- clear them out
@@ -347,7 +346,6 @@ Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
 	End Try
 	
 End Sub
-
 
 
 #Region "PUBLIC METHODS"

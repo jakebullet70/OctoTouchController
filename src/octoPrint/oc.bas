@@ -72,17 +72,19 @@ Sub Process_Globals
 	Public Const cAPI_KEY_REQUEST As String = $"/plugin/appkeys/request!!{"app": "!APP!"}"$ '--- POST
 	Public Const cAPI_KEY_PROBE_WAIT As String = "/plugin/appkeys/request/!APP_TOKEN!" '--- GET
 		
-	
+	'--- has a split char for the API and the JSON payload, char is '!!'
+	Private const cPOST_GCODE As String = "/api/printer/command"
+	Public const cPOST_GCODE_COMMAND As String = $"${cPOST_GCODE}!!{"command": "!CMD!"}"$
+	Public const cPOST_GCODE_COMMANDS As String = $"${cPOST_GCODE}!!{"commands": ["!CMDS!"]}"$
+	'---                                                      {"commands": ["M18","M106 S0"]}
 	
 	Public Const cFILES As String = "/api/files"
 	Public Const cFILES_ALL As String = "/api/files?recursive=true" '----  NOT WORKING ------------   PERMISSION ERROR  
-	'Public Const cFILES_LOCAL As String = ""
 	
-	Public const cPOST_FILES As String = "/api/files/!LOC!/!PATH!" '--- !LOC! = local or sdcard
+	Private const cPOST_FILES As String = "/api/files/!LOC!/!PATH!" '--- !LOC! = local or sdcard
 	Public const cPOST_FILES_PRINT As String = $"${cPOST_FILES}!!{"command": "select","print": true}"$
 	Public const cPOST_FILES_SELECT As String = $"${cPOST_FILES}!!{"command": "select","print": false}"$
 	Public const cDELETE_FILES_DELETE As String = $"${cPOST_FILES}"$
-	
 	
 	Public const cSETTINGS As String = "/api/settings"
 	

@@ -232,7 +232,8 @@ End Sub
 
 
 Private Sub MotorsOff
-	
+	Private const DISABLE_ALL_STEPPERS As String = "M18"
+	mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",DISABLE_ALL_STEPPERS))
 End Sub
 
 

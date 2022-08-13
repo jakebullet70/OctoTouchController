@@ -49,7 +49,7 @@ End Sub
 Private Sub Build_GUI
 	
 	If mMainObj.MasterCtrlr.gMapOctoTempSettings.IsInitialized Then
-		Set_HeatingCBOoptions(mMainObj.MasterCtrlr.gMapOctoTempSettings)
+		Build_HeaterOption(mMainObj.MasterCtrlr.gMapOctoTempSettings)
 		Log("gMapOctoTempSettings IS NOT SET!")
 	End If
 	
@@ -122,6 +122,7 @@ End Sub
 
 Private Sub TempChange_Bed(value As String)
 	
+	'--- callback for lblTempChange_Click
 	If value = "" Then Return
 	If fnc.CheckTempRange("bed", value) = False Then
 		guiHelpers.Show_toast("Invalid Temperature",1800)
@@ -135,6 +136,7 @@ End Sub
 
 Private Sub TempChange_Tool1(value As String)
 	
+	'--- callback for lblTempChange_Click
 	If value = "" Then Return
 	If fnc.CheckTempRange("tool", value) = False Then
 		guiHelpers.Show_toast("Invalid Temperature",1800)
@@ -148,7 +150,7 @@ Private Sub TempChange_Tool1(value As String)
 End Sub
 #end region
 
-public Sub Set_HeatingCBOoptions(mapOfOptions As Map)
+public Sub Build_HeaterOption(mapOfOptions As Map)
 	
 	'--- clear them out
 	mapBedHeatingOptions.Initialize

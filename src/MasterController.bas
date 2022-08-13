@@ -129,7 +129,7 @@ Private Sub GetAllOctoSettingInfo
 		mGotOctoSettingFLAG = True '--- will stop it from firing in the main loop
 		
 '		If oTabHome.oSubTab.oSubTabHeater.IsInitialized Then
-'			CallSubDelayed2(oTabHome.oSubTab.oSubTabHeater,"Set_HeatingCBOoptions",gMapOctoTempSettings)
+'			CallSubDelayed2(oTabHome.oSubTab.oSubTabHeater,"Build_HeaterOption",gMapOctoTempSettings)
 '		End If
 	
 		mGotOctoSettingFLAG_IsBusy = False
@@ -271,7 +271,7 @@ public Sub GetAllOctoFilesInfo
 		
 		'--- populate the listview - this will hapen when the File TAB gets focus
 		'If oTabHome.oSubTab.oSubTabHeater.IsInitialized Then
-		'	CallSubDelayed(oTabHome.oSubTab.oSubTabHeater,"Set_HeatingCBOoptions")
+		'	CallSubDelayed(oTabHome.oSubTab.oSubTabHeater,"Build_HeaterOption")
 		'End If
 	
 		mGotFilesListFLAG = True '--- will stop it from firing in the main loop

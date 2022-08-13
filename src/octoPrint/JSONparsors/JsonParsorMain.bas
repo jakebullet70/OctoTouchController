@@ -60,12 +60,14 @@ public Sub TempStatus(s As String)
 		
 		mTool1 = mTemp.Get("tool0").As(Map)
 		TargetToolCheck = mTool1.Get("target")
+		oc.Tool1ActualReal = mTool1.Get("actual")
 		oc.Tool1Actual = mTool1.Get("actual") & gblConst.DEGREE_SYMBOL & "C"
 		oc.Tool1Target = TargetToolCheck.As(String) & gblConst.DEGREE_SYMBOL & "C"
 			
 		'---  is there a tool 2
 		mTool2 = mTemp.Get("tool1").As(Map)
 		If mTool2.IsInitialized = True Then
+			oc.Tool2ActualReal = mTool2.Get("actual")
 			oc.Tool2Actual = mTool2.Get("actual") & gblConst.DEGREE_SYMBOL & "C"
 			oc.Tool2Target = mTool2.Get("target") & gblConst.DEGREE_SYMBOL & "C"
 		End If

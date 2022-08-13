@@ -48,9 +48,10 @@ End Sub
 
 Private Sub Build_GUI
 	
-	If mMainObj.MasterCtrlr.gMapOctoTempSettings.IsInitialized Then
-		Build_HeaterOption(mMainObj.MasterCtrlr.gMapOctoTempSettings)
+	If mMainObj.MasterCtrlr.gMapOctoTempSettings.IsInitialized = False Then
 		Log("gMapOctoTempSettings IS NOT SET!")
+	Else
+		Build_PresetHeaterOption(mMainObj.MasterCtrlr.gMapOctoTempSettings)
 	End If
 	
 End Sub
@@ -85,25 +86,66 @@ End Sub
 
 
 Private Sub btnPresetTemp_Click
+	
+	If oc.isConnected = False Then Return
+	
 	Dim o As Button : o = Sender
-	If o.Tag = "bed" Then
-
-		If oc.isConnected = False Then Return
-		Dim o1 As mnuHeaterBed
-		o1.Initialize(mMainObj,mapBedHeatingOptions,btnPresetBed)
-		o1.Show
-		
-	Else '--- tool
-
-		If oc.isConnected = False Then Return
-		Dim o2 As mnuHeaterTool
-		o2.Initialize(mMainObj,mapToolHeatingOptions,btnPresetTool)
-		o2.Show
-		
-	End If
+	Dim o1 As dlgListbox
+	o1.Initialize(mMainObj,IIf(o.tag = "tool","Tool Presets","Bed Presets"),Me,"TempChange_Presets")
+	o1.Tag = o.tag
+	o1.Show(IIf(guiHelpers.gScreenSizeAprox >= 6,280dip,280dip),290dip, _
+	    	IIf(o.Tag = "tool",mapToolHeatingOptions,mapBedHeatingOptions))
 	
 End Sub
 
+
+Private Sub TempChange_Presets(selectedMsg As String, tag As Object)
+	
+	'--- callback for btnPresetTemp_Click
+	If selectedMsg.Length = 0 Then Return
+	
+	If selectedMsg = "alloff" Then
+		mMainObj.MasterCtrlr.AllHeaters_Off
+		guiHelpers.Show_toast("Tool / Bed Off",1200)
+		Return
+	End If
+	
+	Dim tagme As String = tag.As(String)
+	Dim msg As String
+	
+	Log(selectedMsg)
+	Select Case True
+		
+		Case selectedMsg.EndsWith("off")
+			If tagme = "bed" Then
+				mMainObj.MasterCtrlr.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",0))
+				msg = "Bed Off"
+			Else
+				mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
+				msg = "Tool Off"	
+			End If
+			
+		Case selectedMsg.Contains("Tool") And Not (selectedMsg.Contains("Bed"))
+			'--- Example, Set PLA (Tool: 60øC )
+			Dim startNDX As Int = selectedMsg.IndexOf(": ")
+			Dim endNDX As Int = selectedMsg.IndexOf(gblConst.DEGREE_SYMBOL)
+			Dim getTemp As String = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
+			mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
+			msg = selectedMsg.Replace("Set","Setting")
+			
+		Case selectedMsg.Contains("Bed") And Not (selectedMsg.Contains("Tool"))
+			'--- Example, PLA (Bed: 60øC )
+			Dim startNDX As Int = selectedMsg.IndexOf(": ")
+			Dim endNDX As Int = selectedMsg.IndexOf(gblConst.DEGREE_SYMBOL)
+			Dim getTemp As String = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
+			mMainObj.MasterCtrlr.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
+			msg = selectedMsg.Replace("Set","Setting")
+		
+	End Select
+	
+	guiHelpers.Show_toast(msg,3000)
+	
+End Sub
 
 #region "TEMP_CHANGE_EDIT"
 Private Sub lblTempChange_Click
@@ -137,7 +179,7 @@ End Sub
 Private Sub TempChange_Tool1(value As String)
 	
 	'--- callback for lblTempChange_Click
-	If value = "" Then Return
+	If value.Length = 0 Then Return
 	If fnc.CheckTempRange("tool", value) = False Then
 		guiHelpers.Show_toast("Invalid Temperature",1800)
 		Return
@@ -150,7 +192,7 @@ Private Sub TempChange_Tool1(value As String)
 End Sub
 #end region
 
-public Sub Build_HeaterOption(mapOfOptions As Map)
+public Sub Build_PresetHeaterOption(mapOfOptions As Map)
 	
 	'--- clear them out
 	mapBedHeatingOptions.Initialize

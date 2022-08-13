@@ -196,6 +196,7 @@ Public Sub ThemeDialogForm(dlg As B4XDialog,title As String)
 	
 	dlg.Title = title
 	dlg.TitleBarFont = xui.CreateDefaultFont(22)
+	dlg.TitleBarColor = clrTheme.BackgroundHeader
 	dlg.ButtonsTextColor = clrTheme.txtNormal
 	dlg.BorderColor = clrTheme.txtNormal
 	dlg.BackgroundColor = clrTheme.BackgroundMenu

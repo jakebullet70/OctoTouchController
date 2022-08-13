@@ -21,36 +21,49 @@ Sub Process_Globals
 	
 End Sub
 
-public Sub SetShadow(btn As View,OnOrOff As Boolean)
-	'Old code, use to work in b4a 6.x
-	Try
-		Dim pnl As Panel = btn
-		Dim lbl As Label, v As B4XView
-		For i = 0 To pnl.NumberOfViews - 1
-			v = pnl.GetView(i)
-			If v Is Label Then
-				lbl = v
-				Dim x As Int
-				If OnOrOff Then x = 3 Else x = 0
-				SetTextShadow(lbl,x,3,3,Colors.DarkGray)
-			End If
-		Next
-		
-	Catch
-		Log(LastException)
-	End Try
-	
+Public Sub SetEnableDisableColor(btnArr() As B4XView)
+	For Each btn As B4XView In btnArr
+		If btn.enabled Then
+			btn.TextColor = clrTheme.txtNormal
+			btn.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,2dip)
+		Else
+			btn.TextColor = xui.Color_Gray
+			btn.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_Gray,2dip)
+		End If
+	Next
 End Sub
-Public Sub SetTextShadow(pView As View, pRadius As Float, pDx As Float, pDy As Float, pColor As Int)
-	Dim ref As Reflector
-	Try
-		ref.Target = pView
-		ref.RunMethod4("setShadowLayer", Array As Object(pRadius, pDx, pDy, pColor), Array As String("java.lang.float", "java.lang.float", "java.lang.float", "java.lang.int"))
-	Catch
-		Log(LastException)
-	End Try
-	
-End Sub
+
+
+'public Sub SetShadow(btn As View,OnOrOff As Boolean)
+'	'Old code, use to work in b4a 6.x
+'	Try
+'		Dim pnl As Panel = btn
+'		Dim lbl As Label, v As B4XView
+'		For i = 0 To pnl.NumberOfViews - 1
+'			v = pnl.GetView(i)
+'			If v Is Label Then
+'				lbl = v
+'				Dim x As Int
+'				If OnOrOff Then x = 3 Else x = 0
+'				SetTextShadow(lbl,x,3,3,Colors.DarkGray)
+'			End If
+'		Next
+'		
+'	Catch
+'		Log(LastException)
+'	End Try
+'	
+'End Sub
+'Public Sub SetTextShadow(pView As View, pRadius As Float, pDx As Float, pDy As Float, pColor As Int)
+'	Dim ref As Reflector
+'	Try
+'		ref.Target = pView
+'		ref.RunMethod4("setShadowLayer", Array As Object(pRadius, pDx, pDy, pColor), Array As String("java.lang.float", "java.lang.float", "java.lang.float", "java.lang.int"))
+'	Catch
+'		Log(LastException)
+'	End Try
+'	
+'End Sub
 
 Public Sub GetAboutText() As String
 	Dim msg As StringBuilder : msg.Initialize

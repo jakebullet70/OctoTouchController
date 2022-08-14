@@ -33,6 +33,12 @@ Public Sub SetEnableDisableColor(btnArr() As B4XView)
 	Next
 End Sub
 
+Public Sub EnableDisableBtns(btnArr() As B4XView,EnableDisable As Boolean)
+	For Each btn As B4XView In btnArr
+		btn.enabled = EnableDisable
+	Next
+	SetEnableDisableColor(btnArr)
+End Sub
 
 'public Sub SetShadow(btn As View,OnOrOff As Boolean)
 '	'Old code, use to work in b4a 6.x

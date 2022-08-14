@@ -24,8 +24,10 @@ Sub Class_Globals
 	Private pnlJogMovement As B4XView
 	Private pnlGeneral As B4XView
 	
-	'Private btnMOff As Button
-	Private btnLength As B4XView
+	Private btnRetract,btnMOff,btnHeat,btnFN,btnExtrude,btnLength As B4XView
+	Private btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback As B4XView
+	Private btnZup,btnZhome,btnZdown As B4XView
+	
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
@@ -43,6 +45,7 @@ End Sub
 
 public Sub Set_focus()
 	mPnlMain.Visible = True
+	Update_Printer_Btns
 End Sub
 
 public Sub Lost_focus()
@@ -66,9 +69,14 @@ End Sub
 
 
 public Sub Update_Printer_Btns
-	'--- sets enable, disable
-	' if is printing then disable the panels
 	
+	'--- sets enable, disable
+	guiHelpers.EnableDisableBtns(Array As B4XView( _
+		btnRetract,btnMOff,btnHeat,btnFN,btnExtrude,btnLength, _
+		btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback, _
+		btnZup,btnZhome,btnZdown), _
+		IIf(oc.isPrinting,False,True))
+		
 End Sub
 
 
@@ -213,7 +221,7 @@ End Sub
 #Region "FUNCTION_MENU"
 private Sub FunctionMenu
 	
-	Dim mapOptions As Map = CreateMap("Load Filament":"lf","UnLoad Filament":"uf")
+	Dim mapOptions As Map = CreateMap("Bed Leveling":"bl","Load Filament":"lf","UnLoad Filament":"uf")
 	
 	Dim o1 As dlgListbox
 	o1.Initialize(mMainObj,"Function Menu",Me,"FunctionMenu_Event")
@@ -221,19 +229,31 @@ private Sub FunctionMenu
 	
 End Sub
 
-Private Sub FunctionMenu_Event(value As String, tag As String)
+Private Sub FunctionMenu_Event(value As String, tag As Object)
 	
 	'--- callback for FunctionMenu
 	If value.Length = 0 Then Return
-	guiHelpers.Show_toast("TODO...",2000)
+	Dim msg As String = "Command sent: "
+	
+	Select Case value
+		Case "bl" '--- bed level
+			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","G29"))
+			msg = msg & "Start Bed Level"
+			
+		Case Else
+			msg = " ...TODO... "
+			
+	End Select
+	
+	guiHelpers.Show_toast(msg,1800)
 	
 End Sub
 #end region
 
 
 Private Sub MotorsOff
-	Private const DISABLE_ALL_STEPPERS As String = "M18"
-	mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",DISABLE_ALL_STEPPERS))
+	'--- DISABLE_ALL_STEPPERS
+	mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","M18"))
 	guiHelpers.Show_toast("Command sent: Motors Off",1800)
 End Sub
 

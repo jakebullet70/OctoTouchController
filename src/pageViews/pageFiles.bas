@@ -55,6 +55,7 @@ public Sub Set_focus()
 	If firstRun = False Then
 		'--- this happened already on 1st run
 		tmrFilesCheckChange_Tick '--- call the check change, it will turn on the timer
+		Update_Printer_Btns
 	Else
 		'--- 1st showing of tab page
 		'logMe.Logit(firstRun,mModule)
@@ -87,7 +88,7 @@ public Sub Update_Printer_Btns
 		enableDisable = True
 	End If
 	
-	For Each btn As B4XView In Array As B4XView(btnLoad,btnLoadAndPrint)
+	For Each btn As B4XView In Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete)
 		btn.Enabled = enableDisable
 	Next
 	guiHelpers.SetEnableDisableColor(Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete))
@@ -143,14 +144,10 @@ Private Sub btnAction_Click
 			
 		Case "load"
 			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_FILES_SELECT.Replace("!LOC!",currentFileInfo.Origin).Replace("!PATH!",currentFileInfo.Name))
-			btnDelete.Enabled = False
 			
 		Case "loadandprint"
 			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_FILES_PRINT.Replace("!LOC!",currentFileInfo.Origin).Replace("!PATH!",currentFileInfo.Name))
-			For Each btn As B4XView In Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete)
-				btn.Enabled = False
-			Next
-			guiHelpers.SetEnableDisableColor(Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete))
+			guiHelpers.EnableDisableBtns(Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete),False)
 			CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_PRINTING)
 			
 	End Select
@@ -232,11 +229,12 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 		
 	End If
 	
-	If Value = oc.JobFileName And oc.isPrinting Then
-		btnDelete.Enabled = False
-	Else
-		btnDelete.Enabled = True
-	End If
+'	If Value = oc.JobFileName And oc.isPrinting Then
+'		btnDelete.Enabled = False
+'	Else
+'		btnDelete.Enabled = True
+'	End If
+'	guiHelpers.SetEnableDisableColor(Array As B4XView(btnDelete))
 
 End Sub
 

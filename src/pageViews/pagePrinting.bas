@@ -18,9 +18,7 @@ Sub Class_Globals
 
 	Private lblToolTemp, lblBedTemp As Label
 	
-	Private btnPresetMaster As B4XView
-	Private btnPresetBed As Button
-	Private btnPresetTool As Button
+	Private btnPresetTool, btnPresetBed, btnPresetMaster As B4XView
 	
 	Private scrlblFileName As ScrollingLabel
 	Private lblPrintStats As B4XView, statTxt As StringBuilder
@@ -78,7 +76,6 @@ Private Sub Build_GUI
 	
 End Sub
 
-
 public Sub Update_Printer_Btns
 	'--- sets enable, disable
 	
@@ -95,12 +92,10 @@ public Sub Update_Printer_Btns
 	'--- is a file loaded and ready?
 	If oc.isFileLoaded = False Then
 		
-		For Each btn As B4XView In Array As B4XView(btnPrint,btnPause,btnCancel)
-			btn.Enabled = False
-		Next
-		
-		guiHelpers.SetEnableDisableColor(Array As B4XView(btnPrint,btnPause,btnCancel))
+		guiHelpers.EnableDisableBtns(Array As B4XView(btnPrint,btnPause,btnCancel),False)
+		guiHelpers.EnableDisableBtns(Array As B4XView(btnPresetTool,btnPresetBed,btnPresetMaster),True)
 		Return
+		
 	Else
 		
 		'If SubExists(B4XPages.MainPage.oPageCurrent,"PrintStarting_UpdateThumbnail") Then
@@ -113,29 +108,24 @@ public Sub Update_Printer_Btns
 	If oc.isPrinting = True Then
 		
 		'--- we are printing or heating
-		btnCancel.Enabled = True
-		btnPause.Enabled = True
-		btnPrint.Enabled = False
+		guiHelpers.EnableDisableBtns(Array As B4XView(btnCancel,btnPause),True)
+		guiHelpers.EnableDisableBtns(Array As B4XView(btnPrint,btnPresetTool,btnPresetBed,btnPresetMaster),False)
+		
 	
 	else if oc.isPrinting = False And oc.isPaused2 = True Then
 		
 		'--- job is paused
-		btnCancel.Enabled = True
-		btnPause.Enabled = False
-		btnPrint.Enabled = True
+		guiHelpers.EnableDisableBtns(Array As B4XView(btnCancel,btnPrint),True)
+		guiHelpers.EnableDisableBtns(Array As B4XView(btnPause,btnPresetTool,btnPresetBed,btnPresetMaster),False)
 				
 	Else
 		
 		'--- not printing anything
-		btnCancel.Enabled = False
-		btnPause.Enabled = False
-		btnPrint.Enabled = oc.isFileLoaded
+		btnPrint.Enabled = oc.isFileLoaded : guiHelpers.SetEnableDisableColor(Array As B4XView(btnPrint))
+		guiHelpers.EnableDisableBtns(Array As B4XView(btnCancel,btnPause),False)
+		guiHelpers.EnableDisableBtns(Array As B4XView(btnPresetTool,btnPresetBed,btnPresetMaster),True)
 		
 	End If
-	
-	'--- change colors depending on what is enabled
-	guiHelpers.SetEnableDisableColor(Array As B4XView(btnPrint,btnPause,btnCancel))
-	
 	
 End Sub
 
@@ -258,7 +248,7 @@ End Sub
 #region "TEMP_CHANGE_EDIT"
 Private Sub lblTempChange_Click
 	
-	If oc.isConnected = False Then Return
+	If oc.isConnected = False Or oc.isPrinting Then Return
 	Dim o As Label : o = Sender
 	
 	Dim o1 As dlgNumericInput
@@ -300,10 +290,6 @@ Private Sub TempChange_Tool1(value As String)
 End Sub
 #end region
 
-
-
-
-
 Private Sub btnAction_Click
 	
 	If oc.isConnected = False Then Return
@@ -311,11 +297,9 @@ Private Sub btnAction_Click
 	Dim o As B4XView : o = Sender
 	
 	'---- turn off btns, they will get re-enabled later
-	For Each btn1 As B4XView In Array As B4XView(btnPrint,btnPause,btnCancel)
-		btn1.Enabled = False
-	Next
-	
-	guiHelpers.SetEnableDisableColor(Array As B4XView(btnPrint,btnPause,btnCancel))
+	'guiHelpers.DisableBtns(Array As B4XView(btnPrint,btnPause,btnCancel))
+	'guiHelpers.SetEnableDisableColor(Array As B4XView(btnPrint,btnPause,btnCancel))
+	Update_Printer_Btns
 	
 	'--- what does the user want?
 	Select Case o.tag
@@ -327,7 +311,7 @@ Private Sub btnAction_Click
 			Else
 				
 				CallSub(B4XPages.MainPage.MasterCtrlr,"tmrMain_Tick")
-				Sleep(500) '--- do we need this?
+				Sleep(50) '--- do we need this?
 				
 				If oc.isCanceling = True Then
 					guiHelpers.Show_toast("Printer Is Canceling, Please Wait...",2000)

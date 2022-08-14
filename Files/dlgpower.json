@@ -3,15 +3,6 @@
     "Theme": "Dark Theme",
     "Items": [
         {
-            "options": [
-                "TODO - tell about power"
-            ],
-            "title": "What this does",
-            "type": "Explanation",
-            "key": "",
-            "required": false
-        },
-        {
             "title": "Take Over Power Management",
             "type": "Boolean",
             "key": "TakePwr",

@@ -20,9 +20,7 @@ End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
 Public Sub Initialize(mobj As B4XMainPage)
-	
 	mainObj = mobj
-	
 End Sub
 
 public Sub CreateDefaultFile
@@ -40,13 +38,15 @@ Public Sub Show
 	CreateDefaultFile
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE)
 	
-	mPowerDlg.Initialize(mainObj.root, "Power Option", 360dip, mainObj.Root.Height - 50dip)
+	mPowerDlg.Initialize(mainObj.root, "Power Option", 360dip, mainObj.Root.Height - 80dip)
 	mPowerDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgPower.json"))
 	mPowerDlg.SetEventsListener(Me,"dlgPower")
-	'pdlgPower.Dialog.OverlayColor = xui.Color_ARGB(128, 0, 10, 40)
-	'pdlgPower.Dialog.TitleBarHeight = 50dip
 	
-	Wait For (mPowerDlg.ShowDialog(Data, "OK", "CANCEL")) Complete (Result As Int)
+	guiHelpers.ThemePrefDialogForm(mPowerDlg)
+	Dim RS As ResumableSub = mPowerDlg.ShowDialog(Data, "OK", "CANCEL")
+	guiHelpers.ThemeInputDialogBtnsResize(mPowerDlg.Dialog)
+	
+	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
 		guiHelpers.Show_toast("Power Data Saved",1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE,Data)

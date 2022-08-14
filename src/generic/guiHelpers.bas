@@ -40,37 +40,6 @@ Public Sub EnableDisableBtns(btnArr() As B4XView,EnableDisable As Boolean)
 	SetEnableDisableColor(btnArr)
 End Sub
 
-'public Sub SetShadow(btn As View,OnOrOff As Boolean)
-'	'Old code, use to work in b4a 6.x
-'	Try
-'		Dim pnl As Panel = btn
-'		Dim lbl As Label, v As B4XView
-'		For i = 0 To pnl.NumberOfViews - 1
-'			v = pnl.GetView(i)
-'			If v Is Label Then
-'				lbl = v
-'				Dim x As Int
-'				If OnOrOff Then x = 3 Else x = 0
-'				SetTextShadow(lbl,x,3,3,Colors.DarkGray)
-'			End If
-'		Next
-'		
-'	Catch
-'		Log(LastException)
-'	End Try
-'	
-'End Sub
-'Public Sub SetTextShadow(pView As View, pRadius As Float, pDx As Float, pDy As Float, pColor As Int)
-'	Dim ref As Reflector
-'	Try
-'		ref.Target = pView
-'		ref.RunMethod4("setShadowLayer", Array As Object(pRadius, pDx, pDy, pColor), Array As String("java.lang.float", "java.lang.float", "java.lang.float", "java.lang.int"))
-'	Catch
-'		Log(LastException)
-'	End Try
-'	
-'End Sub
-
 Public Sub GetAboutText() As String
 	Dim msg As StringBuilder : msg.Initialize
 	msg.Append("OctoTouchController " & Main.Version).Append(CRLF)
@@ -127,41 +96,6 @@ End Sub
 '	Next
 'End Sub
 
-
-
-public Sub ReSkinPlusMinusControl(pm As B4XPlusMinus)
-	
-	Try
-	
-		'pm.ArrowsSize = 22
-		'pm.Base_Resize(pm.mBase.Width, pm.mBase.Height)
-		pm.lblPlus.TextSize = 42
-		pm.lblMinus.TextSize = 42
-		pm.lblMinus.Top = pm.lblMinus.Top - 12dip
-		'pm.MainLabel.As(Label).Style = ""
-		'pm.MainLabel.As(Label).sty
-		pm.MainLabel.Font = xui.CreateDefaultFont(32)
-	
-		pm.lblMinus.Color = xui.Color_Transparent
-		pm.lblPlus.Color = xui.Color_Transparent
-		
-		pm.lblMinus.textColor = clrTheme.txtNormal
-		pm.lblPlus.textColor = clrTheme.txtNormal
-		pm.MainLabel.Color = xui.Color_Transparent
-		pm.MainLabel.textColor = clrTheme.txtNormal
-		
-		'pm.Base_Resize(pm.mBase.Width, pm.mBase.Height)
-	
-	Catch
-		
-		logMe.LogIt(LastException,mModule)
-		
-	End Try
-	
-End Sub
-
-
-
 'public Sub SetTextColor(views() As B4XView, txtColor As Int)
 '	
 '	For Each o As B4XView In views
@@ -184,10 +118,6 @@ public Sub SetTextColorB4XFloatTextField(views() As B4XFloatTextField)
 	
 End Sub
 
-
-
-
-
 Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
 
 	Try
@@ -209,6 +139,15 @@ Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
 	
 End Sub
 
+
+Public Sub ThemePrefDialogForm(prefdlg As PreferencesDialog)
+	
+	prefdlg.ItemsBackgroundColor =  clrTheme.BackgroundMenu
+	prefdlg.SeparatorBackgroundColor = clrTheme.BackgroundHeader
+	prefdlg.SeparatorTextColor = xui.Color_LightGray
+	ThemeDialogForm(prefdlg.Dialog,prefdlg.Title.As(String))
+
+End Sub
 
 
 Public Sub ThemeDialogForm(dlg As B4XDialog,title As String)

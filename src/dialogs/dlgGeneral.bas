@@ -46,10 +46,12 @@ Public Sub Show
 	mGeneralDlg.Initialize(mainObj.root, "General Option", 360dip, mainObj.Root.Height - 50dip)
 	mGeneralDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgGeneral.json"))
 	mGeneralDlg.SetEventsListener(Me,"dlgGeneral")
-	'm_dlgGeneral.Dialog.OverlayColor = xui.Color_ARGB(128, 0, 10, 40)
-	'm_dlgGeneral.Dialog.TitleBarHeight = 50dip
 	
-	Wait For (mGeneralDlg.ShowDialog(Data, "OK", "CANCEL")) Complete (Result As Int)
+	guiHelpers.ThemePrefDialogForm(mGeneralDlg)
+	Dim RS As ResumableSub = mGeneralDlg.ShowDialog(Data, "OK", "CANCEL")
+	guiHelpers.ThemeInputDialogBtnsResize(mGeneralDlg.Dialog)
+	
+	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
 		guiHelpers.Show_toast("General Data Saved",1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,Data)

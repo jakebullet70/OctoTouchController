@@ -14,7 +14,7 @@ Sub Class_Globals
 	Private const mModule As String = "dlgLogging"' 'ignore
 	Private mainObj As B4XMainPage
 	Private xui As XUI
-	Private mLoggingDlg As PreferencesDialog
+	Private mLoggingDlg As sadPreferencesDialog
 	
 End Sub
 

@@ -44,6 +44,8 @@ End Sub
 public Sub Set_focus()
 	
 	mPnlMain.Visible = True
+	mPnlMain.Enabled = oc.isConnected
+	
 	If oc.isFileLoaded Then 
 		scrlblFileName.Text = " File: " & fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
 	Else
@@ -78,6 +80,7 @@ End Sub
 
 public Sub Update_Printer_Btns
 	'--- sets enable, disable
+	mPnlMain.Enabled = oc.isConnected
 	
 	'--- rename printing buttons as needed
 	If oc.isPaused2 = True Then

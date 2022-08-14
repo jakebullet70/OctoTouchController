@@ -14,14 +14,15 @@ Sub Class_Globals
 	Private const mModule As String = "dlgPower"' 'ignore
 	Private mainObj As B4XMainPage
 	Private xui As XUI
-	Private mPowerDlg As PreferencesDialog
+	Private mPowerDlg As sadPreferencesDialog
 	
 End Sub
 
-'Initializes the object. You can add parameters to this method if needed.
+
 Public Sub Initialize(mobj As B4XMainPage)
 	mainObj = mobj
 End Sub
+
 
 public Sub CreateDefaultFile
 
@@ -33,19 +34,31 @@ public Sub CreateDefaultFile
 
 End Sub
 
+
 Public Sub Show
 	
 	CreateDefaultFile
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE)
+
+	Dim h As Float
+	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
+		h = 55%y
+	Else If guiHelpers.gScreenSizeAprox >= 8 Then
+		h = 40%y
+	Else '--- 4 to 5.9 inch
+		h = 80%y
+	End If
 	
-	mPowerDlg.Initialize(mainObj.root, "Power Option", 360dip, mainObj.Root.Height - 80dip)
+	mPowerDlg.Initialize(mainObj.root, "Power Option", 360dip, h)
+	mPowerDlg.Clear
 	mPowerDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgPower.json"))
 	mPowerDlg.SetEventsListener(Me,"dlgPower")
-	
+
 	guiHelpers.ThemePrefDialogForm(mPowerDlg)
-	Dim RS As ResumableSub = mPowerDlg.ShowDialog(Data, "OK", "CANCEL")
-	guiHelpers.ThemeInputDialogBtnsResize(mPowerDlg.Dialog)
-	
+	mPowerDlg.PutAtTop = False
+	Dim RS As ResumableSub = mPowerDlg.ShowDialog(Data, "OK", "Cancel")
+	Sleep(0)
+		
 	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
 		guiHelpers.Show_toast("Power Data Saved",1500)
@@ -75,9 +88,23 @@ Private Sub dlgPower_IsValid (TempData As Map) As Boolean 'ignore
 End Sub
 
 
-
 Private Sub dlgPower_BeforeDialogDisplayed (Template As Object)
-	'--- NOT USED BUT HERE IF NEEDED
+	
+	guiHelpers.ThemeInputDialogBtnsResize(mPowerDlg.Dialog)
+	
+	' TODO, needs some research
+	
+'	Dim pref As PreferencesDialog = Template
+'	Dim dlg As B4XDialog = pref.Dialog
+'	dlg.PutAtTop = False
+'	mPowerDlg.Dialog.BackgroundColor = xui.Color_Cyan
+'	mPowerDlg.Dialog.PutAtTop = False
+'	Log(mPowerDlg.Dialog.PutAtTop)
+'	Sleep(50)
+	
+	'mPowerDlg.CustomListView1.sv.Height = mPowerDlg.CustomListView1.sv.ScrollViewInnerPanel.Height + 10dip
+	'mPowerDlg.CustomListView1.GetPanel(0).GetView(0).Color = xui.Color_Transparent
+	'mPowerDlg.CustomListView1.sv.ScrollViewInnerPanel.Color = xui.Color_Transparent
 	
 '	Dim btnCancel As B4XView = PrefDialog1.Dialog.GetButton(xui.DialogResponse_Cancel)
 '	btnCancel.Width = btnCancel.Width + 60dip

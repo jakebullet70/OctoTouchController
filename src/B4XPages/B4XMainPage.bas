@@ -253,8 +253,10 @@ Private Sub PopupMainMenu
 	o.MenuObj.OrientationVertical = o.MenuObj.OrientationHorizontal_LEFT '--- change menu position
 	
 	Dim top As Float
-	If guiHelpers.gScreenSizeAprox >= 6 Then
-		top = 31%y
+	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
+		top = 21%y
+	Else If guiHelpers.gScreenSizeAprox >= 8 Then
+		top = 33%y
 	Else
 		top = 8%y
 	End If

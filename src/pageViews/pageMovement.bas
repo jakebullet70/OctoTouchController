@@ -45,6 +45,7 @@ End Sub
 
 public Sub Set_focus()
 	mPnlMain.Visible = True
+	mPnlMain.Enabled = oc.isConnected
 	Update_Printer_Btns
 End Sub
 
@@ -76,7 +77,9 @@ public Sub Update_Printer_Btns
 		btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback, _
 		btnZup,btnZhome,btnZdown), _
 		IIf(oc.isPrinting,False,True))
-		
+	
+	mPnlMain.Enabled = oc.isConnected
+	
 End Sub
 
 

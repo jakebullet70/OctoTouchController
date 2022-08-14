@@ -46,6 +46,7 @@ Public Sub GetAboutText() As String
 	msg.Append("A dedicated touch screen controller").Append(CRLF).Append("for Octoprint using older Android devices").Append(CRLF)
 	msg.Append(CRLF).Append("(c)sadLogic 2022 - Open Source - Freeware").Append(CRLF)
 	Return msg.ToString
+	
 End Sub
 
 '--- just an easy wat to Toast!!!!
@@ -120,32 +121,45 @@ End Sub
 
 Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
 
-	Try
-		'--- resize buttons, will error if btn does not exist
-		'--- but we do not care
-		Dim btnCancel As B4XView = dlg.GetButton(xui.DialogResponse_Cancel)
-		btnCancel.Width = btnCancel.Width + 20dip
-		btnCancel.Left = btnCancel.Left - 28dip
-		btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,5dip)
+	Dim btnCancel As B4XView = dlg.GetButton(xui.DialogResponse_Cancel)
+	btnCancel.Width = btnCancel.Width + 20dip
+	btnCancel.Left = btnCancel.Left - 28dip
+	btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,5dip)
 
-		Dim btnOk As B4XView = dlg.GetButton(xui.DialogResponse_Positive)
+	Dim btnOk As B4XView = dlg.GetButton(xui.DialogResponse_Positive)
+	If btnOk.IsInitialized Then
 		btnOk.Width = btnOk.Width + 20dip
 		btnOk.Left = btnOk.Left - 48dip
 		btnOk.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,5dip)
+	End If
 		
-	Catch
-		'Log(LastException)
-	End Try 'ignore
-	
 End Sub
 
 
-Public Sub ThemePrefDialogForm(prefdlg As PreferencesDialog)
+Public Sub ThemePrefDialogForm(prefdlg As sadPreferencesDialog)
 	
-	prefdlg.ItemsBackgroundColor =  clrTheme.BackgroundMenu
-	prefdlg.SeparatorBackgroundColor = clrTheme.BackgroundHeader
-	prefdlg.SeparatorTextColor = xui.Color_LightGray
-	ThemeDialogForm(prefdlg.Dialog,prefdlg.Title.As(String))
+	Try
+		
+		prefdlg.ItemsBackgroundColor = clrTheme.BackgroundMenu
+		prefdlg.SeparatorBackgroundColor = clrTheme.BackgroundHeader
+		prefdlg.SeparatorTextColor = xui.Color_LightGray
+		prefdlg.TextColor = clrTheme.txtNormal
+		
+		
+		'prefdlg.CustomListView1.sv.SetColorAndBorder(xui.Color_Transparent,1dip,xui.Color_blue,0dip)
+		'prefdlg.mBase.SetColorAndBorder(xui.Color_Blue,2dip,xui.Color_White,5dip)
+		'prefdlg.mBase.Color = clrTheme.BackgroundMenu
+		'prefdlg.Dialog.BackgroundColor = xui.Color_Transparent
+		'prefdlg.CustomListView1.AsView.Color = clrTheme.BackgroundMenu
+		'prefdlg.CustomListView1.GetBase.Color = clrTheme.BackgroundMenu
+		'prefdlg.CustomListView1. = clrTheme.BackgroundMenu
+		
+		
+		ThemeDialogForm(prefdlg.Dialog,prefdlg.Title.As(String))
+	Catch
+		Log(LastException)
+	End Try
+	
 
 End Sub
 

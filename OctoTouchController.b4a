@@ -39,15 +39,15 @@ Group=Default Group
 Library1=b4xpages
 Library10=reflection
 Library11=xui views
-Library12=phone
-Library2=b4xpreferencesdialog
-Library3=bctoast
-Library4=byteconverter
-Library5=core
-Library6=dateutils
-Library7=javaobject
-Library8=json
-Library9=okhttputils2
+Library12=b4xpreferencesdialog
+Library2=bctoast
+Library3=byteconverter
+Library4=core
+Library5=dateutils
+Library6=javaobject
+Library7=json
+Library8=okhttputils2
+Library9=phone
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~
 Module1=|relative|src\custom_controls\ASPopupMenu
 Module10=|relative|src\dialogs\dlgGeneral
@@ -75,8 +75,9 @@ Module3=|relative|src\B4XPages\B4XSetupPage
 Module30=|relative|src\pageViews\pageMovement
 Module31=|relative|src\pageViews\pagePrinting
 Module32=|relative|src\octoPrint\RequestApiKey
-Module33=Starter
-Module34=|relative|src\generic\strHelpers
+Module33=|relative|src\custom_controls\sadPreferencesDialog
+Module34=Starter
+Module35=|relative|src\generic\strHelpers
 Module4=|relative|src\helperClasses\CallSubUtils
 Module5=|relative|src\octoPrint\CheckOctoConnection
 Module6=|relative|src\custom_controls\CircularProgressBar
@@ -85,7 +86,7 @@ Module8=|relative|src\helperClasses\clvSelectionsX
 Module9=|relative|src\generic\config
 NumberOfFiles=18
 NumberOfLibraries=12
-NumberOfModules=34
+NumberOfModules=35
 Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
@@ -94,7 +95,7 @@ Version=11.8
 	#VersionName: 1.0
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: landscape
-	#CanInstallToExternalStorage: true
+	#CanInstallToExternalStorage: false
 #End Region
 
 #Region  Activity Attributes 
@@ -111,14 +112,14 @@ Version=11.8
 
 Sub Process_Globals
 	
-	Public Version As String = "V1.0"
+	Public Version As String = "V1.0 - Beta 1"
 	Public ActionBarHomeClicked As Boolean
+	Public tmrTimerCallSub As CallSubUtils
 	
 	'--- timers need to be in 'Process_Globals'
 	Private tmrSplash As Timer
 	Private tmrMain As Timer
 	Private tmrFilesCheckChange As Timer
-	Private tmrTimerCallSub As CallSubUtils
 	
 End Sub
 
@@ -126,10 +127,6 @@ Sub Globals
 End Sub
 
 '===================================================================================
-
-Public Sub getTmrCallSub() As CallSubUtils
-	Return tmrTimerCallSub
-End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	

@@ -51,6 +51,7 @@ End Sub
 
 public Sub Set_focus()
 	mPnlMain.Visible = True
+	mPnlMain.Enabled = oc.isConnected  
 	
 	If firstRun = False Then
 		'--- this happened already on 1st run
@@ -80,6 +81,7 @@ End Sub
 public Sub Update_Printer_Btns
 	'--- sets enable, disable
 	
+	mPnlMain.Enabled = oc.isConnected
 	Dim enableDisable As Boolean
 
 	If oc.isPrinting Or oc.IsPaused2 Or oc.isHeating  Or (clvLastIndexClicked = cNO_SELECTION) Then

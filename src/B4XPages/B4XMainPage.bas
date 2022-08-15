@@ -50,11 +50,17 @@ Public Sub getMasterCtrlr() As MasterController
 End Sub
 
 Public Sub Initialize
-	config.Load
+	
+	config.Init
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
 	clrTheme.Init("red")
-	CallSubDelayed(logMe,"Clean_OldLogs")
+	
+	logMe.Clean_OldLogs
+	
+	powerHelpers.Init
 	powerHelpers.ScreenON(config.AndroidTakeOverSleepFLAG)
+	CallSubDelayed(Main,"Set_ScreenTmr")
+	
 End Sub
 
 #Region "PAGE EVENTS"

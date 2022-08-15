@@ -171,15 +171,18 @@ End Sub
 
 Private Sub btnPresetTemp_Click
 	
-	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
-	If oc.isConnected = False Then Return
+	Dim btn As Button : btn = Sender
 	
-	Dim o As Button : o = Sender
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	
+	If oc.isConnected = False Then Return
+		
 	Dim o1 As dlgListbox
-	o1.Initialize(mMainObj,IIf(o.tag = "tool","Tool Presets","Bed Presets"),Me,"TempChange_Presets")
-	o1.Tag = o.tag
+	Dim title As String = IIf(btn.tag = "tool","Tool Presets","Bed Presets")
+	o1.Initialize(mMainObj,title,Me,"TempChange_Presets")
+	o1.Tag = btn.tag
 	o1.Show(IIf(guiHelpers.gScreenSizeAprox >= 6,280dip,280dip),290dip, _
-	IIf(o.Tag = "tool",mMainObj.MasterCtrlr.mapToolHeatingOptions,mMainObj.MasterCtrlr.mapBedHeatingOptions))
+	IIf(btn.Tag = "tool",mMainObj.MasterCtrlr.mapToolHeatingOptions,mMainObj.MasterCtrlr.mapBedHeatingOptions))
 	
 End Sub
 
@@ -253,9 +256,11 @@ End Sub
 #region "TEMP_CHANGE_EDIT"
 Private Sub lblTempChange_Click
 	
-	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
-	If oc.isConnected = False Or oc.isPrinting Then Return
 	Dim o As Label : o = Sender
+	
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	
+	If oc.isConnected = False Or oc.isPrinting Then Return
 	
 	Dim o1 As dlgNumericInput
 	o1.Initialize(mMainObj, _

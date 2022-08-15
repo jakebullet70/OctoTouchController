@@ -132,7 +132,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	
 	If FirstTime Then
 		tmrTimerCallSub.Initialize
-		tmrScreen.Initialize("tmrScreen",1000)	'--- init, will be reset later
+		tmrScreen.Initialize("tmrScreenPower",15000)	'--- init, will be reset later
 		#if debug
 		tmrSplash.Initialize("tmrSplash",1000)  '--- just a splash screen
 		#else
@@ -210,18 +210,28 @@ Private Sub tmrFilesCheckChange_Tick
 	CallSub(B4XPages.MainPage.MasterCtrlr,"tmrFilesCheckChange_Tick")
 End Sub
 
-Public Sub tmrScreen_Tick
-	
+Public Sub tmrScreenPower_Tick
+	Log("tmrScreenPower_Tick fired: " & tmrScreen.Interval)
+	If oc.isPrinting Then 
+		Set_ScreenTmr
+		Return
+	End If
+	tmrScreen.Enabled = False
+	powerHelpers.ScreenOff
 End Sub
 
-'--- timer control subs ---
+'--- timer control subs --- --- timer control subs ---
+'--- timer control subs --- --- timer control subs ---
 
 Public Sub Set_ScreenTmr()
 	tmrScreen.Enabled = False
 	If config.AndroidTakeOverSleepFLAG = False Then	
+		Log("config.AndroidTakeOverSleepFLAG = False")
 		Return
 	End If
-	tmrScreen.Interval = config.AndroidNotPrintingMinTill * 1000
+	Log("config.AndroidTakeOverSleepFLAG = True: Min: " & config.AndroidNotPrintingMinTill)
+	tmrScreen.Interval = config.AndroidNotPrintingMinTill * 1000 * 60
+	'tmrScreen.Initialize("tmrScreenPower",(config.AndroidNotPrintingMinTill * 1000 * 60))
 	tmrScreen.Enabled = True
 End Sub
 
@@ -267,12 +277,16 @@ End Sub
 
 Sub Activity_Resume
 	B4XPages.Delegate.Activity_Resume
-	powerHelpers.ScreenON(config.AndroidTakeOverSleepFLAG)
+	If config.IsInit Then 
+		'--- config power options if flag is set
+		powerHelpers.ScreenON(config.AndroidTakeOverSleepFLAG)
+		Set_ScreenTmr
+	End If
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
 	B4XPages.Delegate.Activity_Pause
-	powerHelpers.ScreenON(False)
+	'powerHelpers.ScreenON(False)
 End Sub
 
 Sub Activity_PermissionResult (Permission As String, Result As Boolean)

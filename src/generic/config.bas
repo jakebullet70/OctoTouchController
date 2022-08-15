@@ -28,15 +28,20 @@ Sub Process_Globals
 	Public AndroidPrintingScrnOffFLAG As Boolean = False
 	Public AndroidPrintingMinTill As Int
 	
-	'--- also turn of screen after X minutes after print is done
+	Public IsInit As Boolean = False
 
 End Sub
 
 
-public Sub Load()
+Public Sub Init
+	LoadCfgs
+	IsInit = True
+End Sub
+
+
+Private Sub LoadCfgs()
 	
 	'--- get theme from config file -- TODO
-	'colorTheme = "system light" '--- not used
 	
 	Dim Data As Map '--- temp var
 	

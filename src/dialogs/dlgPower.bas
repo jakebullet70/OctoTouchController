@@ -62,8 +62,12 @@ Public Sub Show
 		
 	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
+		
 		guiHelpers.Show_toast("Power Data Saved",1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE,Data)
+		
+		powerHelpers.ScreenON(config.AndroidTakeOverSleepFLAG)
+		
 	End If
 	
 End Sub

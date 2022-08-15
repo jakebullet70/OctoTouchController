@@ -14,30 +14,48 @@ Version=9.5
 '--- Generic code to turn on / off CPU - Screen
 '--- Generic code to turn on / off CPU - Screen
 
-
 Sub Process_Globals
 	Private Const mModule As String = "powerHelpers" 'ignore
+	
 	Public pws As PhoneWakeState
 	Public ph As Phone
+	
+	Private screenBrightness As Float 'ignore
+	Private const AUTO_BRIGHTNESS As Float = -1
+	
+End Sub
+
+
+Public Sub Init
+	screenBrightness = GetScreenBrightness
 End Sub
 
 
 Public Sub ScreenON(takeOverPower As Boolean)
-	
+	Log("ScreenON - enter") 
 	pws.ReleasePartialLock
 	pws.ReleaseKeepAlive
 	If takeOverPower Then 
+		screenBrightness = GetScreenBrightness
+		Log("pws.KeepAlive(True)")
 		pws.KeepAlive(True)
+	Else
+		Log("KeepAlive - OFF")
 	End If
 	
+'	If screenBrightness <> AUTO_BRIGHTNESS Then
+'		SetScreenBrightness(screenBrightness)
+'	End If
+	Log("ScreenON - exit")
 End Sub
 
 
 Public Sub ScreenOff
 	
+	screenBrightness = GetScreenBrightness
 	pws.ReleaseKeepAlive
 	pws.PartialLock
-	ActionBar_Off
+	SetScreenBrightness(0)
 	
 End Sub
 
@@ -58,6 +76,32 @@ Public Sub ActionBar_On
 	Else
 		
 	End If
+End Sub
+
+Public Sub SetScreenBrightness(value As Float)
+	Try
+		If screenBrightness = AUTO_BRIGHTNESS Then
+			Log("cannot set brightness, brightness is in auto")
+			Return
+		End If
+		ph.SetScreenBrightness(value)
+	Catch
+		Log(LastException)
+	End Try 'ignore
+End Sub
+
+' 0 to 1 so 0.7 is 70%
+Public Sub GetScreenBrightness() As Float
+	'--- returns -1 if set to auto
+	' https://www.b4x.com/android/forum/threads/get-set-brightness.107899/#content
+	' https://www.b4x.com/android/forum/threads/setscreenbrightness-not-working.31606/
+	Dim ref As Reflector
+    ref.Target = ref.GetActivity
+    ref.Target = ref.RunMethod("getWindow")
+    ref.Target = ref.RunMethod("getAttributes")
+    Dim brightness As Float = ref.GetField("screenBrightness")
+	'Log("screen brightness: " & brightness)
+	Return brightness
 End Sub
 
 '----------------------------------------------------------------------------------------

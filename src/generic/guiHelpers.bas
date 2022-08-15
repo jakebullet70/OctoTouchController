@@ -120,18 +120,24 @@ public Sub SetTextColorB4XFloatTextField(views() As B4XFloatTextField)
 End Sub
 
 Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
-
-	Dim btnCancel As B4XView = dlg.GetButton(xui.DialogResponse_Cancel)
-	btnCancel.Width = btnCancel.Width + 20dip
-	btnCancel.Left = btnCancel.Left - 28dip
-	btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,5dip)
-
-	Dim btnOk As B4XView = dlg.GetButton(xui.DialogResponse_Positive)
-	If btnOk.IsInitialized Then
+	
+	Try '--- reskin button, if it does not exist then skip the error
+		Dim btnCancel As B4XView = dlg.GetButton(xui.DialogResponse_Cancel)
+		btnCancel.Width = btnCancel.Width + 20dip
+		btnCancel.Left = btnCancel.Left - 28dip
+		btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,5dip)
+	Catch
+		'Log(LastException)
+	End Try 'ignore
+	
+	Try '--- reskin button, if it does not exist then skip the error
+		Dim btnOk As B4XView = dlg.GetButton(xui.DialogResponse_Positive)
 		btnOk.Width = btnOk.Width + 20dip
 		btnOk.Left = btnOk.Left - 48dip
 		btnOk.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,5dip)
-	End If
+	Catch
+		'Log(LastException)
+	End Try 'ignore
 		
 End Sub
 
@@ -166,7 +172,7 @@ End Sub
 
 Public Sub ThemeDialogForm(dlg As B4XDialog,title As String)
 	
-	dlg.Title = title
+	'dlg.Title = title
 	dlg.TitleBarFont = xui.CreateDefaultFont(22)
 	dlg.TitleBarColor = clrTheme.BackgroundHeader
 	dlg.ButtonsTextColor = clrTheme.txtNormal

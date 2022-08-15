@@ -57,6 +57,7 @@ Public Sub Show
 	guiHelpers.ThemePrefDialogForm(mPowerDlg)
 	mPowerDlg.PutAtTop = False
 	Dim RS As ResumableSub = mPowerDlg.ShowDialog(Data, "OK", "Cancel")
+	guiHelpers.ThemeInputDialogBtnsResize(mPowerDlg.Dialog)
 	Sleep(0)
 		
 	Wait For (RS) Complete (Result As Int)
@@ -89,10 +90,8 @@ End Sub
 
 
 Private Sub dlgPower_BeforeDialogDisplayed (Template As Object)
-	
-	guiHelpers.ThemeInputDialogBtnsResize(mPowerDlg.Dialog)
-	
-	' TODO, needs some research
+
+	'--- NOT USED BUT HERE IF NEEDED
 	
 '	Dim pref As PreferencesDialog = Template
 '	Dim dlg As B4XDialog = pref.Dialog
@@ -115,6 +114,7 @@ Private Sub dlgPower_BeforeDialogDisplayed (Template As Object)
 '		btnOk.Width = btnOk.Width + 20dip
 '		btnOk.Left = btnCancel.Left - btnOk.Width
 '	End If
+
 End Sub
 
 

@@ -158,6 +158,7 @@ End Sub
 #Region "HEATER_PRESETS"
 Private Sub btnPresetMaster_Click
 	
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	If oc.isConnected = False Then Return
 	
 	Dim o1 As dlgListbox
@@ -170,6 +171,7 @@ End Sub
 
 Private Sub btnPresetTemp_Click
 	
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	If oc.isConnected = False Then Return
 	
 	Dim o As Button : o = Sender
@@ -251,6 +253,7 @@ End Sub
 #region "TEMP_CHANGE_EDIT"
 Private Sub lblTempChange_Click
 	
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	If oc.isConnected = False Or oc.isPrinting Then Return
 	Dim o As Label : o = Sender
 	
@@ -294,6 +297,8 @@ End Sub
 #end region
 
 Private Sub btnAction_Click
+	
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 	If oc.isConnected = False Then Return
 	

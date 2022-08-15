@@ -49,12 +49,12 @@ Public Sub getMasterCtrlr() As MasterController
 	Return oMasterController
 End Sub
 
-
 Public Sub Initialize
 	config.Load
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
 	clrTheme.Init("red")
-	'logMe.Clean_OldLogs
+	CallSubDelayed(logMe,"Clean_OldLogs")
+	powerHelpers.ScreenON(config.AndroidTakeOverSleepFLAG)
 End Sub
 
 #Region "PAGE EVENTS"
@@ -69,7 +69,8 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	'--- splash screen
 	pnlMaster.Visible = False
 	pnlSplash.Visible = True
-	
+		
+	ConfigPowerOption
 	Build_GUI
 	
 End Sub
@@ -85,16 +86,35 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	Return True '--- exit app
 End Sub
 
-
 Private Sub B4XPage_Appear
-		
 End Sub
 
 Private Sub B4APage_Disappear
+End Sub
+
+Private Sub B4XPages_Foreground
+	Log("B4XPages_Foreground")
+End Sub
+
+Private Sub B4XPages_Background
+End Sub
+#end region
+
+Private Sub Build_GUI
+	
+	pnlMaster.Color = clrTheme.Background
+	pnlHeader.Color	 = clrTheme.BackgroundHeader
+	
+	'--- hide all page views
+	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlMovement))
+	
+	'btnPageAction.TextSize = 48 'guiHelpers.btnResizeText(btnPageAction,False,28) + 2
+	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
+	
+	Switch_Pages(gblConst.PAGE_MENU)
 	
 End Sub
 
-#end region
 
 Public Sub HideSplash_StartUp
 	
@@ -114,15 +134,11 @@ Private Sub TryOctoConnection
 		B4XPages.ShowPage(gblConst.PAGE_SETUP)
 	Else
 		If oc.IsOctoConnectionVarsValid Then
-			StartMasterControler
+			oMasterController.SetCallbackObj(Me,"Update_Printer_Temps","Update_Printer_Status","Update_Printer_Btns")
+			oMasterController.Start
 		End If
 	End If
 
-End Sub
-
-Public Sub StartMasterControler
-	oMasterController.SetCallbackObj(Me,"Update_Printer_Temps","Update_Printer_Status","Update_Printer_Btns")
-	oMasterController.Start
 End Sub
 
 #Region "OCTO_EVENTS"
@@ -167,20 +183,6 @@ Public Sub Update_Printer_Btns
 End Sub
 #end region
 
-Private Sub Build_GUI
-	
-	pnlMaster.Color = clrTheme.Background
-	pnlHeader.Color	 = clrTheme.BackgroundHeader
-	
-	'--- hide all page views
-	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlMovement))
-	
-	'btnPageAction.TextSize = 48 'guiHelpers.btnResizeText(btnPageAction,False,28) + 2
-	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
-	
-	Switch_Pages(gblConst.PAGE_MENU)
-	
-End Sub
 
 #region "MENUS"
 Private Sub btnPageAction_Click
@@ -321,6 +323,18 @@ End Sub
 #end region
 
 
+Private Sub ConfigPowerOption
+	
+	If config.AndroidTakeOverSleepFLAG = False Then 
+		'--- power options not configured
+		powerHelpers.ScreenON(False)
+		Return 
+	End If
+		
+	'--- turn the screen on
+	powerHelpers.ScreenON(True)
+	
+End Sub
 
 
 

@@ -21,15 +21,15 @@ Sub Process_Globals
 	
 	Public LastConnectedClient As String
 	Public pTurnOnDebugTabFLAG As Boolean
-
-	Public AndroidTakeOverSleepFLAG As Boolean = False  
-	Public AndroidNotPrintingScrnOffFLAG As Boolean = False 
+	
+	Public AndroidTakeOverSleepFLAG As Boolean = False
+	Public AndroidNotPrintingScrnOffFLAG As Boolean = False
 	Public AndroidNotPrintingMinTill As Int
 	Public AndroidPrintingScrnOffFLAG As Boolean = False
 	Public AndroidPrintingMinTill As Int
 	
 	'--- also turn of screen after X minutes after print is done
-	
+
 End Sub
 
 

@@ -86,6 +86,7 @@ End Sub
 
 Private Sub btnGeneral_Click
 	
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	If oc.isConnected = False Then Return
 	If oc.JobPrintState <> "Operational" Then
 		guiHelpers.Show_toast(oc.cPRINTER_BUSY_MSG,2000)
@@ -107,6 +108,7 @@ End Sub
 
 Private Sub btnXYZ_Click
 	
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	If oc.JobPrintState <> "Operational" Then
 		guiHelpers.Show_toast(oc.cPRINTER_BUSY_MSG,2000)
 		Return

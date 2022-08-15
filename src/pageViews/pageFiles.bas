@@ -128,6 +128,8 @@ End Sub
 
 Private Sub btnAction_Click
 	
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	
 	If clvLastIndexClicked = cNO_SELECTION Then
 		guiHelpers.Show_toast("No item selected",2500)
 		Return
@@ -201,6 +203,8 @@ Private Sub SetThumbnail2Nothing
 End Sub
 
 Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
+	
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 	If Value = Null Then
 		clvLastIndexClicked = cNO_SELECTION

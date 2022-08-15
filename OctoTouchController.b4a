@@ -219,7 +219,10 @@ Public Sub tmrScreenPower_Tick
 		Return
 	End If
 	tmrScreen.Enabled = False
-	powerHelpers.ScreenOff
+	
+	'powerHelpers.ScreenOff
+	fnc.BlankScreen
+	
 End Sub
 
 '--- timer control subs --- --- timer control subs ---

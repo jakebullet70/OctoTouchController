@@ -15,6 +15,7 @@ Sub Class_Globals
 	Private oMasterController As MasterController
 	Private toast As BCToast
 	Private pageSetup As B4XSetupPage
+	Public pnlScreenOff As B4XView
 	
 	'--- splash screen
 	Private ivSpash As B4XView, pnlSplash As Panel
@@ -34,6 +35,7 @@ Sub Class_Globals
 	
 	'--- master parent used for all templates dialogs
 	Public Dialog As B4XDialog 
+	
 	
 End Sub
 
@@ -88,7 +90,10 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 		Return False '--- cancel close request
 	End If
 	
+	powerHelpers.ReleaseLocks
+	powerHelpers.ActionBar_On
 	Return True '--- exit app
+	
 End Sub
 
 Private Sub B4XPage_Appear
@@ -336,12 +341,18 @@ Private Sub ConfigPowerOption
 		Return 
 	End If
 		
-	'--- turn the screen on
-	powerHelpers.ScreenON(True)
+	fnc.ProcessPowerFlags
 	
 End Sub
 
-
+Private Sub pnlScreenOff_Click
+	'--- eat the click, hide the panel
+	If logMe.logPOWER_EVENTS Then Log("screen off panel click - show screen")
+	pnlScreenOff.Visible = False	
+	pnlScreenOff.SendToBack
+	powerHelpers.SetScreenBrightness(powerHelpers.screenBrightness)
+	fnc.ProcessPowerFlags
+End Sub
 
 
 

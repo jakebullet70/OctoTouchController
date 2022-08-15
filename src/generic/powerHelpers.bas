@@ -20,7 +20,7 @@ Sub Process_Globals
 	Public pws As PhoneWakeState
 	Public ph As Phone
 	
-	Private screenBrightness As Float 'ignore
+	Public screenBrightness As Float 'ignore
 	Private const AUTO_BRIGHTNESS As Float = -1
 	
 End Sub
@@ -40,10 +40,11 @@ Public Sub ScreenON(takeOverPower As Boolean)
 		screenBrightness = GetScreenBrightness
 		If logMe.logPOWER_EVENTS Then Log("pws.KeepAlive(True)")
 		pws.KeepAlive(True)
+		
 	Else
 		If logMe.logPOWER_EVENTS Then Log("KeepAlive - OFF")
 	End If
-	
+	ActionBar_Off
 '	If screenBrightness <> AUTO_BRIGHTNESS Then
 '		SetScreenBrightness(screenBrightness)
 '	End If
@@ -57,6 +58,13 @@ Public Sub ScreenOff
 	pws.ReleaseKeepAlive
 	pws.PartialLock
 	SetScreenBrightness(0)
+	
+End Sub
+
+Public Sub ReleaseLocks
+	screenBrightness = GetScreenBrightness
+	pws.ReleaseKeepAlive
+	pws.PartialLock
 	
 End Sub
 
@@ -79,6 +87,7 @@ Public Sub ActionBar_On
 	End If
 End Sub
 
+' 0 to 1 - so 0.5 is valid
 Public Sub SetScreenBrightness(value As Float)
 	Try
 		If screenBrightness = AUTO_BRIGHTNESS Then
@@ -91,7 +100,7 @@ Public Sub SetScreenBrightness(value As Float)
 	End Try 'ignore
 End Sub
 
-' 0 to 1 so 0.7 is 70%
+' 0 to 1 
 Public Sub GetScreenBrightness() As Float
 	'--- returns -1 if set to auto
 	' https://www.b4x.com/android/forum/threads/get-set-brightness.107899/#content

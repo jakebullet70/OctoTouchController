@@ -14,6 +14,12 @@ Sub Process_Globals
 End Sub
 
 
+Public Sub BlankScreen
+	B4XPages.MainPage.pnlScreenOff.Visible = True
+	B4XPages.MainPage.pnlScreenOff.BringToFront
+	powerHelpers.SetScreenBrightness(0.1)
+End Sub
+
 Public Sub ProcessPowerFlags()
 	
 	If logMe.logPOWER_EVENTS Then Log("ProcessPowerFlags()")

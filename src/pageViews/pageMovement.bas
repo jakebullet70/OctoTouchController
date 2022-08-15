@@ -142,6 +142,7 @@ Private Sub btnXYZ_Click
 	
 	End Select
 	guiHelpers.Show_toast("Command Sent",1200)
+	
 End Sub
 
 Private Sub cboMovementSize_SelectedIndexChanged (Index As Int)
@@ -156,6 +157,10 @@ Private Sub TypeInHeatChangeRequest
 	o1.Show
 	
 End Sub
+Private Sub HeatTempChange_ToolEdit(value As String)
+	'--- callback for TypeInHeatChangeRequest
+	HeatTempChange_Tool(value,"")
+End Sub
 
 	
 Private Sub HeatChangeRequest
@@ -165,14 +170,6 @@ Private Sub HeatChangeRequest
 	o1.Show(250dip,220dip,mMainObj.MasterCtrlr.mapToolHeatValuesOnly)
 	
 End Sub
-
-
-Private Sub HeatTempChange_ToolEdit(value As String)
-	'--- callback for TypeInHeatChangeRequest
-	HeatTempChange_Tool(value,"")
-End Sub
-
-
 Private Sub HeatTempChange_Tool(value As String, tag As String)
 	
 	'--- callback for HeatChangeRequest
@@ -206,7 +203,6 @@ Private Sub SetExtruderLength
 	o1.Show
 	
 End Sub
-
 Private Sub ExtruderLength_Set(value As String)
 	
 	'--- callback for SetExtruderLength
@@ -217,17 +213,6 @@ Private Sub ExtruderLength_Set(value As String)
 		
 End Sub
 #end region
-
-Private Sub ExtrudeRetract(Extrude As Boolean)
-	
-	If oc.Tool1ActualReal < 150 Then
-		guiHelpers.Show_toast("Tool is not hot enough",1600)
-		Return
-	End If
-	mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_TOOL_EXTRUDE_RETRACT.Replace("!LEN!", IIf(Extrude,"","-") & ExtruderLengthSize))
-	guiHelpers.Show_toast(IIf(Extrude,"Extrusion","Retraction") & ": " & ExtruderLengthSize & "mm",1200)
-	
-End Sub
 
 #Region "FUNCTION_MENU"
 private Sub FunctionMenu
@@ -261,13 +246,24 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 End Sub
 #end region
 
+#Region "GCODE"
+Private Sub ExtrudeRetract(Extrude As Boolean)
+	
+	If oc.Tool1ActualReal < 150 Then
+		guiHelpers.Show_toast("Tool is not hot enough",1600)
+		Return
+	End If
+	mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_TOOL_EXTRUDE_RETRACT.Replace("!LEN!", IIf(Extrude,"","-") & ExtruderLengthSize))
+	guiHelpers.Show_toast(IIf(Extrude,"Extrusion","Retraction") & ": " & ExtruderLengthSize & "mm",1200)
+	
+End Sub
 
 Private Sub MotorsOff
 	'--- DISABLE_ALL_STEPPERS
 	mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","M18"))
 	guiHelpers.Show_toast("Command sent: Motors Off",1800)
 End Sub
-
+#end region
 
 
 

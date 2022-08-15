@@ -5,10 +5,9 @@ File11=octopus.png
 File12=pageFiles.bal
 File13=pageMenu.bal
 File14=pageMovement.bal
-File15=pageMovement2.bal
-File16=pagePrinting.bal
-File17=pagesetup.bal
-File18=viewfiles.bal
+File15=pagePrinting.bal
+File16=pagesetup.bal
+File17=viewfiles.bal
 File2=dlgLogging.json
 File3=dlgPower.json
 File4=MainPage.bal
@@ -23,10 +22,9 @@ FileGroup11=MISC
 FileGroup12=VIEWS_PAGES
 FileGroup13=VIEWS_PAGES
 FileGroup14=VIEWS_PAGES
-FileGroup15=Default Group
-FileGroup16=VIEWS_PAGES
-FileGroup17=B4XPages
-FileGroup18=VIEWS
+FileGroup15=VIEWS_PAGES
+FileGroup16=B4XPages
+FileGroup17=VIEWS
 FileGroup2=JSON_CONFIGS
 FileGroup3=JSON_CONFIGS
 FileGroup4=B4XPages
@@ -39,7 +37,7 @@ Group=Default Group
 Library1=b4xpages
 Library10=reflection
 Library11=xui views
-Library12=b4xpreferencesdialog
+Library12=sadb4xpreferencesdialog
 Library2=bctoast
 Library3=byteconverter
 Library4=core
@@ -48,7 +46,7 @@ Library6=javaobject
 Library7=json
 Library8=okhttputils2
 Library9=phone
-ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'--- https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'--- Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~'--- Take over power functions~\n~AddPermission(android.permission.WAKE_LOCK)~\n~~\n~~\n~~\n~''''https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~''''Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~'''CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~'''~\n~'''AddManifestText(~\n~'''~\n~'''	<Activity android:launchMode="singleInstance" />~\n~'''	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="18"/>~\n~'''	~\n~'''	<supports-screens android:largeScreens="true" ~\n~'''	    android:xlargeScreens="true"~\n~'''    	android:normalScreens="false" ~\n~'''    	android:smallScreens="false" ~\n~'''		android:requiresSmallestWidthDp="800"~\n~'''    	android:anyDensity="true"/>~\n~'''~\n~'''		~\n~'''	<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>~\n~'''	<uses-permission android:name="android.permission.GET_ACCOUNTS" />~\n~'''	~\n~''')~\n~'''~\n~'''SetActivityAttribute(main, android:windowSoftInputMode, adjustPan|stateHidden)~\n~'''~\n~'''SetApplicationAttribute(android:hardwareAccelerated, "true")~\n~'''SetApplicationAttribute(android:theme, "@android:style/Theme.Holo.Light")~\n~'''SetApplicationAttribute(android:icon, "@drawable/icon")~\n~'''SetApplicationAttribute(android:label, "$LABEL$")~\n~'''~\n~'''AddPermission(android.permission.REBOOT)~\n~'''AddPermission(android.permission.WAKE_LOCK)~\n~'''AddPermission(android.permission.ACCESS_NETWORK_STATE)~\n~'''~\n~'''#if not (KE)~\n~'''AddPermission(android.permission.MEDIA_UNMOUNTED)~\n~'''AddPermission(android.permission.MEDIA_MOUNTED)~\n~'''~\n~'''AddReceiverText(svrMediaHelper,~\n~'''<intent-filter>~\n~'''    <action android:name="android.intent.action.MEDIA_MOUNTED" />~\n~'''	<data android:scheme="file"/>~\n~'''</intent-filter>)~\n~'''~\n~'''AddReceiverText(svrMediaHelper,~\n~'''<intent-filter>~\n~'''    <action android:name="android.intent.action.MEDIA_UNMOUNTED" />~\n~'''	<data android:scheme="file"/>~\n~'''</intent-filter>)~\n~'''#end if~\n~'''~\n~'''#if not (KE)~\n~'''AddReceiverText(eu.dgconsulting.appupdating.newinst2,~\n~'''  <intent-filter>~\n~'''  <action android:name="android.intent.action.PACKAGE_REPLACED" />~\n~'''    <data android:scheme="package" />~\n~'''  </intent-filter>)~\n~''' #end if~\n~~\n~
 Module1=|relative|src\custom_controls\ASPopupMenu
 Module10=|relative|src\dialogs\dlgGeneral
 Module11=|relative|src\dialogs\dlgListbox
@@ -74,8 +72,8 @@ Module29=|relative|src\pageViews\pageMenu
 Module3=|relative|src\B4XPages\B4XSetupPage
 Module30=|relative|src\pageViews\pageMovement
 Module31=|relative|src\pageViews\pagePrinting
-Module32=|relative|src\octoPrint\RequestApiKey
-Module33=|relative|src\custom_controls\sadPreferencesDialog
+Module32=|relative|src\generic\powerHelpers
+Module33=|relative|src\octoPrint\RequestApiKey
 Module34=Starter
 Module35=|relative|src\generic\strHelpers
 Module4=|relative|src\helperClasses\CallSubUtils
@@ -84,7 +82,7 @@ Module6=|relative|src\custom_controls\CircularProgressBar
 Module7=|relative|src\generic\clrTheme
 Module8=|relative|src\helperClasses\clvSelectionsX
 Module9=|relative|src\generic\config
-NumberOfFiles=18
+NumberOfFiles=17
 NumberOfLibraries=12
 NumberOfModules=35
 Version=11.8
@@ -115,16 +113,18 @@ Sub Process_Globals
 	Public Version As String = "V1.0 - Beta 1"
 	Public ActionBarHomeClicked As Boolean
 	Public tmrTimerCallSub As CallSubUtils
-	
+		
 	'--- timers need to be in 'Process_Globals'
 	Private tmrSplash As Timer
 	Private tmrMain As Timer
 	Private tmrFilesCheckChange As Timer
+	Private tmrScreen As Timer
 	
 End Sub
 
 Sub Globals
 End Sub
+
 
 '===================================================================================
 
@@ -132,6 +132,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	
 	If FirstTime Then
 		tmrTimerCallSub.Initialize
+		tmrScreen.Initialize("tmrScreen",1000)	'--- init, will be reset later
 		#if debug
 		tmrSplash.Initialize("tmrSplash",1000)  '--- just a splash screen
 		#else
@@ -209,6 +210,25 @@ Private Sub tmrFilesCheckChange_Tick
 	CallSub(B4XPages.MainPage.MasterCtrlr,"tmrFilesCheckChange_Tick")
 End Sub
 
+Public Sub tmrScreen_Tick
+	
+End Sub
+
+'--- timer control subs ---
+
+Public Sub Set_ScreenTmr()
+	tmrScreen.Enabled = False
+	If config.AndroidTakeOverSleepFLAG = False Then	
+		Return
+	End If
+	tmrScreen.Interval = config.AndroidNotPrintingMinTill * 1000
+	tmrScreen.Enabled = True
+End Sub
+
+Public Sub TurnOn_ScreenTmr(EnableDisable As Boolean)
+	tmrScreen.Enabled = EnableDisable
+End Sub
+
 Public Sub TurnOn_MainTmr
 	tmrMain.Enabled = True
 End Sub
@@ -216,6 +236,7 @@ End Sub
 Public Sub TurnOnOff_FilesCheckChangeTmr(EnableDisable As Boolean)
 	tmrFilesCheckChange.Enabled = EnableDisable
 End Sub
+
 #end region
 
 '===================================================================================
@@ -246,10 +267,12 @@ End Sub
 
 Sub Activity_Resume
 	B4XPages.Delegate.Activity_Resume
+	powerHelpers.ScreenON(config.AndroidTakeOverSleepFLAG)
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
 	B4XPages.Delegate.Activity_Pause
+	powerHelpers.ScreenON(False)
 End Sub
 
 Sub Activity_PermissionResult (Permission As String, Result As Boolean)
@@ -269,3 +292,25 @@ public boolean _onCreateOptionsMenu(android.view.Menu menu) {
 #End If
 #End Region
 
+
+'==================================================================================
+'==================================================================================
+
+
+'--- 1 = off, 0 = on
+Public Sub Dim_ActionBar(On_off As Int)
+	
+	Try
+			
+		Dim p As Phone
+		If p.SdkVersion >= 14 And p.SdkVersion < 21 Then
+			Dim r As Reflector
+			r.Target = Activity
+			r.RunMethod2("setSystemUiVisibility", On_off, "java.lang.int") '1 = SYSTEM_UI_FLAG_LOW_PROFILE
+		End If
+		
+	Catch
+		Log("DimBottomButtons - " & LastException)
+	End Try
+	
+End Sub

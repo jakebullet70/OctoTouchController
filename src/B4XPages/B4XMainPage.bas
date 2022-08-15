@@ -264,7 +264,7 @@ Private Sub PopupMainMenu
 	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
 		top = 21%y
 	Else If guiHelpers.gScreenSizeAprox >= 8 Then
-		top = 33%y
+		top = 26%y
 	Else
 		top = 8%y
 	End If

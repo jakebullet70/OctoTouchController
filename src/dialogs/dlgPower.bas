@@ -44,7 +44,7 @@ Public Sub Show
 	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
 		h = 55%y
 	Else If guiHelpers.gScreenSizeAprox >= 8 Then
-		h = 40%y
+		h = 42%y
 	Else '--- 4 to 5.9 inch
 		h = 80%y
 	End If

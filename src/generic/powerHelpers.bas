@@ -27,6 +27,7 @@ End Sub
 
 
 Public Sub Init
+	SetScreenBrightness(0.5)
 	screenBrightness = GetScreenBrightness
 End Sub
 
@@ -100,7 +101,7 @@ Public Sub GetScreenBrightness() As Float
     ref.Target = ref.RunMethod("getWindow")
     ref.Target = ref.RunMethod("getAttributes")
     Dim brightness As Float = ref.GetField("screenBrightness")
-	'Log("screen brightness: " & brightness)
+	Log("screen brightness: " & brightness)
 	Return brightness
 End Sub
 

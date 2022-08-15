@@ -86,14 +86,17 @@ End Sub
 
 Private Sub btnGeneral_Click
 	
+	Dim o As B4XView : o = Sender
+	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	
 	If oc.isConnected = False Then Return
+	
 	If oc.JobPrintState <> "Operational" Then
 		guiHelpers.Show_toast(oc.cPRINTER_BUSY_MSG,2000)
 		Return
 	End If
 	
-	Dim o As B4XView : o = Sender
 	Select Case o.Tag
 		Case "heat" 	: HeatChangeRequest
 		Case "elength" 	: SetExtruderLength
@@ -102,19 +105,22 @@ Private Sub btnGeneral_Click
 		Case "fmnu"		: FunctionMenu
 		Case "moff"		: MotorsOff
 	End Select
+	
 End Sub
 
 
 
 Private Sub btnXYZ_Click
 	
+	Dim btn As B4XView : btn = Sender
+	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	
 	If oc.JobPrintState <> "Operational" Then
 		guiHelpers.Show_toast(oc.cPRINTER_BUSY_MSG,2000)
 		Return
 	End If
 	
-	Dim btn As B4XView : btn = Sender
 	Select Case btn.Tag
 		
 		Case "Zhome"

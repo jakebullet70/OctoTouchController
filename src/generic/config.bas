@@ -40,28 +40,22 @@ End Sub
 
 
 Private Sub LoadCfgs()
-	
-	'--- get theme from config file -- TODO
-	
-	Dim Data As Map '--- temp var
-	
+		
 	If File.Exists(xui.DefaultFolder,gblConst.LOGGING_OPTIONS_FILE) = False Then
 		Dim o1 As dlgLogging
 		o1.initialize(Null)
 		o1.createdefaultfile
 	End If
+	ReadLoggingCFG
 	
-	Try
-'  TODO		
-'		Data = File.ReadMap(xui.DefaultFolder,gblConst.LOGGING_OPTIONS_FILE)
-'		logMe.pLogFull =  Data.Get("fulllog").As(Boolean)
-'		logMe.gDaysOfOldLogsBeforeDelete =  Data.Get("days")
-'		pTurnOnDebugTabFLAG = Data.Get("dbgtab").As(Boolean)
+	'======================================================================
 	
-		
-	Catch
-		Log(LastException)
-	End Try
+'	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
+'		Dim o3 As dlgGeneral
+'		o3.initialize(Null)
+'		o3.createdefaultfile
+'	End If
+'	ReadGeneralCFG
 	
 	'======================================================================
 	
@@ -70,8 +64,35 @@ Private Sub LoadCfgs()
 		o2.Initialize(Null)  
 		o2.CreateDefaultFile
 	End If
-		
-	Data = File.ReadMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE)
+	ReadPowerCFG
+	
+End Sub
+
+
+
+Public Sub ReadLoggingCFG
+	Dim Data As Map
+	
+	'  TODO
+'		Data = File.ReadMap(xui.DefaultFolder,gblConst.LOGGING_OPTIONS_FILE)
+'		logMe.pLogFull =  Data.Get("fulllog").As(Boolean)
+'		logMe.gDaysOfOldLogsBeforeDelete =  Data.Get("days")
+'		pTurnOnDebugTabFLAG = Data.Get("dbgtab").As(Boolean)
+
+	
+End Sub
+
+
+Public Sub ReadGeneralCFG
+	Dim Data As Map
+	'--- get theme from config file -- TODO
+	
+End Sub
+
+
+public Sub ReadPowerCFG
+	
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE)
 	
 	AndroidTakeOverSleepFLAG = Data.Get("TakePwr")
 	AndroidNotPrintingScrnOffFLAG = Data.Get("NotPrintingScrnOff")
@@ -79,8 +100,8 @@ Private Sub LoadCfgs()
 	AndroidPrintingScrnOffFLAG  = Data.Get("PrintingScrnOff")
 	AndroidPrintingMinTill  = Data.Get("PrintingMinTill")
 
-	'TODO!!!!!!!!!!!!!!!!    write the code to do power crap!
-	
 End Sub
+
+
 
 

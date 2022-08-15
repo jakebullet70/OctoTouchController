@@ -23,9 +23,10 @@ Sub Process_Globals
 	Public pLog2DebugWindowRestAPI As Boolean = False
 	Public pLog2DebugWindow As Boolean = False
 	
-'	Public cFILES_EVENTS = 1, cMAIN_TIMER_EVENTS = 2 As Int
-'	Type typLogStyle (FILES_EVENTS As Int)
-'	Public LogStype As typLogStyle
+	'--- debugging flags
+	Public logPOWER_EVENTS As Boolean = True
+	Public logFILE_EVENTS As Boolean = False
+	
 	
 End Sub
 

@@ -14,6 +14,18 @@ Sub Process_Globals
 End Sub
 
 
+Public Sub ProcessPowerFlags()
+	
+	If logMe.logPOWER_EVENTS Then Log("ProcessPowerFlags()")
+	
+	powerHelpers.ScreenON(config.AndroidTakeOverSleepFLAG And _
+				(config.AndroidNotPrintingScrnOffFLAG Or config.AndroidPrintingScrnOffFLAG))
+				
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off if enabled
+	
+End Sub
+
+
 public Sub ReadConnectionFile(cn As HttpOctoRestAPI) As Boolean
 	
 	oc.IsOctoConnectionVarsValid = False '--- assume bad

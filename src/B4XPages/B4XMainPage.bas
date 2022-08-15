@@ -58,8 +58,7 @@ Public Sub Initialize
 	logMe.Clean_OldLogs
 	
 	powerHelpers.Init
-	powerHelpers.ScreenON(config.AndroidTakeOverSleepFLAG)
-	CallSubDelayed(Main,"Set_ScreenTmr")
+	fnc.ProcessPowerFlags
 	
 End Sub
 

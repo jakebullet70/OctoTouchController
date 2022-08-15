@@ -148,6 +148,11 @@ public Sub PostRequest(PostApiCmd As String) As ResumableSub
 		logMe.Log_DebuggerRestAPI( $"${UniqueStr}:-->${EndPoint}"$)
 	End If
 	
+	If PostApiCmd = oc.cCMD_PRINT Or PostApiCmd = oc.cCMD_CANCEL Then
+		'--- reset the power / screen on-off (diff timeout when printing)
+		Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Set_ScreenTmr",10000)
+	End If
+	
 	Return retStr
 	
 End Sub

@@ -303,15 +303,12 @@ End Sub
 
 Private Sub btnAction_Click
 	
+	Dim o As B4XView : o = Sender
+	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 	If oc.isConnected = False Then Return
 	
-	Dim o As B4XView : o = Sender
-	
-	'---- turn off btns, they will get re-enabled later
-	'guiHelpers.DisableBtns(Array As B4XView(btnPrint,btnPause,btnCancel))
-	'guiHelpers.SetEnableDisableColor(Array As B4XView(btnPrint,btnPause,btnCancel))
 	Update_Printer_Btns
 	
 	'--- what does the user want?

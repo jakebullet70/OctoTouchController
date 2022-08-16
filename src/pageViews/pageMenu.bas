@@ -11,15 +11,19 @@ Version=11.8
 
 Sub Class_Globals
 	Private Const mModule As String = "pageMenu" 'ignore
+	Private xui As XUI
 	Private mPnlMain As B4XView
 	Private mCallBackEvent As String
-	Private  mMainObj As B4XMainPage'ignore
+	Private mMainObj As B4XMainPage'ignore
 	
 	'--- menus
 	Private mnuFiles As B4XView
 	Private mnuMovement As B4XView
 	Private mnuPrinting As B4XView
 	
+	Public Dialog As B4XDialog
+	
+	Private btnBrightness As B4XView
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String) 
@@ -31,7 +35,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	mPnlMain.SetLayoutAnimated(0,0,masterPanel.top,masterPanel.Width,masterPanel.Height)
 	mPnlMain.LoadLayout("pageMenu")
 	
-	CallSubDelayed(Me,"Build_GUI")
+	Build_GUI
 	
 End Sub
 
@@ -44,6 +48,8 @@ public Sub Lost_focus()
 End Sub
 
 Private Sub Build_GUI
+	
+	btnBrightness.Visible = config.ChangeBrightnessSettingsFLAG
 	
 	'--- build the main menu screen
 	BuildMenuCard(mnuMovement,"menuMovement.png","Move",gblConst.PAGE_MOVEMENT)
@@ -83,4 +89,23 @@ Private Sub mnuCardImg_Click
 	CallSub2(mMainObj,mCallBackEvent,oo.Tag2)
 	
 End Sub
+
+
+#Region "BRIGHTNESS BTN"
+Private Sub btnBrightness_Click
+	
+	Dim o1 As dlgRoundSlider
+	o1.Initialize(mMainObj,"Screen Brightness",Me,"Brightness_Change")
+	o1.Show(powerHelpers.pScreenBrightness * 100)
+	
+End Sub
+Private Sub Brightness_Change(value As Float)
+	'--- callback for btnBrightness_Click
+	Dim v As Float = value / 100
+	powerHelpers.SetScreenBrightness(v)
+	powerHelpers.pScreenBrightness = v
+	
+End Sub
+#end region
+
 

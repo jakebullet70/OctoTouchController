@@ -15,7 +15,6 @@ Sub Process_Globals
 	Private xui As XUI
 	Private Const mModule As String = "config" 'ignore
 	
-	Public colorTheme As String 
 	'Public MQTTserverOnFLAG As Boolean = False
 	'Public MQTTclientOnFLAG As Boolean = False
 	
@@ -27,6 +26,9 @@ Sub Process_Globals
 	Public AndroidNotPrintingMinTill As Int
 	Public AndroidPrintingScrnOffFLAG As Boolean = False
 	Public AndroidPrintingMinTill As Int
+	
+	Public ChangeBrightnessSettingsFLAG As Boolean = True '--- get from general settings, key = chgBrightness
+	Public ColorTheme As String '--- get from general settings, key = themeclr
 	
 	Public IsInit As Boolean = False
 

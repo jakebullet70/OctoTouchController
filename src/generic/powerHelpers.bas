@@ -10,9 +10,9 @@ Version=9.5
 #End Region
 'Static code module
 
-'--- Generic code to turn on / off CPU - Screen - brightness
-'--- Generic code to turn on / off CPU - Screen - brightness
-'--- Generic code to turn on / off CPU - Screen - brightness
+'--- Code to turn on / off CPU - Screen - brightness
+'--- Code to turn on / off CPU - Screen - brightness
+'--- Code to turn on / off CPU - Screen - brightness
 
 Sub Process_Globals
 	Private Const mModule As String = "powerHelpers" 'ignore
@@ -21,7 +21,7 @@ Sub Process_Globals
 	Private pws As PhoneWakeState
 	Private ph As Phone
 	
-	Public mScreenBrightness As Float = -1'ignore
+	Public pScreenBrightness As Float = -1'ignore
 	Private Const AUTO_BRIGHTNESS As Float = -1
 	Private Const SCREEN_BRIGHTNESS_FILE As String = "scrn_brightness.map"
 	
@@ -29,16 +29,18 @@ End Sub
 
 Public Sub Init(takeOverPower As Boolean)
 
+	If config.ChangeBrightnessSettingsFLAG = False Then Return
+	
 	If takeOverPower = False Then Return
 	
 	If LoadBrightnesFromfile = False Then
-		mScreenBrightness = GetScreenBrightness
-		If mScreenBrightness = AUTO_BRIGHTNESS Then
-			mScreenBrightness = 0.5
+		pScreenBrightness = GetScreenBrightness
+		If pScreenBrightness = AUTO_BRIGHTNESS Then
+			pScreenBrightness = 0.5
 		End If
 	End If
 	
-	SetScreenBrightness(mScreenBrightness)
+	SetScreenBrightness(pScreenBrightness)
 	
 End Sub
 
@@ -98,8 +100,11 @@ End Sub
 
 ' 0 to 1 - so 0.5 is valid
 Public Sub SetScreenBrightness(value As Float)
+	
+	If config.ChangeBrightnessSettingsFLAG = False Then Return
+	
 	Try
-		If mScreenBrightness = AUTO_BRIGHTNESS Then
+		If pScreenBrightness = AUTO_BRIGHTNESS Then
 			If logMe.logPOWER_EVENTS Then Log("cannot set brightness, brightness is in automode")
 			Return
 		End If
@@ -111,14 +116,17 @@ Public Sub SetScreenBrightness(value As Float)
 	End Try 'ignore
 End Sub
 Public Sub SetScreenBrightness2
-	SetScreenBrightness(mScreenBrightness)
+	
+	If config.ChangeBrightnessSettingsFLAG = False Then Return
+	SetScreenBrightness(pScreenBrightness)
+	
 End Sub
 
 
 Private Sub SaveBrightnes2file
 	fileHelpers.SafeKill(SCREEN_BRIGHTNESS_FILE)
 	Dim m As Map : m.Initialize
-	m.Put(mScreenBrightness,mScreenBrightness)
+	m.Put(pScreenBrightness,pScreenBrightness)
 	File.WriteMap(xui.DefaultFolder,SCREEN_BRIGHTNESS_FILE,m)
 End Sub
 
@@ -127,7 +135,7 @@ Private Sub LoadBrightnesFromfile() As Boolean
 	
 	If File.Exists(xui.DefaultFolder,SCREEN_BRIGHTNESS_FILE) Then
 		Dim m As Map = File.ReadMap(xui.DefaultFolder,SCREEN_BRIGHTNESS_FILE)
-		mScreenBrightness = m.GetValueAt(0)
+		pScreenBrightness = m.GetValueAt(0)
 		Return True
 	End If
 	

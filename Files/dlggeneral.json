@@ -16,18 +16,15 @@
             "required": false
         },
         {
-            "options": [
-                "Kiosk (Immersive) mode is a way to allow Android to run as a kiosk type application with no taskbar. Versions of Android before V4.4 do not support it. In this case we DIM the taksbar. Use this if you are only going to ONLY run OctoTouchController and no other programs."
-            ],
-            "title": "Kiosk mode (About)",
-            "type": "Explanation",
+            "title": "",
+            "type": "Separator",
             "key": "",
             "required": false
         },
         {
-            "title": "Kiosk mode",
+            "title": "Change Brightness",
             "type": "Boolean",
-            "key": "imode",
+            "key": "chgBrightness",
             "required": false
         }
     ]

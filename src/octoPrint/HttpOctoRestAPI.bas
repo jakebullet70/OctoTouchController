@@ -32,44 +32,25 @@ End Sub
 
 Private Sub ProcessErrMsg(msg As String)
 	
-	'ResponseError. Reason: java.net.ConnectException: Failed to connect to /192.168.1.236:5003, Response:
-'	If msg.Contains("Failed to connect to") Then
-'
-'		If B4XPages.MainPage.pnlNoConnection.Visible = False Then
-'
-'			oc.ResetAllOctoVars
-'			CallSubDelayed(mainObj,"Show_ConnectingScreen")
-'			CallSubDelayed(mainObj,"Start_ConnectTimer")
-'			
-'		End If
-'		Return
-'		
-'	End If
-
-
 	
-	'logMe.pLog2DebugWindowRestAPI = False
-	'--- if TRUE will log to debug window, FALSE logs to disk
-	'--- in RELEASE always logs to disk, this is for testing, debugging
-	#if b4j
-	'CallSubDelayed2(logMe,"Log_DebuggerRestAPI", msg)
-	#else
-	logMe.Log_DebuggerRestAPI( msg)
+	If msg.Contains("Failed to connect to") Then
+		'--- ResponseError. Reason: java.net.ConnectException: Failed to connect to /192.168.1.236:5003, Response:
+		oc.ResetAllOctoVars
+		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)
+		Return
+	else If msg.Contains("Printer is not operational") Then
+		'--- ResponseError. Reason: CONFLICT, Response: {"error":"Printer is not operational"}
+		oc.ResetAllOctoVars
+		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",True)
+		Return
+	End If
 	
-	#end if
-	
+	' TODO clean up logging
+	logMe.Log_DebuggerRestAPI(msg)
 	
 	'--- logs ONLY in the programming envirement
 	logMe.LogDebug2("RestAPI ERR --> " & msg,mModule) '--- TODO, in DEBUG do we want to always log REST API errors?
 	
-	'--- will be called if ShowTabDebugInfoFLAG flag is set to true (view in DEBUG tab)
-'	If config.pTurnOnDebugTabFLAG Then
-'		'CallSubDelayed2( B4XPages.MainPage.oTabHome.oSubTab.oDebug,"ShowDebugVarsJSON",msg)  TODO!!!!
-'	End If
-				
-	
-	'If msg.Contains("CONFLICT") Then
-	'End If
 	
 End Sub
 

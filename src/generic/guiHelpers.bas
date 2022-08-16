@@ -42,7 +42,7 @@ End Sub
 
 Public Sub GetAboutText() As String
 	Dim msg As StringBuilder : msg.Initialize
-	msg.Append("OctoTouchController " & Main.Version).Append(CRLF)
+	msg.Append("OctoTouchController " & gblConst.VERSION).Append(CRLF)
 	msg.Append("A dedicated touch screen controller").Append(CRLF).Append("for Octoprint using older Android devices").Append(CRLF)
 	msg.Append(CRLF).Append("(c)sadLogic 2022 - Open Source - Freeware").Append(CRLF)
 	Return msg.ToString

@@ -13,7 +13,6 @@ Sub Class_Globals
 	Private Root As B4XView 'ignore
 	Private xui As XUI 'ignore
 	Private Const mModule As String = "B4XSetupPage" 'ignore
-	'Private IME1 As IME
 	
 	Private B4XLoadingIndicator1 As B4XLoadingIndicator
 	Private btnCheckConnection As B4XView
@@ -34,11 +33,6 @@ Sub Class_Globals
 	Private btnCancel,btnSave As Button
 	
 End Sub
-
-'
-'Public Sub getCanceled As Boolean
-'	Return mCanceled
-'End Sub
 
 
 Public Sub Initialize(firstTime As Boolean) As Object
@@ -61,7 +55,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 End Sub
 
 Sub B4XPage_Appear
-	btnSave.Enabled = False
+	InvalidateConnection
 End Sub
 
 'Sub B4XPage_Disappear
@@ -143,7 +137,7 @@ End Sub
 
 
 Private Sub SetSaveButtonState
-	btnSave.Enabled = ValidConnection
+	guiHelpers.EnableDisableBtns(Array As B4XView(btnSave),True)
 End Sub
 
 
@@ -272,7 +266,8 @@ Private Sub btnGetOctoKey_Click
 	Sleep(300)
 	
 	'--- start the request for an octokey
-	oGetOctoKey.Initialize(Me,"RequestAPI",gblConst.APP_TITLE,txtPrinterIP.Text,txtPrinterPort.Text)
+	oGetOctoKey.Initialize(Me,"RequestAPI",gblConst.APP_TITLE.Replace("™","").Trim, _
+							txtPrinterIP.Text,txtPrinterPort.Text)
 	oGetOctoKey.RequestAvailable
 	
 End Sub
@@ -323,16 +318,8 @@ End Sub
 
 Private Sub InvalidateConnection
 	ValidConnection = False
-	btnSave.Enabled = False
+	guiHelpers.EnableDisableBtns(Array As B4XView(btnSave),False)
 End Sub
 #End Region
 
 
-
-'Private Sub EnableDisableValidationCheckBtn
-'	btnCheckConnection.Enabled = Not ( txtOctoKey.Text.Length = 0  Or _
-'														 txtPrinterIP.Text.Length = 0  Or _
-'														 txtPrinterPort.Text.Length = 0 )
-'														 
-'	btnGetOctoKey.Enabled = Not ( txtPrinterIP.Text.Length = 0  Or  txtPrinterPort.Text.Length = 0 )
-'End Sub

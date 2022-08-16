@@ -71,7 +71,7 @@ End Sub
 
 
 Public Sub ReadLoggingCFG
-	Dim Data As Map
+	Dim Data As Map 'ignore
 	
 	'  TODO
 '		Data = File.ReadMap(xui.DefaultFolder,gblConst.LOGGING_OPTIONS_FILE)
@@ -84,7 +84,7 @@ End Sub
 
 
 Public Sub ReadGeneralCFG
-	Dim Data As Map
+	Dim Data As Map 'ignore
 	'--- get theme from config file -- TODO
 	
 End Sub

@@ -111,7 +111,6 @@ Version=11.8
 
 Sub Process_Globals
 	
-	Public Version As String = "V1.0 - Beta 1"
 	Public ActionBarHomeClicked As Boolean
 	Public tmrTimerCallSub As CallSubUtils
 		
@@ -251,12 +250,13 @@ Public Sub Set_ScreenTmr()
 	
 End Sub
 
-Public Sub TurnOn_ScreenTmr(EnableDisable As Boolean)
+Public Sub TurnOnOff_ScreenTmr(EnableDisable As Boolean)
 	tmrScreen.Enabled = EnableDisable
 End Sub
 
-Public Sub TurnOn_MainTmr
-	tmrMain.Enabled = True
+Public Sub TurnOnOff_MainTmr(EnableDisable As Boolean)
+	Log("main tmr on: " & EnableDisable)
+	tmrMain.Enabled = EnableDisable
 End Sub
 
 Public Sub TurnOnOff_FilesCheckChangeTmr(EnableDisable As Boolean)

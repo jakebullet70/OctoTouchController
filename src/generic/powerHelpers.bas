@@ -10,62 +10,66 @@ Version=9.5
 #End Region
 'Static code module
 
-'--- Generic code to turn on / off CPU - Screen
-'--- Generic code to turn on / off CPU - Screen
-'--- Generic code to turn on / off CPU - Screen
+'--- Generic code to turn on / off CPU - Screen - brightness
+'--- Generic code to turn on / off CPU - Screen - brightness
+'--- Generic code to turn on / off CPU - Screen - brightness
 
 Sub Process_Globals
 	Private Const mModule As String = "powerHelpers" 'ignore
+	Private xui As XUI
 	
-	Public pws As PhoneWakeState
-	Public ph As Phone
+	Private pws As PhoneWakeState
+	Private ph As Phone
 	
-	Public screenBrightness As Float 'ignore
-	Private const AUTO_BRIGHTNESS As Float = -1
+	Public mScreenBrightness As Float = -1'ignore
+	Private Const AUTO_BRIGHTNESS As Float = -1
+	Private Const SCREEN_BRIGHTNESS_FILE As String = "scrn_brightness.map"
 	
 End Sub
 
+Public Sub Init(takeOverPower As Boolean)
 
-Public Sub Init
-	SetScreenBrightness(0.5)
-	screenBrightness = GetScreenBrightness
+	If takeOverPower = False Then Return
+	
+	If LoadBrightnesFromfile = False Then
+		mScreenBrightness = GetScreenBrightness
+		If mScreenBrightness = AUTO_BRIGHTNESS Then
+			mScreenBrightness = 0.5
+		End If
+	End If
+	
+	SetScreenBrightness(mScreenBrightness)
+	
 End Sub
 
 
 Public Sub ScreenON(takeOverPower As Boolean)
 	
-	pws.ReleasePartialLock
-	pws.ReleaseKeepAlive
+	ReleaseLocks
+	
 	If takeOverPower Then 
-		screenBrightness = GetScreenBrightness
-		If logMe.logPOWER_EVENTS Then Log("pws.KeepAlive(True)")
+		If logMe.logPOWER_EVENTS Then Log("KeepAlive - ON")
 		pws.KeepAlive(True)
-		
 	Else
 		If logMe.logPOWER_EVENTS Then Log("KeepAlive - OFF")
 	End If
+	
 	ActionBar_Off
-'	If screenBrightness <> AUTO_BRIGHTNESS Then
-'		SetScreenBrightness(screenBrightness)
-'	End If
 	
 End Sub
 
 
 Public Sub ScreenOff
 	
-	screenBrightness = GetScreenBrightness
 	pws.ReleaseKeepAlive
 	pws.PartialLock
-	SetScreenBrightness(0)
+	ph.SetScreenBrightness(0)
 	
 End Sub
 
 Public Sub ReleaseLocks
-	screenBrightness = GetScreenBrightness
+	pws.ReleasePartialLock
 	pws.ReleaseKeepAlive
-	pws.PartialLock
-	
 End Sub
 
 
@@ -87,20 +91,52 @@ Public Sub ActionBar_On
 	End If
 End Sub
 
+
+'=================================================================================
+'=================================================================================
+
+
 ' 0 to 1 - so 0.5 is valid
 Public Sub SetScreenBrightness(value As Float)
 	Try
-		If screenBrightness = AUTO_BRIGHTNESS Then
+		If mScreenBrightness = AUTO_BRIGHTNESS Then
 			If logMe.logPOWER_EVENTS Then Log("cannot set brightness, brightness is in automode")
 			Return
 		End If
+		If logMe.logPOWER_EVENTS Then Log("setting brightness to: " & value)
 		ph.SetScreenBrightness(value)
+		SaveBrightnes2file
 	Catch
 		Log(LastException)
 	End Try 'ignore
 End Sub
+Public Sub SetScreenBrightness2
+	SetScreenBrightness(mScreenBrightness)
+End Sub
 
-' 0 to 1 
+
+Private Sub SaveBrightnes2file
+	fileHelpers.SafeKill(SCREEN_BRIGHTNESS_FILE)
+	Dim m As Map : m.Initialize
+	m.Put(mScreenBrightness,mScreenBrightness)
+	File.WriteMap(xui.DefaultFolder,SCREEN_BRIGHTNESS_FILE,m)
+End Sub
+
+
+Private Sub LoadBrightnesFromfile() As Boolean
+	
+	If File.Exists(xui.DefaultFolder,SCREEN_BRIGHTNESS_FILE) Then
+		Dim m As Map = File.ReadMap(xui.DefaultFolder,SCREEN_BRIGHTNESS_FILE)
+		mScreenBrightness = m.GetValueAt(0)
+		Return True
+	End If
+	
+	Return False
+	
+End Sub
+
+
+' 0 to 1  - so 0.5 is valid
 Public Sub GetScreenBrightness() As Float
 	'--- returns -1 if set to auto
 	' https://www.b4x.com/android/forum/threads/get-set-brightness.107899/#content
@@ -110,112 +146,22 @@ Public Sub GetScreenBrightness() As Float
     ref.Target = ref.RunMethod("getWindow")
     ref.Target = ref.RunMethod("getAttributes")
     Dim brightness As Float = ref.GetField("screenBrightness")
-	If logMe.logPOWER_EVENTS Then Log("screen brightness: " & brightness)
+	If logMe.logPOWER_EVENTS Then Log("screen brightness is: " & brightness)
 	Return brightness
 End Sub
 
-'----------------------------------------------------------------------------------------
-'----------------------------------------------------------------------------------------
 
-'Private Sub ScreenFullOn
-'	
-'	Try
-'		
-'		Log("Public Sub ScreenFullOn")
-'		If IsPaused(Main) Then StartActivity(Main)
-'		Dim n As Float = 1.0
-'		ph.SetScreenBrightness(n)
-'		
-'	Catch
-'		Log("ScreenFullOn - " & LastException)
-'	End Try
-'	
+
+'Public Sub SetBrightnessToNormalMode
+'	'--- NEEDS TESTING, SEE BELOW
+'	'  https://www.b4x.com/android/forum/threads/permission-write_settings.94311/#post-597465
+'	Dim jo As JavaObject
+'	jo.InitializeContext
+'	Dim System As JavaObject
+'	System.InitializeStatic("android.provider.Settings.System")
+'	System.RunMethod("putInt", Array( _
+'       jo.RunMethod("getContentResolver", Null), _
+'       System.GetField("SCREEN_BRIGHTNESS_MODE"), _
+'       System.GetField("SCREEN_BRIGHTNESS_MODE_MANUAL")))
 'End Sub
-
-'Public Sub DimTheScrnBySettingBrightness
-'	Log("Public Sub DimTheScrnBySettingBrightness")
-'	Dim f As Float = c.SCRN_DIM_PCT1
-'	ph.SetScreenBrightness(f)
-'End Sub
-
-
-
-
-'Public Sub RemoveScreenPanel
-'	If mScreenOff.IsInitialized = True Then
-'		mScreenOff.SendToBack
-'		mScreenOff.Visible=False '--- this is the WHOLE PANEL covering the screen
-'	End If
-'End Sub
-
-'Public Sub TurnScreen_On
-'	Try
-'			
-'		g.LogWrite("TurnScreen_On",g.ID_LOG_MSG)
-'		RemoveScreenPanel
-'		g.ScreenFullOn '--- calls the phone intent
-'		CallSubDelayed(svrMain,"ResetScrn_SleepCounter")
-'		
-'		'--- if pframe then un-pause the pframe timer
-'		If snapIn_PFrame.IsInitialized Then
-'			If gCurrentPage = c.SNAPIN_MENU_PFRAME_NDX Then
-'				snapIn_PFrame.tmrNextPic.Enabled = True
-'			End If
-'		End If
-'		
-'	Catch
-'		g.LogException2(LastException,True,"TurnScreen_On")
-'	End Try
-'	
-'End Sub
-
-'Public Sub TurnScreen_Off
-'
-'	'--- turn scrn off
-'	If Not (c.IS0SCREEN0OFF) Then g.LogWrite("TurnScreen_Off",g.ID_LOG_MSG)
-'	g.DimTheScrnBySettingBrightness '--- calls the phone intent, make sure the scrn is dim'd
-'	mScreenOff.Color=Colors.ARGB(255,0,0,0) '--- scrn is black
-'	mScreenOff.BringToFront
-'	mScreenOff.Visible = True
-'	
-'	'--- if pframe then pause the pframe timer
-'	If snapIn_PFrame.IsInitialized Then
-'		If gCurrentPage = c.SNAPIN_MENU_PFRAME_NDX Then
-'			snapIn_PFrame.tmrNextPic.Enabled = False
-'		End If
-'	End If
-'	
-'	ICSscreen_Off
-'
-'End Sub
-
-'Private Sub pnlScrnOff_Click
-'	If g.WeatherData.IsInitialize Then
-'		g.WeatherData.TryUpdate
-'	End If
-'	TurnScreen_On
-'End Sub
-'Public Sub TurnScreen_Dim
-'	g.DimTheScrnBySettingBrightness '--- calls the phone intent
-'	mScreenOff.Color = g.PanelBgColor
-'	mScreenOff.BringToFront
-'	mScreenOff.Visible = True
-'End Sub
-
-'Public Sub EnableDisableScreen(disable As Boolean)
-'	'--- called for popups to freeze the background screen
-'	If disable Then
-'		mScreenBackGrnd.Visible = True
-'		mScreenBackGrnd.BringToFront
-'	Else
-'		mScreenBackGrnd.SendToBack
-'		mScreenBackGrnd.Visible = False
-'	End If
-'End Sub
-
-
-
-
-
-
 

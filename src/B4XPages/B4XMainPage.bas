@@ -36,7 +36,6 @@ Sub Class_Globals
 	'--- master parent used for all templates dialogs
 	Public Dialog As B4XDialog 
 	
-	
 End Sub
 
 '======================================================================================
@@ -59,8 +58,8 @@ Public Sub Initialize
 	
 	logMe.Clean_OldLogs
 	
-	powerHelpers.Init
-	fnc.ProcessPowerFlags
+	powerHelpers.Init(config.AndroidTakeOverSleepFLAG)
+	ConfigPowerOption
 	
 End Sub
 
@@ -76,9 +75,9 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	'--- splash screen
 	pnlMaster.Visible = False
 	pnlSplash.Visible = True
-		
-	ConfigPowerOption
+	
 	Build_GUI
+	TryOctoConnection
 	
 End Sub
 
@@ -103,7 +102,6 @@ Private Sub B4APage_Disappear
 End Sub
 
 Private Sub B4XPages_Foreground
-	Log("B4XPages_Foreground")
 End Sub
 
 Private Sub B4XPages_Background
@@ -118,7 +116,6 @@ Private Sub Build_GUI
 	'--- hide all page views
 	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlMovement))
 	
-	'btnPageAction.TextSize = 48 'guiHelpers.btnResizeText(btnPageAction,False,28) + 2
 	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	
 	Switch_Pages(gblConst.PAGE_MENU)
@@ -130,7 +127,6 @@ Public Sub HideSplash_StartUp
 	
 	pnlSplash.Visible = False
 	pnlMaster.Visible = True
-	TryOctoConnection
 	
 End Sub
 
@@ -144,7 +140,7 @@ Private Sub TryOctoConnection
 		B4XPages.ShowPage(gblConst.PAGE_SETUP)
 	Else
 		If oc.IsOctoConnectionVarsValid Then
-			oMasterController.SetCallbackObj(Me,"Update_Printer_Temps","Update_Printer_Status","Update_Printer_Btns")
+			oMasterController.SetCallbackTargets(Me,"Update_Printer_Temps","Update_Printer_Status","Update_Printer_Btns")
 			oMasterController.Start
 		End If
 	End If
@@ -199,8 +195,7 @@ Private Sub btnPageAction_Click
 	If oPageCurrent = oPageMenu Then
 		PopupMainMenu
 	Else
-		'--- back key, go to main menu
-		Switch_Pages(gblConst.PAGE_MENU)
+		Switch_Pages(gblConst.PAGE_MENU) '--- back key, go to main menu
 	End If
 End Sub
 
@@ -333,11 +328,41 @@ End Sub
 #end region
 
 
+Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
+
+	CallSub2(Main,"TurnOnOff_MainTmr",False)
+	CallSub2(Main,"TurnOnOff_ScreenTmr",False)
+	
+	Dim msg As StringBuilder : msg.Initialize
+	
+	If connectedButError Then
+		msg.Append("Connected to Octoprint but there is an error.").Append(CRLF)
+		msg.Append("Check that Octoprint is connected to the printer?").Append(CRLF)
+		msg.Append("Make sure you can print from the Octoprint UI.")
+	Else
+		msg.Append("No connection to Octoprint").Append(CRLF)
+		msg.Append("Is Octoprint turned on?")
+		msg.Append(CRLF).Append("Connected to the printer?")
+	End If
+	
+	Dim sf As Object = xui.Msgbox2Async(msg.ToString, "Connetion Problem", "Retry", "Setup", "", Null)
+	Wait For (sf) Msgbox_Result (Result As Int)
+	
+	Select Case Result
+		Case xui.DialogResponse_Positive '--- retry
+			oMasterController.Start
+		Case xui.DialogResponse_Cancel	 '--- run setup
+			Setup_Closed(0,"oc")
+	End Select
+	
+	ConfigPowerOption
+
+End Sub
+
 Private Sub ConfigPowerOption
 	
 	If config.AndroidTakeOverSleepFLAG = False Then 
-		'--- power options not configured
-		powerHelpers.ScreenON(False)
+		powerHelpers.ScreenON(False) '--- power options not configured
 		Return 
 	End If
 		
@@ -350,7 +375,7 @@ Private Sub pnlScreenOff_Click
 	If logMe.logPOWER_EVENTS Then Log("screen off panel click - show screen")
 	pnlScreenOff.Visible = False	
 	pnlScreenOff.SendToBack
-	powerHelpers.SetScreenBrightness(powerHelpers.screenBrightness)
+	powerHelpers.SetScreenBrightness2
 	fnc.ProcessPowerFlags
 End Sub
 

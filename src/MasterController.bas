@@ -54,7 +54,7 @@ Public Sub Start
 	GetConnectionPrinterStatus
 End Sub
 
-Public Sub SetCallbackObj(CallBack As Object,EventNameTemp As String, _
+Public Sub SetCallbackTargets(CallBack As Object,EventNameTemp As String, _
 																EventNameStatus As String, _
 																EventNameBtns As String)
 	mEventNameTemp = EventNameTemp
@@ -241,7 +241,7 @@ Private Sub GetConnectionPrinterStatus
 		parser.ConnectionStatus(Result)
 		
 		'--- turn on main loop timer
-		CallSub(Main,"TurnOn_MainTmr")
+		CallSub2(Main,"TurnOnOff_MainTmr",True)
 		tmrMain_Tick
 		
 	Else

@@ -172,7 +172,13 @@ End Sub
 
 Public Sub ThemeDialogForm(dlg As B4XDialog,title As String)
 	
-	'dlg.Title = title
+	Try
+		dlg.Title = title
+	Catch
+		'--- errors sometimes, I think...
+		Log("ThemeDialogForm-set title: " & LastException)
+	End Try 'ignore
+	
 	dlg.TitleBarFont = xui.CreateDefaultFont(22)
 	dlg.TitleBarColor = clrTheme.BackgroundHeader
 	dlg.ButtonsTextColor = clrTheme.txtNormal

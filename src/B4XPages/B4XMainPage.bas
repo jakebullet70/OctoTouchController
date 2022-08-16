@@ -36,6 +36,8 @@ Sub Class_Globals
 	'--- master parent used for all templates dialogs
 	Public Dialog As B4XDialog 
 	
+	
+
 End Sub
 
 '======================================================================================
@@ -378,9 +380,4 @@ Private Sub pnlScreenOff_Click
 	powerHelpers.SetScreenBrightness2
 	fnc.ProcessPowerFlags
 End Sub
-
-
-
-
-
 

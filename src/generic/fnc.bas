@@ -14,7 +14,7 @@ Sub Process_Globals
 End Sub
 
 '-------------------------------------------------------------------------------------------
-'	misc support methods
+'	misc support methods - functions and assorted crap
 '-------------------------------------------------------------------------------------------
 
 Public Sub BlankScreen
@@ -299,4 +299,11 @@ public Sub Map2List(myMap As Map, KeyList As Boolean) As List
 End Sub
 
 
-
+Public Sub ChangeGradient(Color1 As Int,Color2 As Int)  As GradientDrawable 'ignore
+	Dim gd As GradientDrawable, C1(2) As Int
+	C1(0) = Color1
+	C1(1) = Color2
+	gd.Initialize("BOTTOM_TOP", C1)
+	'win.SetBackground(gd)
+	Return gd
+End Sub

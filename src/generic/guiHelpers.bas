@@ -173,7 +173,8 @@ Public Sub ThemeDialogForm(dlg As B4XDialog,title As String)
 	Try
 		dlg.Title = title
 	Catch
-		'--- errors sometimes, I think...  LOL
+		'--- errors sometimes, I think... something to do with the title not showing on smaller screens
+		'--- b4xdialog.PutAtTop = False  <----   this!
 		Log("ThemeDialogForm-set title: " & LastException)
 	End Try 'ignore
 	

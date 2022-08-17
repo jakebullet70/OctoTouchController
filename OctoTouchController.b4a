@@ -40,7 +40,6 @@ Library1=b4xpages
 Library10=reflection
 Library11=sadb4xpreferencesdialog
 Library12=xui views
-Library13=b4xdrawer
 Library2=bctoast
 Library3=byteconverter
 Library4=core
@@ -88,7 +87,7 @@ Module7=|relative|src\generic\clrTheme
 Module8=|relative|src\helperClasses\clvSelectionsX
 Module9=|relative|src\generic\config
 NumberOfFiles=18
-NumberOfLibraries=13
+NumberOfLibraries=12
 NumberOfModules=37
 Version=11.8
 @EndOfDesignText@

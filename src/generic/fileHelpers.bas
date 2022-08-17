@@ -229,3 +229,18 @@ public Sub WildCardFilesList(FilesPath As String, WildCards As String, Sorted As
 	End If
 End Sub
 
+
+Public Sub DeleteFiles(folder As String, fileSpec As String)
+
+	Dim lstFolder As List : lstFolder.Initialize
+	
+	lstFolder = WildCardFilesList(folder,fileSpec,False,False)
+	For Each filename As String In lstFolder
+		If File.IsDirectory(folder, filename) Then
+			Continue
+		End If
+		File.Delete(folder,filename)
+	Next
+	
+End Sub
+

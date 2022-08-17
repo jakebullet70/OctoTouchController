@@ -21,14 +21,14 @@ Sub Process_Globals
 	Private pws As PhoneWakeState
 	Private ph As Phone
 	
-	Public pScreenBrightness As Float = -1'ignore
+	Public pScreenBrightness As Float = -1
 	Private Const AUTO_BRIGHTNESS As Float = -1
-	Private Const SCREEN_BRIGHTNESS_FILE As String = "scrn_brightness.map"
+	Private Const SCREEN_BRIGHTNESS_FILE As String = "scrn_brightness.lst"
 	
 End Sub
 
 Public Sub Init(takeOverPower As Boolean)
-
+	
 	If config.ChangeBrightnessSettingsFLAG = False Then Return
 	
 	If takeOverPower = False Then Return
@@ -80,7 +80,7 @@ Public Sub ActionBar_Off
 	If ph.SdkVersion >= 14 And ph.SdkVersion < 21 Then
 		CallSub2(Main,"Dim_ActionBar",1)
 	Else
-		
+		'TODO		
 	End If
 End Sub
 
@@ -89,7 +89,7 @@ Public Sub ActionBar_On
 	If ph.SdkVersion >= 14 And ph.SdkVersion < 21 Then
 		CallSub2(Main,"Dim_ActionBar",0)
 	Else
-		
+		'TODO
 	End If
 End Sub
 
@@ -110,7 +110,7 @@ Public Sub SetScreenBrightness(value As Float)
 		End If
 		If logMe.logPOWER_EVENTS Then Log("setting brightness to: " & value)
 		ph.SetScreenBrightness(value)
-		SaveBrightnes2file
+		fileHelpers.Write_SingleValue(SCREEN_BRIGHTNESS_FILE,value.As(String))
 	Catch
 		Log(LastException)
 	End Try 'ignore
@@ -123,23 +123,12 @@ Public Sub SetScreenBrightness2
 End Sub
 
 
-Private Sub SaveBrightnes2file
-	fileHelpers.SafeKill(SCREEN_BRIGHTNESS_FILE)
-	Dim m As Map : m.Initialize
-	m.Put(pScreenBrightness,pScreenBrightness)
-	File.WriteMap(xui.DefaultFolder,SCREEN_BRIGHTNESS_FILE,m)
-End Sub
-
-
 Private Sub LoadBrightnesFromfile() As Boolean
 	
-	If File.Exists(xui.DefaultFolder,SCREEN_BRIGHTNESS_FILE) Then
-		Dim m As Map = File.ReadMap(xui.DefaultFolder,SCREEN_BRIGHTNESS_FILE)
-		pScreenBrightness = m.GetValueAt(0)
-		Return True
-	End If
-	
-	Return False
+	Dim v As String = fileHelpers.Read_ReturnSingleValue(SCREEN_BRIGHTNESS_FILE)
+	If v = "" Then Return False
+	pScreenBrightness = v.As(Float)
+	Return True
 	
 End Sub
 

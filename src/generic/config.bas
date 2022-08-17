@@ -49,19 +49,20 @@ End Sub
 
 
 Private Sub LoadCfgs()
-		
 
 	'======================================================================
 	
-'	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
-'		Dim o3 As dlgGeneral
-'		o3.initialize(Null)
-'		o3.createdefaultfile
-'	End If
-'	ReadGeneralCFG
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
+		Dim o3 As dlgGeneral
+		o3.initialize(Null)
+		o3.createdefaultfile
+	End If
+	ReadGeneralCFG
 	
 	'======================================================================
 	
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE)
 	If File.Exists(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE) = False Then
 		Dim o2 As dlgPower
 		o2.Initialize(Null)  
@@ -73,8 +74,23 @@ End Sub
 
 
 Public Sub ReadGeneralCFG
-	Dim Data As Map 'ignore
-	'--- get theme from config file -- TODO
+	
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+	
+	ColorTheme = Data.Get("themeclr").As(String).ToLowerCase
+	ChangeBrightnessSettingsFLAG  = Data.Get("chgBrightness").As(Boolean)
+	
+	If Data.Get("logall").As(Boolean) Then
+		logPOWER_EVENTS = True
+		logFILE_EVENTS = True
+		logREQUEST_OCTO_KEY = True
+		logREST_API = True
+	Else
+		logPOWER_EVENTS = Data.Get("logpwr").As(Boolean)
+		logFILE_EVENTS = Data.Get("logfiles").As(Boolean)
+		logREQUEST_OCTO_KEY = Data.Get("logoctokey").As(Boolean)
+		logREST_API = Data.Get("logrest").As(Boolean)
+	End If
 	
 End Sub
 

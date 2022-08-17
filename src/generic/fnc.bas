@@ -70,6 +70,7 @@ Public Sub LoadPrinterConnectionSettings() As Map
 	Dim flist As List
 	
 	'--- Should only be 1 settings file at this point
+	'"default.psettings"
 	flist = fileHelpers.WildCardFilesList(xui.DefaultFolder,"*.psettings",False,False)
 	If flist.Size = 0 Then
 		Return Null

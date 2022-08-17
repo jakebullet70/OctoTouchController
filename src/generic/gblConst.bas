@@ -20,7 +20,6 @@ Sub Process_Globals
 	Public Const PRINTER_PORT As String = "port"
 	Public Const PRINTER_OCTO_KEY As String = "octokey"
 	
-	Public Const LOGGING_OPTIONS_FILE As String = "logging_options.map"
 	Public Const POWER_OPTIONS_FILE As String = "power_options.map"
 	Public Const GENERAL_OPTIONS_FILE As String = "general_options.map"
 	

@@ -26,27 +26,40 @@ End Sub
 
 public Sub CreateDefaultFile
 	
-	'themeclr
-	'chgBrightness
-	
 
-'	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
-'		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE, _
-'						CreateMap("TakePwr": "false", "NotPrintingScrnOff": "false","NotPrintingMinTill":30, _
-'												"PrintingScrnOff": "false","PrintingMinTill":5))
-'	End If
+	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
+		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE, _
+						CreateMap("themeclr": "Red", _
+						 "chgBrightness": "false", _
+						 "logall": "false", _
+						 "logpwr": "false", _
+						 "logfiles": "false", _
+						 "logoctokey": "false", _
+						 "logrest": "false"))
+						 
+	End If
 
 End Sub
 
 Public Sub Show
 	
-	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE)
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	
-	mGeneralDlg.Initialize(mainObj.root, "General Option", 360dip, mainObj.Root.Height - 50dip)
+	Dim h As Float
+	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
+		h = 55%y
+	Else If guiHelpers.gScreenSizeAprox >= 8 Then
+		h = 42%y
+	Else '--- 4 to 5.9 inch
+		h = 80%y
+	End If
+	
+	mGeneralDlg.Initialize(mainObj.root, "General Option", 360dip, h)
 	mGeneralDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgGeneral.json"))
 	mGeneralDlg.SetEventsListener(Me,"dlgGeneral")
 	
 	guiHelpers.ThemePrefDialogForm(mGeneralDlg)
+	mGeneralDlg.PutAtTop = False
 	Dim RS As ResumableSub = mGeneralDlg.ShowDialog(Data, "OK", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(mGeneralDlg.Dialog)
 	

@@ -77,8 +77,21 @@ public Sub TempStatus(s As String)
 			'--- bed / tool is set to heat
 			Dim bedCheckOffset As Int = 2
 			Dim toolCheckOffset As Int = 5
-			Dim bedActual As Int = mBed.Get("actual")
-			Dim toolActual As Int = mTool1.Get("actual")
+			
+			Dim bedActual As Int '--- klipper issue, check for null
+			If mBed.Get("actual") = Null Then
+				bedActual = 0
+			Else
+				bedActual = mBed.Get("actual")
+			End If
+			Dim toolActual As Int '--- klipper issue, check for null
+			If mTool1.Get("actual") = Null Then
+				toolActual = 0
+			Else
+				toolActual = mTool1.Get("actual")
+			End If
+			
+			
 			If (bedActual + bedCheckOffset <= TargetBedCheck) Or (toolActual + toolCheckOffset <= TargetToolCheck) Then
 				oc.isHeating = True
 			Else

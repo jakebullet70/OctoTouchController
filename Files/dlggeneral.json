@@ -54,7 +54,7 @@
         {
             "title": "RestAPI Events",
             "type": "Boolean",
-            "key": "logorest",
+            "key": "logrest",
             "required": false
         }
     ]

@@ -57,7 +57,7 @@ Public Sub Initialize
 	'fileHelpers.DeleteFiles(xui.DefaultFolder,"*.psettings") '--- DEV - delete all printing settings files
 	config.Init
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
-	clrTheme.Init("red")
+	clrTheme.Init(config.ColorTheme)
 	
 	logMe.Clean_OldLogs
 	
@@ -252,7 +252,7 @@ End Sub
 Private Sub PopupMainMenu
 	
 	Dim o As mnuPopup
-	Dim popUpMemuItems As Map = CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc","Logging - Debuging":"log","About":"ab")
+	Dim popUpMemuItems As Map = CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc","About":"ab")
 	If oc.isPrinting Or oc.IsPaused2 Then
 		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
 		popUpMemuItems.Remove("Octoprint Connection") 
@@ -291,11 +291,11 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 				
 		
 			Case "gn"  '--- general settings
-				toast.Show("Not done")
-				'https://www.b4x.com/android/forum/threads/immersive-mode-hide-the-navigation-bar.90882/
-				'V4.4 and above, add it to the general settings
-				'V4.0-3  just dim the bar
+				Dim o3 As dlgGeneral
+				o3.Initialize(Me)
+				o3.Show
 			
+				
 			Case "oc"  '--- octo setup
 				If pageSetup.IsInitialized = False Then
 					B4XPages.AddPage(gblConst.PAGE_SETUP, (pageSetup.Initialize(False)))
@@ -306,12 +306,6 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 				Dim o1 As dlgPower
 				o1.Initialize(Me)
 				o1.Show
-			
-			Case "log"  '--- logging
-				toast.Show("Needs work")
-				'Dim o As dlgLogging
-				'o.Initialize(Me)
-				'o.Show
 			
 		End Select
 		

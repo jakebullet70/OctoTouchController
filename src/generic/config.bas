@@ -31,7 +31,7 @@ Sub Process_Globals
 	'--- general dlg
 	Public ChangeBrightnessSettingsFLAG As Boolean = True '--- get from general settings, key = chgBrightness
 	Public ColorTheme As String '--- get from general settings, key = themeclr
-	Public logPOWER_EVENTS As Boolean = False
+	Public logPOWER_EVENTS As Boolean = False 
 	Public logFILE_EVENTS As Boolean = False
 	Public logREQUEST_OCTO_KEY As Boolean = False
 	Public logREST_API As Boolean = False
@@ -50,13 +50,7 @@ End Sub
 
 Private Sub LoadCfgs()
 		
-	If File.Exists(xui.DefaultFolder,gblConst.LOGGING_OPTIONS_FILE) = False Then
-		Dim o1 As dlgLogging
-		o1.initialize(Null)
-		o1.createdefaultfile
-	End If
-	ReadLoggingCFG
-	
+
 	'======================================================================
 	
 '	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
@@ -74,20 +68,6 @@ Private Sub LoadCfgs()
 		o2.CreateDefaultFile
 	End If
 	ReadPowerCFG
-	
-End Sub
-
-
-
-Public Sub ReadLoggingCFG
-	Dim Data As Map 'ignore
-	
-	'  TODO
-'		Data = File.ReadMap(xui.DefaultFolder,gblConst.LOGGING_OPTIONS_FILE)
-'		logMe.pLogFull =  Data.Get("fulllog").As(Boolean)
-'		logMe.gDaysOfOldLogsBeforeDelete =  Data.Get("days")
-'		pTurnOnDebugTabFLAG = Data.Get("dbgtab").As(Boolean)
-
 	
 End Sub
 

@@ -41,6 +41,10 @@ End Sub
 
 public Sub Set_focus()
 	mPnlMain.Visible = True
+	
+	'TODO needs to move to an event when general cfg changes
+	btnBrightness.Visible = config.ChangeBrightnessSettingsFLAG 
+	
 End Sub
 
 public Sub Lost_focus()
@@ -100,9 +104,10 @@ Private Sub btnBrightness_Click
 	
 End Sub
 Private Sub Brightness_Change(value As Float)
+	
 	'--- callback for btnBrightness_Click
 	Dim v As Float = value / 100
-	powerHelpers.SetScreenBrightness(v)
+	powerHelpers.SetScreenBrightnessAndSave(v,True) 
 	powerHelpers.pScreenBrightness = v
 	
 End Sub

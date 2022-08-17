@@ -33,7 +33,7 @@ Sub Class_Globals
 	Private pnlPrinting As B4XView,   oPagePrinting As pagePrinting
 	Private pnlMovement As B4XView,   oPageMovement As pageMovement
 	
-	'--- master parent used for all templates dialogs
+	'--- master parent obj used for all templates dialogs
 	Public Dialog As B4XDialog 
 	
 	
@@ -73,6 +73,8 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	Root.LoadLayout("MainPage")
 	
 	toast.Initialize(Root)
+	toast.pnl.Color = clrTheme.BackgroundMenu
+	toast.DefaultTextColor = clrTheme.txtNormal
 	
 	'--- splash screen
 	pnlMaster.Visible = False

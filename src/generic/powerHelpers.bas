@@ -29,6 +29,8 @@ End Sub
 
 Public Sub Init(takeOverPower As Boolean)
 	
+	
+	'TODO  brightness needs to be seperated from takeoverpower
 	If config.ChangeBrightnessSettingsFLAG = False Then Return
 	
 	If takeOverPower = False Then Return
@@ -37,10 +39,11 @@ Public Sub Init(takeOverPower As Boolean)
 		pScreenBrightness = GetScreenBrightness
 		If pScreenBrightness = AUTO_BRIGHTNESS Then
 			pScreenBrightness = 0.5
+			SetScreenBrightnessAndSave(pScreenBrightness,True)
+			Return
 		End If
 	End If
-	
-	SetScreenBrightness(pScreenBrightness)
+	SetScreenBrightnessAndSave(pScreenBrightness,False)
 	
 End Sub
 
@@ -99,7 +102,7 @@ End Sub
 
 
 ' 0 to 1 - so 0.5 is valid
-Public Sub SetScreenBrightness(value As Float)
+Public Sub SetScreenBrightnessAndSave(value As Float, Save2File As Boolean)
 	
 	If config.ChangeBrightnessSettingsFLAG = False Then Return
 	
@@ -110,7 +113,9 @@ Public Sub SetScreenBrightness(value As Float)
 		End If
 		If logMe.logPOWER_EVENTS Then Log("setting brightness to: " & value)
 		ph.SetScreenBrightness(value)
-		fileHelpers.Write_SingleValue(SCREEN_BRIGHTNESS_FILE,value.As(String))
+		If Save2File Then 
+			fileHelpers.Write_SingleValue(SCREEN_BRIGHTNESS_FILE,value.As(String))
+		End If
 	Catch
 		Log(LastException)
 	End Try 'ignore
@@ -118,7 +123,7 @@ End Sub
 Public Sub SetScreenBrightness2
 	
 	If config.ChangeBrightnessSettingsFLAG = False Then Return
-	SetScreenBrightness(pScreenBrightness)
+	SetScreenBrightnessAndSave(pScreenBrightness)
 	
 End Sub
 

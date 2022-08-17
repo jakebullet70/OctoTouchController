@@ -27,7 +27,7 @@ End Sub
 public Sub CreateDefaultFile
 	
 	'themeclr
-	'imode
+	'chgBrightness
 	
 
 '	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
@@ -40,7 +40,6 @@ End Sub
 
 Public Sub Show
 	
-	CreateDefaultFile
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE)
 	
 	mGeneralDlg.Initialize(mainObj.root, "General Option", 360dip, mainObj.Root.Height - 50dip)
@@ -55,6 +54,7 @@ Public Sub Show
 	If Result = xui.DialogResponse_Positive Then
 		guiHelpers.Show_toast("General Data Saved",1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,Data)
+		config.ReadGeneralCFG
 	End If
 	
 End Sub

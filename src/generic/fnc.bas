@@ -17,7 +17,7 @@ End Sub
 Public Sub BlankScreen
 	B4XPages.MainPage.pnlScreenOff.Visible = True
 	B4XPages.MainPage.pnlScreenOff.BringToFront
-	powerHelpers.SetScreenBrightness(0.1)
+	powerHelpers.SetScreenBrightnessAndSave(0.1,False)
 End Sub
 
 Public Sub ProcessPowerFlags()

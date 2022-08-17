@@ -28,8 +28,8 @@ public Sub CreateDefaultFile
 
 	If File.Exists(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE) = False Then
 		File.WriteMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE, _
-						CreateMap("TakePwr": "false", "NotPrintingScrnOff": "false","NotPrintingMinTill":30, _
-												"PrintingScrnOff": "false","PrintingMinTill":5))
+						CreateMap("TakePwr": "true", "NotPrintingScrnOff": "true","NotPrintingMinTill":90, _
+												"PrintingScrnOff": "false","PrintingMinTill":20))
 	End If
 
 End Sub
@@ -37,7 +37,6 @@ End Sub
 
 Public Sub Show
 	
-	CreateDefaultFile
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE)
 
 	Dim h As Float

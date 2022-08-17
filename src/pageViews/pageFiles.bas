@@ -59,7 +59,7 @@ public Sub Set_focus()
 		Update_Printer_Btns
 	Else
 		'--- 1st showing of tab page
-		If logMe.logFILE_EVENTS Then logMe.Logit(firstRun,mModule)
+		If config.logFILE_EVENTS Then logMe.LogIt(firstRun,mModule)
 		If clvFiles.Size > 0 Then 
 			clvFiles_ItemClick(0,mMainObj.MasterCtrlr.gMapOctoFilesList.GetKeyAt(0))
 		End If
@@ -101,12 +101,12 @@ Public Sub tmrFilesCheckChange_Tick
 	
 	If mPnlMain.Visible = False Then
 		'--- we  do not have focus so just disable files check
-		'logMe.Logit("tmrFilesCheckChange_Tick - pnl not visible",mModule)
+		'logMe.LogIt("tmrFilesCheckChange_Tick - pnl not visible",mModule)
 		CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 		Return
 	End If
 	
-	If logMe.logFILE_EVENTS Then logMe.Logit("tmrFilesCheckChange_Tick --> FIRED",mModule)
+	If config.logFILE_EVENTS Then logMe.LogIt("tmrFilesCheckChange_Tick --> FIRED",mModule)
 	CheckIfFilesChanged
 	
 End Sub
@@ -219,7 +219,7 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
 	
 		guiHelpers.Show_toast("Getting Thumbnail",1500)
-		If logMe.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
+		If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
 		
 		Dim link As String = $"http://${mMainObj.MasterCtrlr.cn.gIP}:${mMainObj.MasterCtrlr.cn.gPort}/"$ & currentFileInfo.Thumbnail
 		mMainObj.MasterCtrlr.cn.Download_AndSaveFile(link,currentFileInfo.myThumbnail_filename_disk)
@@ -256,7 +256,7 @@ Public Sub CheckIfFilesChanged
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	FilesCheckChangeIsBusyFLAG = True
 	
-	If logMe.logFILE_EVENTS Then logMe.Logit("tmrFilesCheckChange.Enabled = False  -->  START CHECK",mModule)
+	If config.logFILE_EVENTS Then logMe.LogIt("tmrFilesCheckChange.Enabled = False  -->  START CHECK",mModule)
 
 	'--- grab a list of files
 	Dim rs As ResumableSub =  mMainObj.MasterCtrlr.cn.SendRequestGetInfo( oc.cFILES)
@@ -271,7 +271,7 @@ Public Sub CheckIfFilesChanged
 		If didChange Then
 			
 			'--- ok, something changed,  delete - removed thumbnails
-			If logMe.logFILE_EVENTS Then logMe.Logit("did change - YES ;)",mModule)
+			If config.logFILE_EVENTS Then logMe.LogIt("did change - YES ;)",mModule)
 			Dim mapNewFileList As Map = o.GetAllFiles(Result)
 			ProcessThumbnails(mapNewFileList)
 			
@@ -289,7 +289,7 @@ Public Sub CheckIfFilesChanged
 		Else
 			
 			'--- nothing new, bail
-			If logMe.logFILE_EVENTS Then logMe.Logit("did change --- NO!!!!!!!!!!",mModule)
+			If config.logFILE_EVENTS Then logMe.LogIt("did change --- NO!!!!!!!!!!",mModule)
 '			FilesCheckChangeIsBusyFLAG = False
 '			tmrFilesCheckChange.Enabled = True
 '			Log("tmrFilesCheckChange.Enabled = True  -->  END CHECK")
@@ -301,7 +301,7 @@ Public Sub CheckIfFilesChanged
 	
 	FilesCheckChangeIsBusyFLAG = False
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
-	'logMe.Logit("tmrFilesCheckChange.Enabled = True  -->  END CHECK",mModule)
+	'logMe.LogIt("tmrFilesCheckChange.Enabled = True  -->  END CHECK",mModule)
 	
 	If oldListViewSize <> clvFiles.Size Then
 		'--- highllight the first row
@@ -319,13 +319,13 @@ private Sub ProcessThumbnails(NewMap As Map)
 	
 		'--- remove any old thumbnail files
 		Dim deletedFiles As Int = 0
-		If logMe.logFILE_EVENTS Then logMe.Logit("ProcessThumbnails - start - remove any old thumbnail files",mModule)
+		If config.logFILE_EVENTS Then logMe.LogIt("ProcessThumbnails - start - remove any old thumbnail files",mModule)
 		For Each oldMap As typOctoFileInfo In mMainObj.MasterCtrlr.gMapOctoFilesList.Values
 			
 			Dim oldMapKey As String = oldMap.Name
 			If NewMap.ContainsKey(oldMapKey) = False Then
 				
-				If logMe.logFILE_EVENTS Then logMe.Logit("deleted old thumbnail: " & oldMap.myThumbnail_filename_disk,mModule)
+				If config.logFILE_EVENTS Then logMe.LogIt("deleted old thumbnail: " & oldMap.myThumbnail_filename_disk,mModule)
 				fileHelpers.SafeKill(oldMap.myThumbnail_filename_disk)
 				deletedFiles = deletedFiles + 1
 				
@@ -337,9 +337,9 @@ private Sub ProcessThumbnails(NewMap As Map)
 		Log(LastException)
 	End Try
 
-	If logMe.logFILE_EVENTS Then 
-		logMe.Logit("ProcessThumbnails - END - remove any old thumbnail files: #" & deletedFiles,mModule)
-		logMe.Logit("ProcessThumbnails - START - download new thumbnails for new and changed files",mModule)
+	If config.logFILE_EVENTS Then 
+		logMe.LogIt("ProcessThumbnails - END - remove any old thumbnail files: #" & deletedFiles,mModule)
+		logMe.LogIt("ProcessThumbnails - START - download new thumbnails for new and changed files",mModule)
 	End If
 	
 	Try
@@ -355,7 +355,7 @@ private Sub ProcessThumbnails(NewMap As Map)
 				Dim ffFileToWorkOn As typOctoFileInfo = mMainObj.MasterCtrlr.gMapOctoFilesList.get(mapKey)
 				If ffFileToWorkOn.Date <> oNewMap.Date Then '--- date changed
 				
-					If logMe.logFILE_EVENTS Then logMe.Logit("refreshing old thumbnail: " & oNewMap.Name,mModule)
+					If config.logFILE_EVENTS Then logMe.LogIt("refreshing old thumbnail: " & oNewMap.Name,mModule)
 					fileHelpers.SafeKill(ffFileToWorkOn.myThumbnail_filename_disk)
 					changedFiles = changedFiles + 1
 					mMainObj.MasterCtrlr.Download_ThumbnailAndCache2File(oNewMap.Thumbnail,oNewMap.myThumbnail_filename_disk)
@@ -366,7 +366,7 @@ private Sub ProcessThumbnails(NewMap As Map)
 
 				'--- new file, need thumbnail
 				NewFiles = NewFiles + 1
-				logMe.Logit("downloading new thumbnail; " & oNewMap.name,mModule)
+				logMe.LogIt("downloading new thumbnail; " & oNewMap.name,mModule)
 				mMainObj.MasterCtrlr.Download_ThumbnailAndCache2File(oNewMap.Thumbnail,oNewMap.myThumbnail_filename_disk)
 								
 			End If
@@ -376,9 +376,9 @@ private Sub ProcessThumbnails(NewMap As Map)
 	Catch
 		Log(LastException)
 	End Try
-	If logMe.logFILE_EVENTS Then 
-		logMe.Logit("ProcessThumbnails - END - download new thumbnails for new and changed files",mModule)
-		logMe.Logit("files changed #" & changedFiles & "   files new #" & NewFiles,mModule)
+	If config.logFILE_EVENTS Then 
+		logMe.LogIt("ProcessThumbnails - END - download new thumbnails for new and changed files",mModule)
+		logMe.LogIt("files changed #" & changedFiles & "   files new #" & NewFiles,mModule)
 	End If
 	
 	

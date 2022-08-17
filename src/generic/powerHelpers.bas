@@ -53,10 +53,10 @@ Public Sub ScreenON(takeOverPower As Boolean)
 	ReleaseLocks
 	
 	If takeOverPower Then 
-		If logMe.logPOWER_EVENTS Then Log("KeepAlive - ON")
+		If config.logPOWER_EVENTS Then Log("KeepAlive - ON")
 		pws.KeepAlive(True)
 	Else
-		If logMe.logPOWER_EVENTS Then Log("KeepAlive - OFF")
+		If config.logPOWER_EVENTS Then Log("KeepAlive - OFF")
 	End If
 	
 	ActionBar_Off
@@ -108,10 +108,10 @@ Public Sub SetScreenBrightnessAndSave(value As Float, Save2File As Boolean)
 	
 	Try
 		If pScreenBrightness = AUTO_BRIGHTNESS Then
-			If logMe.logPOWER_EVENTS Then Log("cannot set brightness, brightness is in automode")
+			If config.logPOWER_EVENTS Then Log("cannot set brightness, brightness is in automode")
 			Return
 		End If
-		If logMe.logPOWER_EVENTS Then Log("setting brightness to: " & value)
+		If config.logPOWER_EVENTS Then Log("setting brightness to: " & value)
 		ph.SetScreenBrightness(value)
 		If Save2File Then 
 			fileHelpers.Write_SingleValue(SCREEN_BRIGHTNESS_FILE,value.As(String))
@@ -148,7 +148,7 @@ Public Sub GetScreenBrightness() As Float
     ref.Target = ref.RunMethod("getWindow")
     ref.Target = ref.RunMethod("getAttributes")
     Dim brightness As Float = ref.GetField("screenBrightness")
-	If logMe.logPOWER_EVENTS Then Log("screen brightness is: " & brightness)
+	If config.logPOWER_EVENTS Then Log("screen brightness is: " & brightness)
 	Return brightness
 End Sub
 

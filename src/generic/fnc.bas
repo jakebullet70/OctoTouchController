@@ -25,7 +25,7 @@ End Sub
 
 Public Sub ProcessPowerFlags()
 	
-	If logMe.logPOWER_EVENTS Then Log("ProcessPowerFlags()")
+	If config.logPOWER_EVENTS Then Log("ProcessPowerFlags()")
 	
 	powerHelpers.ScreenON(config.AndroidTakeOverSleepFLAG And _
 				(config.AndroidNotPrintingScrnOffFLAG Or config.AndroidPrintingScrnOffFLAG))

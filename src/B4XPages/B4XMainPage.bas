@@ -377,7 +377,7 @@ End Sub
 
 Private Sub pnlScreenOff_Click
 	'--- eat the click, hide the panel
-	If logMe.logPOWER_EVENTS Then Log("screen off panel click - show screen")
+	If config.logPOWER_EVENTS Then Log("screen off panel click - show screen")
 	pnlScreenOff.Visible = False	
 	pnlScreenOff.SendToBack
 	powerHelpers.SetScreenBrightness2

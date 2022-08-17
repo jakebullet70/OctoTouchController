@@ -111,6 +111,10 @@ Private Sub Brightness_Change(value As Float)
 	powerHelpers.pScreenBrightness = v
 	
 End Sub
+
+
+
+
 #end region
 
 

@@ -116,7 +116,7 @@ End Sub
 Private Sub GetAllOctoSettingInfo
 	
 	If mGotOctoSettingFLAG_IsBusy = True Then
-		logMe.LogDebug2("mGotOctoSettingFLAG_IsBusy = True",mModule)
+		logMe.logDebug2("mGotOctoSettingFLAG_IsBusy = True",mModule)
 		Return '---already been called
 	End If
 	
@@ -149,7 +149,7 @@ Private Sub GetPrinterProfileInfo
 	If oc.PrinterProfile.Length = 0 Then Return
 	
 	If mGotProfileInfoFLAG_IsBusy = True Then
-		logMe.LogDebug2("mGotProfileInfoFLAG_IsBusy = True",mModule)
+		logMe.logDebug2("mGotProfileInfoFLAG_IsBusy = True",mModule)
 		Return '---already been called
 	End If
 	
@@ -161,11 +161,9 @@ Private Sub GetPrinterProfileInfo
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
 	
-		Dim o As JsonParserMasterPrinterSettings : 	o.Initialize
+		Dim o As JsonParserMasterPrinterSettings : o.Initialize
 		o.ParsePrinterProfile(Result)
 		mGotProfileInfoFLAG = True '--- will stop it from fiting in the main loop
-		'CallSubDelayed(oTabHome,"Update_PrinterName")
-		
 		mGotProfileInfoFLAG_IsBusy = False
 		
 	Else
@@ -256,7 +254,7 @@ End Sub
 public Sub GetAllOctoFilesInfo
 	
 	If mGotFilesListFLAG_IsBusy = True Then
-		If logMe.logFILE_EVENTS Then logMe.LogDebug2("mGotFilesListFLAG_IsBusy = True",mModule)
+		If config.logFILE_EVENTS Then logMe.Logit("mGotFilesListFLAG_IsBusy = True",mModule)
 		Return '---already been called
 	End If
 	
@@ -374,7 +372,7 @@ public Sub Download_ThumbnailAndCache2File(JobFileName As String,outFileName As 
 		
 	Catch
 		
-		If logMe.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
+		If config.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
 		Log(LastException)
 	End Try
 

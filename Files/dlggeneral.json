@@ -13,18 +13,48 @@
             "title": "Theme",
             "type": "Options",
             "key": "themeclr",
-            "required": false
-        },
-        {
-            "title": "",
-            "type": "Separator",
-            "key": "",
-            "required": false
+            "required": true
         },
         {
             "title": "Change Brightness",
             "type": "Boolean",
             "key": "chgBrightness",
+            "required": true
+        },
+        {
+            "title": "Logging",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "Log All",
+            "type": "Boolean",
+            "key": "logall",
+            "required": false
+        },
+        {
+            "title": "File Events",
+            "type": "Boolean",
+            "key": "logfiles",
+            "required": false
+        },
+        {
+            "title": "Power Events",
+            "type": "Boolean",
+            "key": "logpwr",
+            "required": false
+        },
+        {
+            "title": "Octo Key Events",
+            "type": "Boolean",
+            "key": "logoctokey",
+            "required": false
+        },
+        {
+            "title": "RestAPI Events",
+            "type": "Boolean",
+            "key": "logorest",
             "required": false
         }
     ]

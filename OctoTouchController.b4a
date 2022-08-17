@@ -214,9 +214,9 @@ Private Sub tmrFilesCheckChange_Tick
 End Sub
 
 Public Sub tmrScreenPower_Tick
-	If logMe.logPOWER_EVENTS Then Log("tmrScreenPower_Tick fired: " & tmrScreen.Interval)
+	If config.logPOWER_EVENTS Then Log("tmrScreenPower_Tick fired: " & tmrScreen.Interval)
 	If oc.isPrinting Then 
-		If logMe.logPOWER_EVENTS Then Log("We are printing")
+		If config.logPOWER_EVENTS Then Log("We are printing")
 		Set_ScreenTmr
 		Return
 	End If
@@ -235,17 +235,17 @@ Public Sub Set_ScreenTmr()
 	tmrScreen.Enabled = False
 
 	If config.AndroidTakeOverSleepFLAG = False Then	
-		If logMe.logPOWER_EVENTS Then Log("Power control is off")
+		If config.logPOWER_EVENTS Then Log("Power control is off")
 		Return
 	End If
 	
 	'--- any screen time flags set?
 	If (config.AndroidNotPrintingScrnOffFLAG Or config.AndroidPrintingScrnOffFLAG) Then
 		If oc.isPrinting And config.AndroidPrintingScrnOffFLAG Then
-			If logMe.logPOWER_EVENTS Then Log("AndroidPrintingScrnOffFLAG = True: Min: " & config.AndroidPrintingMinTill)
+			If config.logPOWER_EVENTS Then Log("AndroidPrintingScrnOffFLAG = True: Min: " & config.AndroidPrintingMinTill)
 			tmrScreen.Interval = config.AndroidPrintingMinTill * 1000 * 60 '--- we are priting
 		Else
-			If logMe.logPOWER_EVENTS Then Log("AndroidNotPrintingScrnOffFLAG = True: Min: " & config.AndroidNotPrintingMinTill)
+			If config.logPOWER_EVENTS Then Log("AndroidNotPrintingScrnOffFLAG = True: Min: " & config.AndroidNotPrintingMinTill)
 			tmrScreen.Interval = config.AndroidNotPrintingMinTill * 1000 * 60
 		End If
 		tmrScreen.Enabled = True

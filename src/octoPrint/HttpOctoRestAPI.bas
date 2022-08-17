@@ -45,11 +45,7 @@ Private Sub ProcessErrMsg(msg As String)
 		Return
 	End If
 	
-	' TODO clean up logging
-	logMe.Log_DebuggerRestAPI(msg)
-	
-	'--- logs ONLY in the programming envirement
-	logMe.LogDebug2("RestAPI ERR --> " & msg,mModule) '--- TODO, in DEBUG do we want to always log REST API errors?
+	logMe.logit("RestAPI ERR --> " & msg,mModule) '--- always log these
 	
 	
 End Sub
@@ -67,9 +63,9 @@ public Sub SendRequestGetInfo(octConst As String) As ResumableSub
 	Dim j As HttpJob: j.Initialize("", Me)
 	Dim retStr As String = ""
 	
-	If logMe.pLog2DebugWindowRestAPI  Or logMe.pLogFull Then
+	If config.logREST_API Then
 		Dim UniqueStr As String = Rnd(100000,999999).As(String)
-		logMe.Log_DebuggerRestAPI($"${UniqueStr}:-->${sAPI}"$)
+		logMe.LogIt($"${UniqueStr}:-->${sAPI}"$,mModule)
 	End If
 
 	j.Download(sAPI)
@@ -82,8 +78,8 @@ public Sub SendRequestGetInfo(octConst As String) As ResumableSub
 	
 	j.Release '--- free up resources
 	
-	If logMe.pLog2DebugWindowRestAPI  Or logMe.pLogFull Then
-		logMe.Log_DebuggerRestAPI($"${UniqueStr}:-->${sAPI}"$)
+	If config.logREST_API Then
+		logMe.LogIt($"${UniqueStr}:-->${sAPI}"$,mModule)
 	End If
 	
 	Return retStr
@@ -108,9 +104,9 @@ public Sub PostRequest(PostApiCmd As String) As ResumableSub
 	Dim job As HttpJob : job.Initialize("", Me)
 	Dim retStr As String = ""
 	
-	If logMe.pLog2DebugWindowRestAPI Or logMe.pLogFull  Then
+	If config.logREST_API  Then
 		Dim UniqueStr As String = Rnd(100000,999999).As(String)
-		logMe.Log_DebuggerRestAPI($"${UniqueStr}:-->${EndPoint & CRLF & JsonDataMsg & "<--:"}"$)
+		logMe.LogIt($"${UniqueStr}:-->${EndPoint & CRLF & JsonDataMsg & "<--:"}"$,mModule)
 	End If
 	
 	job.PostString(EndPoint,JsonDataMsg)
@@ -125,8 +121,8 @@ public Sub PostRequest(PostApiCmd As String) As ResumableSub
 	
 	job.Release '--- free up resources
 	
-	If logMe.pLog2DebugWindowRestAPI Or logMe.pLogFull Then
-		logMe.Log_DebuggerRestAPI( $"${UniqueStr}:-->${EndPoint}"$)
+	If config.logREST_API Then
+		logMe.LogIt( $"${UniqueStr}:-->${EndPoint}"$,mModule)
 	End If
 	
 	If PostApiCmd = oc.cCMD_PRINT Or PostApiCmd = oc.cCMD_CANCEL Then
@@ -152,7 +148,7 @@ Public Sub DownloadThumbnailAndShow(Link As String, iv As B4XImageView, fileName
 	'--- pass "" in filename for NO file
 	
 	If Link.Length = 0 Then
-		If logMe.logFILE_EVENTS Then logMe.LogIt("Thumbnail path is empty",mModule)
+		If config.logFILE_EVENTS Then logMe.LogIt("Thumbnail path is empty",mModule)
 		Return
 	End If
 	
@@ -181,7 +177,7 @@ Public Sub DownloadThumbnailAndShow(Link As String, iv As B4XImageView, fileName
 		
 	Catch
 		
-		If logMe.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
+		If config.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
 		
 	End Try
 	
@@ -193,7 +189,7 @@ End Sub
 Public Sub Download_AndSaveFile(Link As String, fileName As String)
 
 	If Link.Length = 0 Then
-		If logMe.logFILE_EVENTS Then logMe.LogIt("Thumbnail path is empty",mModule) 	'--- no thumbnail
+		If config.logFILE_EVENTS Then logMe.LogIt("Thumbnail path is empty",mModule) 	'--- no thumbnail
 		Return
 	End If
 	
@@ -205,7 +201,7 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String)
 		'j.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
 		
 	Catch
-		If logMe.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
+		If config.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
 	End Try
 	
 	Wait For (j) JobDone(j As HttpJob)
@@ -224,7 +220,7 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String)
 		
 	Catch
 		
-		If logMe.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
+		If config.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
 		
 	End Try
 	
@@ -257,9 +253,9 @@ private Sub DeleteRequest2Server(sAPI As String) As ResumableSub
 	Dim job As HttpJob : job.Initialize("", Me)
 	Dim retStr As String = ""
 		
-	If logMe.pLog2DebugWindowRestAPI Or logMe.pLogFull  Then
+	If config.logREST_API Then
 		Dim UniqueStr As String = Rnd(100000,999999).As(String)
-		logMe.Log_DebuggerRestAPI($"${UniqueStr}:-->${sAPI}<--:"}"$)
+		logMe.LogIt($"${UniqueStr}:-->${sAPI}<--:"}"$,mModule)
 	End If
 
 	job.Delete(sAPI)
@@ -275,8 +271,8 @@ private Sub DeleteRequest2Server(sAPI As String) As ResumableSub
 	
 	job.Release '--- free up resources
 		
-	If logMe.pLog2DebugWindowRestAPI Or logMe.pLogFull Then
-		logMe.Log_DebuggerRestAPI( $"${UniqueStr}:-->${sAPI}"$)
+	If config.logREST_API Then
+		logMe.LogIt( $"${UniqueStr}:-->${sAPI}"$,mModule)
 	End If
 	
 	Return retStr

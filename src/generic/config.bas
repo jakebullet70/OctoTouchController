@@ -21,14 +21,21 @@ Sub Process_Globals
 	Public LastConnectedClient As String
 	Public pTurnOnDebugTabFLAG As Boolean
 	
+	'--- power dlg
 	Public AndroidTakeOverSleepFLAG As Boolean = False
 	Public AndroidNotPrintingScrnOffFLAG As Boolean = False
 	Public AndroidNotPrintingMinTill As Int
 	Public AndroidPrintingScrnOffFLAG As Boolean = False
 	Public AndroidPrintingMinTill As Int
 	
+	'--- general dlg
 	Public ChangeBrightnessSettingsFLAG As Boolean = True '--- get from general settings, key = chgBrightness
 	Public ColorTheme As String '--- get from general settings, key = themeclr
+	Public logPOWER_EVENTS As Boolean = False
+	Public logFILE_EVENTS As Boolean = False
+	Public logREQUEST_OCTO_KEY As Boolean = False
+	Public logREST_API As Boolean = False
+	'------------
 	
 	Public IsInit As Boolean = False
 

@@ -22,9 +22,9 @@
         },
         {
             "options": [
-                "2",
-                "180",
-                "2"
+                "5",
+                "480",
+                "5"
             ],
             "title": "After X Minutes",
             "type": "Numeric Range",

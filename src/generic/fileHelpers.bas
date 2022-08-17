@@ -15,6 +15,22 @@ Sub Process_Globals
 End Sub
 
 
+'===========================================================================
+Public Sub Read_ReturnSingleValue(filename As String) As String
+	If File.Exists(xui.DefaultFolder,filename) Then
+		Dim lst As List = File.ReadList(xui.DefaultFolder,filename)
+		Return lst.Get(0)
+	End If
+	Return ""
+End Sub
+Public Sub Write_SingleValue(filename As String, value As String)
+	SafeKill(filename)
+	Dim lst As List : lst.Initialize2(Array As String(value))
+	File.WriteList(xui.DefaultFolder,filename,lst)
+End Sub
+'===========================================================================
+
+
 public Sub CheckAndCleanFileName(StringToCheck As String) As String
 
 	'=======================================================================
@@ -78,7 +94,7 @@ End Sub
 
 
 
-Public  Sub BytesToReadableString(Bytes As String) As String
+Public Sub BytesToReadableString(Bytes As String) As String
 		
 	If IsNumber(Bytes) = False Then Return "-"
 	Dim Bytes1 As Double = Bytes

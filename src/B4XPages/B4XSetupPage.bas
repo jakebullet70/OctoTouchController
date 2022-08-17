@@ -121,7 +121,8 @@ End Sub
 
 private Sub Save_settings
 	
-	Dim fname As String = fnc.GetPrinterProfileConnectionFileName(txtPrinterDesc.text)
+	'Dim fname As String = fnc.GetPrinterProfileConnectionFileName(txtPrinterDesc.text) 'TODO, for multi configs
+	Dim fname As String = "default.psettings"
 	Dim outMap As Map = CreateMap( _
 						gblConst.PRINTER_DESC : txtPrinterDesc.text, gblConst.PRINTER_IP: txtPrinterIP.Text, _
 						gblConst.PRINTER_PORT : txtPrinterPort.Text, gblConst.PRINTER_OCTO_KEY : txtOctoKey.Text)

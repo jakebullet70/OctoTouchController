@@ -13,6 +13,9 @@ Sub Process_Globals
 	Private xui As XUI
 End Sub
 
+'-------------------------------------------------------------------------------------------
+'	misc support methods
+'-------------------------------------------------------------------------------------------
 
 Public Sub BlankScreen
 	B4XPages.MainPage.pnlScreenOff.Visible = True
@@ -49,7 +52,7 @@ public Sub ReadConnectionFile(cn As HttpOctoRestAPI) As Boolean
 	'gbl.cn.Initialize("192.168.1.207","80","C2F4DA9C48494DB3BE4AD241158E96D5")
 	'---- VIRT test
 	'cn.Initialize("192.168.1.236","5003","255A0F82BEFB49689062A3290C125F10") 'octoAPIkey (sub key) has permission issues
-	
+	'
 	'cn.Initialize("192.168.1.236","5003","D09FA63DCB9940109FDCB1750304A067",B4XPages.MainPage) 'octoAPIkey (MAIN GLOBAL key)
 	cn.Initialize(oc.OctoIp ,oc.OctoPort,oc.OctoKey) 'octoAPIkey (MAIN GLOBAL key)
 	
@@ -61,7 +64,7 @@ End Sub
 
 
 Public Sub LoadPrinterConnectionSettings() As Map
-	
+		
 	'--- get the settings connection file
 	Dim fname As String
 	Dim flist As List

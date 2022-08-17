@@ -123,7 +123,7 @@ End Sub
 Public Sub SetScreenBrightness2
 	
 	If config.ChangeBrightnessSettingsFLAG = False Then Return
-	SetScreenBrightnessAndSave(pScreenBrightness)
+	SetScreenBrightnessAndSave(pScreenBrightness,False)
 	
 End Sub
 

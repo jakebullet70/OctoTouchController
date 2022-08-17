@@ -54,6 +54,7 @@ End Sub
 
 Public Sub Initialize
 	
+	'fileHelpers.DeleteFiles(xui.DefaultFolder,"*.psettings") '--- DEV - delete all printing settings files
 	config.Init
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
 	clrTheme.Init("red")
@@ -81,7 +82,6 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	pnlSplash.Visible = True
 	
 	Build_GUI
-	TryOctoConnection
 	
 End Sub
 
@@ -131,6 +131,7 @@ Public Sub HideSplash_StartUp
 	
 	pnlSplash.Visible = False
 	pnlMaster.Visible = True
+	TryOctoConnection
 	
 End Sub
 

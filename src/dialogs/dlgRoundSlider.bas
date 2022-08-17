@@ -49,8 +49,8 @@ Public Sub Show(defaultValue As Int)
 	sadRoundSlider1.xlbl.TextColor = clrTheme.BackgroundHeader
 	sadRoundSlider1.xlbl.Font = xui.CreateDefaultFont(52)
 	sadRoundSlider1.ValueColor = clrTheme.BackgroundMenu
-	sadRoundSlider1.SetCircleColor(clrTheme.BackgroundHeader,xui.Color_White)
-	sadRoundSlider1.SetThumbColor(clrTheme.BackgroundHeader,xui.Color_White)
+	sadRoundSlider1.SetCircleColor(clrTheme.BackgroundHeader,clrTheme.txtNormal)
+	sadRoundSlider1.SetThumbColor(clrTheme.BackgroundHeader,clrTheme.txtNormal)
 	sadRoundSlider1.Draw
 
 	guiHelpers.ThemeDialogForm(mMainObj.Dialog, mTitle)

@@ -15,7 +15,7 @@ Sub Class_Globals
 	
 	Public gMapFiles As Map
 	
-	Type typOctoFileInfo( Name As String, Size As String, Date As Int,Thumbnail As String, _
+	Type typOctoFileInfo( Name As String, Size As String, Date As Long,Thumbnail As String, _
 						Origin As String, Path As String,Thumbnail_src As String,Volume As Double,  _
 						Length As Double, Depth As Double, Width As Double, Height As Double, _
 						myThumbnail_filename_disk As String,Thumbnail_original As String)
@@ -152,7 +152,7 @@ private Sub Parse(jsonTXT As String)
 				ff.Width = dimensions.Get("width")
 				ff.Height = dimensions.Get("height")
 			Catch
-				'--- thinking if we error out here - octoprint has notfinished parsing the newly
+				'--- thinking if we error out here - octoprint has not finished parsing the newly
 				'--- added file so its incomplete
 				Log("ParseFile 1: " & LastException)
 			End Try

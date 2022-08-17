@@ -256,7 +256,7 @@ End Sub
 public Sub GetAllOctoFilesInfo
 	
 	If mGotFilesListFLAG_IsBusy = True Then
-		logMe.LogDebug2("mGotFilesListFLAG_IsBusy = True",mModule)
+		If logMe.logFILE_EVENTS Then logMe.LogDebug2("mGotFilesListFLAG_IsBusy = True",mModule)
 		Return '---already been called
 	End If
 	
@@ -374,7 +374,7 @@ public Sub Download_ThumbnailAndCache2File(JobFileName As String,outFileName As 
 		
 	Catch
 		
-		logMe.LogIt(LastException,mModule)
+		If logMe.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
 		Log(LastException)
 	End Try
 

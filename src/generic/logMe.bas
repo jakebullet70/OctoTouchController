@@ -26,6 +26,8 @@ Sub Process_Globals
 	'--- debugging flags
 	Public logPOWER_EVENTS As Boolean = True
 	Public logFILE_EVENTS As Boolean = False
+	Public logREQUEST_OCTO_KEY As Boolean = False
+	
 	
 	
 End Sub

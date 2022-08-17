@@ -152,7 +152,7 @@ Public Sub DownloadThumbnailAndShow(Link As String, iv As B4XImageView, fileName
 	'--- pass "" in filename for NO file
 	
 	If Link.Length = 0 Then
-		logMe.LogIt("Thumbnail path is empty",mModule)
+		If logMe.logFILE_EVENTS Then logMe.LogIt("Thumbnail path is empty",mModule)
 		Return
 	End If
 	
@@ -181,7 +181,7 @@ Public Sub DownloadThumbnailAndShow(Link As String, iv As B4XImageView, fileName
 		
 	Catch
 		
-		logMe.LogIt(LastException,mModule)
+		If logMe.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
 		
 	End Try
 	
@@ -193,11 +193,11 @@ End Sub
 Public Sub Download_AndSaveFile(Link As String, fileName As String)
 
 	If Link.Length = 0 Then
-		logMe.LogIt("Thumbnail path is empty",mModule) 	'--- no thumbnail
+		If logMe.logFILE_EVENTS Then logMe.LogIt("Thumbnail path is empty",mModule) 	'--- no thumbnail
 		Return
 	End If
 	
-	If fileName.Length <> 0 Then 	fileHelpers.SafeKill(fileName)
+	If fileName.Length <> 0 Then fileHelpers.SafeKill(fileName)
 		
 	Try
 		Dim j As HttpJob :	j.Initialize("", Me)
@@ -205,7 +205,7 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String)
 		'j.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
 		
 	Catch
-		Log(LastException)
+		If logMe.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
 	End Try
 	
 	Wait For (j) JobDone(j As HttpJob)
@@ -224,7 +224,7 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String)
 		
 	Catch
 		
-		logMe.LogIt(LastException,mModule)
+		If logMe.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
 		
 	End Try
 	

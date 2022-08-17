@@ -59,7 +59,7 @@ public Sub Set_focus()
 		Update_Printer_Btns
 	Else
 		'--- 1st showing of tab page
-		'logMe.Logit(firstRun,mModule)
+		If logMe.logFILE_EVENTS Then logMe.Logit(firstRun,mModule)
 		If clvFiles.Size > 0 Then 
 			clvFiles_ItemClick(0,mMainObj.MasterCtrlr.gMapOctoFilesList.GetKeyAt(0))
 		End If
@@ -106,7 +106,7 @@ Public Sub tmrFilesCheckChange_Tick
 		Return
 	End If
 	
-	logMe.Logit("tmrFilesCheckChange_Tick --> FIRED",mModule)
+	If logMe.logFILE_EVENTS Then logMe.Logit("tmrFilesCheckChange_Tick --> FIRED",mModule)
 	CheckIfFilesChanged
 	
 End Sub
@@ -193,7 +193,7 @@ Sub CreateListItem(oData As typOctoFileInfo, Width As Int, Height As Int) As B4X
 	p.SetLayoutAnimated(0, 0, 0, Width, Height)
 	p.LoadLayout("viewFiles")
 	lblpnlFileViewTop.Text = fileHelpers.RemoveExtFromeFileName( oData.Name)
-	lblpnlFileViewBottom.Text = "Size: " &   fileHelpers.BytesToReadableString(oData.Size) '& "Length: " & oData.Length
+	lblpnlFileViewBottom.Text = "Size: " &   fileHelpers.BytesToReadableString(oData.Size) '& " Uploaded: " & dt
 	Return p
 	
 End Sub
@@ -219,7 +219,8 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
 	
 		guiHelpers.Show_toast("Getting Thumbnail",1500)
-		logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
+		If logMe.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
+		
 		Dim link As String = $"http://${mMainObj.MasterCtrlr.cn.gIP}:${mMainObj.MasterCtrlr.cn.gPort}/"$ & currentFileInfo.Thumbnail
 		mMainObj.MasterCtrlr.cn.Download_AndSaveFile(link,currentFileInfo.myThumbnail_filename_disk)
 		Sleep(1500)
@@ -255,7 +256,7 @@ Public Sub CheckIfFilesChanged
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	FilesCheckChangeIsBusyFLAG = True
 	
-	'logMe.Logit("tmrFilesCheckChange.Enabled = False  -->  START CHECK",mModule)
+	If logMe.logFILE_EVENTS Then logMe.Logit("tmrFilesCheckChange.Enabled = False  -->  START CHECK",mModule)
 
 	'--- grab a list of files
 	Dim rs As ResumableSub =  mMainObj.MasterCtrlr.cn.SendRequestGetInfo( oc.cFILES)
@@ -270,13 +271,12 @@ Public Sub CheckIfFilesChanged
 		If didChange Then
 			
 			'--- ok, something changed,  delete - removed thumbnails
-			logMe.Logit("did change - YES ;)",mModule)
+			If logMe.logFILE_EVENTS Then logMe.Logit("did change - YES ;)",mModule)
 			Dim mapNewFileList As Map = o.GetAllFiles(Result)
 			ProcessThumbnails(mapNewFileList)
 			
 			'--- refresh the old list with new changes
 			mMainObj.MasterCtrlr.gMapOctoFilesList = o.GetAllFiles(Result)
-			'logMe.Logit("refresh original File list",mModule)
 			
 			Build_ListViewFileList
 	
@@ -289,7 +289,7 @@ Public Sub CheckIfFilesChanged
 		Else
 			
 			'--- nothing new, bail
-			logMe.Logit("did change --- NO!!!!!!!!!!",mModule)
+			If logMe.logFILE_EVENTS Then logMe.Logit("did change --- NO!!!!!!!!!!",mModule)
 '			FilesCheckChangeIsBusyFLAG = False
 '			tmrFilesCheckChange.Enabled = True
 '			Log("tmrFilesCheckChange.Enabled = True  -->  END CHECK")
@@ -319,13 +319,13 @@ private Sub ProcessThumbnails(NewMap As Map)
 	
 		'--- remove any old thumbnail files
 		Dim deletedFiles As Int = 0
-		logMe.Logit("ProcessThumbnails - start - remove any old thumbnail files",mModule)
+		If logMe.logFILE_EVENTS Then logMe.Logit("ProcessThumbnails - start - remove any old thumbnail files",mModule)
 		For Each oldMap As typOctoFileInfo In mMainObj.MasterCtrlr.gMapOctoFilesList.Values
 			
 			Dim oldMapKey As String = oldMap.Name
 			If NewMap.ContainsKey(oldMapKey) = False Then
 				
-				logMe.Logit("deleted old thumbnail: " & oldMap.myThumbnail_filename_disk,mModule)
+				If logMe.logFILE_EVENTS Then logMe.Logit("deleted old thumbnail: " & oldMap.myThumbnail_filename_disk,mModule)
 				fileHelpers.SafeKill(oldMap.myThumbnail_filename_disk)
 				deletedFiles = deletedFiles + 1
 				
@@ -336,10 +336,12 @@ private Sub ProcessThumbnails(NewMap As Map)
 	Catch
 		Log(LastException)
 	End Try
-	logMe.Logit("ProcessThumbnails - END - remove any old thumbnail files: #" & deletedFiles,mModule)
+
+	If logMe.logFILE_EVENTS Then 
+		logMe.Logit("ProcessThumbnails - END - remove any old thumbnail files: #" & deletedFiles,mModule)
+		logMe.Logit("ProcessThumbnails - START - download new thumbnails for new and changed files",mModule)
+	End If
 	
-	
-	logMe.Logit("ProcessThumbnails - START - download new thumbnails for new and changed files",mModule)
 	Try
 
 		Dim changedFiles = 0, NewFiles = 0 As Int
@@ -353,7 +355,7 @@ private Sub ProcessThumbnails(NewMap As Map)
 				Dim ffFileToWorkOn As typOctoFileInfo = mMainObj.MasterCtrlr.gMapOctoFilesList.get(mapKey)
 				If ffFileToWorkOn.Date <> oNewMap.Date Then '--- date changed
 				
-					logMe.Logit("refreshing old thumbnail: " & oNewMap.Name,mModule)
+					If logMe.logFILE_EVENTS Then logMe.Logit("refreshing old thumbnail: " & oNewMap.Name,mModule)
 					fileHelpers.SafeKill(ffFileToWorkOn.myThumbnail_filename_disk)
 					changedFiles = changedFiles + 1
 					mMainObj.MasterCtrlr.Download_ThumbnailAndCache2File(oNewMap.Thumbnail,oNewMap.myThumbnail_filename_disk)
@@ -374,8 +376,11 @@ private Sub ProcessThumbnails(NewMap As Map)
 	Catch
 		Log(LastException)
 	End Try
-	logMe.Logit("ProcessThumbnails - END - download new thumbnails for new and changed files",mModule)
-	logMe.Logit("files changed #" & changedFiles & "   files new #" & NewFiles,mModule)
+	If logMe.logFILE_EVENTS Then 
+		logMe.Logit("ProcessThumbnails - END - download new thumbnails for new and changed files",mModule)
+		logMe.Logit("files changed #" & changedFiles & "   files new #" & NewFiles,mModule)
+	End If
+	
 	
 	
 End Sub

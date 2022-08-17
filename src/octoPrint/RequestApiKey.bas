@@ -45,17 +45,17 @@ Public Sub RequestAvailable()
 	Dim AllGood As Boolean = False
 	
 	Dim UniqueStr As String = Rnd(100000,999999).As(String)
-	logMe.Logit($"KeyRequestAvail: ${UniqueStr}:-->${sAPI}"$,mModule)
+	If logMe.logREQUEST_OCTO_KEY Then logMe.Logit($"KeyRequestAvail: ${UniqueStr}:-->${sAPI}"$,mModule)
 
 	j.Download(sAPI)
 	Wait For (j) JobDone(j As HttpJob)
 	If j.Success Then
 		If j.Response.StatusCode = 204 Then '--- this is GOOD!
 			AllGood = True
-			logMe.Logit($"KeyRequestAvail: ${UniqueStr}:--> Yeah!"$,mModule)
+			If logMe.logREQUEST_OCTO_KEY Then logMe.Logit($"KeyRequestAvail: ${UniqueStr}:--> Yeah!"$,mModule)
 		Else
 			resultStr = "Request failed - Octoprint key request service is not working"
-			logMe.Logit($"KeyRequestAvail: ${UniqueStr}:--> Failure"$,mModule)
+			If logMe.logREQUEST_OCTO_KEY Then logMe.Logit($"KeyRequestAvail: ${UniqueStr}:--> Failure"$,mModule)
 		End If
 	Else
 		'--- we did not even get a connection
@@ -109,7 +109,7 @@ private Sub Prompt4Key()
 		End If
 		
 	Catch
-		logMe.LogIt(LastException,mModule)
+		If logMe.logREQUEST_OCTO_KEY Then logMe.LogIt(LastException,mModule)
 	End Try
 
 	job.Release '--- free up resources
@@ -143,8 +143,8 @@ private Sub Wait4Key(poleLocation As String)
 		
 		Dim j As HttpJob : j.Initialize("", Me)
 		
-		Dim UniqueStr As String = Rnd(100000,999999).As(String)
-		logMe.LogIt($"KeyWait: ${UniqueStr}:-->${poleLocation}"$,mModule)
+		Dim UniqueStr As String = Rnd(100000,999999).As(String) 'ignore
+		If logMe.logREQUEST_OCTO_KEY Then logMe.LogIt($"KeyWait: ${UniqueStr}:-->${poleLocation}"$,mModule)
 
 		j.Download(poleLocation)
 		Wait For (j) JobDone(j As HttpJob)
@@ -163,14 +163,14 @@ private Sub Wait4Key(poleLocation As String)
 					AllGood = True
 					
 				Case Else
-					logMe.LogIt(j.Response.StatusCode,mModule)
+					If logMe.logREQUEST_OCTO_KEY Then logMe.LogIt("case else - " & j.Response.StatusCode,mModule)
 					
 			End Select
 
 		Else
 			
 			resultStr = ErrMsgDeniedOrTimeout
-			logMe.LogIt($"KeyWait: ${UniqueStr}:--> Failure: ${j.ErrorMessage}"$,mModule)
+			If logMe.logREQUEST_OCTO_KEY Then logMe.LogIt($"KeyWait: ${UniqueStr}:--> Failure: ${j.ErrorMessage}"$,mModule)
 			Exit
 				
 		End If

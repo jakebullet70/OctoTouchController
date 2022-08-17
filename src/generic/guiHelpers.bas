@@ -64,9 +64,9 @@ End Sub
 
 Public Sub SetActionBtnColorIsConnected(btn As B4XView)
 	If oc.isConnected Then
-		btn.TextColor = clrTheme.Go
+		btn.TextColor = clrTheme.ConnectionYes
 	Else
-		btn.TextColor = clrTheme.NoGo
+		btn.TextColor = clrTheme.ConnectionNo
 	End If
 End Sub
 
@@ -110,10 +110,8 @@ End Sub
 public Sub SetTextColorB4XFloatTextField(views() As B4XFloatTextField)
 	
 	For Each o As B4XFloatTextField In views
-'		o.TextField.TextColor = txtColor
-'		o.HintColor = hintColor
-		o.TextField.TextColor = xui.Color_White
-		o.HintColor = xui.Color_Yellow
+		o.TextField.TextColor = clrTheme.txtNormal
+		o.HintColor = clrTheme.txtAccent
 		o.Update
 	Next
 	
@@ -175,7 +173,7 @@ Public Sub ThemeDialogForm(dlg As B4XDialog,title As String)
 	Try
 		dlg.Title = title
 	Catch
-		'--- errors sometimes, I think...
+		'--- errors sometimes, I think...  LOL
 		Log("ThemeDialogForm-set title: " & LastException)
 	End Try 'ignore
 	

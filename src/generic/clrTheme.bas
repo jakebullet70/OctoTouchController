@@ -13,52 +13,33 @@ Sub Process_Globals
 	Private xui As XUI
 	Private Const mModule As String = "clrTheme" 'ignore
 	
-	Public PopupMenuBG As Int
-	Public txtNormal As Int
 	Public Background,BackgroundHeader,BackgroundMenu As Int
 	
+	Public txtNormal As Int
 	Public txtAccent As Int
 	Public btnDisableText As Int
-	'Public btnText As Int
 	Public DividerColor As Int
 	
 	Public ItemsBackgroundColor As Int
-	'Public SeparatorBackgroundColor = 0xFFD0D0D0
-	'SeparatorTextColor = 0xFF4E4F50
-	Public DialogBG  As Int
-	Public DialogButtonsColor  As Int
-	Public DialogBorderColor  As Int
-	Public DialogButtonsTextColor  As Int
 	
-	Public Go As Int
-	Public NoGo As Int
-	
-	Public clvSelectedColor As Int
-	
+	Public ConnectionYes As Int
+	Public ConnectionNo As Int
 	
 End Sub
 
 
 Public Sub Init(theme As String)
 	
-	Go = 0xFF81F266
-	NoGo = 0xFFE14349
+	ConnectionYes = 0xFF81F266
+	ConnectionNo = 0xFFE14349
 
 	txtNormal = xui.Color_White
+	txtAccent = xui.Color_Black
 	btnDisableText = xui.Color_LightGray
 	
 	InitTheme(theme)
 	
 	DividerColor = xui.Color_LightGray
-	
-	'btnText = xui.Color_White
-
-	DialogBG = 0xFF555555
-	DialogButtonsColor = 0xFF555555
-	DialogBorderColor = 0xff000000
-	DialogButtonsTextColor = 0xFF89D5FF
-
-	ItemsBackgroundColor = 0xFF626262
 			
 End Sub
 

@@ -74,8 +74,8 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	Root.LoadLayout("MainPage")
 	
 	toast.Initialize(Root)
-	toast.pnl.Color = clrTheme.BackgroundMenu
-	toast.DefaultTextColor = clrTheme.txtNormal
+	toast.pnl.Color = clrTheme.txtNormal
+	toast.DefaultTextColor = clrTheme.txtAccent
 	
 	'--- splash screen
 	pnlMaster.Visible = False

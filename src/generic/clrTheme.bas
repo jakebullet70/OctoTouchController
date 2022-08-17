@@ -67,7 +67,7 @@ Public Sub InitTheme(theme As String)
 		Case "gray"
 			Background = xui.Color_ARGB(255,90, 90, 90)
 			BackgroundHeader = xui.Color_ARGB(255,73, 73, 73)
-			BackgroundMenu = xui.Color_ARGB(255,90, 90, 90)
+			BackgroundMenu = xui.Color_ARGB(255,97, 96, 95)
 			
 		Case "dark"
 			Background = xui.Color_ARGB(255,18, 18, 18)

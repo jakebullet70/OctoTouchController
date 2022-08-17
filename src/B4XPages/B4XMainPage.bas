@@ -248,7 +248,7 @@ Public Sub Show_toast(msg As String, ms As Int)
 	toast.Show(msg)
 End Sub
 
-#Region "POPUP_MAIN_MENU"
+#Region "POPUP_MAIN_SETUP_MENU"
 Private Sub PopupMainMenu
 	
 	Dim o As mnuPopup
@@ -314,16 +314,6 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 	End Try
 	
 End Sub
-
-'--- callled from B4XSetupPage on exit
-Public Sub PrinterSetup_Closed(NewConfig As Boolean)
-
-	If oc.IsOctoConnectionVarsValid Then
-		TryOctoConnection
-	End If
-	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
-	
-End Sub
 #end region
 
 
@@ -376,5 +366,15 @@ Private Sub pnlScreenOff_Click
 	pnlScreenOff.SendToBack
 	powerHelpers.SetScreenBrightness2
 	fnc.ProcessPowerFlags
+End Sub
+
+'--- callled from B4XSetupPage on exit
+Public Sub PrinterSetup_Closed(NewConfig As Boolean)
+
+	If oc.IsOctoConnectionVarsValid Then
+		TryOctoConnection
+	End If
+	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
+	
 End Sub
 

@@ -3,6 +3,12 @@
     "Theme": "Dark Theme",
     "Items": [
         {
+            "title": "Screen",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
             "options": [
                 "Green",
                 "Blue",
@@ -11,18 +17,18 @@
                 "Gray"
             ],
             "title": "Theme",
-            "type": "Options",
+            "type": "Short Options",
             "key": "themeclr",
-            "required": true
+            "required": false
         },
         {
             "title": "Change Brightness",
             "type": "Boolean",
             "key": "chgBrightness",
-            "required": true
+            "required": false
         },
         {
-            "title": "Logging",
+            "title": "Logging (debug)",
             "type": "Separator",
             "key": "",
             "required": false

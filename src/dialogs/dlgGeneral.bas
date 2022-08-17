@@ -68,6 +68,7 @@ Public Sub Show
 		guiHelpers.Show_toast("General Data Saved",1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,Data)
 		config.ReadGeneralCFG
+		CallSub(mainObj.oPageCurrent,"Set_focus")
 	End If
 	
 End Sub

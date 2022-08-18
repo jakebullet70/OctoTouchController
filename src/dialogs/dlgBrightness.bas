@@ -11,7 +11,7 @@ Version=11.5
 
 Sub Class_Globals
 	
-	Private const mModule As String = "dlgRoundSlider"' 'ignore
+	Private const mModule As String = "dlgBrightness"' 'ignore
 	Private mMainObj As B4XMainPage
 	Private xui As XUI
 	Private mTitle As String
@@ -43,7 +43,6 @@ Public Sub Show(defaultValue As Int)
 	Dim p As B4XView = xui.CreatePanel("")
 	p.SetLayoutAnimated(0, 0, 0, 300dip, 300dip)
 	p.LoadLayout("viewRoundSlider")
-	mMainObj.Dialog.Initialize(mMainObj.Root)
 	
 	sadRoundSlider1.Value = defaultValue
 	sadRoundSlider1.xlbl.TextColor = clrTheme.BackgroundHeader

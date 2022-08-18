@@ -17,8 +17,6 @@ Sub Process_Globals
 	Public gScreenSizeDPI As Int = 0
 	Public gScreenSizeOriatation As String = ""  '---  P or L
 	
-	'Private su As StringUtils
-	
 End Sub
 
 Public Sub SetEnableDisableColor(btnArr() As B4XView)
@@ -46,7 +44,6 @@ Public Sub GetAboutText() As String
 	msg.Append("A dedicated touch screen controller").Append(CRLF).Append("for Octoprint using older Android devices").Append(CRLF)
 	msg.Append(CRLF).Append("(c)sadLogic 2022 - Open Source - Freeware").Append(CRLF)
 	Return msg.ToString
-	
 End Sub
 
 '--- just an easy wat to Toast!!!!
@@ -117,6 +114,7 @@ public Sub SetTextColorB4XFloatTextField(views() As B4XFloatTextField)
 	
 End Sub
 
+
 Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
 	
 	Try '--- reskin button, if it does not exist then skip the error
@@ -133,6 +131,15 @@ Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
 		btnOk.Width = btnOk.Width + 20dip
 		btnOk.Left = btnOk.Left - 48dip
 		btnOk.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,5dip)
+	Catch
+		'Log(LastException)
+	End Try 'ignore
+	
+	Try '--- reskin button, if it does not exist then skip the error
+		Dim btnNo As B4XView = dlg.GetButton(xui.DialogResponse_Negative)
+		btnNo.Width = btnOk.Width + 20dip
+		btnNo.Left = btnOk.Left - 48dip
+		btnNo.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,5dip)
 	Catch
 		'Log(LastException)
 	End Try 'ignore
@@ -169,13 +176,18 @@ End Sub
 
 
 Public Sub ThemeDialogForm(dlg As B4XDialog,title As String)
+	ThemeDialogForm2(dlg,title,22)
+End Sub
+
+
+Public Sub ThemeDialogForm2(dlg As B4XDialog,title As String,txtSize As Int)
 	
 	Try
 		dlg.Title = title
 	Catch
 		'--- errors sometimes, I think... something to do with the title not showing on smaller screens
 		'--- b4xdialog.PutAtTop = False  <----   this!
-		Log("ThemeDialogForm-set title: " & LastException)
+		'Log("ThemeDialogForm-set title: " & LastException)
 	End Try 'ignore
 	
 	dlg.TitleBarFont = xui.CreateDefaultFont(22)
@@ -183,11 +195,11 @@ Public Sub ThemeDialogForm(dlg As B4XDialog,title As String)
 	dlg.ButtonsTextColor = clrTheme.txtNormal
 	dlg.BorderColor = clrTheme.txtNormal
 	dlg.BackgroundColor = clrTheme.BackgroundMenu
-	dlg.ButtonsFont = xui.CreateDefaultFont(22)
+	dlg.ButtonsFont = xui.CreateDefaultFont(txtSize)
 	dlg.ButtonsHeight = 60dip
 	
+	
 End Sub
-
 
 
 

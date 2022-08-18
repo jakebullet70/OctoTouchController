@@ -98,7 +98,7 @@ End Sub
 #Region "BRIGHTNESS BTN"
 Private Sub btnBrightness_Click
 	
-	Dim o1 As dlgRoundSlider
+	Dim o1 As dlgBrightness
 	o1.Initialize(mMainObj,"Screen Brightness",Me,"Brightness_Change")
 	o1.Show(powerHelpers.pScreenBrightness * 100)
 	

@@ -71,3 +71,70 @@ End Sub
 
 
 
+Sub YourSub
+
+	Dim input As B4XInputTemplate
+	input.Initialize
+	input.RegexPattern = ".+" 'require at least one character
+	input.lblTitle.Text = "Enter Employee Number"
+	input.mBase.Height = 20%y
+	input.mBase.Width = 60%x
+	Dim RS As ResumableSub = (dialog.ShowTemplate(input, "OK", "", "CANCEL"))
+	FormatDialog(input, True, False)
+	Wait For(RS) Complete (Result As Int)
+	If Result = xui.DialogResponse_Positive Then
+		.
+		.Your Code Here
+		.
+	Else
+		.
+		.And Your Code Here
+		.
+	End If
+End Sub
+
+
+
+
+'   RESIZE DIALOG CODE
+'   RESIZE DIALOG CODE
+'   RESIZE DIALOG CODE
+
+
+
+'Sub  FormatDialog(input As B4XInputTemplate, NumOnly As Boolean, PW As Boolean)
+'	Dim ET As EditText = input.TextField1
+'	Dim p As Panel = input.GetPanel(dialog)
+'	ET.Height = (input.mBase.Height / 2)
+'	ET.top = (input.mBase.Height / 3)
+'	ET.Width = input.mBase.Width - (ET.Left * 2)
+'	Dim p As Panel = input.GetPanel(dialog)
+'	Dim LB As Label = p.GetView(0)
+'	LB.Height = (input.mBase.Height / 3)
+'	LB.TextSize = 25
+'	LB.TextColor = Colors.Cyan
+'	Dim Cncl As B4XView = dialog.GetButton(xui.DialogResponse_Cancel)
+'	Cncl.Width = (input.mBase.Width * .45)
+'	Cncl.Left = ET.Left
+'	Cncl.Height = Cncl.Height * 1.2  '((p.Height - (ET.Top + ET.Height)) * 2) '- 5dip        '
+'	Cncl.TextSize = 33
+'	Cncl.Color = Colors.RGB(255, 91, 71)
+'	Cncl.Top = ET.Top + ET.Height + 15dip
+'	Dim ok As B4XView = dialog.GetButton(xui.DialogResponse_Positive)
+'	ok.Width = Cncl.Width
+'	ok.Left = ET.Left + ET.Width - ok.Width
+'	ok.Height = Cncl.Height
+'	ok.TextSize = 33
+'	ok.Color = Colors.Cyan
+'	ok.Top = ET.Top + ET.Height + 15dip
+'	ET.TextSize = 32
+'	If NumOnly Then
+'		'input.ConfigureForNumbers(True, False)
+'		IME.SetCustomFilter(ET, ET.INPUT_TYPE_NUMBERS, "-.0123456789")
+'	Else
+'		ET.InputType = Bit.Or(128, Bit.Or(ET.InputType, 524288)) 'VARIATION_PASSWORD, NO_SUGGESTION
+'		ET.PasswordMode = False
+'	End If
+'	ET.PasswordMode = PW
+'End Sub
+

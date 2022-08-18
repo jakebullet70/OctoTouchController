@@ -129,9 +129,9 @@ End Sub
 
 Public Sub HideSplash_StartUp
 	
+	TryOctoConnection
 	pnlSplash.Visible = False
 	pnlMaster.Visible = True
-	TryOctoConnection
 	
 End Sub
 
@@ -266,11 +266,11 @@ Private Sub PopupMainMenu
 	
 	Dim top As Float
 	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
-		top = 21%y
+		top = 22%y
 	Else If guiHelpers.gScreenSizeAprox >= 8 Then
-		top = 26%y
+		top = 27%y
 	Else
-		top = 8%y
+		top = 9%y
 	End If
 	
 	o.MenuObj.OpenMenuAdvanced((50%x - 130dip) ,top,260dip)
@@ -287,9 +287,7 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 				Dim msg As String = guiHelpers.GetAboutText()
 				Dim sf As Object = xui.Msgbox2Async(msg, "About", "OK", "", "", Null)
 				Wait For (sf) Msgbox_Result (result1 As Int)
-				' TODO, change to a panel with more info
 				
-		
 			Case "gn"  '--- general settings
 				Dim o3 As dlgGeneral
 				o3.Initialize(Me)
@@ -322,19 +320,19 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	CallSub2(Main,"TurnOnOff_MainTmr",False)
 	CallSub2(Main,"TurnOnOff_ScreenTmr",False)
 	
-	Dim msg As StringBuilder : msg.Initialize
+	Dim Msg As StringBuilder : Msg.Initialize
 	
 	If connectedButError Then
-		msg.Append("Connected to Octoprint but there is an error.").Append(CRLF)
-		msg.Append("Check that Octoprint is connected to the printer?").Append(CRLF)
-		msg.Append("Make sure you can print from the Octoprint UI.")
+		Msg.Append("Connected to Octoprint but there is an error.").Append(CRLF)
+		Msg.Append("Check that Octoprint is connected to the printer?").Append(CRLF)
+		Msg.Append("Make sure you can print from the Octoprint UI.")
 	Else
-		msg.Append("No connection to Octoprint").Append(CRLF)
-		msg.Append("Is Octoprint turned on?")
-		msg.Append(CRLF).Append("Connected to the printer?")
+		Msg.Append("No connection to Octoprint").Append(CRLF)
+		Msg.Append("Is Octoprint turned on?")
+		Msg.Append(CRLF).Append("Connected to the printer?")
 	End If
 	
-	Dim sf As Object = xui.Msgbox2Async(msg.ToString, "Connetion Problem", "Retry", "Setup", "", Null)
+	Dim sf As Object = xui.Msgbox2Async(Msg.ToString, "Connetion Problem", "Retry", "Setup", "", Null)
 	Wait For (sf) Msgbox_Result (Result As Int)
 	
 	Select Case Result
@@ -377,4 +375,7 @@ Public Sub PrinterSetup_Closed(NewConfig As Boolean)
 	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	
 End Sub
+
+
+
 

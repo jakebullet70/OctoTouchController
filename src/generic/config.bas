@@ -29,8 +29,9 @@ Sub Process_Globals
 	Public AndroidPrintingMinTill As Int
 	
 	'--- general dlg
-	Public ChangeBrightnessSettingsFLAG As Boolean = True '--- get from general settings, key = chgBrightness
-	Public ColorTheme As String '--- get from general settings, key = themeclr
+	Public ChangeBrightnessSettingsFLAG As Boolean = True 
+	Public ShowScreenOffFLAG As Boolean = True 
+	Public ColorTheme As String 
 	Public logPOWER_EVENTS As Boolean = False 
 	Public logFILE_EVENTS As Boolean = False
 	Public logREQUEST_OCTO_KEY As Boolean = False
@@ -78,7 +79,8 @@ Public Sub ReadGeneralCFG
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	
 	ColorTheme = Data.Get("themeclr").As(String).ToLowerCase
-	ChangeBrightnessSettingsFLAG  = Data.Get("chgBrightness").As(Boolean)
+	ChangeBrightnessSettingsFLAG = Data.Get("chgBrightness").As(Boolean)
+	ShowScreenOffFLAG = Data.Get("scrnoff").As(Boolean)
 	
 	If Data.Get("logall").As(Boolean) Then
 		logPOWER_EVENTS = True

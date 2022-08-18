@@ -28,6 +28,12 @@
             "required": false
         },
         {
+            "title": "Screen Off Button",
+            "type": "Boolean",
+            "key": "scrnoff",
+            "required": false
+        },
+        {
             "title": "Logging (debug)",
             "type": "Separator",
             "key": "",

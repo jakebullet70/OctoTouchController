@@ -23,7 +23,7 @@ Sub Class_Globals
 	
 	Public Dialog As B4XDialog
 	
-	Private btnBrightness As B4XView
+	Private btnScrnOff,btnBrightness As B4XView
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String) 
@@ -44,6 +44,14 @@ public Sub Set_focus()
 	
 	'TODO needs to move to an event when general cfg changes
 	btnBrightness.Visible = config.ChangeBrightnessSettingsFLAG 
+	btnScrnOff.Visible = config.ShowScreenOffFLAG
+	If btnBrightness.Visible = False And btnScrnOff.Visible = True Then
+		btnScrnOff.Left = btnBrightness.Left
+	else If btnBrightness.Visible = True And btnScrnOff.Visible = True Then
+		btnScrnOff.Left = btnBrightness.Left - 60dip
+	End If
+	
+	
 	
 End Sub
 
@@ -53,7 +61,8 @@ End Sub
 
 Private Sub Build_GUI
 	
-	btnBrightness.Visible = config.ChangeBrightnessSettingsFLAG
+	'btnBrightness.Visible = config.ChangeBrightnessSettingsFLAG
+	'btnScrnOff.Visible = config.ShowScreenOffFLAG
 	
 	'--- build the main menu screen
 	BuildMenuCard(mnuMovement,"menuMovement.png","Move",gblConst.PAGE_MOVEMENT)
@@ -96,7 +105,7 @@ End Sub
 
 
 #Region "BRIGHTNESS BTN"
-Private Sub btnBrightness_Click
+Private Sub DoBrightnessDlg
 	
 	Dim o1 As dlgBrightness
 	o1.Initialize(mMainObj,"Screen Brightness",Me,"Brightness_Change")
@@ -112,9 +121,25 @@ Private Sub Brightness_Change(value As Float)
 	
 End Sub
 
-
-
-
 #end region
+
+
+Private Sub btnSubBtnAction_Click
+	Dim o As B4XView : o = Sender
+	Select Case o.Tag
+		Case "br" '--- brightness
+			DoBrightnessDlg
+			
+		Case "soff" '--- screen off
+			CallSub2(Main,"TurnOnOff_ScreenTmr",False)
+			fnc.BlankScreen
+			
+	End Select
+	
+End Sub
+
+
+
+
 
 

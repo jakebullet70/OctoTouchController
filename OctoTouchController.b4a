@@ -216,9 +216,8 @@ Public Sub tmrScreenPower_Tick
 		Set_ScreenTmr
 		Return
 	End If
-	tmrScreen.Enabled = False
 	
-	'powerHelpers.ScreenOff
+	tmrScreen.Enabled = False
 	fnc.BlankScreen
 	
 End Sub

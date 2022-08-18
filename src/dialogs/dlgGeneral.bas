@@ -31,6 +31,7 @@ public Sub CreateDefaultFile
 		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE, _
 						CreateMap("themeclr": "Red", _
 						 "chgBrightness": "false", _
+						 "scrnoff": "false", _
 						 "logall": "false", _
 						 "logpwr": "false", _
 						 "logfiles": "false", _

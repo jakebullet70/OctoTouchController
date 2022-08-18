@@ -71,34 +71,27 @@ End Sub
 
 
 
-Sub YourSub
-
-	Dim input As B4XInputTemplate
-	input.Initialize
-	input.RegexPattern = ".+" 'require at least one character
-	input.lblTitle.Text = "Enter Employee Number"
-	input.mBase.Height = 20%y
-	input.mBase.Width = 60%x
-	Dim RS As ResumableSub = (dialog.ShowTemplate(input, "OK", "", "CANCEL"))
-	FormatDialog(input, True, False)
-	Wait For(RS) Complete (Result As Int)
-	If Result = xui.DialogResponse_Positive Then
-		.
-		.Your Code Here
-		.
-	Else
-		.
-		.And Your Code Here
-		.
-	End If
-End Sub
-
-
-
-
 '   RESIZE DIALOG CODE
 '   RESIZE DIALOG CODE
 '   RESIZE DIALOG CODE
+
+
+
+'Sub YourSub
+'
+'	Dim input As B4XInputTemplate
+'	input.Initialize
+'	input.RegexPattern = ".+" 'require at least one character
+'	input.lblTitle.Text = "Enter Employee Number"
+'	input.mBase.Height = 20%y
+'	input.mBase.Width = 60%x
+'	Dim RS As ResumableSub = (dialog.ShowTemplate(input, "OK", "", "CANCEL"))
+'	FormatDialog(input, True, False)
+'	Wait For(RS) Complete (Result As Int)
+'	If Result = xui.DialogResponse_Positive Then
+'	
+'End Sub
+
 
 
 

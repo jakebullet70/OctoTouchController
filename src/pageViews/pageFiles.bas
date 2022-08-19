@@ -13,7 +13,7 @@ Sub Class_Globals
 	Private Const mModule As String = "pageFiles" 'ignore
 	Private mPnlMain As B4XView
 	Private mCallBackEvent As String 'ignore
-	Private  mMainObj As B4XMainPage'ignore
+	Private mMainObj As B4XMainPage'ignore
 	Private DisplayedFileName As String '--- curently displayed file name
 	
 	Private CSelections As clvSelectionsX
@@ -58,6 +58,7 @@ public Sub Set_focus()
 	If firstRun = False Then
 		'--- this happened already on 1st run
 		tmrFilesCheckChange_Tick '--- call the check change, it will turn on the timer
+		Sleep(500)
 		Update_Printer_Btns
 	Else
 		'--- 1st showing of tab page
@@ -89,24 +90,20 @@ public Sub Update_Printer_Btns
 	mPnlMain.Enabled = oc.isConnected
 	Dim enableDisable As Boolean
 
-	If oc.isPrinting Or oc.IsPaused2 Or oc.isHeating  Or (clvLastIndexClicked = cNO_SELECTION) Then
+	If oc.isPrinting Or oc.IsPaused2 Or oc.isHeating Or (clvLastIndexClicked = cNO_SELECTION) Then
 		enableDisable = False
 	Else
 		enableDisable = True
 	End If
 	
-	For Each btn As B4XView In Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete)
-		btn.Enabled = enableDisable
-	Next
-	guiHelpers.SetEnableDisableColor(Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete))
+	guiHelpers.EnableDisableBtns(Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete),enableDisable)
 
 End Sub
 
 Public Sub tmrFilesCheckChange_Tick
 	
 	If mPnlMain.Visible = False Then
-		'--- we  do not have focus so just disable files check
-		'logMe.LogIt("tmrFilesCheckChange_Tick - pnl not visible",mModule)
+		'--- we do not have focus so just disable files check
 		CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 		Return
 	End If
@@ -132,7 +129,7 @@ Private Sub Build_GUI
 		clvFiles_ItemClick(0,mMainObj.MasterCtrlr.gMapOctoFilesList.GetKeyAt(0))
 	Else
 		clvFiles.Clear
-		clvLastIndexClicked = cNO_SELECTION
+		'clvLastIndexClicked = cNO_SELECTION
 		clvFiles_ItemClick(0,Null)
 	End If
 	
@@ -159,14 +156,15 @@ Private Sub btnAction_Click
 			
 			If Result = xui.DialogResponse_Positive Then
 				SendDeleteCmdAndRemoveFromGrid
-				Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName",1500)
 			End If
 			CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 			
 		Case "load"
 			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_FILES_SELECT.Replace("!LOC!",currentFileInfo.Origin).Replace("!PATH!",currentFileInfo.Name))
 			guiHelpers.Show_toast("Loading file...",2000)
-			Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName",1500)
+			Sleep(100)
+			CallSub(B4XPages.MainPage.MasterCtrlr,"tmrMain_Tick")
+			Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName",500)
 			
 		Case "loadandprint"
 			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_FILES_PRINT.Replace("!LOC!",currentFileInfo.Origin).Replace("!PATH!",currentFileInfo.Name))
@@ -180,9 +178,7 @@ End Sub
 Public Sub Build_ListViewFileList()
 
 	clvFiles.Clear
-	clvLastIndexClicked = cNO_SELECTION
-		
-	CSelections.Initialize(clvFiles) '--- adds new selection modes
+	CSelections.Initialize(clvFiles) 
 	CSelections.Mode = CSelections.MODE_SINGLE_ITEM_PERMANENT
 	
 	For ndx = 0 To mMainObj.MasterCtrlr.gMapOctoFilesList.Size - 1
@@ -193,19 +189,19 @@ Public Sub Build_ListViewFileList()
 		
 	Next
 	
-	clvFiles.PressedColor = 0x721F1C1C  '--- alpha sat to 128
+	clvFiles.PressedColor = 0x721F1C1C  '--- alpha set to 128
 	CSelections.SelectionColor = clvFiles.PressedColor
-	clvFiles.DefaultTextColor =  clrTheme.txtNormal
+	clvFiles.DefaultTextColor  = clrTheme.txtNormal
 	clvFiles.DefaultTextBackgroundColor = xui.Color_Transparent
 	
 	If clvFiles.Size > 0 Then
 		'--- if we have data select the 1st one
 		CSelections.ItemClicked(0)
+		clvLastIndexClicked = 0
+	Else
+		clvLastIndexClicked = cNO_SELECTION
 	End If
-	
-	Sleep(50)
-	Update_Printer_Btns
-	
+
 End Sub
 
 Sub CreateListItem(oData As typOctoFileInfo, Width As Int, Height As Int) As B4XView
@@ -231,7 +227,7 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	If Value = Null Then
 		clvLastIndexClicked = cNO_SELECTION
 		SetThumbnail2Nothing
-		Return'ignore
+		Return 
 	End If
 	
 	CSelections.ItemClicked(Index)
@@ -258,13 +254,6 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 		
 	End If
 	
-'	If Value = oc.JobFileName And oc.isPrinting Then
-'		btnDelete.Enabled = False
-'	Else
-'		btnDelete.Enabled = True
-'	End If
-'	guiHelpers.SetEnableDisableColor(Array As B4XView(btnDelete))
-
 End Sub
 
 #region "FILES_CHANGED_CHECK"
@@ -278,8 +267,6 @@ Public Sub CheckIfFilesChanged
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	FilesCheckChangeIsBusyFLAG = True
 	
-	'If config.logFILE_EVENTS Then logMe.LogIt("tmrFilesCheckChange.Enabled = False  -->  START CHECK",mModule)
-
 	'--- grab a list of files
 	Dim rs As ResumableSub =  mMainObj.MasterCtrlr.cn.SendRequestGetInfo( oc.cFILES)
 	Wait For(rs) Complete (Result As String)
@@ -308,10 +295,10 @@ Public Sub CheckIfFilesChanged
 						
 			Build_ListViewFileList
 	
-'			If mainObj.gMapOctoFilesList.Size > 0 Then
-'				clvFiles_ItemClick(0,mainObj.gMapOctoFilesList.GetKeyAt(0))
-			''			Else
-			''				clvFiles_ItemClick(0,Null)
+'			If mMainObj.MasterCtrlr.gMapOctoFilesList.Size > 0 Then
+'				clvFiles_ItemClick(0,mMainObj.MasterCtrlr.gMapOctoFilesList.GetKeyAt(0))
+'			Else
+'				clvFiles_ItemClick(0,Null)
 '			End If
 			
 		Else
@@ -401,6 +388,7 @@ private Sub ProcessThumbnails(NewMap As Map)
 	Catch
 		Log(LastException)
 	End Try
+	
 	If config.logFILE_EVENTS Then 
 		logMe.LogIt("ProcessThumbnails - END - download new thumbnails for new and changed files",mModule)
 		logMe.LogIt("files changed #" & changedFiles & "   files new #" & NewFiles,mModule)
@@ -444,6 +432,11 @@ Private Sub SendDeleteCmdAndRemoveFromGrid
 	Else
 		clvFiles_ItemClick(0,Null)
 	End If
+	
+	Sleep(200)
+	CallSub(B4XPages.MainPage.MasterCtrlr,"tmrMain_Tick")
+	Sleep(100)
+	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName",500)
 	
 End Sub
 

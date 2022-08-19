@@ -31,7 +31,10 @@ End Sub
 
 Public Sub ItemClicked (Index As Int)
 	If mCurrentMode = MODE_SINGLE_ITEM_TEMP Then Return
-	'If SelectedItems.Contains(Index)  Then '--- Original, will un-select a prev selected row if it is the current row, we ALWAYS want one row selected
+	'Log(Index)
+	'--- Original, will un-select a prev selected row if it is the current row, we ALWAYS want one row selected
+	'If SelectedItems.Contains(Index)  Then 
+	
 	If SelectedItems.Contains(Index) And mCurrentMode <> MODE_SINGLE_ITEM_PERMANENT Then
 		SelectedItems.Remove(Index)
 		mCLV.GetPanel(Index).Color = UnselectedColor

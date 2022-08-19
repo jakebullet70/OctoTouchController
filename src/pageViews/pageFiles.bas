@@ -203,6 +203,9 @@ Public Sub Build_ListViewFileList()
 		CSelections.ItemClicked(0)
 	End If
 	
+	Sleep(50)
+	Update_Printer_Btns
+	
 End Sub
 
 Sub CreateListItem(oData As typOctoFileInfo, Width As Int, Height As Int) As B4XView
@@ -411,7 +414,7 @@ End Sub
 Private Sub SendDeleteCmdAndRemoveFromGrid
 	
 	mMainObj.MasterCtrlr.cn.DeleteRequest(oc.cDELETE_FILES_DELETE.Replace("!LOC!",currentFileInfo.Origin).Replace("!PATH!",currentFileInfo.Name))
-	Sleep(500)
+	'Sleep(500)
 	
 	guiHelpers.Show_toast("Deleting File",1700)
 	

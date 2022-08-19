@@ -14,6 +14,7 @@ Sub Class_Globals
 	Private mPnlMain As B4XView
 	Private mCallBackEvent As String 'ignore
 	Private  mMainObj As B4XMainPage'ignore
+	Private DisplayedFileName As String '--- curently displayed file name
 	
 	Private CSelections As clvSelectionsX
 	Private const cNO_SELECTION As Int = -1
@@ -32,6 +33,7 @@ Sub Class_Globals
 	Private FilesCheckChangeIsBusyFLAG As Boolean = False
 	Private firstRun As Boolean = True
 	
+	Private scrlblFileName As ScrollingLabel
 End Sub
 
 'TODO - check gcode files with spaces in them, need encoding?
@@ -66,6 +68,9 @@ public Sub Set_focus()
 		CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 		firstRun = False
 	End If
+	
+	Update_LoadedFileName
+	DisplayedFileName = oc.JobFileName
 	
 End Sub
 
@@ -108,6 +113,14 @@ Public Sub tmrFilesCheckChange_Tick
 	
 	CheckIfFilesChanged
 	
+	If (oc.JobFileName.Length = 0 And scrlblFileName.Text <> gblConst.NO_FILE_LOADED) Or _
+		(oc.JobFileName.Length <> 0 And scrlblFileName.Text = gblConst.NO_FILE_LOADED) Or _
+		(DisplayedFileName <> oc.JobFileName) Then
+		Update_LoadedFileName
+	End If
+	
+	DisplayedFileName = oc.JobFileName
+	
 End Sub
 
 
@@ -146,11 +159,14 @@ Private Sub btnAction_Click
 			
 			If Result = xui.DialogResponse_Positive Then
 				SendDeleteCmdAndRemoveFromGrid
+				Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName",1500)
 			End If
 			CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 			
 		Case "load"
 			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_FILES_SELECT.Replace("!LOC!",currentFileInfo.Origin).Replace("!PATH!",currentFileInfo.Name))
+			guiHelpers.Show_toast("Loading file...",2000)
+			Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName",1500)
 			
 		Case "loadandprint"
 			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_FILES_PRINT.Replace("!LOC!",currentFileInfo.Origin).Replace("!PATH!",currentFileInfo.Name))
@@ -306,7 +322,6 @@ Public Sub CheckIfFilesChanged
 	
 	FilesCheckChangeIsBusyFLAG = False
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
-	'logMe.LogIt("tmrFilesCheckChange.Enabled = True  -->  END CHECK",mModule)
 	
 	If oldListViewSize <> clvFiles.Size Then
 		'--- highllight the first row
@@ -314,6 +329,8 @@ Public Sub CheckIfFilesChanged
 		clvFiles_ItemClick(0,mMainObj.MasterCtrlr.gMapOctoFilesList.GetKeyAt(0))
 		Sleep(200)
 	End If
+	
+	Update_Printer_Btns
 	
 End Sub
 
@@ -391,14 +408,12 @@ private Sub ProcessThumbnails(NewMap As Map)
 End Sub
 #end region
 
-
-
 Private Sub SendDeleteCmdAndRemoveFromGrid
 	
 	mMainObj.MasterCtrlr.cn.DeleteRequest(oc.cDELETE_FILES_DELETE.Replace("!LOC!",currentFileInfo.Origin).Replace("!PATH!",currentFileInfo.Name))
 	Sleep(500)
 	
-	guiHelpers.Show_toast("Deleting File",1000)
+	guiHelpers.Show_toast("Deleting File",1700)
 	
 	'--- delete from thumbnail cache
 	fileHelpers.SafeKill (currentFileInfo.myThumbnail_filename_disk)
@@ -428,3 +443,13 @@ Private Sub SendDeleteCmdAndRemoveFromGrid
 	End If
 	
 End Sub
+
+
+private Sub Update_LoadedFileName
+	If oc.isFileLoaded Then
+		scrlblFileName.Text = " File: " & fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
+	Else
+		scrlblFileName.Text = gblConst.NO_FILE_LOADED
+	End If
+End Sub
+

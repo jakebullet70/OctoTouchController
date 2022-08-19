@@ -31,4 +31,6 @@ Sub Process_Globals
 	Public Const PAGE_HEATING As String = "het"
 	Public Const PAGE_MENU As String = "mnu"
 	
+	Public Const NO_FILE_LOADED As String = " No file loaded"
+	
 End Sub

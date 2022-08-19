@@ -59,7 +59,8 @@ Public Sub Initialize
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
 	clrTheme.Init(config.ColorTheme)
 	
-	logMe.Clean_OldLogs
+	'--- in 15 minutes check for old logs and delete them
+	Starter.tmrTimerCallSub.CallSubDelayedPlus(Starter,"Clean_OldLogs",60000 * 15)
 	
 	powerHelpers.Init(config.AndroidTakeOverSleepFLAG)
 	ConfigPowerOption

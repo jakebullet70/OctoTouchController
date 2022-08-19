@@ -11,11 +11,9 @@ Version=9.85
 
 Sub Process_Globals
 	Public tmrTimerCallSub As CallSubUtils
-	
 End Sub
 
-Sub Service_Create
-	'This is the program entry point.
+Sub Service_Create '--- This is the program entry point.
 	tmrTimerCallSub.Initialize
 End Sub
 
@@ -33,4 +31,12 @@ Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
 End Sub
 
 Sub Service_Destroy
+	Log("Service_Destroy")
+End Sub
+
+
+'===========================================================================
+
+Public Sub Clean_OldLogs
+	logMe.Clean_OldLogs
 End Sub

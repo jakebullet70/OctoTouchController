@@ -59,22 +59,6 @@ public Sub Str2Bool(txt As String) As Boolean
 	
 End Sub
 
-public Sub Map2Json(m As Map) As String
-	
-	Dim gen As JSONGenerator
-	gen.Initialize(m)
-	Return gen.ToString
-	
-End Sub
-
-public Sub List2Json(lst As List) As String
-	
-	Dim gen As JSONGenerator
-	gen.Initialize2(lst)
-	Return gen.ToString
-	
-End Sub
-
 
 
 

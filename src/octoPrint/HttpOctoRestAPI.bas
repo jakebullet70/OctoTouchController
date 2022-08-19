@@ -127,7 +127,7 @@ public Sub PostRequest(PostApiCmd As String) As ResumableSub
 	
 	If PostApiCmd = oc.cCMD_PRINT Or PostApiCmd = oc.cCMD_CANCEL Then
 		'--- reset the power / screen on-off (diff timeout when printing)
-		Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Set_ScreenTmr",10000)
+		Starter.tmrTimerCallSub.CallSubDelayedPlus(Main,"Set_ScreenTmr",10000)
 	End If
 	
 	Return retStr
@@ -236,23 +236,11 @@ End Sub
 
 public Sub DeleteRequest(DeleteApiCmd As String) As ResumableSub
 
-	'Dim restAPI  As String
-		
-	Dim EndPoint As String = $"http://${gIP}:${gPort}${DeleteApiCmd}?apikey=${mAPIkey}"$
-	
-	Dim rs As ResumableSub =  DeleteRequest2Server(EndPoint)
-	Wait For(rs) Complete (Result As String)
-	Return Result
-		
-End Sub
-
-
-
-private Sub DeleteRequest2Server(sAPI As String) As ResumableSub
+	Dim sAPI As String = $"http://${gIP}:${gPort}${DeleteApiCmd}?apikey=${mAPIkey}"$
 	
 	Dim job As HttpJob : job.Initialize("", Me)
 	Dim retStr As String = ""
-		
+	
 	If config.logREST_API Then
 		Dim UniqueStr As String = Rnd(100000,999999).As(String)
 		logMe.LogIt($"${UniqueStr}:-->${sAPI}<--:"}"$,mModule)
@@ -266,7 +254,7 @@ private Sub DeleteRequest2Server(sAPI As String) As ResumableSub
 	If job.Success Then
 		retStr = job.GetString
 	Else
-		ProcessErrMsg( sAPI & CRLF &  job.ErrorMessage)
+		ProcessErrMsg(sAPI & CRLF &  job.ErrorMessage)
 	End If
 	
 	job.Release '--- free up resources
@@ -277,5 +265,43 @@ private Sub DeleteRequest2Server(sAPI As String) As ResumableSub
 	
 	Return retStr
 
+	
+	'Dim rs As ResumableSub =  DeleteRequest2Server(EndPoint)
+	'Wait For(rs) Complete (Result As String)
+	'Return Result
+		
 End Sub
 
+
+'
+'private Sub DeleteRequest2Server(sAPI As String) As ResumableSub
+'	
+'	Dim job As HttpJob : job.Initialize("", Me)
+'	Dim retStr As String = ""
+'		
+'	If config.logREST_API Then
+'		Dim UniqueStr As String = Rnd(100000,999999).As(String)
+'		logMe.LogIt($"${UniqueStr}:-->${sAPI}<--:"}"$,mModule)
+'	End If
+'
+'	job.Delete(sAPI)
+'	Log(sAPI)
+'	'job.GetRequest.SetContentType("application/json")
+'
+'	Wait For (job) JobDone(job As HttpJob)
+'	If job.Success Then
+'		retStr = job.GetString
+'	Else
+'		ProcessErrMsg( sAPI & CRLF &  job.ErrorMessage)
+'	End If
+'	
+'	job.Release '--- free up resources
+'		
+'	If config.logREST_API Then
+'		logMe.LogIt( $"${UniqueStr}:-->${sAPI}"$,mModule)
+'	End If
+'	
+'	Return retStr
+'
+'End Sub
+'

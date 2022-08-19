@@ -15,6 +15,7 @@ Sub Class_Globals
 	Private mPnlMain As B4XView
 	Private mCallBackEvent As String 'ignore
 	Private mMainObj As B4XMainPage'ignore
+	Private Const NO_FILE_LOADED As String = " No file loaded"
 
 	Private lblToolTemp, lblBedTemp As Label
 	
@@ -45,16 +46,12 @@ public Sub Set_focus()
 	
 	mPnlMain.Visible = True
 	mPnlMain.Enabled = oc.isConnected
-	
-	If oc.isFileLoaded Then 
-		scrlblFileName.Text = " File: " & fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
-	Else
-		scrlblFileName.Text = " No file loaded"
-	End If
-	
+
 	Update_Printer_Stats
 	Update_Printer_Temps
 	Update_Printer_Btns
+	
+	UpdateFileName
 	
 End Sub
 
@@ -147,6 +144,19 @@ Public Sub Update_Printer_Stats
 	statTxt.Append($"Job Time Left:${fnc.ConvertSecondsToString(oc.JobPrintTimeLeft)}"$)
 	lblPrintStats.Text = statTxt.ToString
 	
+	If oc.JobFileName.Length = 0 And scrlblFileName.Text <> NO_FILE_LOADED Or _
+		oc.JobFileName.Length <> 0 And scrlblFileName.Text = NO_FILE_LOADED Then
+		UpdateFileName
+	End If
+	
+End Sub
+
+private Sub UpdateFileName
+	If oc.isFileLoaded Then
+		scrlblFileName.Text = " File: " & fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
+	Else
+		scrlblFileName.Text = NO_FILE_LOADED
+	End If
 End Sub
 
 Public Sub Update_Printer_Temps

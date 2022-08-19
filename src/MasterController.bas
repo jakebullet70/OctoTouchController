@@ -79,6 +79,7 @@ Public Sub tmrFilesCheckChange_Tick
 
 End Sub
 
+
 Public Sub tmrMain_Tick
 
 	'--- make API requested and update screen
@@ -267,14 +268,8 @@ public Sub GetAllOctoFilesInfo
 
 		Dim o As JsonParserFiles  : o.Initialize(True) '--- download thumbnails
 		gMapOctoFilesList.Initialize
-		gMapOctoFilesList = o.GetAllFiles(Result)
+		gMapOctoFilesList = o.StartParseAllFiles(Result)
 		
-		'--- populate the listview - this will hapen when the File TAB gets focus
-		'If oTabHome.oSubTab.oSubTabHeater.IsInitialized Then
-		'	CallSubDelayed(oTabHome.oSubTab.oSubTabHeater,"Build_PresetHeaterOption")
-		'End If
-		
-	
 		mGotFilesListFLAG = True '--- will stop it from firing in the main loop
 		mGotFilesListFLAG_IsBusy = False '--- reset the is busy flag
 		
@@ -379,3 +374,20 @@ public Sub Download_ThumbnailAndCache2File(JobFileName As String,outFileName As 
 	
 End Sub
 #end region
+
+
+Public Sub IsIncompleteFileData() As Boolean
+	For Each o As typOctoFileInfo In gMapOctoFilesList.Values
+		If o.missingData Then
+			If config.logFILE_EVENTS Then logMe.LogIt("Incomplete data in files array",mModule)
+			Return True
+		End If
+	Next
+	Return False
+End Sub
+
+
+
+
+
+

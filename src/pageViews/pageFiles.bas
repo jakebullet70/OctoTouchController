@@ -106,7 +106,6 @@ Public Sub tmrFilesCheckChange_Tick
 		Return
 	End If
 	
-	If config.logFILE_EVENTS Then logMe.LogIt("tmrFilesCheckChange_Tick --> FIRED",mModule)
 	CheckIfFilesChanged
 	
 End Sub
@@ -126,8 +125,11 @@ Private Sub Build_GUI
 	
 End Sub
 
+
 Private Sub btnAction_Click
 	
+	Dim btn As B4XView : btn = Sender
+			
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 	If clvLastIndexClicked = cNO_SELECTION Then
@@ -135,12 +137,13 @@ Private Sub btnAction_Click
 		Return
 	End If
 	
-	Dim btn As B4XView : btn = Sender
 	Select Case btn.Tag
 		Case "delete"
 			CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
+			
 			Dim sf As Object = xui.Msgbox2Async("Delete file from Octoprint?", "Question", "Yes - Delete It", "No", "", Null)
 			Wait For (sf) Msgbox_Result (Result As Int)
+			
 			If Result = xui.DialogResponse_Positive Then
 				SendDeleteCmdAndRemoveFromGrid
 			End If
@@ -256,7 +259,7 @@ Public Sub CheckIfFilesChanged
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	FilesCheckChangeIsBusyFLAG = True
 	
-	If config.logFILE_EVENTS Then logMe.LogIt("tmrFilesCheckChange.Enabled = False  -->  START CHECK",mModule)
+	'If config.logFILE_EVENTS Then logMe.LogIt("tmrFilesCheckChange.Enabled = False  -->  START CHECK",mModule)
 
 	'--- grab a list of files
 	Dim rs As ResumableSub =  mMainObj.MasterCtrlr.cn.SendRequestGetInfo( oc.cFILES)
@@ -264,20 +267,26 @@ Public Sub CheckIfFilesChanged
 	
 	If Result.Length <> 0 Then
 	
-		'--- compre new list with old
+		'--- compore new list with old
 		Dim o As JsonParserFiles  : o.Initialize(False) '--- DO NOT download thumbnails
-		Dim didChange As Boolean  = o.CheckIfChanged( Result,mMainObj.MasterCtrlr.gMapOctoFilesList)
+		Dim didChange As Boolean  = o.CheckIfChanged(Result, mMainObj.MasterCtrlr.gMapOctoFilesList)
+		Dim IncompleteData As Boolean = mMainObj.MasterCtrlr.IsIncompleteFileData
 		
-		If didChange Then
+		'---seen this a few times on startup, not sure why
+		Dim SizeMisMatch As Boolean = (clvFiles.Size <> mMainObj.MasterCtrlr.gMapOctoFilesList.Size) 
+		
+		If didChange Or IncompleteData Or SizeMisMatch Then
 			
 			'--- ok, something changed,  delete - removed thumbnails
-			If config.logFILE_EVENTS Then logMe.LogIt("did change - YES ;)",mModule)
-			Dim mapNewFileList As Map = o.GetAllFiles(Result)
+			If config.logFILE_EVENTS Then 
+				logMe.LogIt($"did change:(incomplete:${IncompleteData})(SizeMisMatch:${SizeMisMatch})"$,mModule)
+			End If
+			Dim mapNewFileList As Map = o.StartParseAllFiles(Result)
 			ProcessThumbnails(mapNewFileList)
 			
 			'--- refresh the old list with new changes
-			mMainObj.MasterCtrlr.gMapOctoFilesList = o.GetAllFiles(Result)
-			
+			mMainObj.MasterCtrlr.gMapOctoFilesList = objHelpers.CopyMap(mapNewFileList)'  o.StartParseAllFiles(Result)
+						
 			Build_ListViewFileList
 	
 '			If mainObj.gMapOctoFilesList.Size > 0 Then
@@ -288,12 +297,8 @@ Public Sub CheckIfFilesChanged
 			
 		Else
 			
-			'--- nothing new, bail
+			'--- nothing new
 			If config.logFILE_EVENTS Then logMe.LogIt("did change --- NO!!!!!!!!!!",mModule)
-'			FilesCheckChangeIsBusyFLAG = False
-'			tmrFilesCheckChange.Enabled = True
-'			Log("tmrFilesCheckChange.Enabled = True  -->  END CHECK")
-'			Return
 			
 		End If
 		

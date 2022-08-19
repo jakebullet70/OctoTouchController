@@ -139,13 +139,11 @@ public Sub  JobStatus(s As String)
 		mFile = mJob.Get("file").As(Map)
 		mProgress = m.Get("progress").As(Map)
 	
-		oc.JobFileName = mFile.Get("name")
-		If oc.JobFileName = "null" Then oc.JobFileName = ""
+		oc.JobFileName = CheckNull(mFile.Get("name"))
 		
 		oc.isFileLoaded = (oc.JobFileName.Length <> 0)
-		
-		oc.JobFileOrigin = mFile.Get("origin")
-		oc.JobFileSize = mFile.Get("size")
+		oc.JobFileOrigin = CheckNull(mFile.Get("origin"))
+		oc.JobFileSize = CheckNull(mFile.Get("size"))
 	
 		oc.JobEstPrintTime = IIf(mJob.Get("estimatedPrintTime") = "",mJob.Get("estimatedPrintTime"),"N/A")
 		
@@ -172,6 +170,15 @@ public Sub  JobStatus(s As String)
 		
 	End Try
 	
+End Sub
+
+private Sub CheckNull(v As String) As String
+	Try
+		Return IIf(v = "null","",v)
+	Catch
+		Log(LastException)
+		Return ""
+	End Try
 End Sub
 
 

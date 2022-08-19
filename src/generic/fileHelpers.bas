@@ -244,3 +244,16 @@ Public Sub DeleteFiles(folder As String, fileSpec As String)
 	
 End Sub
 
+
+
+public Sub WriteTxt2Disk(str As String,folder As String, filename As String) 'ignore
+	
+	'---- Simple, just write out a TXT file, use in debugging long JSON files
+	'--- TODO  see File.OpenOutput
+	
+	Dim TextWriter1 As TextWriter
+	TextWriter1.Initialize(File.OpenOutput( folder, filename, True))
+	TextWriter1.WriteLine(str)
+	TextWriter1.Close
+	
+End Sub

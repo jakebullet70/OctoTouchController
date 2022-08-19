@@ -250,21 +250,6 @@ Public Sub RoundJobPctNoDecimals(n As String) As String
 End Sub
 
 
-
-
-public Sub WriteTxt2Disk(str As String,folder As String, filename As String) 'ignore
-	
-	'---- Simple, just write out a TXT file, use in debugging long JSON files
-	'--- TODO  see File.OpenOutput
-	
-	Dim TextWriter1 As TextWriter
-	TextWriter1.Initialize(File.OpenOutput( folder, filename, True))
-	TextWriter1.WriteLine(str)
-	TextWriter1.Close
-	
-End Sub
-
-
 Public Sub CheckTempRange(what As String, value As Int) As Boolean
 	
 	If what = "bed" Then
@@ -279,23 +264,6 @@ Public Sub CheckTempRange(what As String, value As Int) As Boolean
 	
 	Return True
 	
-End Sub
-
-
-'Convert a map into a list
-'if KeyList = True, then return a list of keys, otherwise a list of values
-public Sub Map2List(myMap As Map, KeyList As Boolean) As List
-    Dim lst As List : lst.Initialize
-    If KeyList Then
-        For Each item As Object In myMap.Keys
-            lst.Add(item)
-        Next
-    Else
-        For Each item As Object In myMap.Values
-            lst.Add(item)
-        Next
-    End If
-    Return lst
 End Sub
 
 

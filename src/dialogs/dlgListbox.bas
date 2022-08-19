@@ -51,7 +51,7 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	ListTemplate.CustomListView1.AsView.width = width
 	ListTemplate.CustomListView1.AsView.Height = height
 	ListTemplate.CustomListView1.PressedColor = clrTheme.BackgroundHeader
-	ListTemplate.options = fnc.Map2List(mDataMap,True)
+	ListTemplate.options = objHelpers.Map2List(mDataMap,True)
 	Dim l As B4XView = ListTemplate.CustomListView1.DesignerLabel
 	l.Font =xui.CreateDefaultFont(26)
 	

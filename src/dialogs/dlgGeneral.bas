@@ -29,9 +29,9 @@ public Sub CreateDefaultFile
 
 	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
 		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE, _
-						CreateMap("themeclr": "Red", _
+						CreateMap("themeclr": "blue", _
 						 "chgBrightness": "false", _
-						 "scrnoff": "false", _
+						 "scrnoff": "true", _
 						 "logall": "false", _
 						 "logpwr": "false", _
 						 "logfiles": "false", _

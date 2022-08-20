@@ -9,4 +9,6 @@ Add a dedicated touch screen to your 3D printer!
 Written in B4X, Work in progress... 
 
 ### Project Status
-Octoprint functions are feature complete, only UI work left. (Aug 2022)
+Octoprint functions are feature complete, only UI work left. (Aug/1/2022)
+
+Internal testing of Beta 1. (Aug/19/2022)

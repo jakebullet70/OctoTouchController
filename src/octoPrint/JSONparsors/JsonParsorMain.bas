@@ -5,36 +5,16 @@ Type=Class
 Version=8.8
 @EndOfDesignText@
 ' Author:  sadLogic
+' Author:  sadLogic, Kherson Ukraine
 #Region VERSIONS 
 ' V. 1.0 	June/7/2022
 #End Region
 Sub Class_Globals
-	Private xui As XUI
 	Private Const mModule As String = "JsonParserMain" 'ignore
-	
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
 Public Sub Initialize
-End Sub
-
-
-public Sub ServerOctoVersion(s As String) 
-
-	Try
-		
-		Dim m As Map,  jp As JSONParser
-		jp.Initialize(s)
-		m = jp.NextObject
-		oc.OctoVersion = m.Get("version")
-		oc.isConnected = True
-		
-	Catch
-		
-		logMe.LogIt(LastException,mModule)
-		
-	End Try
-	
 End Sub
 
 
@@ -181,109 +161,6 @@ private Sub CheckNull(v As String) As String
 	End Try
 End Sub
 
-
-public Sub ConnectionStatus(s As String) 
-	
-	Dim m, mm As Map
-	Dim jp As JSONParser
-	Try
-	
-		jp.Initialize(s)
-	
-		'--- populate json maps
-		m = jp.NextObject
-		mm = m.Get("current").As(Map)
-	
-		oc.PrinterBaud = mm.Get("baudrate")
-		oc.PrinterPort = mm.Get("port")
-		oc.PrinterState = mm.Get("state")
-		oc.PrinterProfile = mm.Get("printerProfile") '--- this is NOT the name of the printer! See 'cPRINTER_PROFILES'
-		oc.isConnected = True
-		
-	Catch
-		
-		logMe.LogIt(LastException,mModule)
-		oc.ResetStateVars
-		
-	End Try
-	
-End Sub
-
-public Sub FileInfo(s As String)'pic As B4XImageView)
-	
-'	
-'	''''gbl.WriteTxt2Disk(s,xui.DefaultFolder,"tmpJSON.json")
-'	
-'	
-	Dim parser As JSONParser
-	parser.Initialize(s)
-	Dim root As Map = parser.NextObject
-'	Dim date As Int = root.Get("date")
-	
-	Try
-		
-		oc.JobPrintThumbnailSrc = root.Get("thumbnail_src")
-		oc.JobPrintThumbnail = root.Get("thumbnail")
-		
-	Catch
-		'--- no thumbnail info found
-		oc.JobPrintThumbnailSrc = ""
-		oc.JobPrintThumbnail = ""
-	End Try
-	
-'	Dim display As String = root.Get("display")
-'	Dim origin As String = root.Get("origin")
-'	Dim Type As String = root.Get("type")
-'	Dim prints As Map = root.Get("prints")
-'	Dim last As Map = prints.Get("last")
-'	'Dim date As Double = last.Get("date")
-'	Dim success As String = last.Get("success")
-'	Dim failure As Int = prints.Get("failure")
-'	'Dim success As Int = prints.Get("success")
-'	Dim path As String = root.Get("path")
-'	Dim typePath As List = root.Get("typePath")
-'	For Each coltypePath As String In typePath
-'	Next
-'
-'	Dim size As Int = root.Get("size")
-	Dim refs As Map = root.Get("refs")
-	Dim download As String = refs.Get("download") 'ignore
-	Dim resource As String = refs.Get("resource") 'ignore
-'
-'	Dim name As String = root.Get("name")
-'	Dim gcodeAnalysis As Map = root.Get("gcodeAnalysis")
-'	Dim estimatedPrintTime As Double = gcodeAnalysis.Get("estimatedPrintTime")
-'	Dim filament As Map = gcodeAnalysis.Get("filament")
-'
-'	Dim tool0 As Map = filament.Get("tool0")
-'	Dim volume As Double = tool0.Get("volume")
-'	Dim length As Double = tool0.Get("length")
-'	Dim dimensions As Map = gcodeAnalysis.Get("dimensions")
-'	Dim depth As Double = dimensions.Get("depth")
-'	Dim width As Double = dimensions.Get("width")
-'	Dim height As Double = dimensions.Get("height")
-'
-'	Dim printingArea As Map = gcodeAnalysis.Get("printingArea")
-'	Dim minY As Double = printingArea.Get("minY")
-'	Dim maxZ As Double = printingArea.Get("maxZ")
-'	Dim minX As Double = printingArea.Get("minX")
-'	Dim maxY As Double = printingArea.Get("maxY")
-'	Dim maxX As Double = printingArea.Get("maxX")
-'	Dim minZ As Double = printingArea.Get("minZ")
-'
-'	Dim hash As String = root.Get("hash")
-'	Dim statistics As Map = root.Get("statistics")
-'	Dim lastPrintTime As Map = statistics.Get("lastPrintTime")
-'	Dim averagePrintTime As Map = statistics.Get("averagePrintTime")
-'
-'		
-'	Catch
-'		
-'		Log(LastException)
-'	
-'	End Try
-	
-End Sub
 
 
 

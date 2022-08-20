@@ -237,13 +237,16 @@ Private Sub GetConnectionPrinterStatus
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
 		
-		parser.ConnectionStatus(Result)
+		Dim o2 As JsonParsorConnectionStatus
+		o2.Initialize
+		o2.ConnectionStatus(Result)
 		
 		'--- turn on main loop timer
 		CallSub2(Main,"TurnOnOff_MainTmr",True)
 		tmrMain_Tick
 		
 	Else
+		
 		oc.ResetStateVars
 		
 	End If

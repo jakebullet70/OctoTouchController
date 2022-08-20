@@ -4,12 +4,11 @@ ModulesStructureVersion=1
 Type=Class
 Version=9.5
 @EndOfDesignText@
-' Author:  sadLogic
+' Author:  sadLogic, Kherson Ukraine
 #Region VERSIONS 
 ' V. 1.0 	June/27/2022
 #End Region
 Sub Class_Globals
-	'Private xui As XUI
 	Private Const mModule As String = "JsonParserMasterPrinterSettings"
 	
 	'--- get the heating profiles setup in octoprint

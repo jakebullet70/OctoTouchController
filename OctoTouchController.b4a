@@ -344,20 +344,20 @@ End Sub
 
 
 
-'Public Sub Restart_App
-'   TODO, errors out, needs work
-'	guiHelpers.Show_toast("Re-Starting Application...",2000)
-'	Activity.Finish
-'	Sleep(2200)
-'	Dim r, r2 As Reflector
-'	r.Target = r.GetActivity
-'	r.Target = r.RunMethod("getApplicationContext")
-'	r2.Target = r.RunMethod("getPackageManager")
-'	Dim I As Intent = r2.RunMethod2("getLaunchIntentForPackage", r.RunMethod("getPackageName"), "java.lang.String" )
-'	r.Target = I
-'	r.RunMethod2("addFlags",  67108864, "java.lang.int")
-'	StartActivity(I)
-'End Sub
+Public Sub Restart_App
+	' TODO, errors out, needs work
+	guiHelpers.Show_toast("Re-Starting Application...",2000)
+	Activity.Finish
+	Sleep(2200)
+	Dim r, r2 As Reflector
+	r.Target = r.GetActivity
+	r.Target = r.RunMethod("getApplicationContext")
+	r2.Target = r.RunMethod("getPackageManager")
+	Dim I As Intent = r2.RunMethod2("getLaunchIntentForPackage", r.RunMethod("getPackageName"), "java.lang.String" )
+	r.Target = I
+	r.RunMethod2("addFlags",  67108864, "java.lang.int")
+	StartActivity(I)
+End Sub
 
 
 

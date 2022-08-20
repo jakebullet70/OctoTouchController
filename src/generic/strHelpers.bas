@@ -14,6 +14,10 @@ Sub Process_Globals
 	Private Const mModule As String = "strHelper" 'ignore
 End Sub
 
+public Sub ConvertLinuxLineEndings2Windows(s As String) As String
+	Return s.Replace(Chr(10),Chr(13) & Chr(10))
+End Sub
+
 
 public Sub Join(sepChar As String, Strings As List) As String
 	

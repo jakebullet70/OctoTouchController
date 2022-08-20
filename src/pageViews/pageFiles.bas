@@ -273,27 +273,29 @@ Public Sub CheckIfFilesChanged
 	
 	If Result.Length <> 0 Then
 	
-		'--- compore new list with old
-		Dim o As JsonParserFiles  : o.Initialize(False) '--- DO NOT download thumbnails
-		Dim didChange As Boolean  = o.CheckIfChanged(Result, mMainObj.MasterCtrlr.gMapOctoFilesList)
+		'--- compare new list with old
+		Dim o As JsonParserFiles : o.Initialize(False) '--- DO NOT download thumbnails
+		Dim didChange As Boolean = o.CheckIfChanged(Result, mMainObj.MasterCtrlr.gMapOctoFilesList)
 		Dim IncompleteData As Boolean = mMainObj.MasterCtrlr.IsIncompleteFileData
 		
-		'---seen this a few times on startup, not sure why
 		Dim SizeMisMatch As Boolean = (clvFiles.Size <> mMainObj.MasterCtrlr.gMapOctoFilesList.Size) 
 		
 		If didChange Or IncompleteData Or SizeMisMatch Then
 			
-			'--- ok, something changed,  delete - removed thumbnails
+			'--- ok, something changed
 			If config.logFILE_EVENTS Then 
 				logMe.LogIt($"did change:(incomplete:${IncompleteData})(SizeMisMatch:${SizeMisMatch})"$,mModule)
 			End If
 			Dim mapNewFileList As Map = o.StartParseAllFiles(Result)
-			ProcessThumbnails(mapNewFileList)
+			ProcessNewOldThumbnails(mapNewFileList)
 			
 			'--- refresh the old list with new changes
 			mMainObj.MasterCtrlr.gMapOctoFilesList = objHelpers.CopyMap(mapNewFileList)'  o.StartParseAllFiles(Result)
-						
-			Build_ListViewFileList
+			
+			If IncompleteData = False Then
+				Build_ListViewFileList
+			End If
+			
 	
 '			If mMainObj.MasterCtrlr.gMapOctoFilesList.Size > 0 Then
 '				clvFiles_ItemClick(0,mMainObj.MasterCtrlr.gMapOctoFilesList.GetKeyAt(0))
@@ -325,7 +327,7 @@ Public Sub CheckIfFilesChanged
 End Sub
 
 
-private Sub ProcessThumbnails(NewMap As Map)
+private Sub ProcessNewOldThumbnails(NewMap As Map)
 	
 	Try
 	

@@ -33,4 +33,6 @@ Sub Process_Globals
 	
 	Public Const NO_FILE_LOADED As String = " No file loaded"
 	
+	Public Const WIN_CRLF As String = Chr(10) & Chr(13)
+	
 End Sub

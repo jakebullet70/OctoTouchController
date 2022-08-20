@@ -85,12 +85,9 @@ public Sub Write2Disk(strToLog As String)
 End Sub
 
 
-public Sub Clean_OldLogs() 'ignore 
-
-	Log("Clean_OldLogs")
-	
+Public Sub DeleteOldFiles(fspec As String)
 	Dim flist As List
-	flist = fileHelpers.WildCardFilesList(xui.DefaultFolder,"*.logs",False,False)
+	flist = fileHelpers.WildCardFilesList(xui.DefaultFolder,fspec,False,False)
 	For Each fname In flist
 		
 		Dim fDate As Long = File.LastModified(xui.DefaultFolder, fname)
@@ -100,7 +97,6 @@ public Sub Clean_OldLogs() 'ignore
 			Log("deleting log file: " &  fname)
 		End If
 	Next
-	
 End Sub
 
 

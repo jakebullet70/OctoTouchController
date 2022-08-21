@@ -152,6 +152,7 @@ Private Sub btnAction_Click
 			CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 			
 			Dim sf As Object = xui.Msgbox2Async("Delete file from Octoprint?", "Question", "Yes - Delete It", "No", "", Null)
+			guiHelpers.ThreeDMsgboxCorner(sf)
 			Wait For (sf) Msgbox_Result (Result As Int)
 			
 			If Result = xui.DialogResponse_Positive Then

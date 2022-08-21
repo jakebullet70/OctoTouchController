@@ -192,8 +192,10 @@ Private Sub btnCheckConnection_Click
 	Dim msg As String = CheckInputs
 	If msg.Length <> 0 Then
 		B4XLoadingIndicator1.Hide
-		Dim sf As Object = xui.Msgbox2Async($"Input Error! ${msg}"$, "Problem", "OK", "", "", Null)
-		Wait For (sf) Msgbox_Result (Result As Int)
+		'Dim sf As Object = xui.Msgbox2Async($"Input Error! ${msg}"$, "Problem", "OK", "", "", Null)
+		'Wait For (B4XPages.GetManager.MainPage.sadMSGBOX("Problem",msg,"INFO","","","OK")) Complete (result1 As Int)
+		'guiHelpers.ThreeDMsgboxCorner(sf)
+		'Wait For (sf) Msgbox_Result (Result As Int)
 		Return
 	End If
 	
@@ -232,6 +234,7 @@ Public Sub connect_Complete (result As Object, success As Object)
 		msg.Append("Connection Failed.").Append(CRLF).Append("A couple of things to think about").Append(CRLF)
 		msg.Append("Is Octoprint turned on?").Append(CRLF).Append("Are Your IP And Port correct?").Append(CRLF)
 		Dim sf As Object = xui.Msgbox2Async(msg.ToString, "Problem", "OK", "", "", Null)
+		guiHelpers.ThreeDMsgboxCorner(sf)
 		Wait For (sf) Msgbox_Result (result1 As Int)
 	End If
 	
@@ -255,6 +258,7 @@ Private Sub btnGetOctoKey_Click
 	msg.Append("You will need to click OK in Octoprint to confirm that this app can have access").Append(CRLF & CRLF)
 	msg.Append("Press OK when ready").Append(CRLF)
 	Dim sf As Object = xui.Msgbox2Async(msg.ToString, "Information", "OK", "", "CANCEL", Null)
+	guiHelpers.ThreeDMsgboxCorner(sf)
 	Wait For (sf) Msgbox_Result (result1 As Int)
 	If result1 <> xui.DialogResponse_Positive Then
 		Return
@@ -289,6 +293,7 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 		Else
 			'--- some error happened
 			Dim sf1 As Object = xui.Msgbox2Async(result.As(String), "Problem", "OK", "", "", Null)
+			guiHelpers.ThreeDMsgboxCorner(sf1)
 			Wait For (sf1) Msgbox_Result (result1 As Int)
 		End If
 		

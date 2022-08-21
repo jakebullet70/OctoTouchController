@@ -351,6 +351,7 @@ Private Sub btnAction_Click
 			
 		Case "cancel"
 			Dim sf As Object = xui.Msgbox2Async("Do you want to cancel this print?", "Question", "Yes - Cancel The Print", "No", "", Null)
+			guiHelpers.ThreeDMsgboxCorner(sf)
 			Wait For (sf) Msgbox_Result (Result As Int)
 
 			If Result = xui.DialogResponse_Positive Then

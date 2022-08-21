@@ -143,7 +143,8 @@ End Sub
 
 '--- pass in an empty filename string to NOT write out a file
 Public Sub DownloadThumbnailAndShow(Link As String, iv As B4XImageView, fileName As String)'ignore
-
+	
+	Dim InSub As String = "DownloadThumbnailAndShow"
 	'--- downloads and optionally writes out the file
 	'--- pass "" in filename for NO file
 	
@@ -177,7 +178,7 @@ Public Sub DownloadThumbnailAndShow(Link As String, iv As B4XImageView, fileName
 		
 	Catch
 		
-		If config.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
+		If config.logFILE_EVENTS Then logMe.LogIt2(LastException,mModule,InSub)
 		
 	End Try
 	
@@ -188,6 +189,8 @@ End Sub
 
 Public Sub Download_AndSaveFile(Link As String, fileName As String)
 
+	Dim InSub As String = "Download_AndSaveFile"
+	
 	If Link.Length = 0 Then
 		If config.logFILE_EVENTS Then logMe.LogIt("Thumbnail path is empty",mModule) 	'--- no thumbnail
 		Return
@@ -201,7 +204,7 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String)
 		'j.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
 		
 	Catch
-		If config.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
+		If config.logFILE_EVENTS Then logMe.LogIt2(LastException,mModule,InSub)
 	End Try
 	
 	Wait For (j) JobDone(j As HttpJob)
@@ -220,7 +223,7 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String)
 		
 	Catch
 		
-		If config.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
+		If config.logFILE_EVENTS Then logMe.LogIt2(LastException,mModule,InSub)
 		
 	End Try
 	
@@ -235,6 +238,7 @@ End Sub
 
 
 public Sub DeleteRequest(DeleteApiCmd As String) As ResumableSub
+
 
 	Dim sAPI As String = $"http://${gIP}:${gPort}${DeleteApiCmd}?apikey=${mAPIkey}"$
 	
@@ -264,44 +268,6 @@ public Sub DeleteRequest(DeleteApiCmd As String) As ResumableSub
 	End If
 	
 	Return retStr
-
-	
-	'Dim rs As ResumableSub =  DeleteRequest2Server(EndPoint)
-	'Wait For(rs) Complete (Result As String)
-	'Return Result
 		
 End Sub
 
-
-'
-'private Sub DeleteRequest2Server(sAPI As String) As ResumableSub
-'	
-'	Dim job As HttpJob : job.Initialize("", Me)
-'	Dim retStr As String = ""
-'		
-'	If config.logREST_API Then
-'		Dim UniqueStr As String = Rnd(100000,999999).As(String)
-'		logMe.LogIt($"${UniqueStr}:-->${sAPI}<--:"}"$,mModule)
-'	End If
-'
-'	job.Delete(sAPI)
-'	Log(sAPI)
-'	'job.GetRequest.SetContentType("application/json")
-'
-'	Wait For (job) JobDone(job As HttpJob)
-'	If job.Success Then
-'		retStr = job.GetString
-'	Else
-'		ProcessErrMsg( sAPI & CRLF &  job.ErrorMessage)
-'	End If
-'	
-'	job.Release '--- free up resources
-'		
-'	If config.logREST_API Then
-'		logMe.LogIt( $"${UniqueStr}:-->${sAPI}"$,mModule)
-'	End If
-'	
-'	Return retStr
-'
-'End Sub
-'

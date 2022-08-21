@@ -351,7 +351,8 @@ Private Sub btnAction_Click
 			
 		Case "cancel"
 			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Question",540dip, 170dip)
-			Wait For (mb.Show("Do you want to cancel this print?","QUES","Yes - Cancel It","","No")) Complete (res As Int)
+			Wait For (mb.Show("Do you want to cancel this print?",gblConst.MB_ICON_QUESTION, _
+						"Yes - Cancel It","","No")) Complete (res As Int)
 
 			If res = xui.DialogResponse_Positive Then
 				guiHelpers.Show_toast("Canceling...",2000)

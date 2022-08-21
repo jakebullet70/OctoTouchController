@@ -291,7 +291,7 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 			Case "ab" '--- about
 				Dim msg As String = guiHelpers.GetAboutText()
 				Dim mb As dlgMsgBox : mb.Initialize(Me,"About",560dip, 200dip)
-				Wait For (mb.Show(msg,"INFO","OK","","")) Complete (res As Int)
+				Wait For (mb.Show(msg,gblConst.MB_ICON_INFO,"OK","","")) Complete (res As Int)
 				
 				
 			Case "gn"  '--- general settings
@@ -342,7 +342,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	
 	Dim mb As dlgMsgBox : mb.Initialize(Me,"Connetion Problem",560dip, 180dip)
 	mb.lblTxt.Font = xui.CreateDefaultFont(20)
-	Wait For (mb.Show(Msg.ToString,"STOP","Retry","","Setup")) Complete (res As Int)
+	Wait For (mb.Show(Msg.ToString,gblConst.MB_ICON_WARNING,"Retry","","Setup")) Complete (res As Int)
 	
 	Select Case res
 		Case xui.DialogResponse_Positive '--- retry

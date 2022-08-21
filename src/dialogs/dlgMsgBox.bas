@@ -53,8 +53,8 @@ Public Sub Show(txt  As String, icon As String, _
 	
 	Dim icon_file As String
 	Select Case icon
-		Case "QUES" : icon_file = "mb_question.png"
-		Case "STOP" : icon_file = "mb_stop.png"
+		Case gblConst.MB_ICON_QUESTION : icon_file = "mb_question.png"
+		Case gblConst.MB_ICON_WARNING  : icon_file = "mb_stop.png"
 		Case Else
 			icon_file = "mb_info.png"
 	End Select

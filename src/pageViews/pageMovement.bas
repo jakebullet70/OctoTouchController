@@ -219,11 +219,12 @@ End Sub
 #Region "FUNCTION_MENU"
 private Sub FunctionMenu
 	
-	Dim mapOptions As Map = CreateMap("Bed Leveling":"bl","Load Filament":"lf","UnLoad Filament":"uf")
+	Dim mapOptions As Map = CreateMap( _
+			"Auto Bed Leveling (G29)":"bl","Change filament (M600)":"cl","Load Filament":"lf","UnLoad Filament":"uf")
 	
 	Dim o1 As dlgListbox
 	o1.Initialize(mMainObj,"Function Menu",Me,"FunctionMenu_Event")
-	o1.Show(250dip,220dip,mapOptions)
+	o1.Show(250dip,320dip,mapOptions)
 	
 End Sub
 
@@ -236,14 +237,15 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 	Select Case value
 		Case "bl" '--- bed level
 			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","G29"))
-			msg = msg & "Start Bed Level"
+			msg = msg & "Start Bed Leveling"
 			
 		Case Else
 			msg = " ...TODO... "
 			
+			
 	End Select
+	guiHelpers.Show_toast(msg,3200)
 	
-	guiHelpers.Show_toast(msg,1800)
 	
 End Sub
 #end region

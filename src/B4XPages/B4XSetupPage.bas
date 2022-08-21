@@ -239,7 +239,7 @@ Public Sub connect_Complete (result As Object, success As Object)
 		msg.Append("Connection Failed.").Append(CRLF).Append("A couple of things to think about.").Append(CRLF)
 		msg.Append("Is Octoprint turned on?").Append(CRLF).Append("Are Your IP And Port correct?")
 		Dim mb As dlgMsgBox : mb.Initialize(Root,"Problem",580dip, 220dip)
-		Wait For (mb.Show(msg.ToString,"STOP","OK","","")) Complete (res As Int)
+		Wait For (mb.Show(msg.ToString,gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
 	End If
 	
 End Sub
@@ -252,7 +252,7 @@ Private Sub btnGetOctoKey_Click
 	If txtPrinterIP.Text.Length = 0 Or txtPrinterPort.Text.Length = 0 Then
 		Dim mb As dlgMsgBox : mb.Initialize(Root,"Problem",540dip, 200dip)
 		Wait For (mb.Show("Please check if your IP and Port Are Set", _
-						  "STOP","OK","","")) Complete (res As Int)
+				gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
 		Return
 	End If
 	
@@ -297,7 +297,7 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 		Else
 			'--- some error happened
 			Dim mb As dlgMsgBox : mb.Initialize(Root,"Problem",540dip, 220dip)
-			Wait For (mb.Show(result.As(String),"STOP","OK","","")) Complete (res As Int)
+			Wait For (mb.Show(result.As(String),gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
 
 		End If
 		

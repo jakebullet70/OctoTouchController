@@ -19,7 +19,7 @@ End Sub
 
 public Sub ConnectionStatus(s As String) 
 	
-	Dim m, mm As Map
+	Dim m, mm As Map, InSub As String = "ConnectionStatus"
 	Dim jp As JSONParser
 	Try
 	
@@ -37,7 +37,7 @@ public Sub ConnectionStatus(s As String)
 		
 	Catch
 		
-		logMe.LogIt(LastException,mModule)
+		logMe.LogIt2(LastException,mModule,InSub)
 		oc.ResetStateVars
 		
 	End Try

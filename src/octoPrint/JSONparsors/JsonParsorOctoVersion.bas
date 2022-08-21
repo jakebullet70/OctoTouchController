@@ -19,6 +19,7 @@ End Sub
 
 public Sub ServerOctoVersion(s As String)
 
+	Dim InSub As String = "ServerOctoVersion"
 	Try
 		
 		Dim m As Map,  jp As JSONParser
@@ -29,7 +30,7 @@ public Sub ServerOctoVersion(s As String)
 		
 	Catch
 		
-		logMe.LogIt(LastException,mModule)
+		logMe.LogIt2(LastException,mModule,InSub)
 		
 	End Try
 	

@@ -328,6 +328,7 @@ End Sub
 
 private Sub ProcessNewOldThumbnails(NewMap As Map)
 	
+	Dim InSub As String = "ProcessNewOldThumbnails"
 	Try
 	
 		'--- remove any old thumbnail files
@@ -347,12 +348,12 @@ private Sub ProcessNewOldThumbnails(NewMap As Map)
 		Next
 		
 	Catch
-		Log(LastException)
+		logMe.LogIt2(LastException,mModule,InSub)
 	End Try
 
 	If config.logFILE_EVENTS Then 
-		logMe.LogIt("ProcessThumbnails - END - remove any old thumbnail files: #" & deletedFiles,mModule)
-		logMe.LogIt("ProcessThumbnails - START - download new thumbnails for new and changed files",mModule)
+		logMe.LogIt2("END - remove any old thumbnail files: #" & deletedFiles,mModule,InSub)
+		logMe.LogIt2("START - download new thumbnails for new and changed files",mModule,InSub)
 	End If
 	
 	Try
@@ -368,7 +369,7 @@ private Sub ProcessNewOldThumbnails(NewMap As Map)
 				Dim ffFileToWorkOn As typOctoFileInfo = mMainObj.MasterCtrlr.gMapOctoFilesList.get(mapKey)
 				If ffFileToWorkOn.Date <> oNewMap.Date Then '--- date changed
 				
-					If config.logFILE_EVENTS Then logMe.LogIt("refreshing old thumbnail: " & oNewMap.Name,mModule)
+					If config.logFILE_EVENTS Then logMe.LogIt2("refreshing old thumbnail: " & oNewMap.Name,mModule,InSub)
 					fileHelpers.SafeKill(ffFileToWorkOn.myThumbnail_filename_disk)
 					changedFiles = changedFiles + 1
 					mMainObj.MasterCtrlr.Download_ThumbnailAndCache2File(oNewMap.Thumbnail,oNewMap.myThumbnail_filename_disk)
@@ -379,7 +380,7 @@ private Sub ProcessNewOldThumbnails(NewMap As Map)
 
 				'--- new file, need thumbnail
 				NewFiles = NewFiles + 1
-				logMe.LogIt("downloading new thumbnail; " & oNewMap.name,mModule)
+				If config.logFILE_EVENTS Then logMe.LogIt2("downloading new thumbnail; " & oNewMap.name,mModule,InSub)
 				mMainObj.MasterCtrlr.Download_ThumbnailAndCache2File(oNewMap.Thumbnail,oNewMap.myThumbnail_filename_disk)
 								
 			End If
@@ -387,12 +388,11 @@ private Sub ProcessNewOldThumbnails(NewMap As Map)
 		Next
 			
 	Catch
-		Log(LastException)
+		logMe.LogIt2(LastException,mModule,InSub)
 	End Try
 	
 	If config.logFILE_EVENTS Then 
-		logMe.LogIt("ProcessThumbnails - END - download new thumbnails for new and changed files",mModule)
-		logMe.LogIt("files changed #" & changedFiles & "   files new #" & NewFiles,mModule)
+		logMe.LogIt2("files changed #" & changedFiles & "   files new #" & NewFiles,mModule,InSub)
 	End If
 	
 	

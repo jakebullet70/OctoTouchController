@@ -218,7 +218,6 @@ Private Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	Dim tagme As String = tag.As(String)
 	Dim msg As String
 	
-	Log(selectedMsg)
 	Select Case True
 		
 		Case selectedMsg.EndsWith("off")

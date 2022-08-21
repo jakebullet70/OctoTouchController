@@ -35,8 +35,8 @@ Sub Process_Globals
 	
 	Public Const WIN_CRLF As String = Chr(10) & Chr(13)
 	
-	Public Const MB_ICON_WARNING As String = "STOP"
-	Public Const MB_ICON_INFO As String = "INFO"
-	Public Const MB_ICON_QUESTION As String = "QUES"
+	Public Const MB_ICON_WARNING As String = "mb_stop.png"
+	Public Const MB_ICON_INFO As String = "mb_info.png"
+	Public Const MB_ICON_QUESTION As String = "mb_question.png"
 	
 End Sub

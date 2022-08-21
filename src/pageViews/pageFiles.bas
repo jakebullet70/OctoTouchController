@@ -17,8 +17,8 @@ Sub Class_Globals
 	Private DisplayedFileName As String '--- curently displayed file name
 	
 	Private CSelections As clvSelectionsX
-	Private const cNO_SELECTION As Int = -1
-	Private clvLastIndexClicked As Int = cNO_SELECTION
+	Private Const NO_SELECTION As Int = -1
+	Private clvLastIndexClicked As Int = NO_SELECTION
 
 	Private clvFiles As CustomListView
 	Private ivPreview As lmB4XImageViewX
@@ -90,7 +90,7 @@ public Sub Update_Printer_Btns
 	mPnlMain.Enabled = oc.isConnected
 	Dim enableDisable As Boolean
 
-	If oc.isPrinting Or oc.IsPaused2 Or oc.isHeating Or (clvLastIndexClicked = cNO_SELECTION) Then
+	If oc.isPrinting Or oc.IsPaused2 Or oc.isHeating Or (clvLastIndexClicked = NO_SELECTION) Then
 		enableDisable = False
 	Else
 		enableDisable = True
@@ -120,7 +120,6 @@ Public Sub tmrFilesCheckChange_Tick
 	
 End Sub
 
-
 Private Sub Build_GUI
 	
 	If mMainObj.MasterCtrlr.gMapOctoFilesList.IsInitialized And mMainObj.MasterCtrlr.gMapOctoFilesList.Size > 0 Then
@@ -129,7 +128,7 @@ Private Sub Build_GUI
 		clvFiles_ItemClick(0,mMainObj.MasterCtrlr.gMapOctoFilesList.GetKeyAt(0))
 	Else
 		clvFiles.Clear
-		'clvLastIndexClicked = cNO_SELECTION
+		'clvLastIndexClicked = NO_SELECTION
 		clvFiles_ItemClick(0,Null)
 	End If
 	
@@ -142,7 +141,7 @@ Private Sub btnAction_Click
 			
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
-	If clvLastIndexClicked = cNO_SELECTION Then
+	If clvLastIndexClicked = NO_SELECTION Then
 		guiHelpers.Show_toast("No item selected",2500)
 		Return
 	End If
@@ -199,7 +198,7 @@ Public Sub Build_ListViewFileList()
 		CSelections.ItemClicked(0)
 		clvLastIndexClicked = 0
 	Else
-		clvLastIndexClicked = cNO_SELECTION
+		clvLastIndexClicked = NO_SELECTION
 	End If
 
 End Sub
@@ -225,7 +224,7 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 	If Value = Null Then
-		clvLastIndexClicked = cNO_SELECTION
+		clvLastIndexClicked = NO_SELECTION
 		SetThumbnail2Nothing
 		Return 
 	End If

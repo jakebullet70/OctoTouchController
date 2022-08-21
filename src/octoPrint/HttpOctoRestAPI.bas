@@ -45,7 +45,7 @@ Private Sub ProcessErrMsg(msg As String)
 		Return
 	End If
 	
-	logMe.logit("RestAPI ERR --> " & msg,mModule) '--- always log these
+	logMe.logit("(ProcessErrMsg)RestAPI ERR --> " & msg,mModule) '--- always log these
 	
 	
 End Sub
@@ -58,6 +58,7 @@ End Sub
 
 public Sub SendRequestGetInfo(octConst As String) As ResumableSub
 
+	Dim inSub As String = "SendRequestGetInfo"
 	Dim sAPI As String = $"http://${gIP}:${gPort}${octConst}?apikey=${mAPIkey}"$
 	
 	Dim j As HttpJob: j.Initialize("", Me)
@@ -65,7 +66,7 @@ public Sub SendRequestGetInfo(octConst As String) As ResumableSub
 	
 	If config.logREST_API Then
 		Dim UniqueStr As String = Rnd(100000,999999).As(String)
-		logMe.LogIt($"${UniqueStr}:-->${sAPI}"$,mModule)
+		logMe.LogIt2($"${UniqueStr}:-->${sAPI}"$,mModule,inSub)
 	End If
 
 	j.Download(sAPI)
@@ -79,7 +80,7 @@ public Sub SendRequestGetInfo(octConst As String) As ResumableSub
 	j.Release '--- free up resources
 	
 	If config.logREST_API Then
-		logMe.LogIt($"${UniqueStr}:-->${sAPI}"$,mModule)
+		logMe.LogIt2($"${UniqueStr}:-->${sAPI}"$,mModule,inSub)
 	End If
 	
 	Return retStr
@@ -239,7 +240,7 @@ End Sub
 
 public Sub DeleteRequest(DeleteApiCmd As String) As ResumableSub
 
-
+	Dim InSub As String = "DeleteRequest"
 	Dim sAPI As String = $"http://${gIP}:${gPort}${DeleteApiCmd}?apikey=${mAPIkey}"$
 	
 	Dim job As HttpJob : job.Initialize("", Me)
@@ -247,11 +248,10 @@ public Sub DeleteRequest(DeleteApiCmd As String) As ResumableSub
 	
 	If config.logREST_API Then
 		Dim UniqueStr As String = Rnd(100000,999999).As(String)
-		logMe.LogIt($"${UniqueStr}:-->${sAPI}<--:"}"$,mModule)
+		logMe.LogIt2($"${UniqueStr}:-->${sAPI}<--:"}"$,mModule,InSub)
 	End If
 
 	job.Delete(sAPI)
-	Log(sAPI)
 	'job.GetRequest.SetContentType("application/json")
 
 	Wait For (job) JobDone(job As HttpJob)
@@ -264,7 +264,7 @@ public Sub DeleteRequest(DeleteApiCmd As String) As ResumableSub
 	job.Release '--- free up resources
 		
 	If config.logREST_API Then
-		logMe.LogIt( $"${UniqueStr}:-->${sAPI}"$,mModule)
+		logMe.LogIt2( $"${UniqueStr}:-->${sAPI}"$,mModule,InSub)
 	End If
 	
 	Return retStr

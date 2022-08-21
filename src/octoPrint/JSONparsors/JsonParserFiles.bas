@@ -11,7 +11,7 @@ Version=9.5
 
 Sub Class_Globals
 
-	Private Const mModule As String = "JsonParserFiles" 'ignore
+	Private Const mModule As String = "JsonParserFiles" 
 	
 	Public gMapFiles As Map
 	
@@ -40,6 +40,7 @@ End Sub
 
 private Sub ParseCompareCheck(jsonTXT As String,oldMap As Map) As Boolean
 	
+	Dim InSub As String = "ParseCompareCheck"
 	Dim parser As JSONParser
 	parser.Initialize(jsonTXT)
 	
@@ -59,14 +60,14 @@ private Sub ParseCompareCheck(jsonTXT As String,oldMap As Map) As Boolean
 
 		If ff = Null Then
 			'--- we did Not find this file so lets tell them something changed (file was added)
-			Log("file added")
+			If config.logFILE_EVENTS Then logMe.LogIt2("file added",mModule,InSub)
 			Return True
 			
 		Else
 			
 			If ff.Date <> fileDate Then
 				'--- file is there but date changed, tell them (same file name, new date)
-				Log("same file name, new date")
+				If config.logFILE_EVENTS Then logMe.LogIt2("same file name, new date",mModule,InSub)
 				Return True
 			End If
 			
@@ -100,6 +101,7 @@ End Sub
 
 private Sub Parse(jsonTXT As String)
 	
+	Dim InSub As String = "Parse"
 	Dim parser As JSONParser
 	parser.Initialize(jsonTXT)
 	
@@ -153,9 +155,9 @@ private Sub Parse(jsonTXT As String)
 				ff.Height = dimensions.Get("height")
 			Catch
 				'--- thinking if we error out here - octoprint has not finished parsing the newly
-				'--- added file gcode so its incomplete
+				'--- added file so the gcode analisys is incomplete
 				ff.missingData = True
-				Log("ParseFile 1: " & LastException)
+				logMe.LogIt2("ParseFile 1: " & LastException,mModule,InSub)
 			End Try
 				
 '		Dim printingArea As Map = gcodeAnalysis.Get("printingArea")
@@ -173,7 +175,7 @@ private Sub Parse(jsonTXT As String)
 '		Dim _default As Double = averagePrintTime.Get("_default")
 	
 		Catch
-			Log("ParseFile 2: " & LastException)
+			logMe.LogIt2("ParseFile 2: " & LastException,mModule,InSub)
 		End Try
 		
 		If mDownloadThumbnails And  ff.Thumbnail.Length <> 0 Then

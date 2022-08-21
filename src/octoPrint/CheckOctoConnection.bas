@@ -50,14 +50,17 @@ End Sub
 
 public Sub Check(ip As String,port As String,octo_key As String) 
 
+	Dim InSub As String = "Check"
 	Dim sAPI As String = $"http://${ip}:${port}${oc.cSERVER}?apikey=${octo_key}"$
 	
 	Dim j As HttpJob: j.Initialize("", Me)
 	Dim resultStr As String = ""
 	Dim boolStr As String = False.As(String)
 	
-	Dim UniqueStr As String = Rnd(100000,999999).As(String)
-	Log($"ConnectCheck: ${UniqueStr}:-->${sAPI}"$)
+	If config.logREST_API Then
+		Dim UniqueStr As String = Rnd(100000,999999).As(String)
+		logMe.logit2($"ConnectCheck: ${UniqueStr}:-->${sAPI}"$,mModule,InSub)
+	End If
 
 	j.Download(sAPI)
 	Wait For (j) JobDone(j As HttpJob)
@@ -68,7 +71,9 @@ public Sub Check(ip As String,port As String,octo_key As String)
 	
 	j.Release '--- free up resources
 	
-	Log($"ConnectCheck: ${UniqueStr}:-->${sAPI}"$)
+	If config.logREST_API Then
+		logMe.logit2($"ConnectCheck: ${UniqueStr}:-->${sAPI}"$,mModule,InSub)
+	End If
 	
 	Dim retList As List : retList.Initialize2(Array As String(resultStr,boolStr))
 	RaiseEvent("Complete",retList)

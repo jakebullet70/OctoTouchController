@@ -370,8 +370,8 @@ public Sub Download_ThumbnailAndCache2File(JobFileName As String,outFileName As 
 		
 	Catch
 		
-		If config.logFILE_EVENTS Then logMe.LogIt(LastException,mModule)
-		Log(LastException)
+		If config.logFILE_EVENTS Then logMe.LogIt2(LastException,mModule,"Download_ThumbnailAndCache2File")
+		
 	End Try
 
 	

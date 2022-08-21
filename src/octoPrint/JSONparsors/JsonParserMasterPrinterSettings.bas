@@ -31,6 +31,7 @@ End Sub
 
 private Sub ParseMasterSettings(jsonTXT As String)
 	
+	Dim inSub As String	= "ParseMasterSettings"
 	Dim parser As JSONParser : parser.Initialize(jsonTXT)
 	
 	Dim root As Map = parser.NextObject
@@ -53,7 +54,7 @@ private Sub ParseMasterSettings(jsonTXT As String)
 		
 	Catch
 		
-		logMe.LogIt(LastException,mModule)
+		logMe.LogIt2(LastException,mModule,inSub)
 		
 	End Try
 	
@@ -568,6 +569,5 @@ Public Sub ParsePrinterProfile(jsonTXT As String)
 	'Dim sharedNozzle As String = extruder.Get("sharedNozzle")
 	oc.PrinterProfileNozzleCount = extruder.Get("count")
 
-	
 	
 End Sub

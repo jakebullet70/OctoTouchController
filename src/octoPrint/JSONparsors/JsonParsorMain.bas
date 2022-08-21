@@ -10,7 +10,7 @@ Version=8.8
 ' V. 1.0 	June/7/2022
 #End Region
 Sub Class_Globals
-	Private Const mModule As String = "JsonParserMain" 'ignore
+	Private Const mModule As String = "jsonParserMain" 'ignore
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -19,6 +19,7 @@ End Sub
 
 
 public Sub TempStatus(s As String)
+	Dim CallingSub As String = "TempStatus"
 	Dim m, mTemp, mBed, mTool1, mTool2 As Map
 	Dim jp As JSONParser
 	
@@ -34,14 +35,14 @@ public Sub TempStatus(s As String)
 		mTemp = m.Get("temperature").As(Map)
 		
 		mBed = mTemp.Get("bed").As(Map)
-		TargetBedCheck = mBed.Get("target")
-		oc.BedActual = mBed.Get("actual") & gblConst.DEGREE_SYMBOL & "C"
+		TargetBedCheck = CheckNull0(mBed.Get("target"))
+		oc.BedActual = CheckNull0(mBed.Get("actual")) & gblConst.DEGREE_SYMBOL & "C"
 		oc.BedTarget = TargetBedCheck.As(String)  & gblConst.DEGREE_SYMBOL & "C"
 		
 		mTool1 = mTemp.Get("tool0").As(Map)
-		TargetToolCheck = mTool1.Get("target")
-		oc.Tool1ActualReal = mTool1.Get("actual")
-		oc.Tool1Actual = mTool1.Get("actual") & gblConst.DEGREE_SYMBOL & "C"
+		TargetToolCheck = CheckNull0(mTool1.Get("target"))
+		oc.Tool1ActualReal = CheckNull0(mTool1.Get("actual"))
+		oc.Tool1Actual = CheckNull0(mTool1.Get("actual")) & gblConst.DEGREE_SYMBOL & "C"
 		oc.Tool1Target = TargetToolCheck.As(String) & gblConst.DEGREE_SYMBOL & "C"
 			
 		'---  is there a tool 2
@@ -58,19 +59,19 @@ public Sub TempStatus(s As String)
 			Dim bedCheckOffset As Int = 2
 			Dim toolCheckOffset As Int = 5
 			
-			Dim bedActual As Int '--- klipper issue, check for null
-			If mBed.Get("actual") = Null Then
-				bedActual = 0
-			Else
-				bedActual = mBed.Get("actual")
-			End If
-			Dim toolActual As Int '--- klipper issue, check for null
-			If mTool1.Get("actual") = Null Then
-				toolActual = 0
-			Else
-				toolActual = mTool1.Get("actual")
-			End If
+			Dim bedActual As Int = CheckNull0(mBed.Get("actual"))
+'			If mBed.Get("actual") = Null Then
+'				bedActual = 0
+'			Else
+'				bedActual = mBed.Get("actual")
+'			End If
 			
+			Dim toolActual As Int = CheckNull0(mTool1.Get("actual"))
+'			If mTool1.Get("actual") = Null Then
+'				toolActual = 0
+'			Else
+'				toolActual = mTool1.Get("actual")
+'			End If
 			
 			If (bedActual + bedCheckOffset <= TargetBedCheck) Or (toolActual + toolCheckOffset <= TargetToolCheck) Then
 				oc.isHeating = True
@@ -83,7 +84,7 @@ public Sub TempStatus(s As String)
 			
 	Catch
 		
-		logMe.LogIt(LastException,mModule)
+		logMe.LogIt2(LastException,mModule,CallingSub)
 		oc.ResetTempVars
 		
 	End Try
@@ -92,7 +93,7 @@ End Sub
 
 
 public Sub  JobStatus(s As String)
-	
+	Dim CallingSub As String = "JobStatus"
 	Dim m, mProgress, mJob, mFile As Map
 	Dim jp As JSONParser
 	
@@ -125,12 +126,13 @@ public Sub  JobStatus(s As String)
 		oc.JobFileOrigin = CheckNull(mFile.Get("origin"))
 		oc.JobFileSize = CheckNull(mFile.Get("size"))
 	
-		oc.JobEstPrintTime = IIf(mJob.Get("estimatedPrintTime") = "",mJob.Get("estimatedPrintTime"),"N/A")
+		oc.JobEstPrintTime = IIf(CheckNull(mJob.Get("estimatedPrintTime")) <> "", _
+						mJob.Get("estimatedPrintTime"),"N/A")
 		
-		oc.JobCompletion = mProgress.Get("completion")
-		oc.JobFilePos = mProgress.Get("filepos")
-		oc.JobPrintTime = mProgress.Get("printTime")
-		oc.JobPrintTimeLeft = mProgress.Get("printTimeLeft")
+		oc.JobCompletion = CheckNull0(mProgress.Get("completion"))
+		oc.JobFilePos = CheckNull0(mProgress.Get("filepos"))
+		oc.JobPrintTime = CheckNullDash(mProgress.Get("printTime"))
+		oc.JobPrintTimeLeft = CheckNullDash(mProgress.Get("printTimeLeft"))
 		
 		If oc.isHeating = True And oc.isPrinting = True Then
 			oc.JobPrintState = "Heating/Printing"
@@ -145,22 +147,44 @@ public Sub  JobStatus(s As String)
 		
 	Catch
 		
-		logMe.LogIt(LastException,mModule)
+		logMe.LogIt2(LastException,mModule,CallingSub)
 		oc.ResetJobVars
 		
 	End Try
 	
 End Sub
 
+
+
+'================================================================================
+'    These checks where added for the Klipper addin for octoprint
+'    Issues found when octoprint is running but the Klipper host is not
+'================================================================================
+
+
 private Sub CheckNull(v As String) As String
 	Try
-		Return IIf(v = "null","",v)
+		Return IIf(v = Null Or v = "null","",v)
 	Catch
-		Log(LastException)
 		Return ""
 	End Try
 End Sub
 
 
+private Sub CheckNull0(v As String) As String
+	Try
+		Return IIf(v = Null Or v = "null","0",v)
+	Catch
+		Return "0"
+	End Try
+End Sub
 
+private Sub CheckNullDash(v As String) As String
+	Try
+		Return IIf(v = Null Or v = "null","-",v)
+	Catch
+		Return "-"
+	End Try
+End Sub
 
+'================================================================================

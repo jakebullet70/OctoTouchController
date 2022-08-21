@@ -133,6 +133,7 @@ Sub Process_Globals
 End Sub
 
 Sub Globals
+	Private mModule As String = "Main"
 End Sub
 
 
@@ -221,9 +222,14 @@ Private Sub tmrFilesCheckChange_Tick
 End Sub
 
 Public Sub tmrScreenPower_Tick
-	If config.logPOWER_EVENTS Then Log("tmrScreenPower_Tick fired: " & tmrScreen.Interval)
+	Dim InSub As String = "tmrScreenPower_Tick"
+	If config.logPOWER_EVENTS Then 
+		logMe.LogIt2("tmrScreenPower_Tick fired: " & tmrScreen.Interval,mModule,InSub)
+	End If
 	If oc.isPrinting Then 
-		If config.logPOWER_EVENTS Then Log("We are printing")
+		If config.logPOWER_EVENTS Then 
+			logMe.LogIt2("We are printing",mModule,InSub)
+		End If
 		Set_ScreenTmr
 		Return
 	End If
@@ -238,20 +244,27 @@ End Sub
 
 Public Sub Set_ScreenTmr()
 
+	Dim inSub As String = "Set_ScreenTmr"
 	tmrScreen.Enabled = False
 
 	If config.AndroidTakeOverSleepFLAG = False Then	
-		If config.logPOWER_EVENTS Then Log("Power control is off")
+		If config.logPOWER_EVENTS Then 
+			logMe.LogIt("Power control is off",mModule)
+		End If
 		Return
 	End If
 	
 	'--- any screen time flags set?
 	If (config.AndroidNotPrintingScrnOffFLAG Or config.AndroidPrintingScrnOffFLAG) Then
 		If oc.isPrinting And config.AndroidPrintingScrnOffFLAG Then
-			If config.logPOWER_EVENTS Then Log("AndroidPrintingScrnOffFLAG = True: Min: " & config.AndroidPrintingMinTill)
+			If config.logPOWER_EVENTS Then 
+				logMe.LogIt2("AndroidPrintingScrnOffFLAG = True: Min: " & config.AndroidPrintingMinTill,mModule,inSub)
+			End If
 			tmrScreen.Interval = config.AndroidPrintingMinTill * 1000 * 60 '--- we are priting
 		Else
-			If config.logPOWER_EVENTS Then Log("AndroidNotPrintingScrnOffFLAG = True: Min: " & config.AndroidNotPrintingMinTill)
+			If config.logPOWER_EVENTS Then 
+				logMe.LogIt2("AndroidNotPrintingScrnOffFLAG = True: Min: " & config.AndroidNotPrintingMinTill,mModule,inSub)
+			End If
 			tmrScreen.Interval = config.AndroidNotPrintingMinTill * 1000 * 60
 		End If
 		tmrScreen.Enabled = True
@@ -260,15 +273,17 @@ Public Sub Set_ScreenTmr()
 End Sub
 
 Public Sub TurnOnOff_ScreenTmr(EnableDisable As Boolean)
+	logMe.LogIt("screen tmr on: " & EnableDisable,mModule)
 	tmrScreen.Enabled = EnableDisable
 End Sub
 
 Public Sub TurnOnOff_MainTmr(EnableDisable As Boolean)
-	Log("main tmr on: " & EnableDisable)
+	logMe.LogIt("main tmr on: " & EnableDisable,mModule)
 	tmrMain.Enabled = EnableDisable
 End Sub
 
 Public Sub TurnOnOff_FilesCheckChangeTmr(EnableDisable As Boolean)
+	If config.logFILE_EVENTS Then logMe.LogIt("file tmr on: " & EnableDisable,mModule)
 	tmrFilesCheckChange.Enabled = EnableDisable
 End Sub
 

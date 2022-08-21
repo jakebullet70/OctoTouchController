@@ -167,10 +167,10 @@ Public Sub ThemePrefDialogForm(prefdlg As sadPreferencesDialog)
 		'prefdlg.CustomListView1.GetBase.Color = clrTheme.BackgroundMenu
 		'prefdlg.CustomListView1. = clrTheme.BackgroundMenu
 		
-		
 		ThemeDialogForm(prefdlg.Dialog,prefdlg.Title.As(String))
+		
 	Catch
-		Log(LastException)
+		logMe.LogIt2(LastException,mModule,"ThemePrefDialogForm")
 	End Try
 	
 

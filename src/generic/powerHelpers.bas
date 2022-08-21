@@ -116,10 +116,13 @@ Public Sub SetScreenBrightnessAndSave(value As Float, Save2File As Boolean)
 		If Save2File Then 
 			fileHelpers.Write_SingleValue(SCREEN_BRIGHTNESS_FILE,value.As(String))
 		End If
+		
 	Catch
-		Log(LastException)
-	End Try 'ignore
+		logMe.LogIt2(LastException,mModule,"SetScreenBrightnessAndSave")
+	End Try 
+	
 End Sub
+
 Public Sub SetScreenBrightness2
 	
 	If config.ChangeBrightnessSettingsFLAG = False Then Return

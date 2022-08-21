@@ -302,7 +302,9 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 		End If
 		
 	Catch
-		Log(LastException)
+		
+		logMe.LogIt2(LastException,mModule,"RequestAPI_RequestComplete")
+		
 	End Try
 		
 End Sub

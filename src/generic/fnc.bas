@@ -11,6 +11,7 @@ Version=9.5
 'Static code module
 Sub Process_Globals
 	Private xui As XUI
+	Private mModule As String = "fnc"
 End Sub
 
 '-------------------------------------------------------------------------------------------
@@ -124,8 +125,8 @@ End Sub
 
 
 Public Sub CleanOldThumbnailFiles
-	
-	Log("CleanOldThumbnailFiles")
+
+	If config.logFILE_EVENTS Then logMe.LogIt("CleanOldThumbnailFiles!",mModule)
 	
 	Dim flist As List
 	flist = fileHelpers.WildCardFilesList(xui.DefaultFolder,"sad__*",False,False)

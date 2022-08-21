@@ -35,7 +35,7 @@ Sub Class_Globals
 	Private pnlMovement As B4XView,   oPageMovement As pageMovement
 	
 	'--- master parent obj used for all templates dialogs
-	Public Dialog As B4XDialog 
+	Private mDialog As B4XDialog 
 
 End Sub
 
@@ -45,6 +45,10 @@ End Sub
 ' --- just shows panel-classes
 '
 '======================================================================================
+
+Public Sub getDialog() As B4XDialog
+	Return mDialog
+End Sub
 
 Public Sub getMasterCtrlr() As MasterController
 	'--- master Octo controller / methods
@@ -286,12 +290,9 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 			
 			Case "ab" '--- about
 				Dim msg As String = guiHelpers.GetAboutText()
-				Dim sf As Object = xui.Msgbox2Async(msg, "About", "OK", "", "", Null)
-				Wait For (sf) Msgbox_Result (result1 As Int)
-'				Dim mb As ASMsgBox : mb.Initialize(Me,"ASMsgBox")
-'				sadMB(Me,mb,"About",msg,"INFO","","","OK",460dip,300dip)
-'				Wait For ASMsgBox1_result(res As Int)
-'				Wait For (mb.Close(True)) Complete (Closed As Boolean)
+				Dim mb As dlgMsgBox : mb.Initialize(Me,"About",560dip, 200dip)
+				Wait For (mb.Show(msg,"INFO","OK","","")) Complete (res As Int)
+				
 				
 			Case "gn"  '--- general settings
 				Dim o3 As dlgGeneral
@@ -339,11 +340,11 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 		Msg.Append(CRLF).Append("Connected to the printer?")
 	End If
 	
-	Dim sf As Object = xui.Msgbox2Async(Msg.ToString, "Connetion Problem", "Retry", "Setup", "", Null)
-	guiHelpers.ThreeDMsgboxCorner(sf)
-	Wait For (sf) Msgbox_Result (Result As Int)
+	Dim mb As dlgMsgBox : mb.Initialize(Me,"Connetion Problem",560dip, 180dip)
+	mb.lblTxt.Font = xui.CreateDefaultFont(20)
+	Wait For (mb.Show(Msg.ToString,"STOP","Retry","","Setup")) Complete (res As Int)
 	
-	Select Case Result
+	Select Case res
 		Case xui.DialogResponse_Positive '--- retry
 			oMasterController.Start
 		Case xui.DialogResponse_Cancel	 '--- run setup
@@ -383,53 +384,5 @@ Public Sub PrinterSetup_Closed(NewConfig As Boolean)
 	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	
 End Sub
-
-
-
-'
-''icon = "INFO","QUES","STOP"
-'public Sub sadMB(act As B4XView, ASMsgBox1 As ASMsgBox,headerTXT As String, bodyTXT As String, icon As String, _
-'					btn1 As String, btn2 As String,btn3 As String, _
-'					width As Float, height As Float) 
-'		
-'	Try
-'	
-'		Dim icon_file As String = ""
-'	
-'		ASMsgBox1.Initialize(act,"ASMsgBox1")
-'		ASMsgBox1.InitializeWithoutDesigner(act.root,clrTheme.BackgroundMenu,True,True,False,460dip,300dip)
-'		ASMsgBox1.InitializeBottom(btn1,btn2,btn3)
-'		ASMsgBox1.HeaderColor = clrTheme.BackgroundHeader
-'		ASMsgBox1.BottomColor = clrTheme.BackgroundHeader
-'		ASMsgBox1.Header_Text = headerTXT
-'		ASMsgBox1.Header_Font_Size = 28
-'		ASMsgBox1.Icon_direction = "LEFT"
-'		ASMsgBox1.Button3.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,5dip)
-'		ASMsgBox1.Button2.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,5dip)
-'		ASMsgBox1.Button1.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,5dip)
-'	
-'		Select Case icon
-'			Case "INFO" : icon_file = "mb_info.png"
-'			Case "QUES" : icon_file = "mb_question.png"
-'			Case "STOP" : icon_file = "mb_stop.png"
-'		End Select
-'		
-'		ASMsgBox1.icon_set_icon(xui.LoadBitmap(File.DirAssets,icon_file))
-'		ASMsgBox1.CenterDialog(act)
-'		ASMsgBox1.ShowWithText(bodyTXT,True)
-'		
-'	Catch
-'		Log(LastException)
-'	End Try
-'	
-'End Sub
-'
-'
-'
-
-
-
-
-
 
 

@@ -20,14 +20,6 @@ Sub Process_Globals
 End Sub
 
 
-Public Sub ThreeDMsgboxCorner(sf As Object)
-	'--- a funky twist to a standard Android MSGBOX
-	Dim jo As JavaObject = sf
-	Dim cd2 As ColorDrawable
-	'cd2.Initialize2(clrTheme.BackgroundMenu, 10dip, 0dip, Colors.ARGB(45,0,0,0))
-	cd2.Initialize2(clrTheme.BackgroundMenu, 10dip, 6dip, clrTheme.BackgroundHeader)
-	jo.RunMethodJO("getWindow", Null).RunMethod("setBackgroundDrawable", Array(cd2))
-End Sub
 
 Public Sub SetEnableDisableColor(btnArr() As B4XView)
 	For Each btn As B4XView In btnArr

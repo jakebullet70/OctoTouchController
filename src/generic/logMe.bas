@@ -52,7 +52,17 @@ Public Sub LogIt(txt As String, callingModule As String)
 	#End If
 
 End Sub
+Public Sub LogIt2(txt As String, callingModule As String,callingSub As String)
+	
+	CheckIfNeedNewLogFile
 
+	#if release
+	Write2Disk2("** " & GetDateTime4LogMsg &  " :--> " &  callingModule & ":" & callingSub & " <--> " & txt,mLogFileName)
+	#Else
+	Log("**  " & GetDateTime4LogMsg &  "  :--> " &  callingModule & ":" & callingSub & " <--> " & txt)
+	#End If
+
+End Sub
 
 '==============  Log routines ========================================
 '==============  Log routines ========================================
@@ -62,7 +72,7 @@ End Sub
 private Sub GetDateTime4LogMsg() As String
 	
 	DateTime.DateFormat= "yyyy-MM-dd"
-	DateTime.TimeFormat = "HH:mm:ss.SSS"
+	DateTime.TimeFormat = "HH:mm:ss.SS"
 	Return DateTime.Date(DateTime.Now) & " " & DateTime.Time(DateTime.TicksPerDay)
 	
 End Sub

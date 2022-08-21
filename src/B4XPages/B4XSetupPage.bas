@@ -31,7 +31,12 @@ Sub Class_Globals
 	
 	'Public mCanceled As Boolean = True
 	Private btnCancel,btnSave As Button
+	Private mDialog As B4XDialog
 	
+End Sub
+
+Public Sub getDialog() As B4XDialog
+	Return mDialog
 End Sub
 
 
@@ -228,16 +233,14 @@ Public Sub connect_Complete (result As Object, success As Object)
 	SetSaveButtonState
 
 	If ValidConnection Then
-		toast.DurationMs = 1500 : toast.Show("Connection OK")
+		toast.DurationMs = 3000 : toast.Show("Connection OK")
 	Else
 		Dim msg As StringBuilder : msg.Initialize
-		msg.Append("Connection Failed.").Append(CRLF).Append("A couple of things to think about").Append(CRLF)
-		msg.Append("Is Octoprint turned on?").Append(CRLF).Append("Are Your IP And Port correct?").Append(CRLF)
-		Dim sf As Object = xui.Msgbox2Async(msg.ToString, "Problem", "OK", "", "", Null)
-		guiHelpers.ThreeDMsgboxCorner(sf)
-		Wait For (sf) Msgbox_Result (result1 As Int)
+		msg.Append("Connection Failed.").Append(CRLF).Append("A couple of things to think about.").Append(CRLF)
+		msg.Append("Is Octoprint turned on?").Append(CRLF).Append("Are Your IP And Port correct?")
+		Dim mb As dlgMsgBox : mb.Initialize(Root,"Problem",580dip, 220dip)
+		Wait For (mb.Show(msg.ToString,"STOP","OK","","")) Complete (res As Int)
 	End If
-	
 	
 End Sub
 #end region
@@ -247,8 +250,9 @@ End Sub
 Private Sub btnGetOctoKey_Click
 
 	If txtPrinterIP.Text.Length = 0 Or txtPrinterPort.Text.Length = 0 Then
-		Dim sf As Object = xui.Msgbox2Async("Please check if your IP and Port Are Set", "Problem", "OK", "", "", Null)
-		Wait For (sf) Msgbox_Result (result1 As Int)
+		Dim mb As dlgMsgBox : mb.Initialize(Root,"Problem",540dip, 200dip)
+		Wait For (mb.Show("Please check if your IP and Port Are Set", _
+						  "STOP","OK","","")) Complete (res As Int)
 		Return
 	End If
 	
@@ -256,11 +260,11 @@ Private Sub btnGetOctoKey_Click
 	msg.Append("You are about to request a API key from Octoprint. ")
 	msg.Append("Press the OK button and go to your Octoprint web interface. ")
 	msg.Append("You will need to click OK in Octoprint to confirm that this app can have access").Append(CRLF & CRLF)
-	msg.Append("Press OK when ready").Append(CRLF)
-	Dim sf As Object = xui.Msgbox2Async(msg.ToString, "Information", "OK", "", "CANCEL", Null)
-	guiHelpers.ThreeDMsgboxCorner(sf)
-	Wait For (sf) Msgbox_Result (result1 As Int)
-	If result1 <> xui.DialogResponse_Positive Then
+	msg.Append("Press OK when ready") '.Append(CRLF)
+	Dim mb As dlgMsgBox : mb.Initialize(Root,"About",500dip, 220dip)
+	mb.lblTxt.Font = xui.CreateDefaultFont(20)
+	Wait For (mb.Show(msg.ToString,"INFO","OK","","")) Complete (res As Int)
+	If res <> xui.DialogResponse_Positive Then
 		Return
 	End If
 	
@@ -292,9 +296,9 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 			SetSaveButtonState
 		Else
 			'--- some error happened
-			Dim sf1 As Object = xui.Msgbox2Async(result.As(String), "Problem", "OK", "", "", Null)
-			guiHelpers.ThreeDMsgboxCorner(sf1)
-			Wait For (sf1) Msgbox_Result (result1 As Int)
+			Dim mb As dlgMsgBox : mb.Initialize(Root,"Problem",540dip, 220dip)
+			Wait For (mb.Show(result.As(String),"STOP","OK","","")) Complete (res As Int)
+
 		End If
 		
 	Catch

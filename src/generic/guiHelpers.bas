@@ -15,7 +15,7 @@ Sub Process_Globals
 	
 	Public gScreenSizeAprox As Double = 7 '--- asume a small tablet
 	Public gScreenSizeDPI As Int = 0
-	Public gScreenSizeOriatation As String = ""  '---  P or L
+	'Public gScreenSizeOriatation As String = ""  '---  P or L
 	
 End Sub
 

@@ -293,6 +293,8 @@ Public Sub CheckIfFilesChanged
 			
 			If IncompleteData = False Then
 				Build_ListViewFileList
+			Else
+				If config.logFILE_EVENTS Then logMe.LogIt("Incomplete file data processed",mModule)
 			End If
 			
 	

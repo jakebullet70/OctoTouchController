@@ -1,1 +1,2 @@
-11.8
+Written in B4A V11.8 with HTTP Libs from V11.2
+See folder 'HTTP Android 4.x Support'

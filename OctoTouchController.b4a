@@ -90,6 +90,7 @@ Module38=|relative|src\custom_controls\sadRoundSlider
 Module39=|relative|src\main\Starter
 Module4=|relative|src\helperClasses\CallSubUtils
 Module40=|relative|src\generic\strHelpers
+Module41=|relative|src\helperClasses\WildCardFilesList
 Module5=|relative|src\octoPrint\CheckOctoConnection
 Module6=|relative|src\custom_controls\CircularProgressBar
 Module7=|relative|src\generic\clrTheme
@@ -97,7 +98,7 @@ Module8=|relative|src\helperClasses\clvSelectionsX
 Module9=|relative|src\generic\config
 NumberOfFiles=21
 NumberOfLibraries=12
-NumberOfModules=40
+NumberOfModules=41
 Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 

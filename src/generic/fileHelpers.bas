@@ -16,6 +16,7 @@ End Sub
 
 
 '===========================================================================
+'reads a single string value 
 Public Sub Read_ReturnSingleValue(filename As String) As String
 	If File.Exists(xui.DefaultFolder,filename) Then
 		Dim lst As List = File.ReadList(xui.DefaultFolder,filename)
@@ -23,6 +24,7 @@ Public Sub Read_ReturnSingleValue(filename As String) As String
 	End If
 	Return ""
 End Sub
+'saves a single string value as a list obj to disk
 Public Sub Write_SingleValue(filename As String, value As String)
 	SafeKill(filename)
 	Dim lst As List : lst.Initialize2(Array As String(value))
@@ -114,7 +116,7 @@ Public Sub BytesToReadableString(Bytes As String) As String
 End Sub
 
 
-'
+
 'Sub RenameFile(SrcDir As String, SrcFilename As String, DestDir As String, DestFilename As String) As Boolean
 '	Dim R As Reflector, NewObj As Object, New As String , Old As String
 '	If SrcFilename=Null Or DestFilename=Null Or SrcDir=Null Or DestDir=Null Then Return False
@@ -161,12 +163,12 @@ End Sub
 ' --- Not sure where I found this at but I can amagine on the forum
 public Sub RemoveOldFiles(folder As String, fileSpec As String, numOfDays As Int) As Boolean
 	
-	Dim lstFolder As List
-	lstFolder.Initialize
+	
+	Dim o1 As WildCardFilesList : o1.Initialize
 	
 	Try
 		
-		lstFolder = WildCardFilesList(folder,fileSpec,False,False)
+		Dim lstFolder As List = o1.GetFiles(folder,fileSpec,False,False)
 		For Each filename As String In lstFolder
 			
 			If File.IsDirectory(folder, filename) Then
@@ -184,7 +186,7 @@ public Sub RemoveOldFiles(folder As String, fileSpec As String, numOfDays As Int
 		
 	Catch
 		
-		logMe.LogIt(LastException,mModule)
+		logMe.LogIt2(LastException,mModule,"RemoveOldFiles")
 		Return False
 		
 	End Try
@@ -193,48 +195,12 @@ public Sub RemoveOldFiles(folder As String, fileSpec As String, numOfDays As Int
 	
 End Sub
 
-public Sub WildCardFilesList(FilesPath As String, WildCards As String, Sorted As Boolean, Ascending As Boolean) As List
-
-
-	If File.IsDirectory("", FilesPath) Then
-		Dim FilesFound As List = File.ListFiles(FilesPath)
-		'Wait For (File.ListFilesAsync(Dir)) Complete (Success As Boolean, Files As List) 	'TODO - make async
-		Dim GetCards() As String = Regex.Split(",", WildCards)
-		Dim FilteredFiles As List : FilteredFiles.Initialize
-		
-		For i = 0 To FilesFound.Size - 1
-			For l = 0 To GetCards.Length - 1
-				
-				Dim TestItem As String = FilesFound.Get(i)
-				Dim mask As String = GetCards(l).Trim
-				Dim pattern As String = "^" & mask.Replace(".","\.").Replace("*",".+").Replace("?",".") & "$"
-				
-				If Regex.IsMatch(pattern,TestItem) = True Then
-					FilteredFiles.Add(TestItem.Trim)
-				End If
-				
-			Next
-		Next
-		
-		If Sorted Then
-			FilteredFiles.SortCaseInsensitive(Ascending)
-		End If
-		
-		Return FilteredFiles
-		
-	Else
-		
-		Return Null
-		
-	End If
-End Sub
-
 
 Public Sub DeleteFiles(folder As String, fileSpec As String)
 
-	Dim lstFolder As List : lstFolder.Initialize
+	Dim o1 As WildCardFilesList : o1.Initialize
+	Dim lstFolder As List = o1.GetFiles(folder,fileSpec,False,False)
 	
-	lstFolder = WildCardFilesList(folder,fileSpec,False,False)
 	For Each filename As String In lstFolder
 		If File.IsDirectory(folder, filename) Then
 			Continue

@@ -68,11 +68,11 @@ Public Sub LoadPrinterConnectionSettings() As Map
 		
 	'--- get the settings connection file
 	Dim fname As String
-	Dim flist As List
 	
 	'--- Should only be 1 settings file at this point
 	'"default.psettings"
-	flist = fileHelpers.WildCardFilesList(xui.DefaultFolder,"*.psettings",False,False)
+	Dim o1 As WildCardFilesList : o1.Initialize
+	Dim flist As List = o1.GetFiles(xui.DefaultFolder,"*.psettings",False,False)
 	If flist.Size = 0 Then
 		Return Null
 	Else
@@ -128,8 +128,8 @@ Public Sub CleanOldThumbnailFiles
 
 	If config.logFILE_EVENTS Then logMe.LogIt("CleanOldThumbnailFiles!",mModule)
 	
-	Dim flist As List
-	flist = fileHelpers.WildCardFilesList(xui.DefaultFolder,"sad__*",False,False)
+	Dim o1 As WildCardFilesList : o1.Initialize
+	Dim flist As List = o1.GetFiles(xui.DefaultFolder,"sad__*",False,False)
 	For Each fname In flist
 		fileHelpers.SafeKill(fname)
 	Next

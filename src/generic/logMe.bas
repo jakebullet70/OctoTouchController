@@ -96,8 +96,9 @@ End Sub
 
 
 Public Sub DeleteOldFiles(fspec As String)
-	Dim flist As List
-	flist = fileHelpers.WildCardFilesList(xui.DefaultFolder,fspec,False,False)
+	
+	Dim o1 As WildCardFilesList : o1.Initialize
+	Dim flist As List = o1.GetFiles(xui.DefaultFolder,fspec,False,False)
 	For Each fname In flist
 		
 		Dim fDate As Long = File.LastModified(xui.DefaultFolder, fname)

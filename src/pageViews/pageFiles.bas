@@ -36,8 +36,6 @@ Sub Class_Globals
 	Private scrlblFileName As ScrollingLabel
 End Sub
 
-'TODO - check gcode files with spaces in them, need encoding?
-
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	
 	mPnlMain = masterPanel

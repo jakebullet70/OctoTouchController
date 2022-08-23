@@ -59,7 +59,7 @@ Public Sub ScreenON(takeOverPower As Boolean)
 		If config.logPOWER_EVENTS Then Log("KeepAlive - OFF")
 	End If
 	
-	ActionBar_Off
+	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON) '--- action bar off (if its on)
 	
 End Sub
 
@@ -78,23 +78,19 @@ Public Sub ReleaseLocks
 End Sub
 
 
-Public Sub ActionBar_Off
-	'--- needs the activity obj so its in main - TODO
-	If ph.SdkVersion >= 14 And ph.SdkVersion < 21 Then
-		CallSub2(Main,"Dim_ActionBar",1)
-	Else
-		'TODO		
-	End If
-End Sub
-
-Public Sub ActionBar_On
-	'--- needs the activity obj so its in main - TODO
-	If ph.SdkVersion >= 14 And ph.SdkVersion < 21 Then
-		CallSub2(Main,"Dim_ActionBar",0)
-	Else
-		'TODO
-	End If
-End Sub
+'Public Sub ActionBar_Off
+'	'--- needs the activity obj so its in main 
+'	If ph.SdkVersion >= 14 And ph.SdkVersion < 20 Then
+'		CallSub2(Main,"Dim_ActionBar",1)
+'	End If
+'End Sub
+'
+'Public Sub ActionBar_On
+'	'--- needs the activity obj so its in main 
+'	If ph.SdkVersion >= 14 And ph.SdkVersion < 20 Then
+'		CallSub2(Main,"Dim_ActionBar",0)
+'	End If
+'End Sub
 
 
 '=================================================================================

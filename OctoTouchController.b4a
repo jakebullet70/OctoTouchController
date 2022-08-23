@@ -277,7 +277,7 @@ Public Sub Set_ScreenTmr()
 		tmrScreen.Enabled = True
 	End If
 	
-	Dim_ActionBar(1) '--- turn off if it is on
+	Dim_ActionBar(gblConst.ACTIONBAR_OFF) '--- turn off if it is on
 	
 End Sub
 
@@ -374,21 +374,27 @@ public boolean _onCreateOptionsMenu(android.view.Menu menu) {
 '==================================================================================
 
 
-'--- 1 = off, 0 = on
+'--- 1 = off, 0 = on 
 Public Sub Dim_ActionBar(On_off As Int)
+	
+	'--- Android 4 thing, you can dim the action bar
+	'--- Android 4.4 has Imersive mode so we skip it
+	
+	Dim Const API_ANDROID_4_0 As Int = 14
+	Dim Const API_ANDROID_4_4 As Int = 19
 	
 	Try
 			
 		Dim p As Phone
-		If p.SdkVersion >= 14 And p.SdkVersion < 21 Then
+		If p.SdkVersion >= API_ANDROID_4_0 And p.SdkVersion < API_ANDROID_4_4 Then
 			Dim r As Reflector
 			r.Target = Activity
 			r.RunMethod2("setSystemUiVisibility", On_off, "java.lang.int") '1 = SYSTEM_UI_FLAG_LOW_PROFILE
 		End If
 		
 	Catch
-		Log("DimBottomButtons - " & LastException)
-	End Try
+		'Log("DimBottomButtons - " & LastException)
+	End Try 'ignore
 	
 End Sub
 

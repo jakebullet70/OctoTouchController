@@ -99,7 +99,7 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	End If
 	
 	powerHelpers.ReleaseLocks
-	powerHelpers.ActionBar_On
+	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
 	Return True '--- exit app
 	
 End Sub

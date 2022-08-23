@@ -39,4 +39,7 @@ Sub Process_Globals
 	Public Const MB_ICON_INFO As String = "mb_info.png"
 	Public Const MB_ICON_QUESTION As String = "mb_question.png"
 	
+	Public Const ACTIONBAR_OFF As Int = 1
+	Public Const ACTIONBAR_ON As Int = 0
+	
 End Sub

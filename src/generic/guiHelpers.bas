@@ -105,6 +105,10 @@ End Sub
 'End Sub
 
 
+Public Sub RestoreImersiveIfNeeded
+	CallSub2(Main,"Activity_WindowFocusChanged",True)
+End Sub
+
 
 public Sub SetTextColorB4XFloatTextField(views() As B4XFloatTextField)
 	

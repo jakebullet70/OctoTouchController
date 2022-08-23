@@ -33,7 +33,7 @@ Public Sub Init(theme As String)
 	ConnectionNo = 0xFFE14349
 
 	txtNormal = xui.Color_White
-	txtAccent = xui.Color_DarkGray
+	txtAccent = xui.Color_LightGray
 	btnDisableText = xui.Color_LightGray
 	
 	InitTheme(theme)

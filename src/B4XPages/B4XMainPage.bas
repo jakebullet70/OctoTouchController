@@ -14,7 +14,6 @@ Sub Class_Globals
 	Private xui As XUI
 	Private oMasterController As MasterController
 	Private toast As BCToast
-	Private pageSetup As B4XSetupPage
 	
 	Public pnlScreenOff As B4XView
 	
@@ -34,7 +33,7 @@ Sub Class_Globals
 	Private pnlPrinting As B4XView,   oPagePrinting As pagePrinting
 	Private pnlMovement As B4XView,   oPageMovement As pageMovement
 	
-	'--- master parent obj used for all templates dialogs
+	'--- master parent obj used for some templates dialogs
 	Private mDialog As B4XDialog 
 
 End Sub
@@ -146,8 +145,9 @@ Private Sub TryOctoConnection
 		oMasterController.Initialize
 	End If
 	If fnc.ReadConnectionFile(oMasterController.CN) = False Then
-		B4XPages.AddPage(gblConst.PAGE_SETUP, (pageSetup.Initialize(True)))
-		B4XPages.ShowPage(gblConst.PAGE_SETUP)
+		Dim o9 As dlgOctoSetup 
+		o9.Initialize(Me,"Octoprint Connection","PrinterSetup_Closed")
+		o9.Show(True)
 	Else
 		If oc.IsOctoConnectionVarsValid Then
 			oMasterController.SetCallbackTargets(Me,"Update_Printer_Temps","Update_Printer_Status","Update_Printer_Btns")
@@ -295,20 +295,16 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 				
 				
 			Case "gn"  '--- general settings
-				Dim o3 As dlgGeneral
-				o3.Initialize(Me)
+				Dim o3 As dlgGeneral : o3.Initialize(Me)
 				o3.Show
 			
 				
 			Case "oc"  '--- octo setup
-				If pageSetup.IsInitialized = False Then
-					B4XPages.AddPage(gblConst.PAGE_SETUP, (pageSetup.Initialize(False)))
-				End If
-				B4XPages.ShowPage(gblConst.PAGE_SETUP)
+				Dim o9 As dlgOctoSetup : o9.Initialize(Me,"Octoprint Connection","PrinterSetup_Closed")
+				o9.Show(False)
 			
 			Case "pw"  '--- android power setup
-				Dim o1 As dlgPower
-				o1.Initialize(Me)
+				Dim o1 As dlgPower : o1.Initialize(Me)
 				o1.Show
 			
 		End Select
@@ -375,12 +371,16 @@ Private Sub pnlScreenOff_Click
 	fnc.ProcessPowerFlags
 End Sub
 
-'--- callled from B4XSetupPage on exit
-Public Sub PrinterSetup_Closed(NewConfig As Boolean)
+
+
+
+'--- callled from dlgOctoSetup on exit
+Public Sub PrinterSetup_Closed
 
 	If oc.IsOctoConnectionVarsValid Then
 		TryOctoConnection
 	End If
+	Sleep(100)
 	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	
 End Sub

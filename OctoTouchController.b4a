@@ -7,11 +7,11 @@ File13=pageFiles.bal
 File14=pageMenu.bal
 File15=pageMovement.bal
 File16=pagePrinting.bal
-File17=pagesetup.bal
-File18=splash.png
-File19=viewfiles.bal
+File17=splash.png
+File18=viewfiles.bal
+File19=viewMsgBox.bal
 File2=dlgLogging.json
-File20=viewMsgBox.bal
+File20=viewOctoSetup.bal
 File21=viewRoundSlider.bal
 File3=dlgPower.json
 File4=MainPage.bal
@@ -28,17 +28,17 @@ FileGroup13=VIEWS_PAGES
 FileGroup14=VIEWS_PAGES
 FileGroup15=VIEWS_PAGES
 FileGroup16=VIEWS_PAGES
-FileGroup17=B4XPages
-FileGroup18=MISC
-FileGroup19=VIEWS
+FileGroup17=MISC
+FileGroup18=VIEWS
+FileGroup19=DIALOG_CUSTOM_VIEWS
 FileGroup2=JSON_CONFIGS
-FileGroup20=VIEWS
-FileGroup21=VIEWS
+FileGroup20=DIALOG_CUSTOM_VIEWS
+FileGroup21=DIALOG_CUSTOM_VIEWS
 FileGroup3=JSON_CONFIGS
 FileGroup4=B4XPages
-FileGroup5=Default Group
-FileGroup6=Default Group
-FileGroup7=Default Group
+FileGroup5=MISC
+FileGroup6=MISC
+FileGroup7=MISC
 FileGroup8=VIEWS
 FileGroup9=MAIN_MENU
 Group=MAIN
@@ -56,11 +56,11 @@ Library8=okhttputils2
 Library9=phone
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'--- https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'--- Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~'--- Take over power functions~\n~AddPermission(android.permission.WAKE_LOCK)~\n~AddPermission(android.permission.WRITE_SETTINGS)~\n~~\n~~\n~~\n~''''https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~''''Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~'''CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~'''~\n~'''AddManifestText(~\n~'''~\n~'''	<Activity android:launchMode="singleInstance" />~\n~'''	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="18"/>~\n~'''	~\n~'''	<supports-screens android:largeScreens="true" ~\n~'''	    android:xlargeScreens="true"~\n~'''    	android:normalScreens="false" ~\n~'''    	android:smallScreens="false" ~\n~'''		android:requiresSmallestWidthDp="800"~\n~'''    	android:anyDensity="true"/>~\n~'''~\n~'''		~\n~'''	<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>~\n~'''	<uses-permission android:name="android.permission.GET_ACCOUNTS" />~\n~'''	~\n~''')~\n~'''~\n~'''SetActivityAttribute(main, android:windowSoftInputMode, adjustPan|stateHidden)~\n~'''~\n~'''SetApplicationAttribute(android:hardwareAccelerated, "true")~\n~'''SetApplicationAttribute(android:theme, "@android:style/Theme.Holo.Light")~\n~'''SetApplicationAttribute(android:icon, "@drawable/icon")~\n~'''SetApplicationAttribute(android:label, "$LABEL$")~\n~'''~\n~'''AddPermission(android.permission.REBOOT)~\n~'''AddPermission(android.permission.WAKE_LOCK)~\n~'''AddPermission(android.permission.ACCESS_NETWORK_STATE)~\n~'''~\n~'''#if not (KE)~\n~'''AddPermission(android.permission.MEDIA_UNMOUNTED)~\n~'''AddPermission(android.permission.MEDIA_MOUNTED)~\n~'''~\n~'''AddReceiverText(svrMediaHelper,~\n~'''<intent-filter>~\n~'''    <action android:name="android.intent.action.MEDIA_MOUNTED" />~\n~'''	<data android:scheme="file"/>~\n~'''</intent-filter>)~\n~'''~\n~'''AddReceiverText(svrMediaHelper,~\n~'''<intent-filter>~\n~'''    <action android:name="android.intent.action.MEDIA_UNMOUNTED" />~\n~'''	<data android:scheme="file"/>~\n~'''</intent-filter>)~\n~'''#end if~\n~'''~\n~'''#if not (KE)~\n~'''AddReceiverText(eu.dgconsulting.appupdating.newinst2,~\n~'''  <intent-filter>~\n~'''  <action android:name="android.intent.action.PACKAGE_REPLACED" />~\n~'''    <data android:scheme="package" />~\n~'''  </intent-filter>)~\n~''' #end if~\n~~\n~
 Module1=|relative|src\custom_controls\ASPopupMenu
-Module10=|relative|src\dialogs\dlgBrightness
-Module11=|relative|src\dialogs\dlgGeneral
-Module12=|relative|src\dialogs\dlgListbox
-Module13=|relative|src\dialogs\dlgMsgBox
-Module14=|relative|src\dialogs\dlgNumericInput
+Module10=|relative|src\dialogs\dlgGeneral
+Module11=|relative|src\dialogs\dlgListbox
+Module12=|relative|src\dialogs\dlgMsgBox
+Module13=|relative|src\dialogs\dlgNumericInput
+Module14=|relative|src\dialogs\dlgOctoSetup
 Module15=|relative|src\dialogs\dlgPower
 Module16=|relative|src\generic\fileHelpers
 Module17=|relative|src\generic\fnc
@@ -77,7 +77,7 @@ Module26=|relative|src\custom_controls\lmB4XImageViewX
 Module27=|relative|src\generic\logMe
 Module28=|relative|src\main\MasterController
 Module29=|relative|src\helperClasses\mnuPopup
-Module3=|relative|src\B4XPages\B4XSetupPage
+Module3=|relative|src\helperClasses\CallSubUtils
 Module30=|relative|src\generic\objHelpers
 Module31=|relative|src\octoPrint\oc
 Module32=|relative|src\pageViews\pageFiles
@@ -88,14 +88,14 @@ Module36=|relative|src\generic\powerHelpers
 Module37=|relative|src\octoPrint\RequestApiKey
 Module38=|relative|src\custom_controls\sadRoundSlider
 Module39=|relative|src\main\Starter
-Module4=|relative|src\helperClasses\CallSubUtils
+Module4=|relative|src\octoPrint\CheckOctoConnection
 Module40=|relative|src\generic\strHelpers
 Module41=|relative|src\helperClasses\WildCardFilesList
-Module5=|relative|src\octoPrint\CheckOctoConnection
-Module6=|relative|src\custom_controls\CircularProgressBar
-Module7=|relative|src\generic\clrTheme
-Module8=|relative|src\helperClasses\clvSelectionsX
-Module9=|relative|src\generic\config
+Module5=|relative|src\custom_controls\CircularProgressBar
+Module6=|relative|src\generic\clrTheme
+Module7=|relative|src\helperClasses\clvSelectionsX
+Module8=|relative|src\generic\config
+Module9=|relative|src\dialogs\dlgBrightness
 NumberOfFiles=21
 NumberOfLibraries=12
 NumberOfModules=41
@@ -135,6 +135,9 @@ End Sub
 
 Sub Globals
 	Private mModule As String = "Main"
+	Private Const API_ANDROID_4_0 As Int = 14
+	Private Const API_ANDROID_4_4 As Int = 19
+	Private ph As Phone	
 End Sub
 
 
@@ -171,16 +174,16 @@ Private Sub SetupFullScrn
 	
 	'https://www.b4x.com/android/forum/threads/immersive-mode-hide-the-navigation-bar.90882/
 	
-	Dim p As Phone,lv As LayoutValues
+	Dim lv As LayoutValues
 	
-	If p.SdkVersion >= 28 Then
+	If ph.SdkVersion >= 28 Then
 		'--- cutout mode...  ????
 		Dim ctxt As JavaObject
 		ctxt.InitializeContext
 		ctxt.RunMethodJO("getWindow", Null).RunMethodJO("getAttributes", Null).SetField("layoutInDisplayCutoutMode", 1)
 	End If
 
-	If p.SdkVersion >= 19 Then
+	If ph.SdkVersion >= 19 Then
 		Activity_WindowFocusChanged(True)
 		lv = GetRealSize
 		Dim jo As JavaObject = Activity
@@ -308,7 +311,10 @@ End Sub
 '==================================================================================
 
 Sub Activity_WindowFocusChanged(HasFocus As Boolean)
-	Log(HasFocus)
+	
+	If ph.SdkVersion < API_ANDROID_4_4 Then Return 
+	
+	'--- restore imersive mode
 	If HasFocus Then
 		Try
 			Dim jo As JavaObject = Activity
@@ -376,13 +382,9 @@ Public Sub Dim_ActionBar(On_off As Int)
 	'--- Android 4 thing, you can dim the action bar
 	'--- Android 4.4 has Imersive mode so we skip it
 	
-	Dim Const API_ANDROID_4_0 As Int = 14
-	Dim Const API_ANDROID_4_4 As Int = 19
-	
 	Try
 			
-		Dim p As Phone
-		If p.SdkVersion >= API_ANDROID_4_0 And p.SdkVersion < API_ANDROID_4_4 Then
+		If ph.SdkVersion >= API_ANDROID_4_0 And ph.SdkVersion < API_ANDROID_4_4 Then
 			Dim r As Reflector
 			r.Target = Activity
 			r.RunMethod2("setSystemUiVisibility", On_off, "java.lang.int") '1 = SYSTEM_UI_FLAG_LOW_PROFILE

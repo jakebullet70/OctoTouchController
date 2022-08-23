@@ -11,7 +11,7 @@ Version=11.5
 
 Sub Class_Globals
 	
-	Private const mModule As String = "dlgPower"' 'ignore
+	Private const mModule As String = "dlgPowerOptions"' 'ignore
 	Private mainObj As B4XMainPage
 	Private xui As XUI
 	Private mPowerDlg As sadPreferencesDialog

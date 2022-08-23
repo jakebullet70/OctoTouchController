@@ -11,7 +11,7 @@ Version=11.5
 
 Sub Class_Globals
 	
-	Private const mModule As String = "dlgGeneral"' 'ignore
+	Private const mModule As String = "dlgGeneralOptions"' 'ignore
 	Private mainObj As B4XMainPage
 	Private xui As XUI
 	Private mGeneralDlg As sadPreferencesDialog

@@ -295,16 +295,18 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 				
 				
 			Case "gn"  '--- general settings
-				Dim o3 As dlgGeneral : o3.Initialize(Me)
+				Dim o3 As dlgGeneralOptions
+				o3.Initialize(Me)
 				o3.Show
 			
 				
 			Case "oc"  '--- octo setup
-				Dim o9 As dlgOctoSetup : o9.Initialize(Me,"Octoprint Connection","PrinterSetup_Closed")
+				Dim o9 As dlgOctoSetup 
+				o9.Initialize(Me,"Octoprint Connection","PrinterSetup_Closed")
 				o9.Show(False)
 			
 			Case "pw"  '--- android power setup
-				Dim o1 As dlgPower : o1.Initialize(Me)
+				Dim o1 As dlgPowerOptions : o1.Initialize(Me)
 				o1.Show
 			
 		End Select

@@ -55,7 +55,7 @@ Private Sub LoadCfgs()
 	
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
-		Dim o3 As dlgGeneral
+		Dim o3 As dlgGeneralOptions
 		o3.initialize(Null)
 		o3.createdefaultfile
 	End If
@@ -65,7 +65,7 @@ Private Sub LoadCfgs()
 	
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE)
 	If File.Exists(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE) = False Then
-		Dim o2 As dlgPower
+		Dim o2 As dlgPowerOptions
 		o2.Initialize(Null)  
 		o2.CreateDefaultFile
 	End If

@@ -1,5 +1,5 @@
 ﻿B4A=true
-Group=CLASSES
+Group=MISC_CLASSES
 ModulesStructureVersion=1
 Type=Class
 Version=5.5

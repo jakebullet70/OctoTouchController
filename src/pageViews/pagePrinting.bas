@@ -75,6 +75,13 @@ Private Sub Build_GUI
 		CircularProgressBar1.MainLabel.Font = xui.CreateDefaultFont(42)
 	End If
 	
+	If guiHelpers.gScreenSizeAprox > 8 Then
+		'--- txt on btns not scaling prperly on larger devices
+		Dim fn As B4XFont = xui.CreateDefaultFont(btnCancel.TextSize - 2)
+		btnCancel.Font = fn 
+		btnPause.Font  = fn
+		btnPrint.Font  = fn
+	End If
 	
 End Sub
 

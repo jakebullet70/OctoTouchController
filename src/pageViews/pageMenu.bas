@@ -44,11 +44,12 @@ public Sub Set_focus()
 	
 	'TODO needs to move to an event when general cfg changes
 	btnBrightness.Visible = config.ChangeBrightnessSettingsFLAG 
-	btnScrnOff.Visible = config.ShowScreenOffFLAG
+	btnScrnOff.Visible    = config.ShowScreenOffFLAG
+	
 	If btnBrightness.Visible = False And btnScrnOff.Visible = True Then
 		btnScrnOff.Left = btnBrightness.Left
 	else If btnBrightness.Visible = True And btnScrnOff.Visible = True Then
-		btnScrnOff.Left = btnBrightness.Left - 60dip
+		btnScrnOff.Left = btnBrightness.Left - (60dip + IIf(guiHelpers.gScreenSizeAprox < 5.4,0dip,10dip))
 	End If
 	
 	

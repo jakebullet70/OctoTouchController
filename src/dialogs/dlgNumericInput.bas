@@ -58,12 +58,12 @@ Public Sub Show
 	'--- display dialog
 	Wait For(rs)complete(intResult As Int)
 	If intResult = xui.DialogResponse_Positive Then
-		
 		CallSub2(mCallback,mEventName,inputTemplate.Text)
 	Else
 		CallSub2(mCallback,mEventName,"")
-		
 	End If
+	
+	guiHelpers.RestoreImersiveIfNeeded
 
 End Sub
 

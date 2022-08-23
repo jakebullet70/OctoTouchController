@@ -40,9 +40,9 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 End Sub
 
 public Sub Set_focus()
+	
 	mPnlMain.Visible = True
 	
-	'TODO needs to move to an event when general cfg changes
 	btnBrightness.Visible = config.ChangeBrightnessSettingsFLAG 
 	btnScrnOff.Visible    = config.ShowScreenOffFLAG
 	
@@ -51,8 +51,6 @@ public Sub Set_focus()
 	else If btnBrightness.Visible = True And btnScrnOff.Visible = True Then
 		btnScrnOff.Left = btnBrightness.Left - (60dip + IIf(guiHelpers.gScreenSizeAprox < 5.4,0dip,10dip))
 	End If
-	
-	
 	
 End Sub
 

@@ -228,6 +228,12 @@ Private Sub tmrFilesCheckChange_Tick
 	CallSub(B4XPages.MainPage.MasterCtrlr,"tmrFilesCheckChange_Tick")
 End Sub
 
+Private Sub tmrSplash_Tick
+	tmrSplash.Enabled = False
+	CallSubDelayed(B4XPages.MainPage,"HideSplash_StartUp")
+End Sub
+
+
 Public Sub tmrScreenPower_Tick
 	Dim InSub As String = "tmrScreenPower_Tick"
 	If config.logPOWER_EVENTS Then 
@@ -299,16 +305,6 @@ End Sub
 #end region
 
 '===================================================================================
-'==================================================================================
-
-Private Sub tmrSplash_Tick
-	
-	tmrSplash.Enabled = False
-	CallSubDelayed(B4XPages.MainPage,"HideSplash_StartUp")
-	
-End Sub
-
-'==================================================================================
 '==================================================================================
 
 Sub Activity_WindowFocusChanged(HasFocus As Boolean)

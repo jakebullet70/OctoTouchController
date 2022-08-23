@@ -52,8 +52,9 @@ Public Sub Show
 	inputTemplate.lblTitle.Text = mPrompt
 	
 	guiHelpers.ThemeDialogForm(mMainObj.Dialog, mTitle)
-	Dim rs As ResumableSub = mMainObj.Dialog.ShowTemplate(inputTemplate, "Set", "", "Cancel")
+	Dim rs As ResumableSub = mMainObj.Dialog.ShowTemplate(inputTemplate, "SET", "", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(mMainObj.Dialog)
+	SizeInputDialog(mMainObj.Dialog,inputTemplate)
 	
 	'--- display dialog
 	Wait For(rs)complete(intResult As Int)
@@ -67,6 +68,29 @@ Public Sub Show
 
 End Sub
 
+
+
+Private Sub SizeInputDialog(dlg As B4XDialog, input As B4XInputTemplate)
+	Dim ET As EditText = input.TextField1
+	Dim p As Panel = input.GetPanel(dlg)
+	
+	Dim p As Panel = input.GetPanel(dlg)
+	Dim LB As Label = p.GetView(0)
+	LB.Height = Round((input.mBase.Height / 2.6)).As(Float)
+	LB.TextSize = 23
+	
+	ET.Height = Round(input.mBase.Height / 2).As(Float)
+	ET.top = LB.Top + LB.Height + 8dip  '(input.mBase.Height / 3)
+	ET.Width = input.mBase.Width - (ET.Left * 2)
+	ET.TextSize = 24
+	
+	Dim Cncl As B4XView = dlg.GetButton(xui.DialogResponse_Cancel)
+	Cncl.Top = ET.Top + ET.Height + 46dip
+	Dim ok As B4XView = dlg.GetButton(xui.DialogResponse_Positive)
+	ok.Top = ET.Top + ET.Height + 46dip
+	
+	dlg.Base.Height = ET.Height + LB.Height + ok.Height + 62dip
+End Sub
 
 
 
@@ -95,7 +119,7 @@ End Sub
 
 
 
-'Sub  FormatDialog(input As B4XInputTemplate, NumOnly As Boolean, PW As Boolean)
+'Sub FormatDialog(input As B4XInputTemplate, NumOnly As Boolean, PW As Boolean)
 '	Dim ET As EditText = input.TextField1
 '	Dim p As Panel = input.GetPanel(dialog)
 '	ET.Height = (input.mBase.Height / 2)

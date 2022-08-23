@@ -22,8 +22,7 @@ Sub Process_Globals
 	
 	Public ItemsBackgroundColor As Int
 	
-	Public ConnectionYes As Int
-	Public ConnectionNo As Int
+	Public ConnectionNo,ConnectionYes As Int
 	
 End Sub
 
@@ -34,7 +33,7 @@ Public Sub Init(theme As String)
 	ConnectionNo = 0xFFE14349
 
 	txtNormal = xui.Color_White
-	txtAccent = xui.Color_Black
+	txtAccent = xui.Color_DarkGray
 	btnDisableText = xui.Color_LightGray
 	
 	InitTheme(theme)

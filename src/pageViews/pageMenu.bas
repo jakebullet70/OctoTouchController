@@ -16,7 +16,7 @@ Sub Class_Globals
 	Private mCallBackEvent As String
 	Private mMainObj As B4XMainPage'ignore
 	
-	'--- menus
+	'--- menu icons
 	Private mnuFiles As B4XView
 	Private mnuMovement As B4XView
 	Private mnuPrinting As B4XView
@@ -43,9 +43,9 @@ public Sub Set_focus()
 	
 	mPnlMain.Visible = True
 	
-	btnBrightness.Visible = config.ChangeBrightnessSettingsFLAG 
+	'--- set bottom action btn if visible
+	btnBrightness.Visible = config.ChangeBrightnessSettingsFLAG
 	btnScrnOff.Visible    = config.ShowScreenOffFLAG
-	
 	If btnBrightness.Visible = False And btnScrnOff.Visible = True Then
 		btnScrnOff.Left = btnBrightness.Left
 	else If btnBrightness.Visible = True And btnScrnOff.Visible = True Then

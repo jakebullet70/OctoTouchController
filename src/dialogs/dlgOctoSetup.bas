@@ -84,6 +84,7 @@ Public Sub Show(firstRun As Boolean)
 	
 End Sub
 
+
 Private Sub Show_KB
 	txtPrinterDesc.RequestFocusAndShowKeyboard
 End Sub
@@ -138,6 +139,13 @@ Private Sub SetSaveButtonState
 	End Try 'ignore
 End Sub
 
+Private Sub EnableDisableBtns(en As Boolean)
+	
+	guiHelpers.EnableDisableBtns(Array As B4XView( _
+		Dialog.GetButton(xui.DialogResponse_Positive),Dialog.GetButton(xui.DialogResponse_Cancel), _
+		btnCheckConnection,btnGetOctoKey),en)
+			
+End Sub
 
 
 #Region "CONNECTION CHECK"
@@ -157,7 +165,8 @@ Private Sub btnCheckConnection_Click
 	
 	'--- disable dialog
 	pnlMain.Enabled = False
-	SetSaveButtonState
+	'SetSaveButtonState
+	EnableDisableBtns(False)
 	B4XLoadingIndicator1.Show
 	Sleep(200)
 			
@@ -181,6 +190,7 @@ Public Sub connect_Complete (result As Object, success As Object)
 	B4XLoadingIndicator1.Hide
 	
 	ValidConnection = success.As(Boolean)
+	EnableDisableBtns(True)
 	SetSaveButtonState
 
 	If ValidConnection Then
@@ -232,6 +242,7 @@ Private Sub btnGetOctoKey_Click
 	'--- show I am busy!
 	pnlMain.Enabled = False
 	B4XLoadingIndicator1.Show
+	EnableDisableBtns(False)
 	Sleep(300)
 	
 	'--- start the request for an octokey
@@ -253,7 +264,6 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 		If Success Then
 			txtOctoKey.Text = result.As(String)
 			ValidConnection = True
-			SetSaveButtonState
 		Else
 			'--- custom dlgMSgBox not working inside another dialog object
 			'Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",540dip, 220dip)
@@ -267,6 +277,9 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 		logMe.LogIt2(LastException,mModule,"RequestAPI_RequestComplete")
 		
 	End Try
+
+	EnableDisableBtns(True)
+	SetSaveButtonState
 		
 End Sub
 #end region

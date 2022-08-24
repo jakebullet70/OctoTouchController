@@ -13,6 +13,7 @@ Version=11.8
 Sub Class_Globals
 	
 	Private Const mModule As String = "pageMovement" 'ignore
+	Private xui As XUI
 	Private mPnlMain As B4XView
 	Private mCallBackEvent As String 'ignore
 	Private mMainObj As B4XMainPage
@@ -219,9 +220,10 @@ End Sub
 #Region "FUNCTION_MENU"
 private Sub FunctionMenu
 	
+'	Dim mapOptions As Map = CreateMap( _
+'			"Auto Bed Leveling (G29)":"bl","Change filament (M600)":"cl","Load Filament":"lf","UnLoad Filament":"uf")
 	Dim mapOptions As Map = CreateMap( _
-			"Auto Bed Leveling (G29)":"bl","Change filament (M600)":"cl","Load Filament":"lf","UnLoad Filament":"uf")
-	
+			"Auto Bed Leveling (G29)":"bl","Change filament (M600)":"cfl")
 	Dim o1 As dlgListbox
 	o1.Initialize(mMainObj,"Function Menu",Me,"FunctionMenu_Event")
 	o1.Show(250dip,320dip,mapOptions)
@@ -230,25 +232,37 @@ End Sub
 
 Private Sub FunctionMenu_Event(value As String, tag As Object)
 	
-	'--- callback for FunctionMenu
+	'--- callback for Function Menu
 	If value.Length = 0 Then Return
 	Dim msg As String = "Command sent: "
+	Dim mb As dlgMsgBox : mb.Initialize(mMainObj.root,"Continue",500dip, 200dip)
+	Dim Ask As String = "Touch OK to continue"
 	
 	Select Case value
 		Case "bl" '--- bed level
+			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)
+			If ret = xui.DialogResponse_Cancel Then Return
 			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","G29"))
 			msg = msg & "Start Bed Leveling"
 			
+		Case "cfl" '--- Change filament
+			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)
+			If ret = xui.DialogResponse_Cancel Then Return
+			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","M600"))
+			msg = msg & "Sending M600"
+			
 		Case Else
 			msg = " ...TODO... "
-			
 			
 	End Select
 	guiHelpers.Show_toast(msg,3200)
 	
 	
 End Sub
+
 #end region
+
+
 
 #Region "GCODE"
 Private Sub ExtrudeRetract(Extrude As Boolean)

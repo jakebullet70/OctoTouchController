@@ -339,7 +339,6 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	End If
 	
 	Dim mb As dlgMsgBox : mb.Initialize(Root,"Connetion Problem",560dip, 180dip)
-	mb.lblTxt.Font = xui.CreateDefaultFont(20)
 	Wait For (mb.Show(Msg.ToString,gblConst.MB_ICON_WARNING,"Retry","","Setup")) Complete (res As Int)
 	
 	Select Case res

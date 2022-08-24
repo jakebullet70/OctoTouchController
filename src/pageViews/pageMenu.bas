@@ -82,9 +82,9 @@ Private Sub BuildMenuCard(mnuPanel As Panel,imgFile As String, Text As String, m
 				o1.Load(File.DirAssets,imgFile)
 				o1.Tag2 = mnuAction '--- set menu action
 				
-			Else If v.Tag = "lbl" Then
-				Dim o2 As Label = v
-				o2.Text = Text
+			else if v.Tag Is AutoTextSizeLabel Then
+				Dim o6 As AutoTextSizeLabel = v.Tag
+				o6.Text = Text
 				
 			End If
 		End If

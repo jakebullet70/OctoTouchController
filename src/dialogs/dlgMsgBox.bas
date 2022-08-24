@@ -21,7 +21,7 @@ Sub Class_Globals
 	Private mWidth As Float
 	
 	Private lblPic As B4XView
-	Public lblTxt As B4XView
+	Public lblTxt As AutoTextSizeLabel
 	
 	Private BasePnl As B4XView
 	Private Dialog As B4XDialog

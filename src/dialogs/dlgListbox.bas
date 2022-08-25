@@ -53,7 +53,7 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	ListTemplate.CustomListView1.PressedColor = clrTheme.BackgroundHeader
 	ListTemplate.options = objHelpers.Map2List(mDataMap,True)
 	Dim l As B4XView = ListTemplate.CustomListView1.DesignerLabel
-	l.Font =xui.CreateDefaultFont(26)
+	l.Font = xui.CreateDefaultFont(NumberFormat2(26 / guiHelpers.gFscale,1,0,0,False))
 	
 	guiHelpers.ThemeDialogForm(mMainObj.Dialog, mTitle)
 	Dim rs As ResumableSub = mMainObj.Dialog.ShowTemplate(ListTemplate, "", "", "Cancel")

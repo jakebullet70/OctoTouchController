@@ -75,14 +75,15 @@ Private Sub SizeInputDialog(dlg As B4XDialog, input As B4XInputTemplate)
 	Dim p As Panel = input.GetPanel(dlg)
 	
 	Dim p As Panel = input.GetPanel(dlg)
-	Dim LB As Label = p.GetView(0)
+	Dim LB As B4XView = p.GetView(0)
 	LB.Height = Round((input.mBase.Height / 2.6)).As(Float)
-	LB.TextSize = 23
+	LB.Font = xui.CreateDefaultFont(NumberFormat2(22 / guiHelpers.gFscale,1,0,0,False))
+	
 	
 	ET.Height = Round(input.mBase.Height / 2).As(Float)
 	ET.top = LB.Top + LB.Height + 8dip  '(input.mBase.Height / 3)
 	ET.Width = input.mBase.Width - (ET.Left * 2)
-	ET.TextSize = 24
+	ET.TextSize = NumberFormat2(20 / guiHelpers.gFscale,1,0,0,False)
 	
 	Dim Cncl As B4XView = dlg.GetButton(xui.DialogResponse_Cancel)
 	Cncl.Top = ET.Top + ET.Height + 46dip

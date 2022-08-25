@@ -199,6 +199,7 @@ Private Sub SetupFullScrn
 	End If
 	
 	guiHelpers.gScreenSizeAprox = lv.ApproximateScreenSize
+	Dim ac As Accessibility : guiHelpers.gFscale = ac.GetUserFontScale
 	
 End Sub
 

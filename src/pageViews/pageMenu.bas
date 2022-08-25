@@ -26,6 +26,7 @@ Sub Class_Globals
 	Private btnScrnOff,btnBrightness As B4XView
 End Sub
 
+
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String) 
 	
 	mPnlMain = masterPanel
@@ -38,6 +39,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	Build_GUI
 	
 End Sub
+
 
 public Sub Set_focus()
 	
@@ -54,9 +56,11 @@ public Sub Set_focus()
 	
 End Sub
 
+
 public Sub Lost_focus()
 	mPnlMain.Visible = False
 End Sub
+
 
 Private Sub Build_GUI
 	
@@ -69,6 +73,7 @@ Private Sub Build_GUI
 	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
 	
 End Sub
+
 
 Private Sub BuildMenuCard(mnuPanel As Panel,imgFile As String, Text As String, mnuAction As String)
 	
@@ -92,6 +97,7 @@ Private Sub BuildMenuCard(mnuPanel As Panel,imgFile As String, Text As String, m
 	Next
 	
 End Sub
+
 
 Private Sub mnuCardImg_Click
 	

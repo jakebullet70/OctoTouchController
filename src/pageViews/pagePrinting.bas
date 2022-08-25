@@ -18,9 +18,6 @@ Sub Class_Globals
 	
 	Private DisplayedFileName As String '--- curently displayed file name
 	
-
-	Private lblToolTemp, lblBedTemp As Label
-	
 	Private btnPresetTool, btnPresetBed, btnPresetMaster As B4XView
 	
 	Private scrlblFileName As ScrollingLabel
@@ -28,6 +25,8 @@ Sub Class_Globals
 	Private CircularProgressBar1 As CircularProgressBar
 	
 	Private btnCancel, btnPause, btnPrint As B4XView
+	Private lblBedTemp As AutoTextSizeLabel
+	Private lblToolTemp As AutoTextSizeLabel
 End Sub
 
 
@@ -64,6 +63,8 @@ End Sub
 
 Private Sub Build_GUI
 	
+	guiHelpers.SetTextColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel))
+	
 	CircularProgressBar1.ColorEmpty = clrTheme.txtNormal
 	CircularProgressBar1.ColorFull = clrTheme.BackgroundMenu
 	CircularProgressBar1.Value = 0
@@ -75,13 +76,15 @@ Private Sub Build_GUI
 		CircularProgressBar1.MainLabel.Font = xui.CreateDefaultFont(42)
 	End If
 	
-	If guiHelpers.gScreenSizeAprox > 8 Then
-		'--- txt on btns not scaling prperly on larger devices
-		Dim fn As B4XFont = xui.CreateDefaultFont(btnCancel.TextSize - 2)
+	'If guiHelpers.gScreenSizeAprox > 8 Then
+		'--- txt on btns not scaling prperly on larger devices with user fontscale changed
+		Dim fn As B4XFont = _
+				xui.CreateDefaultFont(NumberFormat2(btnCancel.TextSize / guiHelpers.gFscale,1,0,0,False) - _
+				IIf(guiHelpers.gFscale > 1,2,0))
 		btnCancel.Font = fn 
 		btnPause.Font  = fn
 		btnPrint.Font  = fn
-	End If
+	'End If
 	
 End Sub
 
@@ -276,9 +279,7 @@ End Sub
 #end region
 
 #region "TEMP_CHANGE_EDIT"
-Private Sub lblTempChange_Click
-	
-	Dim o As Label : o = Sender
+Private Sub lblTempChange(what As String)
 	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
@@ -286,16 +287,24 @@ Private Sub lblTempChange_Click
 	
 	Dim o1 As dlgNumericInput
 	o1.Initialize(mMainObj, _
-		IIf(o.Tag = "bed","Bed Temperature","Tool Temperature"),"Enter Temperature",Me, _
-		IIf(o.Tag = "bed","TempChange_Bed","TempChange_Tool1"))
+		IIf(what = "bed","Bed Temperature","Tool Temperature"),"Enter Temperature",Me, _
+		IIf(what = "bed","TempChange_Bed","TempChange_Tool1"))
 		
 	o1.Show
 	
 End Sub
 
+Private Sub lblToolTemp_Click
+	lblTempChange("tool")
+End Sub
+Private Sub lblBedTemp_Click
+	lblTempChange("bed")
+End Sub
+
 Private Sub TempChange_Bed(value As String)
 	
-	'--- callback for lblTempChange_Click
+	'--- callback for lblTempChange
+	'--- callback for lblTempChange
 	If value = "" Then Return
 	If fnc.CheckTempRange("bed", value) = False Then
 		guiHelpers.Show_toast("Invalid Temperature",1800)
@@ -309,7 +318,8 @@ End Sub
 
 Private Sub TempChange_Tool1(value As String)
 	
-	'--- callback for lblTempChange_Click
+	'--- callback for lblTempChange
+	'--- callback for lblTempChange
 	If value.Length = 0 Then Return
 	If fnc.CheckTempRange("tool", value) = False Then
 		guiHelpers.Show_toast("Invalid Temperature",1800)
@@ -376,4 +386,6 @@ Private Sub btnAction_Click
 	End Select
 	
 End Sub
+
+
 

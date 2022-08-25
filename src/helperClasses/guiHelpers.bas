@@ -15,6 +15,7 @@ Sub Process_Globals
 	
 	Public gScreenSizeAprox As Double = 7 '--- asume a small tablet
 	Public gScreenSizeDPI As Int = 0
+	Public gFscale As Double
 	'Public gScreenSizeOriatation As String = ""  '---  P or L
 	
 End Sub
@@ -208,4 +209,9 @@ Public Sub ThemeDialogForm2(dlg As B4XDialog,title As String,txtSize As Int)
 End Sub
 
 
+public Sub SetTextColor(obj() As B4XView)
+	For Each o As B4XView In obj
+		o.TextColor = clrTheme.txtNormal
+	Next
+End Sub
 

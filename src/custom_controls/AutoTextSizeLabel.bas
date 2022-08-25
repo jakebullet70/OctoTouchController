@@ -6,7 +6,9 @@ Version=8.5
 @EndOfDesignText@
 ' Author:  B4X, sadLogic - Kherson, Ukraine
 #Region VERSIONS 
-' V. 1.2 	Aug/24/2022
+' V. 1.3 	Aug/24/2022
+'			Fixed click event
+' V. 1.2 	Aug/20/2022
 '			Added tag to return me
 ' V. 1.1 	Aug/12/2022
 '			Added TextColor properties
@@ -18,7 +20,7 @@ Version=8.5
 #Event: LongClick
 #End If
 
-#DesignerProperty: Key: maxSize, DisplayName: Max Text Size, FieldType: Int, DefaultValue: 20
+#DesignerProperty: Key: maxSize, DisplayName: Max Text Size, FieldType: Int, DefaultValue: 28
 #DesignerProperty: Key: minSize, DisplayName: Min Text Size, FieldType: Int, DefaultValue: 5
 #DesignerProperty: Key: ignoreUserFontScale, DisplayName: Ignore User Font Scale, FieldType: Boolean, DefaultValue: True
 
@@ -29,7 +31,7 @@ Sub Class_Globals
 	Private mlbl As B4XView
 	Private xui As XUI
 	Private mautopnl As B4XView
-	Private maxSize As Int = 20
+	Private maxSize As Int = 28
 	Private minSize As Int = 5
 	Private ac As Accessibility
 	Private scaler As Float
@@ -46,10 +48,10 @@ End Sub
 Public Sub DesignerCreateView (Base As Object, Lbl As Label, Props As Map)
 	mBase = Base
 	mlbl = Lbl
-	Tag = mBase.Tag
 	mBase.Tag = Me
+	Tag = mBase.Tag
 
-	mautopnl = xui.CreatePanel("")
+	mautopnl = xui.CreatePanel("mautopnl")
 
 	Dim parent As B4XView = mBase.Parent	
 	parent.AddView(mlbl, mBase.Left, mBase.Top, mBase.Width, mBase.Height)
@@ -61,8 +63,8 @@ Public Sub DesignerCreateView (Base As Object, Lbl As Label, Props As Map)
 	#End If
 	
 	scaler = IIf(Props.Get("ignoreUserFontScale").As(Boolean), ac.GetUserFontScale, 1)
-	maxSize = Props.Get("maxSize")/scaler
-	minSize = Props.Get("minSize")/scaler
+	maxSize = Props.Get("maxSize") / scaler
+	minSize = Props.Get("minSize") / scaler
 End Sub
 
 Private Sub Base_Resize (Width As Double, Height As Double)
@@ -153,7 +155,6 @@ Private Sub CheckSize(size As Float, multipleLines As Boolean) As Boolean
 End Sub
 
 #Region Click
-
 
 Private Sub mautopnl_Click
 	mautopnl_click_handler(Sender)

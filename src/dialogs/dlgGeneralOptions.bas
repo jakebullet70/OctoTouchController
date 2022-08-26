@@ -48,14 +48,14 @@ Public Sub Show
 	
 	Dim h As Float
 	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
-		h = 55%y
+		h = 62%y
 	Else If guiHelpers.gScreenSizeAprox >= 8 Then
-		h = 42%y
+		h = 55%y
 	Else '--- 4 to 5.9 inch
 		h = 80%y
 	End If
 	
-	mGeneralDlg.Initialize(mainObj.root, "General Option", 360dip, h)
+	mGeneralDlg.Initialize(mainObj.root, "General Settings", 360dip, h)
 	mGeneralDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgGeneral.json"))
 	mGeneralDlg.SetEventsListener(Me,"dlgGeneral")
 	

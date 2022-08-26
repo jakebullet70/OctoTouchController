@@ -267,6 +267,7 @@ Private Sub PopupMainMenu
 	o.Initialize(Me,"Setup",Me,popUpMemuItems,btnPageAction,"Options")
 	o.MenuWidth = 260dip '--- defaults to 100
 	o.ItemHeight = 56dip
+
 	o.MenuObj.OrientationVertical = o.MenuObj.OrientationHorizontal_LEFT '--- change menu position
 	
 	Dim top As Float
@@ -291,7 +292,7 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 			Case "ab" '--- about
 				Dim msg As String = guiHelpers.GetAboutText()
 				Dim mb As dlgMsgBox : mb.Initialize(Root,"About",560dip, 200dip)
-				Wait For (mb.Show(msg,gblConst.MB_ICON_INFO,"OK","","")) Complete (res As Int)
+				Wait For (mb.Show(msg,"splash.png","OK","","")) Complete (res As Int)
 				
 				
 			Case "gn"  '--- general settings

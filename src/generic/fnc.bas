@@ -179,7 +179,7 @@ End Sub
 Public Sub ConvertSecondsToString(str As String) As String    'D:HH:MM:SS
 
 	If IsNumber(str) = False Then
-		If str = "null" Then Return "-"
+		If str = "null" Or str = "-" Then Return "-" '"00:00:00"
 		Return str
 	End If
 	

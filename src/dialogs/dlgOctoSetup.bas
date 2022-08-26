@@ -54,7 +54,7 @@ Public Sub Show(firstRun As Boolean)
 	Dim w, h As Float
 	
 	If guiHelpers.gScreenSizeAprox < 8 Then
-		w = 80%x : h = 75%y
+		w = 80%x : h = 74%y
 	Else
 		w = 74%x : h = 70%y
 	End If
@@ -110,6 +110,8 @@ private Sub Build_GUI
 	btnCheckConnection.Text= "Validate Connection"
 	btnGetOctoKey.Text = "Request Octoprint Key"
 	
+	btnCheckConnection.Font = xui.CreateDefaultFont(NumberFormat2(btnCheckConnection.Font.Size / guiHelpers.gFscale,1,0,0,False))
+	btnGetOctoKey.Font = xui.CreateDefaultFont(NumberFormat2(btnGetOctoKey.Font.Size / guiHelpers.gFscale,1,0,0,False))
 End Sub
 
 

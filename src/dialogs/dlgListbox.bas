@@ -56,7 +56,7 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	l.Font = xui.CreateDefaultFont(NumberFormat2(26 / guiHelpers.gFscale,1,0,0,False))
 	
 	guiHelpers.ThemeDialogForm(mMainObj.Dialog, mTitle)
-	Dim rs As ResumableSub = mMainObj.Dialog.ShowTemplate(ListTemplate, "", "", "Cancel")
+	Dim rs As ResumableSub = mMainObj.Dialog.ShowTemplate(ListTemplate, "", "", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(mMainObj.Dialog)
 	
 	'--- display dialog

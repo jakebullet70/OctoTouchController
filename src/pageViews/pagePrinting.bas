@@ -21,12 +21,13 @@ Sub Class_Globals
 	Private btnPresetTool, btnPresetBed, btnPresetMaster As B4XView
 	
 	Private scrlblFileName As ScrollingLabel
-	Private lblPrintStats As B4XView, statTxt As StringBuilder
 	Private CircularProgressBar1 As CircularProgressBar
 	
 	Private btnCancel, btnPause, btnPrint As B4XView
 	Private lblBedTemp As AutoTextSizeLabel
 	Private lblToolTemp As AutoTextSizeLabel
+	Private lblPrintStats1,lblPrintStats3,lblPrintStats2 As AutoTextSizeLabel
+	
 End Sub
 
 
@@ -63,7 +64,9 @@ End Sub
 
 Private Sub Build_GUI
 	
-	guiHelpers.SetTextColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel))
+	guiHelpers.SetTextColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel, _
+								lblPrintStats1.BaseLabel,lblPrintStats2.BaseLabel,lblPrintStats3.BaseLabel, _
+								btnCancel,btnPause,btnPrint))
 	
 	CircularProgressBar1.ColorEmpty = clrTheme.txtNormal
 	CircularProgressBar1.ColorFull = clrTheme.BackgroundMenu
@@ -75,16 +78,13 @@ Private Sub Build_GUI
 	Else
 		CircularProgressBar1.MainLabel.Font = xui.CreateDefaultFont(42)
 	End If
-	
-	'If guiHelpers.gScreenSizeAprox > 8 Then
-		'--- txt on btns not scaling prperly on larger devices with user fontscale changed
-		Dim fn As B4XFont = _
-				xui.CreateDefaultFont(NumberFormat2(btnCancel.TextSize / guiHelpers.gFscale,1,0,0,False) - _
-				IIf(guiHelpers.gFscale > 1,2,0))
-		btnCancel.Font = fn 
-		btnPause.Font  = fn
-		btnPrint.Font  = fn
-	'End If
+
+	Dim fn As B4XFont = _
+			xui.CreateDefaultFont(NumberFormat2(btnCancel.TextSize / guiHelpers.gFscale,1,0,0,False) - _
+			IIf(guiHelpers.gFscale > 1,3,0))
+	btnCancel.Font = fn 
+	btnPause.Font  = fn
+	btnPrint.Font  = fn
 	
 End Sub
 
@@ -150,12 +150,19 @@ Public Sub Update_Printer_Stats
 	Else
 		CircularProgressBar1.Reset
 	End If
-	
-	statTxt.Initialize
-	statTxt.Append($"File Size:${fileHelpers.BytesToReadableString(oc.JobFileSize)}"$).Append(CRLF)
-	statTxt.Append($"Job TTL Time:${fnc.ConvertSecondsToString(oc.JobPrintTime)}"$).Append(CRLF)
-	statTxt.Append($"Job Time Left:${fnc.ConvertSecondsToString(oc.JobPrintTimeLeft)}"$)
-	lblPrintStats.Text = statTxt.ToString
+
+'	statTxt.Initialize
+'	statTxt.Append($"File Size:${fileHelpers.BytesToReadableString(oc.JobFileSize)}"$).Append(CRLF)
+'	statTxt.Append($"Job TTL Time:${fnc.ConvertSecondsToString(oc.JobPrintTime)}"$).Append(CRLF)
+'	statTxt.Append($"Job Time Left:${fnc.ConvertSecondsToString(oc.JobPrintTimeLeft)}"$)
+	lblPrintStats1.Text = $"File Size:${fileHelpers.BytesToReadableString(oc.JobFileSize)}"$
+	If oc.JobPrintTime <> "-" Then
+		lblPrintStats2.Text = $"Job TTL Time:${fnc.ConvertSecondsToString(oc.JobPrintTime)}"$
+		lblPrintStats3.Text = $"Job Time Left:${fnc.ConvertSecondsToString(oc.JobPrintTimeLeft)}"$
+	Else
+		lblPrintStats2.Text = ""
+		lblPrintStats3.Text = ""
+	End If
 	
 	If (oc.JobFileName.Length = 0 And scrlblFileName.Text <> gblConst.NO_FILE_LOADED) Or _
 		(oc.JobFileName.Length <> 0 And scrlblFileName.Text = gblConst.NO_FILE_LOADED) Or _
@@ -362,6 +369,8 @@ Private Sub btnAction_Click
 				
 				guiHelpers.Show_toast("Starting Print...",2000)
 				mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_PRINT)
+				'Sleep(500)
+				'lblPrintStats.RefreshView
 
 			End If
 			

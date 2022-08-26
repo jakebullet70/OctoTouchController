@@ -79,7 +79,7 @@ private Sub BuildGUI
 	aspm_main.OrientationHorizontal = aspm_main.OrientationHorizontal_MIDDLE
 		
 	aspm_main.ItemLabelProperties.BackgroundColor =  xui.Color_ARGB(152,0,0,0)' --- dims background color
-	aspm_main.ItemLabelProperties.xFont = xui.CreateDefaultFont(26)
+	aspm_main.ItemLabelProperties.xFont = xui.CreateDefaultFont(NumberFormat2(26 / guiHelpers.gFscale,1,0,0,False))'xui.CreateDefaultFont(26)
 	
 	'aspm_main.ItemLabelProperties.BackgroundColor =  clrTheme.DialogBG'  xui.Color_ARGB(152,0,0,0)'black
 	

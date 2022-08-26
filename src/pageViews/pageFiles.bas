@@ -26,8 +26,8 @@ Sub Class_Globals
 	Private currentFileInfo As typOctoFileInfo
 	
 	'--- list view panel
-	Private lblpnlFileViewBottom As Label
-	Private lblpnlFileViewTop As Label
+	Private lblpnlFileViewBottom As B4XView
+	Private lblpnlFileViewTop As B4XView
 	Private pnlFileViewBG As B4XView
 	
 	Private FilesCheckChangeIsBusyFLAG As Boolean = False
@@ -130,6 +130,18 @@ Private Sub Build_GUI
 		clvFiles_ItemClick(0,Null)
 	End If
 	
+	btnLoadAndPrint.Text = "Load" & CRLF & "Print"
+	btnLoad.Text = "Load"
+	btnDelete.Text = "Delete"
+	
+	guiHelpers.SetTextColor(Array As B4XView(btnLoadAndPrint,btnLoad,btnDelete))
+	Dim fn As B4XFont = _
+				xui.CreateDefaultFont(NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - _
+				IIf(guiHelpers.gFscale > 1,2,0))
+	btnDelete.Font = fn
+	btnLoad.Font  = fn
+	btnLoadAndPrint.Font  = fn
+	
 End Sub
 
 
@@ -204,10 +216,13 @@ End Sub
 Sub CreateListItem(oData As typOctoFileInfo, Width As Int, Height As Int) As B4XView
 	
 	Dim p As B4XView = xui.CreatePanel("")
-	'p.Color = xui.Color_Transparent
-	p.SetLayoutAnimated(0, 0, 0, Width, Height)
+	'--- add 20dip to height for larger screens
+	p.SetLayoutAnimated(0, 0, 0, Width, Height + IIf(guiHelpers.gScreenSizeAprox > 7.8,20dip,0dip))
 	p.LoadLayout("viewFiles")
-	lblpnlFileViewTop.Text = fileHelpers.RemoveExtFromeFileName( oData.Name)
+	lblpnlFileViewTop.font = xui.CreateDefaultFont( _
+			NumberFormat2(lblpnlFileViewTop.TextSize / guiHelpers.gFscale,1,0,0,False))
+	lblpnlFileViewTop.Text = fileHelpers.RemoveExtFromeFileName(oData.Name)
+	lblpnlFileViewBottom.Font = lblpnlFileViewTop.Font
 	lblpnlFileViewBottom.Text = "Size: " &   fileHelpers.BytesToReadableString(oData.Size) '& " Uploaded: " & dt
 	Return p
 	
@@ -258,6 +273,7 @@ End Sub
 Public Sub CheckIfFilesChanged
 	
 	If FilesCheckChangeIsBusyFLAG Then Return
+	If mMainObj.MasterCtrlr.gMapOctoFilesList.IsInitialized = False Then Return
 	
 	Dim oldListViewSize As Int = clvFiles.Size
 		

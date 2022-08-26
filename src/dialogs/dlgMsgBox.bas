@@ -20,12 +20,12 @@ Sub Class_Globals
 	Private mHeight As Float
 	Private mWidth As Float
 	
-	Private lblPic As B4XView
 	Public lblTxt As AutoTextSizeLabel
 	
 	Private BasePnl As B4XView
 	Private Dialog As B4XDialog
 	
+	Private lmB4XImageViewX1 As lmB4XImageViewX
 End Sub
 
 
@@ -53,7 +53,7 @@ Public Sub Show(txt  As String, icon_file As String, _
 	Dialog.Initialize(mMainObj)
 	
 	lblTxt.Text = txt
-	lblPic.SetBitmap(LoadBitmapSample(File.DirAssets, icon_file, lblPic.Width, lblPic.Height))
+	lmB4XImageViewX1.Load(File.DirAssets, icon_file)
 
 	guiHelpers.ThemeDialogForm(Dialog, mTitle)
 	Dim rs As ResumableSub = Dialog.ShowCustom(BasePnl,btn1,btn2,btn3)

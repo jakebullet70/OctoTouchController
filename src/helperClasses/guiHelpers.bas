@@ -20,6 +20,10 @@ Sub Process_Globals
 End Sub
 
 
+'=====================================================================================
+'  Generic GUI helper methods
+'=====================================================================================
+
 
 Public Sub SetEnableDisableColor(btnArr() As B4XView)
 	For Each btn As B4XView In btnArr

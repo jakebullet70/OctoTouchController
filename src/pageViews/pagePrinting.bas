@@ -20,13 +20,15 @@ Sub Class_Globals
 	
 	Private btnPresetTool, btnPresetBed, btnPresetMaster As B4XView
 	
-	Private scrlblFileName As ScrollingLabel
+'	Private scrlblFileName As ScrollingLabel
+	Private lblFileName As AutoTextSizeLabel
 	Private CircularProgressBar1 As CircularProgressBar
 	
 	Private btnCancel, btnPause, btnPrint As B4XView
 	Private lblBedTemp As AutoTextSizeLabel
 	Private lblToolTemp As AutoTextSizeLabel
 	Private lblPrintStats1,lblPrintStats3,lblPrintStats2 As AutoTextSizeLabel
+	
 	
 End Sub
 
@@ -73,7 +75,7 @@ Private Sub Build_GUI
 	CircularProgressBar1.Value = 0
 	CircularProgressBar1.ValueUnit = "%"
 	
-	If guiHelpers.gScreenSizeAprox > 9 Then
+	If guiHelpers.gScreenSizeAprox > 6 Then
 		CircularProgressBar1.MainLabel.Font = xui.CreateDefaultFont(62)
 	Else
 		CircularProgressBar1.MainLabel.Font = xui.CreateDefaultFont(42)
@@ -164,8 +166,8 @@ Public Sub Update_Printer_Stats
 		lblPrintStats3.Text = ""
 	End If
 	
-	If (oc.JobFileName.Length = 0 And scrlblFileName.Text <> gblConst.NO_FILE_LOADED) Or _
-		(oc.JobFileName.Length <> 0 And scrlblFileName.Text = gblConst.NO_FILE_LOADED) Or _
+	If (oc.JobFileName.Length = 0 And lblFileName.Text <> gblConst.NO_FILE_LOADED) Or _
+		(oc.JobFileName.Length <> 0 And lblFileName.Text = gblConst.NO_FILE_LOADED) Or _
 		(DisplayedFileName <> oc.JobFileName) Then
 		UpdateFileName
 	End If
@@ -176,9 +178,9 @@ End Sub
 
 private Sub UpdateFileName
 	If oc.isFileLoaded Then
-		scrlblFileName.Text = " File: " & fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
+		lblFileName.Text = " File: " & fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
 	Else
-		scrlblFileName.Text = gblConst.NO_FILE_LOADED
+		lblFileName.Text = gblConst.NO_FILE_LOADED
 	End If
 End Sub
 
@@ -290,7 +292,7 @@ Private Sub lblTempChange(what As String)
 	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
-	If oc.isConnected = False Or oc.isPrinting Then Return
+	If oc.isConnected = False Or oc.isPrinting Or oc.IsPaused2 Then Return
 	
 	Dim o1 As dlgNumericInput
 	o1.Initialize(mMainObj, _

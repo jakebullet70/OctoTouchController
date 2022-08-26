@@ -26,14 +26,13 @@ Sub Class_Globals
 	Private currentFileInfo As typOctoFileInfo
 	
 	'--- list view panel
-	Private lblpnlFileViewBottom As B4XView
-	Private lblpnlFileViewTop As B4XView
+	Private lblpnlFileViewTop,lblpnlFileViewBottom As B4XView
 	Private pnlFileViewBG As B4XView
 	
 	Private FilesCheckChangeIsBusyFLAG As Boolean = False
 	Private firstRun As Boolean = True
 	
-	Private scrlblFileName As ScrollingLabel
+	Private lblFileName As AutoTextSizeLabel
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
@@ -108,8 +107,8 @@ Public Sub tmrFilesCheckChange_Tick
 	
 	CheckIfFilesChanged
 	
-	If (oc.JobFileName.Length = 0 And scrlblFileName.Text <> gblConst.NO_FILE_LOADED) Or _
-		(oc.JobFileName.Length <> 0 And scrlblFileName.Text = gblConst.NO_FILE_LOADED) Or _
+	If (oc.JobFileName.Length = 0 And lblFileName.Text <> gblConst.NO_FILE_LOADED) Or _
+		(oc.JobFileName.Length <> 0 And lblFileName.Text = gblConst.NO_FILE_LOADED) Or _
 		(DisplayedFileName <> oc.JobFileName) Then
 		Update_LoadedFileName
 	End If
@@ -460,9 +459,9 @@ End Sub
 
 private Sub Update_LoadedFileName
 	If oc.isFileLoaded Then
-		scrlblFileName.Text = " File: " & fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
+		lblFileName.Text = fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
 	Else
-		scrlblFileName.Text = gblConst.NO_FILE_LOADED
+		lblFileName.Text = gblConst.NO_FILE_LOADED
 	End If
 End Sub
 

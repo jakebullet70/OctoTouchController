@@ -5,6 +5,8 @@ Type=Class
 Version=7.3
 @EndOfDesignText@
 #Region VERSIONS 
+'	2.2.0		08/26/2002 - sadLogic, Kherson Ukraine
+'				Added click event
 '	2.1.1		08/13/2002 - sadLogic, Kherson Ukraine
 '				Added Color Full / Empty properties, code cleanup
 '				Added getMainLabel to allow changing of text property
@@ -33,7 +35,7 @@ Sub Class_Globals
 	Private mBase As B4XView
 	Private currentValue As Float = 0
 	Private DurationFromZeroTo100 As Int
-	Private mUnit As String=""
+	Private mUnit As String = ""
 End Sub
 
 #Region "PROPERTIES"
@@ -83,6 +85,7 @@ Public Sub DesignerCreateView (Base As Object, Lbl As Label, Props As Map)
 	clrEmpty = xui.PaintOrColorToColor(Props.Get("ColorEmpty"))
 	stroke = DipToCurrent(Props.Get("StrokeWidth"))
 	DurationFromZeroTo100 = Props.Get("Duration")
+	Lbl.Initialize("lbl")
 	mLbl = Lbl
 	cx = mBase.Width / 2
 	cy = mBase.Height / 2
@@ -93,7 +96,7 @@ Public Sub DesignerCreateView (Base As Object, Lbl As Label, Props As Map)
 	mLbl.SetTextAlignment("CENTER", "CENTER")
 	
 	'--- 2017/10/22 center text
-	mBase.AddView(mLbl, stroke, stroke, mBase.Width-2*stroke,mBase.Height-2*stroke)
+	mBase.AddView(mLbl, stroke, stroke, mBase.Width-2 * stroke,mBase.Height-2 * stroke)
 	
 	cvs.Initialize(mBase)
 	DrawValue(currentValue)
@@ -163,5 +166,9 @@ Private Sub DrawValue(Value As Float)
 	
 End Sub
 
-
-
+Private Sub lbl_Click
+	Dim SubFullName As String = mEventName & "_Click"
+	If SubExists(mCallBack, SubFullName) Then
+		CallSub(mCallBack, SubFullName)
+	End If
+End Sub

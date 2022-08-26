@@ -68,7 +68,7 @@ Private Sub Build_GUI
 	
 	guiHelpers.SetTextColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel, _
 								lblPrintStats1.BaseLabel,lblPrintStats2.BaseLabel,lblPrintStats3.BaseLabel, _
-								btnCancel,btnPause,btnPrint))
+								btnCancel,btnPause,btnPrint,CircularProgressBar1.MainLabel))
 	
 	CircularProgressBar1.ColorEmpty = clrTheme.txtNormal
 	CircularProgressBar1.ColorFull = clrTheme.BackgroundMenu
@@ -153,11 +153,9 @@ Public Sub Update_Printer_Stats
 		CircularProgressBar1.Reset
 	End If
 
-'	statTxt.Initialize
-'	statTxt.Append($"File Size:${fileHelpers.BytesToReadableString(oc.JobFileSize)}"$).Append(CRLF)
-'	statTxt.Append($"Job TTL Time:${fnc.ConvertSecondsToString(oc.JobPrintTime)}"$).Append(CRLF)
-'	statTxt.Append($"Job Time Left:${fnc.ConvertSecondsToString(oc.JobPrintTimeLeft)}"$)
-	lblPrintStats1.Text = $"File Size:${fileHelpers.BytesToReadableString(oc.JobFileSize)}"$
+	Dim tmp As String = $"File Size:${fileHelpers.BytesToReadableString(oc.JobFileSize)}"$
+	If lblPrintStats1.Text <> tmp Then lblPrintStats1.Text = tmp
+	'lblPrintStats1.Text = $"File Size:${fileHelpers.BytesToReadableString(oc.JobFileSize)}"$'
 	If oc.JobPrintTime <> "-" Then
 		lblPrintStats2.Text = $"Job TTL Time:${fnc.ConvertSecondsToString(oc.JobPrintTime)}"$
 		lblPrintStats3.Text = $"Job Time Left:${fnc.ConvertSecondsToString(oc.JobPrintTimeLeft)}"$
@@ -398,5 +396,9 @@ Private Sub btnAction_Click
 	
 End Sub
 
+
+Private Sub CircularProgressBar1_Click
+	' TODO --  add pic of thumbnail and swap out thumbnail for progressbar on click
+End Sub
 
 

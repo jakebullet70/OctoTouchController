@@ -1,5 +1,5 @@
 ﻿B4J=true
-Group=HELPER_CLASSES
+Group=HELPERS
 ModulesStructureVersion=1
 Type=StaticCode
 Version=9.5

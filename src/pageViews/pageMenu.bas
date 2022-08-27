@@ -24,6 +24,7 @@ Sub Class_Globals
 	Public Dialog As B4XDialog
 	
 	Private btnScrnOff,btnBrightness As B4XView
+	Private btnSonoff As B4XView
 End Sub
 
 
@@ -54,6 +55,8 @@ public Sub Set_focus()
 		btnScrnOff.Left = btnBrightness.Left - (60dip + IIf(guiHelpers.gScreenSizeAprox < 5.4,0dip,10dip))
 	End If
 	
+	btnSonoff.Visible = config.SonoffFLAG
+	
 End Sub
 
 
@@ -64,13 +67,12 @@ End Sub
 
 Private Sub Build_GUI
 	
-	'btnBrightness.Visible = config.ChangeBrightnessSettingsFLAG
-	'btnScrnOff.Visible = config.ShowScreenOffFLAG
-	
 	'--- build the main menu screen
 	BuildMenuCard(mnuMovement,"menuMovement.png","Move",gblConst.PAGE_MOVEMENT)
 	BuildMenuCard(mnuFiles,"menuFiles.png","Files",gblConst.PAGE_FILES)
 	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
+	
+	guiHelpers.SetTextColor(Array As B4XView(btnSonoff,btnScrnOff,btnBrightness))
 	
 End Sub
 
@@ -139,7 +141,7 @@ Private Sub btnSubBtnAction_Click
 			CallSub2(Main,"TurnOnOff_ScreenTmr",False)
 			fnc.BlankScreen
 			
-		Case "snoff"
+		Case "snof" '--- Sonoff crap
 				
 	End Select
 	

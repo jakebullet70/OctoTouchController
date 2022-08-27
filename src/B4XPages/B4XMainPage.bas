@@ -337,16 +337,6 @@ Public Sub PrinterSetup_Closed
 	
 End Sub
 
-'--- callled from dlgSonoffSetup on exit
-Public Sub SonoffSetup_Closed
-	
-	config.ReadSonoffCFG
-	'Sleep(100)
-	'guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
-	
-End Sub
-
-
 
 #end region
 

@@ -169,6 +169,9 @@ Private Sub btnCheckConnection_Click
 			ValidConnection = True
 		Else
 			connected2something = True
+			If config.logREST_API Then
+				logMe.logit2($"ConnectCheck:-->${j.GetString}"$,mModule,inSub)
+			End If
 		End If
 	End If
 	

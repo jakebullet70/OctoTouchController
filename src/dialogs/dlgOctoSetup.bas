@@ -11,7 +11,7 @@ Version=11.5
 
 Sub Class_Globals
 	
-	Private const mModule As String = "dlgBrightness"' 'ignore
+	Private const mModule As String = "dlgOctoSetup"' 'ignore
 	Private mMainObj As B4XMainPage
 	Private xui As XUI
 	Private mTitle As String

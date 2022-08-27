@@ -257,12 +257,15 @@ End Sub
 Private Sub PopupMainMenu
 	
 	Dim o As mnuPopup
-	Dim popUpMemuItems As Map = CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc","About":"ab")
+	Dim popUpMemuItems As Map = _
+		CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc", _
+				  "Sonoff Connection":"snf","About":"ab")
+		
 	If oc.isPrinting Or oc.IsPaused2 Then
 		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
 		popUpMemuItems.Remove("Octoprint Connection") 
 	End If
-	Sleep(400)
+	Sleep(20)
 	 
 	o.Initialize(Me,"Setup",Me,popUpMemuItems,btnPageAction,"Options")
 	o.MenuWidth = 260dip '--- defaults to 100
@@ -272,11 +275,11 @@ Private Sub PopupMainMenu
 	
 	Dim top As Float
 	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
-		top = 22%y
+		top = 21%y
 	Else If guiHelpers.gScreenSizeAprox >= 8 Then
-		top = 27%y
+		top = 26%y
 	Else
-		top = 9%y
+		top = 8%y
 	End If
 	
 	o.MenuObj.OpenMenuAdvanced((50%x - 130dip) ,top,260dip)
@@ -309,6 +312,11 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 			Case "pw"  '--- android power setup
 				Dim o1 As dlgPowerOptions : o1.Initialize(Me)
 				o1.Show
+				
+			Case "snf"  '--- sonoff setup
+				Dim oA As dlgSonoffSetup
+				oA.Initialize(Me,"Sonoff Connection")
+				oA.Show
 			
 		End Select
 		
@@ -317,10 +325,30 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 	End Try
 	
 End Sub
+
+'--- callled from dlgOctoSetup on exit
+Public Sub PrinterSetup_Closed
+
+	If oc.IsOctoConnectionVarsValid Then
+		TryOctoConnection
+	End If
+	Sleep(100)
+	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
+	
+End Sub
+
+'--- callled from dlgSonoffSetup on exit
+Public Sub SonoffSetup_Closed
+	
+	config.ReadSonoffCFG
+	'Sleep(100)
+	'guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
+	
+End Sub
+
+
+
 #end region
-
-
-
 
 Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 
@@ -373,18 +401,5 @@ Private Sub pnlScreenOff_Click
 	fnc.ProcessPowerFlags
 End Sub
 
-
-
-
-'--- callled from dlgOctoSetup on exit
-Public Sub PrinterSetup_Closed
-
-	If oc.IsOctoConnectionVarsValid Then
-		TryOctoConnection
-	End If
-	Sleep(100)
-	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
-	
-End Sub
 
 

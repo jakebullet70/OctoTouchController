@@ -20,8 +20,12 @@ Sub Process_Globals
 	Public Const PRINTER_PORT As String = "port"
 	Public Const PRINTER_OCTO_KEY As String = "octokey"
 	
+	Public Const SONOFF_IP As String = "ip"
+	Public Const SONOFF_ON As String = "on"
+	
 	Public Const POWER_OPTIONS_FILE As String = "power_options.map"
 	Public Const GENERAL_OPTIONS_FILE As String = "general_options.map"
+	Public Const SONOFF_OPTIONS_FILE As String = "sonoff_options.map"
 	
 	Public Const PAGE_PRINTING As String = "ppr"
 	Public Const PAGE_FILES As String = "pfi"

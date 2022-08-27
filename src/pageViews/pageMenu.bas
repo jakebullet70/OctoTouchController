@@ -139,6 +139,8 @@ Private Sub btnSubBtnAction_Click
 			CallSub2(Main,"TurnOnOff_ScreenTmr",False)
 			fnc.BlankScreen
 			
+		Case "snoff"
+				
 	End Select
 	
 End Sub

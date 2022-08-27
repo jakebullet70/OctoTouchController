@@ -39,6 +39,10 @@ Sub Process_Globals
 	'------------
 	
 	Public IsInit As Boolean = False
+	
+	'--- sonoff dlg
+	Public SonoffFLAG As Boolean = False
+	Public SonoffIP As String = ""
 
 End Sub
 
@@ -50,10 +54,8 @@ End Sub
 
 
 Private Sub LoadCfgs()
-
-	'======================================================================
 	
-	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
 		Dim o3 As dlgGeneralOptions
 		o3.initialize(Null)
@@ -63,13 +65,33 @@ Private Sub LoadCfgs()
 	
 	'======================================================================
 	
-	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE)
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE) = False Then
 		Dim o2 As dlgPowerOptions
 		o2.Initialize(Null)  
 		o2.CreateDefaultFile
 	End If
 	ReadPowerCFG
+	
+	'======================================================================
+	
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE) '--- Dev
+	If File.Exists(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE) = False Then
+		Dim o1 As dlgSonoffSetup
+		o1.Initialize(Null,"")
+		o1.CreateDefaultFile
+	End If
+	ReadSonoffCFG
+	
+End Sub
+
+
+Public Sub ReadSonoffCFG
+	
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE)
+	
+	SonoffIP = Data.Get(gblConst.SONOFF_IP)
+	SonoffFLAG = Data.Get(gblConst.SONOFF_ON).As(Boolean)
 	
 End Sub
 

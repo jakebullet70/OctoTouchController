@@ -1,5 +1,5 @@
 ﻿B4J=true
-Group=HELPER_CLASSES
+Group=HELPERS
 ModulesStructureVersion=1
 Type=StaticCode
 Version=9.5
@@ -29,10 +29,10 @@ Public Sub SetEnableDisableColor(btnArr() As B4XView)
 	For Each btn As B4XView In btnArr
 		If btn.enabled Then
 			btn.TextColor = clrTheme.txtNormal
-			btn.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,2dip)
+			btn.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
 		Else
 			btn.TextColor = clrTheme.btnDisableText
-			btn.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_Gray,2dip)
+			btn.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_Gray,8dip)
 		End If
 	Next
 End Sub

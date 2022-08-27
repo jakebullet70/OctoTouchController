@@ -23,8 +23,8 @@ Sub Class_Globals
 	Private txtPrinterIP As B4XFloatTextField
 	Private pnlMain As B4XView
 	
-	Private ValidConnection As Boolean = False
-	Private Dialog As B4XDialog
+	Private mValidConnection As Boolean = False
+	Private mDialog As B4XDialog
 	
 End Sub
 
@@ -41,7 +41,7 @@ End Sub
 Public Sub Show
 	
 	'--- init
-	Dialog.Initialize(mMainObj.Root)
+	mDialog.Initialize(mMainObj.Root)
 	
 	Dim p As B4XView = xui.CreatePanel("")
 	p.SetLayoutAnimated(0, 0, 0, 510dip, 300dip)
@@ -49,9 +49,9 @@ Public Sub Show
 	
 	Build_GUI 
 
-	guiHelpers.ThemeDialogForm(Dialog, mTitle)
-	Dim rs As ResumableSub = Dialog.ShowCustom(p, "SAVE", "", "CLOSE")
-	guiHelpers.ThemeInputDialogBtnsResize(Dialog)
+	guiHelpers.ThemeDialogForm(mDialog, mTitle)
+	Dim rs As ResumableSub = mDialog.ShowCustom(p, "SAVE", "", "CLOSE")
+	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 
 	ReadSettingsFile
 	InvalidateConnection
@@ -112,7 +112,7 @@ End Sub
 Private Sub SetSaveButtonState
 	Try
 		guiHelpers.EnableDisableBtns( _
-			Array As B4XView(Dialog.GetButton(xui.DialogResponse_Positive)),ValidConnection)	
+			Array As B4XView(mDialog.GetButton(xui.DialogResponse_Positive)),mValidConnection)	
 	Catch
 		'Log(LastException)
 	End Try 'ignore
@@ -121,7 +121,7 @@ End Sub
 Private Sub EnableDisableBtns(en As Boolean)
 	
 	guiHelpers.EnableDisableBtns(Array As B4XView( _
-		Dialog.GetButton(xui.DialogResponse_Positive),Dialog.GetButton(xui.DialogResponse_Cancel), _
+		mDialog.GetButton(xui.DialogResponse_Positive),mDialog.GetButton(xui.DialogResponse_Cancel), _
 		btnCheckConnection),en)
 			
 End Sub
@@ -131,10 +131,8 @@ End Sub
 Private Sub btnCheckConnection_Click
 	
 	'--- see if inputs are valid
-	
 	Dim msg As String = CheckInputs
 	If msg.Length <> 0 Then
-		'B4XLoadingIndicator1.Hide
 		'--- custom dlgMSgBox not working inside another dialog object
 		'Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",580dip, 220dip)
 		'Wait For (mb.Show(msg,gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
@@ -143,47 +141,29 @@ Private Sub btnCheckConnection_Click
 		Return
 	End If
 	
-	Dim inSub As String = "btnCheckConnection_Click"
 	'--- disable dialog
 	pnlMain.Enabled = False
-	'SetSaveButtonState
 	EnableDisableBtns(False)
 	B4XLoadingIndicator1.Show
-	Sleep(200)
+	Sleep(20)
 			
 	'--- run connection check
-	guiHelpers.Show_toast("Checking Connection...",800)
+	guiHelpers.Show_toast("Checking Sonoff Connection...",800)
 	
-	Dim sAPI As String = $"http://${txtPrinterIP.Text}"$
-	Dim j As HttpJob: j.Initialize("", Me)
-	
-	If config.logREST_API Then
-		logMe.logit2($"ConnectCheck:-->${sAPI}"$,mModule,inSub)
-	End If
+	Dim o As HttpDownloadStr : o.Initialize
+	Wait For (o.Download($"http://${txtPrinterIP.Text}"$)) Complete(s As String)
 
-	Dim connected2something As Boolean = False 'ignore - TODO, do we want expanded error checking?
-	j.Download(sAPI)
-	Wait For (j) JobDone(j As HttpJob)
-	If j.Success Then
-		If j.GetString.Contains("Tasmota") Then
-			ValidConnection = True
-		Else
-			connected2something = True
-			If config.logREST_API Then
-				logMe.logit2($"ConnectCheck:-->${j.GetString}"$,mModule,inSub)
-			End If
+	If s.Contains("Tasmota") Then
+		mValidConnection = True
+	Else If s.Length > 0 Then
+		If config.logREST_API Then
+			logMe.logit2(s,mModule,"btnCheckConnection_Click")
 		End If
-	End If
-	
-	j.Release '--- free up resources
-	
-	If config.logREST_API Then
-		logMe.logit2($"ConnectCheck:-->${sAPI}"$,mModule,inSub)
 	End If
 	
 	B4XLoadingIndicator1.Hide
 	
-	If ValidConnection Then
+	If mValidConnection Then
 		guiHelpers.Show_toast("Connection OK",3000)
 	Else
 		'--- custom dlgMSgBox not working inside another dialog object
@@ -207,7 +187,12 @@ Private Sub CheckInputs() As String
 	Dim msg As String = ""
 	If txtPrinterIP.Text.Length = 0  Then
 		msg = "Missing IP address" 
+	Else
+		If fnc.IsValidIPv4Address(txtPrinterIP.Text) = False Then
+			msg = "Invalid IPv4 address"
+		End If
 	End If
+	
 	Return msg
 	
 End Sub
@@ -218,7 +203,7 @@ Private Sub txtPrinterIP_TextChanged (Old As String, New As String)
 End Sub
 
 Private Sub InvalidateConnection
-	ValidConnection = False
+	mValidConnection = False
 	SetSaveButtonState
 End Sub
 #End Region
@@ -232,7 +217,3 @@ private Sub ReadSettingsFile
 
 End Sub
 
-
-'Private Sub B4XSwitch1_ValueChanged (Value As Boolean)
-	
-'End Sub

@@ -344,6 +344,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 
 	CallSub2(Main,"TurnOnOff_MainTmr",False)
 	CallSub2(Main,"TurnOnOff_ScreenTmr",False)
+	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	
 	Dim Msg As StringBuilder : Msg.Initialize
 	
@@ -358,13 +359,16 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	End If
 	
 	Dim mb As dlgMsgBox : mb.Initialize(Root,"Connetion Problem",560dip, 180dip)
-	Wait For (mb.Show(Msg.ToString,gblConst.MB_ICON_WARNING,"Retry","","Setup")) Complete (res As Int)
+	Dim IsPowerCtrl As String = ""
+	Wait For (mb.Show(Msg.ToString,gblConst.MB_ICON_WARNING,"Retry",IsPowerCtrl,"")) Complete (res As Int)
 	
 	Select Case res
 		Case xui.DialogResponse_Positive '--- retry
 			oMasterController.Start
 		Case xui.DialogResponse_Cancel	 '--- run setup
 			Setup_Closed(0,"oc")
+		Case xui.DialogResponse_Negative '--- Power on 
+			
 	End Select
 	
 	ConfigPowerOption

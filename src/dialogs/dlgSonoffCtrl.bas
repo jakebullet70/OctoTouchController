@@ -41,7 +41,7 @@ Public Sub Show
 	
 	Dim p As B4XView = xui.CreatePanel("")
 	p.SetLayoutAnimated(0, 0, 0, 240dip, 280dip)
-	p.LoadLayout("dlgSonoffCtrl")
+	p.LoadLayout("viewSonoffCtrl")
 	
 	Build_GUI 
 

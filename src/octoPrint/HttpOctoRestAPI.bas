@@ -33,7 +33,7 @@ End Sub
 Private Sub ProcessErrMsg(msg As String)
 	
 	
-	If msg.Contains("Failed to connect to") Then
+	If msg.Contains("Failed to connect to") Or msg.Contains("ockettimeout") Then
 		'--- ResponseError. Reason: java.net.ConnectException: Failed to connect to /192.168.1.236:5003, Response:
 		oc.ResetAllOctoVars
 		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)

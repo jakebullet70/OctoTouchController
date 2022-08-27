@@ -161,8 +161,8 @@ private Sub Wait4Key(poleLocation As String)
 		
 		Dim j As HttpJob : j.Initialize("", Me)
 		
-		Dim UniqueStr As String = Rnd(100000,999999).As(String) 'ignore
 		If config.logREQUEST_OCTO_KEY Then 
+			Dim UniqueStr As String = Rnd(100000,999999).As(String) 'ignore
 			logMe.LogIt2($"KeyWait: ${UniqueStr}:-->${poleLocation}"$,mModule,InSub)
 		End If
 

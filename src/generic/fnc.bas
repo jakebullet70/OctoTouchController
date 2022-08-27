@@ -112,12 +112,12 @@ End Sub
 
 
 
-'Public Sub IsValidIPv4Address(IPAddress As String) As Boolean
-'	'Tests given string if it looks like an ipv4 address
-'	Return Regex.IsMatch("^(([01]?\d\d?|2[0-4]\d|25[0-5])\.){3}([01]?\d\d?|2[0-4]\d|25[0-5])$", IPAddress)
-'End Sub
-'
-'
+Public Sub IsValidIPv4Address(IPAddress As String) As Boolean
+	'--- Tests given string if it looks like an ipv4 address
+	Return Regex.IsMatch("^(([01]?\d\d?|2[0-4]\d|25[0-5])\.){3}([01]?\d\d?|2[0-4]\d|25[0-5])$", IPAddress)
+End Sub
+
+
 'Public Sub IsValidIPv6Address(IPAddress As String) As Boolean
 '	'Tests given string if it looks like an ipv6 address
 '	Return Regex.IsMatch("^([0-9a-f]{1,4}:){7}([0-9a-f]){1,4}$", IPAddress)

@@ -18,7 +18,8 @@ Public Sub Initialize
 End Sub
 
 
-Public Sub Download(target As String)As ResumableSub
+
+Public Sub SendRequest(target As String)As ResumableSub
 	
 	Dim insub As String = "PostMe"
 	Dim j As HttpJob: j.Initialize("", Me)

@@ -42,7 +42,7 @@ Sub Process_Globals
 	
 	'--- sonoff dlg
 	Public SonoffFLAG As Boolean = False
-	Public SonoffIP As String = ""
+	'Public SonoffIP As String = ""
 
 End Sub
 
@@ -90,7 +90,7 @@ Public Sub ReadSonoffCFG
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE)
 	
-	SonoffIP = Data.Get(gblConst.SONOFF_IP)
+	'SonoffIP = Data.Get(gblConst.SONOFF_IP)
 	SonoffFLAG = Data.Get(gblConst.SONOFF_ON).As(Boolean)
 	
 End Sub

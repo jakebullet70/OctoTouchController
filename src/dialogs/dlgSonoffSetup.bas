@@ -151,7 +151,7 @@ Private Sub btnCheckConnection_Click
 	guiHelpers.Show_toast("Checking Sonoff Connection...",800)
 	
 	Dim o As HttpDownloadStr : o.Initialize
-	Wait For (o.Download($"http://${txtPrinterIP.Text}"$)) Complete(s As String)
+	Wait For (o.SendRequest($"http://${txtPrinterIP.Text}"$)) Complete(s As String)
 
 	If s.Contains("Tasmota") Then
 		mValidConnection = True

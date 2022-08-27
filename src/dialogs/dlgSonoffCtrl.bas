@@ -84,7 +84,8 @@ Private Sub btnCtrl_Click
 	Dim sm As HttpDownloadStr 
 	sm.Initialize
 	Wait For (sm.SendRequest($"http://${IPaddr}/cm?cmnd=Power%20${o.Tag}"$)) Complete(s As String)
-	mDialog.Close(-1) '--- close it
+	
+	mDialog.Close(-1) '--- close it, exit dialog
 	
 End Sub
 

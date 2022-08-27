@@ -130,7 +130,7 @@ End Sub
 
 #end region
 
-
+' small action buttons on main menu
 Private Sub btnSubBtnAction_Click
 	Dim o As B4XView : o = Sender
 	Select Case o.Tag

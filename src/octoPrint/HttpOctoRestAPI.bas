@@ -32,13 +32,15 @@ End Sub
 
 Private Sub ProcessErrMsg(msg As String)
 	
-	
-	If msg.Contains("Failed to connect to") Or msg.Contains("ockettimeout") Then
+	msg = msg.ToLowerCase
+	If msg.Contains("failed to connect to") Or msg.Contains("ockettimeou") Then
 		'--- ResponseError. Reason: java.net.ConnectException: Failed to connect to /192.168.1.236:5003, Response:
+		'--- java.net.SocketTimeoutException: failed to connect to /192.168.1.207 (port 80) after 30000ms
+		'--- java.net.SocketTimeoutException
 		oc.ResetAllOctoVars
 		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)
 		Return
-	else If msg.Contains("Printer is not operational") Then
+	else If msg.Contains("is not operational") Then
 		'--- ResponseError. Reason: CONFLICT, Response: {"error":"Printer is not operational"}
 		oc.ResetAllOctoVars
 		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",True)
@@ -46,7 +48,6 @@ Private Sub ProcessErrMsg(msg As String)
 	End If
 	
 	logMe.logit("(ProcessErrMsg)RestAPI ERR --> " & msg,mModule) '--- always log these
-	
 	
 End Sub
 

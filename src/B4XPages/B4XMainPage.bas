@@ -267,7 +267,7 @@ Private Sub PopupMainMenu
 	End If
 	Sleep(20)
 	 
-	o.Initialize(Me,"Setup",Me,popUpMemuItems,btnPageAction,"Options")
+	o.Initialize(Me,"PopupMainMenu",Me,popUpMemuItems,btnPageAction,"Options")
 	o.MenuWidth = 260dip '--- defaults to 100
 	o.ItemHeight = 56dip
 
@@ -287,7 +287,7 @@ Private Sub PopupMainMenu
 End Sub
 
 
-Private Sub Setup_Closed (index As Int, tag As Object)
+Private Sub PopupMainMenu_Closed (index As Int, tag As Object)
 	
 	Try
 		Select Case tag.As(String)
@@ -368,19 +368,19 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	End If
 
 	Dim Const JUSTIFY_BUTTON_2_LEFT As Boolean = True
-	Dim mb As dlgMsgBox : mb.Initialize(Root,"Connetion Problem",560dip, 180dip,JUSTIFY_BUTTON_2_LEFT)
-	Wait For (mb.Show(Msg.ToString,gblConst.MB_ICON_WARNING, _
-			"RETRY",IsPowerCtrlAvail,"CANCEL")) Complete (res As Int)
+	dim ErrorDlg as dlgMsgBox
+	ErrorDlg.Initialize(Root,"Connetion Problem",560dip, 180dip,JUSTIFY_BUTTON_2_LEFT)
+	Wait For (ErrorDlg.Show(Msg.ToString,gblConst.MB_ICON_WARNING, _
+					"RETRY",IsPowerCtrlAvail,"CANCEL")) Complete (res As Int)
 	
 	Select Case res
 		Case xui.DialogResponse_Positive '--- retry
 			oMasterController.Start
 			
-		Case xui.DialogResponse_Cancel	 '--- run setup
-			Setup_Closed(0,"oc")
+		Case xui.DialogResponse_Cancel	 '--- this runs setup
+			PopupMainMenu_Closed(0,"oc")
 			
 		Case xui.DialogResponse_Negative '--- Power on 
-			guiHelpers.Show_toast("Sending Power ON command, Please wait...",3500)
 			Wait For (PowerCtrl.SendCmd("on")) Complete(s As String)
 			Sleep(3000)
 			oMasterController.Start
@@ -403,12 +403,14 @@ Private Sub ConfigPowerOption
 End Sub
 
 Private Sub pnlScreenOff_Click
+	
 	'--- eat the click, hide the panel
 	If config.logPOWER_EVENTS Then Log("screen off panel click - show screen")
 	pnlScreenOff.Visible = False	
 	pnlScreenOff.SendToBack
 	powerHelpers.SetScreenBrightness2
 	fnc.ProcessPowerFlags
+	
 End Sub
 
 

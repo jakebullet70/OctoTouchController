@@ -67,22 +67,25 @@ End Sub
 Public Sub LoadPrinterConnectionSettings() As Map
 		
 	'--- get the settings connection file
-	Dim fname As String
+	Dim fname As String = "default.psettings"
+	If File.Exists(xui.DefaultFolder,fname) = False Then
+		Return Null
+	End If
 	
 	'--- Should only be 1 settings file at this point
 	'"default.psettings"
-	Dim o1 As WildCardFilesList : o1.Initialize
-	Dim flist As List = o1.GetFiles(xui.DefaultFolder,"*.psettings",False,False)
-	If flist.Size = 0 Then
-		Return Null
-	Else
-		If flist.Size = 1 Then
-			fname = flist.Get(0)
-		Else
-			Log("TODO - we have to many .psetting config files, time for a popup selection!")
-			Return Null
-		End If
-	End If
+'	Dim o1 As WildCardFilesList : o1.Initialize
+'	Dim flist As List = o1.GetFiles(xui.DefaultFolder,"*.psettings",False,False)
+'	If flist.Size = 0 Then
+'		Return Null
+'	Else
+'		If flist.Size = 1 Then
+'			fname = flist.Get(0)
+'		Else
+'			Log("TODO - we have to many .psetting config files, time for a popup selection!")
+'			Return Null
+'		End If
+'	End If
 	
 	Dim inMap As Map = File.ReadMap(xui.DefaultFolder,fname)
 	Return inMap

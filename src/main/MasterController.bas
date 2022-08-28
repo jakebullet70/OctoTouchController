@@ -34,6 +34,7 @@ Sub Class_Globals
 	'--- maps for popup listboxes - formated!
 	Public mapBedHeatingOptions, mapToolHeatingOptions,mapAllHeatingOptions,mapToolHeatValuesOnly As Map
 	
+	'--- stops calls from backing up if we have had a disconnect	
 	Private mGetTempFLAG_Busy, mJobStatusFLAG_Busy As Boolean = False
 	
 End Sub
@@ -210,7 +211,7 @@ End Sub
 
 Private Sub GetJobStatus
 	
-	If mJobStatusFLAG_Busy = True Then Return '--- stop calls from backing up if we have had a disconect
+	If mJobStatusFLAG_Busy = True Then Return '--- stop calls from backing up if we have had a disconnect
 	mJobStatusFLAG_Busy = True
 	
 	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(oc.cJOB_INFO)

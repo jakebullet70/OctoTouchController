@@ -159,7 +159,7 @@ Private Sub btnAction_Click
 		Case "delete"
 			CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 			
-			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Question",540dip, 170dip)
+			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Question",540dip, 170dip,False)
 			Wait For (mb.Show("Delete file from Octoprint?",gblConst.MB_ICON_QUESTION,"Yes - Delete It","","No")) Complete (res As Int)
 			
 			If res = xui.DialogResponse_Positive Then

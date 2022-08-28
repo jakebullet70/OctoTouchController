@@ -375,7 +375,7 @@ Private Sub btnAction_Click
 			End If
 			
 		Case "cancel"
-			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Question",540dip, 170dip)
+			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Question",540dip, 170dip,False)
 			Wait For (mb.Show("Do you want to cancel this print?",gblConst.MB_ICON_QUESTION, _
 						"Yes - Cancel It","","No")) Complete (res As Int)
 

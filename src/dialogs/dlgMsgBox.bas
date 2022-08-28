@@ -19,23 +19,25 @@ Sub Class_Globals
 	Private mTitle As String
 	Private mHeight As Float
 	Private mWidth As Float
+	Private mPutNegativeBtn2Left As Boolean 
 	
 	Public lblTxt As AutoTextSizeLabel
 	
 	Private BasePnl As B4XView
-	Private Dialog As B4XDialog
+	Private mDialog As B4XDialog
 	
 	Private lmB4XImageViewX1 As lmB4XImageViewX
 End Sub
 
 
 
-Public Sub Initialize(parentObj As B4XView, title As String, width As Float, height As Float)
+Public Sub Initialize(parentObj As B4XView, title As String, width As Float, height As Float,PutNegativeBtn2Left As Boolean)
 	
 	mMainObj = parentObj
 	mTitle   = title
 	mHeight  = height
 	mWidth   = width
+	mPutNegativeBtn2Left = PutNegativeBtn2Left
 	
 	BasePnl = xui.CreatePanel("")
 	BasePnl.SetLayoutAnimated(0, 0, 0, mWidth, mHeight)
@@ -50,19 +52,77 @@ Public Sub Show(txt  As String, icon_file As String, _
 				btn1 As String, btn2 As String, btn3 As String)As ResumableSub
 	
 	'--- init
-	Dialog.Initialize(mMainObj)
+	mDialog.Initialize(mMainObj)
 	
 	lblTxt.Text = txt
 	lmB4XImageViewX1.Load(File.DirAssets, icon_file)
 
-	guiHelpers.ThemeDialogForm(Dialog, mTitle)
-	Dim rs As ResumableSub = Dialog.ShowCustom(BasePnl,btn1,btn2,btn3)
-	guiHelpers.ThemeInputDialogBtnsResize(Dialog)
+	guiHelpers.ThemeDialogForm(mDialog, mTitle)
+	Dim rs As ResumableSub = mDialog.ShowCustom(BasePnl,btn1,btn2,btn3)
+	ThemeInputDialogBtnsResize2(mDialog,mWidth)
 	
 	Wait For (rs) Complete (Result As Int)
 	Return Result
 	
 End Sub
+
+
+Private Sub ThemeInputDialogBtnsResize2(dlg As B4XDialog, w As Float)
+	
+	Dim numOfBtns As Int = 0
+	Try '--- reskin button, if it does not exist then skip the error
+		Dim btnCancel As B4XView = dlg.GetButton(xui.DialogResponse_Cancel)
+		If btnCancel <> Null Then
+			numOfBtns = numOfBtns + 1
+			btnCancel.Font = xui.CreateDefaultFont(NumberFormat2(btnCancel.Font.Size / guiHelpers.gFscale,1,0,0,False))
+			btnCancel.Width = btnCancel.Width + 20dip
+			btnCancel.Left = w - btnCancel.Width - 5dip
+			btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
+		End If
+	Catch
+		'Log(LastException)
+	End Try 'ignore
+	
+	'======================================================================
+
+	Try '--- reskin button, if it does not exist then skip the error
+		Dim btnYes As B4XView = dlg.GetButton(xui.DialogResponse_Positive)
+		
+		If btnYes <> Null Then
+			numOfBtns = numOfBtns + 1
+			btnYes.Font = xui.CreateDefaultFont(NumberFormat2(btnYes.Font.Size / guiHelpers.gFscale,1,0,0,False))
+			btnYes.Width = btnYes.Width + 20dip
+			btnYes.Left = w - (btnYes.width * numOfBtns) - (5dip  * numOfBtns)
+			btnYes.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
+		End If
+	Catch
+		'Log(LastException)
+	End Try 'ignore
+
+	'======================================================================
+
+	Try '--- reskin button, if it does not exist then skip the error
+		Dim btnNo As B4XView = dlg.GetButton(xui.DialogResponse_Negative)
+		
+		If btnNo <> Null Then
+			numOfBtns = numOfBtns + 1
+			btnNo.Font = xui.CreateDefaultFont(NumberFormat2(btnNo.Font.Size / guiHelpers.gFscale,1,0,0,False))
+			btnNo.Width = btnNo.Width + 20dip
+			If mPutNegativeBtn2Left Then
+				btnNo.Left = 10dip
+			Else
+				btnNo.Left = w - (btnNo.width * numOfBtns) - (5dip  * numOfBtns)
+			End If
+			btnNo.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
+		End If
+		
+	Catch
+		'Log(LastException)
+	End Try 'ignore
+	
+End Sub
+
+
 
 
 

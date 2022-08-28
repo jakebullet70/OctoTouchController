@@ -294,7 +294,7 @@ Private Sub Setup_Closed (index As Int, tag As Object)
 			
 			Case "ab" '--- about
 				Dim msg As String = guiHelpers.GetAboutText()
-				Dim mb As dlgMsgBox : mb.Initialize(Root,"About",560dip, 200dip)
+				Dim mb As dlgMsgBox : mb.Initialize(Root,"About",560dip, 200dip,False)
 				Wait For (mb.Show(msg,"splash.png","OK","","")) Complete (res As Int)
 				
 				
@@ -342,11 +342,13 @@ End Sub
 
 Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 
+	'--- turn timers off
 	CallSub2(Main,"TurnOnOff_MainTmr",False)
-	CallSub2(Main,"TurnOnOff_ScreenTmr",False)
+	'CallSub2(Main,"TurnOnOff_ScreenTmr",False)
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	
 	Dim Msg As StringBuilder : Msg.Initialize
+	Dim IsPowerCtrlAvail As String = ""
 	
 	If connectedButError Then
 		Msg.Append("Connected to Octoprint but there is an error.").Append(CRLF)
@@ -357,17 +359,31 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 		Msg.Append("Is Octoprint turned on?")
 		Msg.Append(CRLF).Append("Connected to the printer?")
 	End If
-	
-	Dim mb As dlgMsgBox : mb.Initialize(Root,"Connetion Problem",560dip, 180dip)
-	Dim IsPowerCtrl As String = ""
-	Wait For (mb.Show(Msg.ToString,gblConst.MB_ICON_WARNING,"Retry",IsPowerCtrl,"")) Complete (res As Int)
+
+	'--- if printer power is configed, show btn	
+	Dim PowerCtrl As dlgSonoffCtrl : PowerCtrl.Initialize(Null,"")
+	PowerCtrl.ReadSettingsFile
+	If PowerCtrl.mIPaddr.Length <> 0 And PowerCtrl.mShowOnScreen = True Then
+		IsPowerCtrlAvail = "POWER ON"
+	End If
+
+	Dim Const JUSTIFY_BUTTON_2_LEFT As Boolean = True
+	Dim mb As dlgMsgBox : mb.Initialize(Root,"Connetion Problem",560dip, 180dip,JUSTIFY_BUTTON_2_LEFT)
+	Wait For (mb.Show(Msg.ToString,gblConst.MB_ICON_WARNING, _
+			"RETRY",IsPowerCtrlAvail,"CANCEL")) Complete (res As Int)
 	
 	Select Case res
 		Case xui.DialogResponse_Positive '--- retry
 			oMasterController.Start
+			
 		Case xui.DialogResponse_Cancel	 '--- run setup
 			Setup_Closed(0,"oc")
+			
 		Case xui.DialogResponse_Negative '--- Power on 
+			guiHelpers.Show_toast("Sending Power ON command, Please wait...",3500)
+			Wait For (PowerCtrl.SendCmd("on")) Complete(s As String)
+			Sleep(3000)
+			oMasterController.Start
 			
 	End Select
 	

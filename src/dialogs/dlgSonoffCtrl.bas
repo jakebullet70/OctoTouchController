@@ -20,7 +20,8 @@ Sub Class_Globals
 	Private mDialog As B4XDialog
 	
 	Private btnOff,btnOn As B4XView
-	Private IPaddr As String
+	Public mIPaddr As String
+	Public mShowOnScreen As Boolean
 	
 End Sub
 
@@ -70,22 +71,30 @@ private Sub Build_GUI
 End Sub
 
 
-private Sub ReadSettingsFile
+Public Sub ReadSettingsFile
 
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE)
-	IPaddr = Data.Get(gblConst.SONOFF_IP)
+	mIPaddr = Data.Get(gblConst.SONOFF_IP)
+	mShowOnScreen = Data.Get(gblConst.SONOFF_ON).As(Boolean)
 
 End Sub
 
 
 Private Sub btnCtrl_Click
 	
-	Dim o As B4XView : o = Sender
-	Dim sm As HttpDownloadStr 
-	sm.Initialize
-	Wait For (sm.SendRequest($"http://${IPaddr}/cm?cmnd=Power%20${o.Tag}"$)) Complete(s As String)
-	
+	Dim o As B4XView 
+	o = Sender
+	Wait For (SendCmd(o.Tag)) Complete(s As String)
 	mDialog.Close(-1) '--- close it, exit dialog
+	
+End Sub
+
+
+Public Sub SendCmd(cmd As String)As ResumableSub'ignore
+	
+	Dim sm As HttpDownloadStr
+	sm.Initialize
+	Wait For (sm.SendRequest($"http://${mIPaddr}/cm?cmnd=Power%20${cmd}"$)) Complete(s As String)
 	
 End Sub
 

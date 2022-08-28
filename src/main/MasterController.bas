@@ -34,6 +34,8 @@ Sub Class_Globals
 	'--- maps for popup listboxes - formated!
 	Public mapBedHeatingOptions, mapToolHeatingOptions,mapAllHeatingOptions,mapToolHeatValuesOnly As Map
 	
+	Private mGetTempFLAG_Busy, mJobStatusFLAG_Busy As Boolean = False
+	
 End Sub
 
 
@@ -179,6 +181,9 @@ End Sub
 
 Private Sub GetTemps
 	
+	If mGetTempFLAG_Busy = True Then Return '--- stop calls from backing up if we have had a disconect
+	mGetTempFLAG_Busy = True
+	
 	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(oc.cPRINTER_MASTER_STATE)
 
 	'{"error":"You don't have the permission to access the requested resource. It is either read-protected or not readable by the server."}
@@ -198,10 +203,15 @@ Private Sub GetTemps
 	
 	CallSub(mCallBack,mEventNameTemp)
 	
+	mGetTempFLAG_Busy = False
+	
 End Sub
 
 
 Private Sub GetJobStatus
+	
+	If mJobStatusFLAG_Busy = True Then Return '--- stop calls from backing up if we have had a disconect
+	mJobStatusFLAG_Busy = True
 	
 	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(oc.cJOB_INFO)
 	Wait For(rs) Complete (Result As String)
@@ -222,6 +232,8 @@ Private Sub GetJobStatus
 	End If
 	
 	CallSub(mCallBack,mEventNameStatus)
+	
+	mJobStatusFLAG_Busy = False
 	
 End Sub
 

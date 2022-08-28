@@ -18,6 +18,7 @@ Sub Class_Globals
 	Private mTitle As String
 	Private mCallback As Object
 	Private mEventName As String
+	Private mDialog As B4XDialog
 	
 End Sub
 
@@ -37,7 +38,8 @@ End Sub
 Public Sub Show
 	
 	'--- init
-	mMainObj.Dialog.Initialize(mMainObj.Root)
+	'mMainObj.Dialog.Initialize(mMainObj.Root)
+	mDialog.Initialize(mMainObj.Root)
 	Dim inputTemplate As B4XInputTemplate
 	inputTemplate.Initialize
 	
@@ -51,10 +53,10 @@ Public Sub Show
 	inputTemplate.mBase.Color = clrTheme.BackgroundMenu
 	inputTemplate.lblTitle.Text = mPrompt
 	
-	guiHelpers.ThemeDialogForm(mMainObj.Dialog, mTitle)
-	Dim rs As ResumableSub = mMainObj.Dialog.ShowTemplate(inputTemplate, "SET", "", "CANCEL")
-	guiHelpers.ThemeInputDialogBtnsResize(mMainObj.Dialog)
-	SizeInputDialog(mMainObj.Dialog,inputTemplate)
+	guiHelpers.ThemeDialogForm(mDialog, mTitle)
+	Dim rs As ResumableSub = mDialog.ShowTemplate(inputTemplate, "SET", "", "CANCEL")
+	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
+	SizeInputDialog(mDialog,inputTemplate)
 	
 	'--- display dialog
 	Wait For(rs)complete(intResult As Int)

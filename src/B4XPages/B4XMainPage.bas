@@ -368,10 +368,10 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	End If
 
 	Dim Const JUSTIFY_BUTTON_2_LEFT As Boolean = True
-	dim ErrorDlg as dlgMsgBox
+	Dim ErrorDlg As dlgMsgBox
 	ErrorDlg.Initialize(Root,"Connetion Problem",560dip, 180dip,JUSTIFY_BUTTON_2_LEFT)
 	Wait For (ErrorDlg.Show(Msg.ToString,gblConst.MB_ICON_WARNING, _
-					"RETRY",IsPowerCtrlAvail,"CANCEL")) Complete (res As Int)
+					"RETRY",IsPowerCtrlAvail,"SETUP")) Complete (res As Int)
 	
 	Select Case res
 		Case xui.DialogResponse_Positive '--- retry

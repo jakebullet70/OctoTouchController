@@ -256,6 +256,8 @@ End Sub
 #Region "POPUP_MAIN_SETUP_MENU"
 Private Sub PopupMainMenu
 	
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	
 	Dim o As mnuPopup
 	Dim popUpMemuItems As Map = _
 		CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc", _
@@ -288,6 +290,8 @@ End Sub
 
 
 Private Sub PopupMainMenu_Closed (index As Int, tag As Object)
+	
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 	Try
 		Select Case tag.As(String)
@@ -344,8 +348,9 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 
 	'--- turn timers off
 	CallSub2(Main,"TurnOnOff_MainTmr",False)
-	'CallSub2(Main,"TurnOnOff_ScreenTmr",False)
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
+	
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 	Dim Msg As StringBuilder : Msg.Initialize
 	Dim IsPowerCtrlAvail As String = ""

@@ -25,7 +25,7 @@ Sub Class_Globals
 	
 End Sub
 
-
+'--- Dual class, GUI and command
 
 Public Sub Initialize(mobj As B4XMainPage, title As String)
 	
@@ -94,6 +94,7 @@ Public Sub SendCmd(cmd As String)As ResumableSub'ignore
 	
 	Dim sm As HttpDownloadStr
 	sm.Initialize
+	guiHelpers.Show_toast($"Sending Power ${cmd.ToUpperCase} command, Please wait..."$,3000)
 	Wait For (sm.SendRequest($"http://${mIPaddr}/cm?cmnd=Power%20${cmd}"$)) Complete(s As String)
 	
 End Sub

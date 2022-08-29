@@ -20,6 +20,8 @@ Sub Class_Globals
 	Private mDataMap As Map
 	Private mTag As Object = Null 'ignore
 	
+	Private mDialog As B4XDialog
+	
 End Sub
 
 Public Sub setTag(v As Object)
@@ -39,7 +41,7 @@ End Sub
 Public Sub Show(height As Float, width As Float, data As Map)
 	
 	'--- init
-	mMainObj.Dialog.Initialize(mMainObj.Root)
+	mDialog.Initialize(mMainObj.Root)
 	Dim ListTemplate As B4XListTemplate : ListTemplate.Initialize
 	mDataMap = data
 	
@@ -55,9 +57,9 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	Dim l As B4XView = ListTemplate.CustomListView1.DesignerLabel
 	l.Font = xui.CreateDefaultFont(NumberFormat2(26 / guiHelpers.gFscale,1,0,0,False))
 	
-	guiHelpers.ThemeDialogForm(mMainObj.Dialog, mTitle)
-	Dim rs As ResumableSub = mMainObj.Dialog.ShowTemplate(ListTemplate, "", "", "CANCEL")
-	guiHelpers.ThemeInputDialogBtnsResize(mMainObj.Dialog)
+	guiHelpers.ThemeDialogForm(mDialog, mTitle)
+	Dim rs As ResumableSub = mDialog.ShowTemplate(ListTemplate, "", "", "CANCEL")
+	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 	
 	'--- display dialog
 	Wait For(rs)complete(intResult As Int)

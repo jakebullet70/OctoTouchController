@@ -19,6 +19,7 @@ Sub Class_Globals
 	Private mEventName As String
 	
 	Private sadRoundSlider1 As sadRoundSlider
+	Private mDialog As B4XDialog
 	
 End Sub
 
@@ -38,7 +39,7 @@ End Sub
 Public Sub Show(defaultValue As Int)
 	
 	'--- init
-	mMainObj.Dialog.Initialize(mMainObj.Root)
+	mDialog.Initialize(mMainObj.Root)
 	
 	Dim p As B4XView = xui.CreatePanel("")
 	p.SetLayoutAnimated(0, 0, 0, 300dip, 300dip)
@@ -52,9 +53,9 @@ Public Sub Show(defaultValue As Int)
 	sadRoundSlider1.SetThumbColor(clrTheme.BackgroundHeader,clrTheme.txtNormal)
 	sadRoundSlider1.Draw
 
-	guiHelpers.ThemeDialogForm(mMainObj.Dialog, mTitle)
-	Dim rs As ResumableSub = mMainObj.Dialog.ShowCustom(p, "OK", "", "CANCEL")
-	guiHelpers.ThemeInputDialogBtnsResize(mMainObj.Dialog)
+	guiHelpers.ThemeDialogForm(mDialog, mTitle)
+	Dim rs As ResumableSub = mDialog.ShowCustom(p, "OK", "", "CANCEL")
+	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 	
 	Wait For (rs) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then

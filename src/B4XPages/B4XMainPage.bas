@@ -14,10 +14,11 @@ Sub Class_Globals
 	Private xui As XUI
 	Private oMasterController As MasterController
 	Private toast As BCToast
-	
+
+	'--- panel to cover screen for power ctrl
 	Public pnlScreenOff As B4XView
 	
-	'--- splash screen
+	'--- splash screen crap
 	Private ivSpash As B4XView, pnlSplash As Panel
 	
 	'--- master base panel
@@ -34,7 +35,7 @@ Sub Class_Globals
 	Private pnlMovement As B4XView,   oPageMovement As pageMovement
 	
 	'--- only show the dialog once (should not be needed)
-	Private mConnectionErrorDlgShowingFLAG As Boolean = False
+	Private mConnectionErrDlgShowingFLAG As Boolean = False
 
 End Sub
 
@@ -343,18 +344,18 @@ End Sub
 
 Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 
-	If mConnectionErrorDlgShowingFLAG Then Return
-	mConnectionErrorDlgShowingFLAG = True
+	If mConnectionErrDlgShowingFLAG Then Return
+	mConnectionErrDlgShowingFLAG = True
 	Log("starting error setup cfg")
 
 	'--- turn timers off
 	CallSub2(Main,"TurnOnOff_MainTmr",False)
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	
-	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	'CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 	Dim Msg As StringBuilder : Msg.Initialize
-	Dim IsPowerCtrlAvail As String = ""
+	Dim PowerCtrlAvail As String = ""
 	
 	If connectedButError Then
 		Msg.Append("Connected to Octoprint but there is an error.").Append(CRLF)
@@ -370,14 +371,14 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	Dim PowerCtrl As dlgSonoffCtrl : PowerCtrl.Initialize(Null,"")
 	PowerCtrl.ReadSettingsFile
 	If PowerCtrl.mIPaddr.Length <> 0 And PowerCtrl.mShowOnScreen = True Then
-		IsPowerCtrlAvail = "POWER ON"
+		PowerCtrlAvail = "POWER ON"
 	End If
 
 	Dim Const JUSTIFY_BUTTON_2_LEFT As Boolean = True
 	Dim ErrorDlg As dlgMsgBox
 	ErrorDlg.Initialize(Root,"Connetion Problem",560dip, 180dip,JUSTIFY_BUTTON_2_LEFT)
 	Wait For (ErrorDlg.Show(Msg.ToString,gblConst.MB_ICON_WARNING, _
-					"RETRY",IsPowerCtrlAvail,"SETUP")) Complete (res As Int)
+					"RETRY",PowerCtrlAvail,"SETUP")) Complete (res As Int)
 	
 	Select Case res
 		Case xui.DialogResponse_Positive '--- retry
@@ -394,7 +395,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	End Select
 	
 	ConfigPowerOption
-	mConnectionErrorDlgShowingFLAG = False
+	mConnectionErrDlgShowingFLAG = False
 	Log("exiting error setup cfg")
 
 End Sub

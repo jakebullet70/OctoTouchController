@@ -33,11 +33,8 @@ Sub Class_Globals
 	Private pnlPrinting As B4XView,   oPagePrinting As pagePrinting
 	Private pnlMovement As B4XView,   oPageMovement As pageMovement
 	
-	'--- master parent obj used for some templates dialogs
-	Private mDialog As B4XDialog 
-	
 	'--- only show the dialog once (should not be needed)
-	Private mSetupErrorDlgShowingFLAG As Boolean = False
+	Private mConnectionErrorDlgShowingFLAG As Boolean = False
 
 End Sub
 
@@ -47,10 +44,6 @@ End Sub
 ' --- just shows panel-classes
 '
 '======================================================================================
-
-Public Sub getDialog() As B4XDialog
-	Return mDialog
-End Sub
 
 Public Sub getMasterCtrlr() As MasterController
 	'--- master Octo controller / methods
@@ -350,8 +343,8 @@ End Sub
 
 Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 
-	If mSetupErrorDlgShowingFLAG Then Return
-	mSetupErrorDlgShowingFLAG = True
+	If mConnectionErrorDlgShowingFLAG Then Return
+	mConnectionErrorDlgShowingFLAG = True
 	Log("starting error setup cfg")
 
 	'--- turn timers off
@@ -401,7 +394,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	End Select
 	
 	ConfigPowerOption
-	mSetupErrorDlgShowingFLAG = False
+	mConnectionErrorDlgShowingFLAG = False
 	Log("exiting error setup cfg")
 
 End Sub

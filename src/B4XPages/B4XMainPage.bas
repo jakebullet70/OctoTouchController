@@ -35,6 +35,9 @@ Sub Class_Globals
 	
 	'--- master parent obj used for some templates dialogs
 	Private mDialog As B4XDialog 
+	
+	'--- only show the dialog once (should not be needed)
+	Private mSetupErrorDlgShowingFLAG As Boolean = False
 
 End Sub
 
@@ -334,6 +337,7 @@ End Sub
 Public Sub PrinterSetup_Closed
 
 	If oc.IsOctoConnectionVarsValid Then
+		guiHelpers.Show_toast("Trying to connect...",3000)		
 		TryOctoConnection
 	End If
 	Sleep(100)
@@ -345,6 +349,10 @@ End Sub
 #end region
 
 Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
+
+	If mSetupErrorDlgShowingFLAG Then Return
+	mSetupErrorDlgShowingFLAG = True
+	Log("starting error setup cfg")
 
 	'--- turn timers off
 	CallSub2(Main,"TurnOnOff_MainTmr",False)
@@ -393,6 +401,8 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	End Select
 	
 	ConfigPowerOption
+	mSetupErrorDlgShowingFLAG = False
+	Log("exiting error setup cfg")
 
 End Sub
 

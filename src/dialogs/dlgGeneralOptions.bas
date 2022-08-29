@@ -99,15 +99,14 @@ End Sub
 Private Sub dlgGeneral_BeforeDialogDisplayed (Template As Object)
 	'--- NOT USED BUT HERE IF NEEDED
 	
-'	Dim btnCancel As B4XView = PrefDialog1.Dialog.GetButton(xui.DialogResponse_Cancel)
-'	btnCancel.Width = btnCancel.Width + 60dip
-'	btnCancel.Left = btnCancel.Left - 60dip
-'	btnCancel.TextColor = xui.Color_Red
-'	Dim btnOk As B4XView = PrefDialog1.Dialog.GetButton(xui.DialogResponse_Positive)
-'	If btnOk.IsInitialized Then
-'		btnOk.Width = btnOk.Width + 20dip
-'		btnOk.Left = btnCancel.Left - btnOk.Width
-'	End If
+'	For i = 0 To mGeneralDlg.PrefItems.Size - 1
+'		Dim pi As B4XPrefItem = mGeneralDlg.PrefItems.Get(i)
+'		If pi.ItemType = mGeneralDlg.TYPE_TEXT Then
+'			Dim ft As B4XFloatTextField = mGeneralDlg.CustomListView1.GetPanel(i).GetView(0).Tag
+'			ft.TextField.Font = xui.CreateDefaultBoldFont(20)    'or whatever you want
+'			'rest
+'		End If
+'	Next
 End Sub
 
 

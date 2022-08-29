@@ -55,6 +55,8 @@ Public Sub Show
 
 	ReadSettingsFile
 	InvalidateConnection
+	
+	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
 
 	'--- show KB	
 	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Show_KB",400)
@@ -67,6 +69,8 @@ Public Sub Show
 		config.ReadSonoffCFG
 		CallSub(mMainObj.oPageCurrent,"Set_focus")
 	End If
+	
+	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 	
 End Sub
 

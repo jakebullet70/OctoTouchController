@@ -77,6 +77,8 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	toast.Initialize(Root)
 	toast.pnl.Color = clrTheme.txtNormal
 	toast.DefaultTextColor = clrTheme.Background
+	toast.MaxHeight = 120dip
+	
 	
 	'--- splash screen
 	pnlMaster.Visible = False
@@ -247,7 +249,7 @@ End Sub
 
 Public Sub Show_toast(msg As String, ms As Int)
 	toast.DurationMs = ms
-	toast.Show(msg)
+	toast.Show("[TextSize=24][b]" & msg & "[/b][/TextSize]")
 End Sub
 
 #Region "POPUP_MAIN_SETUP_MENU"

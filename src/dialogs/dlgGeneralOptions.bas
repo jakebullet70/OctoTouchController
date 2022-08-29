@@ -99,14 +99,31 @@ End Sub
 Private Sub dlgGeneral_BeforeDialogDisplayed (Template As Object)
 	'--- NOT USED BUT HERE IF NEEDED
 	
-'	For i = 0 To mGeneralDlg.PrefItems.Size - 1
-'		Dim pi As B4XPrefItem = mGeneralDlg.PrefItems.Get(i)
-'		If pi.ItemType = mGeneralDlg.TYPE_TEXT Then
-'			Dim ft As B4XFloatTextField = mGeneralDlg.CustomListView1.GetPanel(i).GetView(0).Tag
-'			ft.TextField.Font = xui.CreateDefaultBoldFont(20)    'or whatever you want
-'			'rest
-'		End If
-'	Next
+'	Try
+'		
+'		For i = 0 To mGeneralDlg.PrefItems.Size - 1
+'			Dim pit As B4XPrefItem = mGeneralDlg.PrefItems.Get(i)
+'			Select Case pit.ItemType
+'				Case mGeneralDlg.TYPE_TEXT, mGeneralDlg.TYPE_PASSWORD, mGeneralDlg.TYPE_NUMBER, mGeneralDlg.TYPE_DECIMALNUMBER, mGeneralDlg.TYPE_MULTILINETEXT
+'					Dim ft As B4XFloatTextField = mGeneralDlg.CustomListView1.GetPanel(i).GetView(0).Tag
+'					ft.TextField.Font = xui.CreateDefaultBoldFont(20)
+'
+'				Case mGeneralDlg.TYPE_OPTIONS
+'				Case mGeneralDlg.TYPE_SHORTOPTIONS
+'					Dim cmb As B4XComboBox = mGeneralDlg.CustomListView1.GetPanel(i).GetView(0).Tag
+''				Dim options As List = PrefItem.Extra.Get("options")
+''				cmb.SelectedIndex = Max(0, options.IndexOf(GetPrefItemValue(PrefItem, "", Data)))
+'				
+'			End Select
+'
+'		Next
+'		
+'	Catch
+'		Log(LastException)
+'	End Try
+'	
+	
+	
 End Sub
 
 

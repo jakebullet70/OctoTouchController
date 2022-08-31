@@ -76,14 +76,19 @@ Sub Service_Destroy
 	Log("Service_Destroy")
 End Sub
 
-
 '===========================================================================
 
 Public Sub Clean_OldLogs
-	logMe.DeleteOldFiles("*.logs")
+	logMe.DeleteOldFiles("*.log")
+	'---check every X hours for old logs / crash files
+	Dim hrs As Int = 12
+	tmrTimerCallSub.CallSubDelayedPlus(Me,"Clean_OldLogs",60000 * 60 * hrs)
 End Sub
 Public Sub Clean_OldCrash
 	logMe.DeleteOldFiles("*.crash")
+	'---check every X hours for old logs / crash files
+	Dim hrs As Int = 12
+	tmrTimerCallSub.CallSubDelayedPlus(Me,"Clean_OldCrash",60000 * 60 * hrs)
 End Sub
 
 

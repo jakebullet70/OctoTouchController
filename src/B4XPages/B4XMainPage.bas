@@ -53,7 +53,7 @@ End Sub
 
 Public Sub Initialize
 	
-	'fileHelpers.DeleteFiles(xui.DefaultFolder,"*.psettings") '--- DEV - delete all printing settings files
+	'fileHelpers.DeleteFiles(xui.DefaultFolder,"*.psettings") '--- DEV - delete all printer settings files
 	config.Init
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
 	clrTheme.Init(config.ColorTheme)

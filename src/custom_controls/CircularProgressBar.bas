@@ -5,9 +5,9 @@ Type=Class
 Version=7.3
 @EndOfDesignText@
 #Region VERSIONS 
-'	2.2.0		08/26/2002 - sadLogic, Kherson Ukraine
+'	2.2.0		08/26/2022 - sadLogic, Kherson Ukraine
 '				Added click event
-'	2.1.1		08/13/2002 - sadLogic, Kherson Ukraine
+'	2.1.1		08/13/2022 - sadLogic, Kherson Ukraine
 '				Added Color Full / Empty properties, code cleanup
 '				Added getMainLabel to allow changing of text property
 '	2.1.0		10/22/2017 - DV

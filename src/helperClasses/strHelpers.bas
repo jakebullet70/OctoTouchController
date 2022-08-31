@@ -10,7 +10,7 @@ Version=9.5
 #End Region
 'Static code module
 Sub Process_Globals
-	Private xui As XUI
+	'Private xui As XUI
 	Private Const mModule As String = "strHelper" 'ignore
 End Sub
 
@@ -62,8 +62,6 @@ public Sub Str2Bool(txt As String) As Boolean
 	Return False
 	
 End Sub
-
-
 
 
 

@@ -6,7 +6,7 @@ Version=5.5
 @EndOfDesignText@
 ' Author:  Forum / sadLogic
 #Region VERSIONS 
-' V. 1.1 	Aug/22/2002
+' V. 1.1 	Aug/22/2022
 '			Added Async version
 ' V. 1.0	Unknown
 #End Region

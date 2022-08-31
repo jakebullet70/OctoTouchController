@@ -22,6 +22,8 @@ Sub Class_Globals
 	
 	Private mDialog As B4XDialog
 	
+	Public IsMenu As Boolean = False
+	
 End Sub
 
 Public Sub setTag(v As Object)
@@ -58,7 +60,7 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	l.Font = xui.CreateDefaultFont(NumberFormat2(26 / guiHelpers.gFscale,1,0,0,False))
 	
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)
-	Dim rs As ResumableSub = mDialog.ShowTemplate(ListTemplate, "", "", "CANCEL")
+	Dim rs As ResumableSub = mDialog.ShowTemplate(ListTemplate, "", "",IIf(IsMenu,"CLOSE","CANCEL"))
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 	
 	'--- display dialog

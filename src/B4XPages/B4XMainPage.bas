@@ -257,75 +257,56 @@ Private Sub PopupMainMenu
 	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
-	Dim o As mnuPopup
 	Dim popUpMemuItems As Map = _
 		CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc", _
 				  "Sonoff Connection":"snf","About":"ab")
 		
 	If oc.isPrinting Or oc.IsPaused2 Then
 		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
-		popUpMemuItems.Remove("Octoprint Connection") 
+		popUpMemuItems.Remove("Octoprint Connection")
 	End If
 	Sleep(20)
-	 
-	o.Initialize(Me,"PopupMainMenu",Me,popUpMemuItems,btnPageAction,"Options")
-	o.MenuWidth = 260dip '--- defaults to 100
-	o.ItemHeight = 56dip
-
-	o.MenuObj.OrientationVertical = o.MenuObj.OrientationHorizontal_LEFT '--- change menu position
 	
-	Dim top As Float
-	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
-		top = 21%y
-	Else If guiHelpers.gScreenSizeAprox >= 8 Then
-		top = 26%y
-	Else
-		top = 8%y
-	End If
-	
-	o.MenuObj.OpenMenuAdvanced((50%x - 130dip) ,top,260dip)
+	Dim o1 As dlgListbox
+	o1.Initialize(Me,"Options Menu",Me,"OptionsMenu_Event")
+	o1.IsMenu = True
+	o1.Show(260dip,300dip,popUpMemuItems)
 	
 End Sub
 
-
-Private Sub PopupMainMenu_Closed (index As Int, tag As Object)
+Private Sub OptionsMenu_Event(value As String, tag As Object)
 	
-	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	'--- callback for options Menu
+	If value.Length = 0 Then Return
 	
-	Try
-		Select Case tag.As(String)
-			
-			Case "ab" '--- about
-				Dim msg As String = guiHelpers.GetAboutText()
-				Dim mb As dlgMsgBox : mb.Initialize(Root,"About",560dip, 200dip,False)
-				Wait For (mb.Show(msg,"splash.png","OK","","")) Complete (res As Int)
-				
-				
-			Case "gn"  '--- general settings
-				Dim o3 As dlgGeneralOptions
-				o3.Initialize(Me)
-				o3.Show
-			
-				
-			Case "oc"  '--- octo setup
-				Dim o9 As dlgOctoSetup 
-				o9.Initialize(Me,"Octoprint Connection","PrinterSetup_Closed")
-				o9.Show(False)
-			
-			Case "pw"  '--- android power setup
-				Dim o1 As dlgPowerOptions : o1.Initialize(Me)
-				o1.Show
-				
-			Case "snf"  '--- sonoff setup
-				Dim oA As dlgSonoffSetup
-				oA.Initialize(Me,"Sonoff Connection")
-				oA.Show
-			
-		End Select
+	Select Case value
 		
-	Catch
-		Log(LastException)
-	End Try
+		Case "ab" '--- about
+			Dim msg As String = guiHelpers.GetAboutText()
+			Dim mb As dlgMsgBox : mb.Initialize(Root,"About",560dip, 200dip,False)
+			Wait For (mb.Show(msg,"splash.png","OK","","")) Complete (res As Int)
+			
+		Case "gn"  '--- general settings
+			Dim o3 As dlgGeneralOptions
+			o3.Initialize(Me)
+			o3.Show
+			
+		Case "oc"  '--- octo setup
+			Dim o9 As dlgOctoSetup
+			o9.Initialize(Me,"Octoprint Connection","PrinterSetup_Closed")
+			o9.Show(False)
+		
+		Case "pw"  '--- android power setup
+			Dim o1 As dlgPowerOptions : o1.Initialize(Me)
+			o1.Show
+			
+		Case "snf"  '--- sonoff setup
+			Dim oA As dlgSonoffSetup
+			oA.Initialize(Me,"Sonoff Connection")
+			oA.Show
+		
+	End Select
+	
 	
 End Sub
 
@@ -340,9 +321,8 @@ Public Sub PrinterSetup_Closed
 	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	
 End Sub
-
-
 #end region
+
 
 Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 
@@ -387,7 +367,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 			oMasterController.Start
 			
 		Case xui.DialogResponse_Cancel	 '--- this runs setup
-			PopupMainMenu_Closed(0,"oc")
+			OptionsMenu_Event(0,"oc")
 			
 		Case xui.DialogResponse_Negative '--- Power on 
 			Wait For (PowerCtrl.SendCmd("on")) Complete(s As String)

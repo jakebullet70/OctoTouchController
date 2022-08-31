@@ -192,6 +192,7 @@ End Sub
 Private Sub btnPresetMaster_Click
 	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	
 	If oc.isConnected = False Then Return
 	
 	Dim o1 As dlgListbox
@@ -211,11 +212,11 @@ Private Sub btnPresetTemp_Click
 	If oc.isConnected = False Then Return
 		
 	Dim o1 As dlgListbox
-	Dim title As String = IIf(btn.tag = "tool","Tool Presets","Bed Presets")
-	o1.Initialize(mMainObj,title,Me,"TempChange_Presets")
+	o1.Initialize(mMainObj,IIf(btn.tag = "tool","Tool Presets","Bed Presets"),Me,"TempChange_Presets")
 	o1.Tag = btn.tag
-	o1.Show(IIf(guiHelpers.gScreenSizeAprox >= 6,280dip,280dip),290dip, _
-	IIf(btn.Tag = "tool",mMainObj.MasterCtrlr.mapToolHeatingOptions,mMainObj.MasterCtrlr.mapBedHeatingOptions))
+	o1.Show(280dip,290dip,IIf(btn.Tag = "tool", _
+				mMainObj.MasterCtrlr.mapToolHeatingOptions, _
+				mMainObj.MasterCtrlr.mapBedHeatingOptions))
 	
 End Sub
 
@@ -233,7 +234,8 @@ Private Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	End If
 	
 	Dim tagme As String = tag.As(String)
-	Dim msg As String
+	Dim msg, getTemp As String
+	Dim startNDX, endNDX As Int
 	
 	Select Case True
 		
@@ -248,33 +250,33 @@ Private Sub TempChange_Presets(selectedMsg As String, tag As Object)
 			
 		Case selectedMsg.Contains("Tool") And Not (selectedMsg.Contains("Bed"))
 			'--- Example, Set PLA (Tool: 60øC )
-			Dim startNDX As Int = selectedMsg.IndexOf(": ")
-			Dim endNDX As Int = selectedMsg.IndexOf(gblConst.DEGREE_SYMBOL)
-			Dim getTemp As String = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
+			startNDX = selectedMsg.IndexOf(": ")
+			endNDX = selectedMsg.IndexOf(gblConst.DEGREE_SYMBOL)
+			getTemp = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
 			mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
 			msg = selectedMsg.Replace("Set","Setting")
 			
 		Case selectedMsg.Contains("Bed") And Not (selectedMsg.Contains("Tool"))
 			'--- Example, PLA (Bed: 60øC )
-			Dim startNDX As Int = selectedMsg.IndexOf(": ")
-			Dim endNDX As Int = selectedMsg.IndexOf(gblConst.DEGREE_SYMBOL)
-			Dim getTemp As String = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
+			startNDX = selectedMsg.IndexOf(": ")
+			endNDX = selectedMsg.IndexOf(gblConst.DEGREE_SYMBOL)
+			getTemp = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
 			mMainObj.MasterCtrlr.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
 			msg = selectedMsg.Replace("Set","Setting")
 			
 		Case Else
 			'--- Example, Set ABS (Tool: 240øC  / (Bed: 105øC )
-			Dim toolMSG As String  = Regex.Split("/",selectedMsg)(0)
-			Dim bedMSG As String  = Regex.Split("/",selectedMsg)(1)
+			Dim toolMSG As String = Regex.Split("/",selectedMsg)(0)
+			Dim bedMSG  As String = Regex.Split("/",selectedMsg)(1)
 				
-			Dim startNDX As Int = toolMSG.IndexOf(": ")
-			Dim endNDX As Int = toolMSG.IndexOf(gblConst.DEGREE_SYMBOL)
-			Dim getTemp As String = toolMSG.SubString2(startNDX + 2,endNDX).Trim
+			startNDX = toolMSG.IndexOf(": ")
+			endNDX = toolMSG.IndexOf(gblConst.DEGREE_SYMBOL)
+			getTemp = toolMSG.SubString2(startNDX + 2,endNDX).Trim
 			mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
 				
-			Dim startNDX As Int = bedMSG.IndexOf(": ")
-			Dim endNDX As Int = bedMSG.IndexOf(gblConst.DEGREE_SYMBOL)
-			Dim getTemp As String = bedMSG.SubString2(startNDX + 2,endNDX).Trim
+			startNDX = bedMSG.IndexOf(": ")
+			endNDX = bedMSG.IndexOf(gblConst.DEGREE_SYMBOL)
+			getTemp = bedMSG.SubString2(startNDX + 2,endNDX).Trim
 			mMainObj.MasterCtrlr.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
 			msg = selectedMsg.Replace("Set","Setting")
 			

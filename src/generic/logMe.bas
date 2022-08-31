@@ -105,7 +105,9 @@ Public Sub DeleteOldFiles(fspec As String)
 		Dim numDays As Int = DaysBetweenDated(fDate,DateTime.Now)
 		If  numDays > pDaysOfOldLogsBeforeDelete Then
 			fileHelpers.SafeKill(fname)
-			Log("deleting log file: " &  fname)
+			Dim s As String = "deleting old log/crash file: " &  fname
+			Log(s) 
+			Write2Disk(s)
 		End If
 	Next
 End Sub

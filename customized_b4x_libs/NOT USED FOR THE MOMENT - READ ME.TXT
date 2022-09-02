@@ -1,0 +1,2 @@
+I have added sadPreferanceDialog.bas source to the main project now so
+this is not needed at the moment. When debugging is finished I will clean this up

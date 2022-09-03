@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <doclet-version-NOT-library-version>1.00</doclet-version-NOT-library-version>
+    <class>
+        <name>com.rootsoft.oslibrary.OSLibrary</name>
+        <shortname>OperatingSystem</shortname>
+        <owner>process</owner>
+        <permission>android.permission.INTERNET</permission>
+        <permission>android.permission.REBOOT</permission>
+        <permission>android.permission.DUMP</permission>
+        <permission>android.permission.ACCESS_NETWORK_STATE</permission>
+        <permission>android.permission.BATTERY_STATS</permission>
+        <permission>android.permission.KILL_BACKGROUND_PROCESSES</permission>
+        <permission>android.permission.WRITE_SETTINGS</permission>
+        <permission>android.permission.GET_TASKS</permission>
+        <method>
+            <name>sendSignal</name>
+            <comment>Send a signal to the given process.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>pid</name>
+                <type>int</type>
+            </parameter>
+            <parameter>
+                <name>signal</name>
+                <type>int</type>
+            </parameter>
+        </method>
+        <method>
+            <name>setLowMemory</name>
+            <comment>Set to true if the system considers itself to currently be in a low memory situation.</comment>
+            <returntype>boolean</returntype>
+        </method>
+        <method>
+            <name>userActivity</name>
+            <comment>User activity happened.
+ Turns the device from whatever state it's in to full on, and resets the auto-off timer.
+ 
+ when	is used to order this correctly with the wake lock calls. This time should be in the SystemClock.uptimeMillis() time base.
+ 
+ noChangeLights	should be true if you don't want the lights to turn on because of this event. This is set when the power key goes down. 
+ We want the device to stay on while the button is down, but we're about to turn off. Otherwise the lights flash on and then off and it looks weird.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>when</name>
+                <type>long</type>
+            </parameter>
+            <parameter>
+                <name>noChangeLights</name>
+                <type>boolean</type>
+            </parameter>
+        </method>
+        <method>
+            <name>density</name>
+            <comment>The logical density of the display. This is a scaling factor for the Density Independent Pixel unit, 
+ where one DIP is one pixel on an approximately 160 dpi screen (for example a 240x320, 1.5"x2" screen), 
+ providing the baseline of the system's display. Thus on a 160dpi screen this density value will be 1; 
+ on a 120 dpi screen it would be .75; etc.
+ This value does not exactly follow the real screen size (as given by xdpi and ydpi, but rather is used to 
+ scale the size of the overall UI in steps based on gross changes in the display dpi. For example, a 240x320 
+ screen will have a density of 1 even if its width is 1.8", 1.3", etc. However, if the screen resolution is 
+ increased to 320x480 but the screen size remained 1.5"x2" then the density would be increased (probably to 1.5).
+Return type: @return:</comment>
+            <returntype>float</returntype>
+        </method>
+        <method>
+            <name>getRunningTasks</name>
+            <comment>RReturn a list of the tasks that are currently running, with the most recent being first and older ones after in order. Note that "running" does not mean any of the task's code is currently loaded or activity -- 
+ the task may have been frozen by the system, so that it can be restarted in its previous state when next brought to the foreground.
+Return type: @return:</comment>
+            <returntype>java.util.List</returntype>
+            <parameter>
+                <name>maxNum</name>
+                <type>int</type>
+            </parameter>
+        </method>
+        <method>
+            <name>densityDpi</name>
+            <comment>The screen density expressed as dots-per-inch. May be either DENSITY_LOW, DENSITY_MEDIUM, or DENSITY_HIGH.
+ http://developer.android.com/reference/android/util/DisplayMetrics.html#densityDpi
+Return type: @return:</comment>
+            <returntype>int</returntype>
+        </method>
+        <method>
+            <name>getInfo</name>
+            <comment></comment>
+            <returntype>java.lang.String</returntype>
+            <parameter>
+                <name>name</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>getRunningServices</name>
+            <comment>Return a list of the services that are currently running.
+ maxNum	The maximum number of entries to return in the list. The actual number returned may be smaller, depending on how many services are running.
+Return type: @return:</comment>
+            <returntype>java.util.List</returntype>
+            <parameter>
+                <name>maxNum</name>
+                <type>int</type>
+            </parameter>
+        </method>
+        <method>
+            <name>supportsProcesses</name>
+            <comment>Determine whether the current environment supports multiple processes.</comment>
+            <returntype>boolean</returntype>
+        </method>
+        <method>
+            <name>scaledDensity</name>
+            <comment>A scaling factor for fonts displayed on the display. 
+ This is the same as density, except that it may be adjusted in smaller increments at runtime based on a user preference for the font size.
+Return type: @return:</comment>
+            <returntype>float</returntype>
+        </method>
+        <method>
+            <name>setThreadPriority</name>
+            <comment>Set the priority of a thread, based on Linux priorities.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>tid</name>
+                <type>int</type>
+            </parameter>
+            <parameter>
+                <name>priority</name>
+                <type>int</type>
+            </parameter>
+        </method>
+        <method>
+            <name>CountDownTimer</name>
+            <comment>Makes a countdown timer from duration (in ms).
+ 2 events are raised:
+ eventname_ontick
+ eventname_onfinish (OS as String)</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>duration</name>
+                <type>long</type>
+            </parameter>
+        </method>
+        <method>
+            <name>getGidForName</name>
+            <comment>Returns the GID assigned to a particular user name, or -1 if there is none.</comment>
+            <returntype>int</returntype>
+            <parameter>
+                <name>name</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>ydpi</name>
+            <comment>The exact physical pixels per inch of the screen in the Y dimension
+Return type: @return:</comment>
+            <returntype>float</returntype>
+        </method>
+        <method>
+            <name>externalMemoryAvailable</name>
+            <comment>Returns if the external memory is available.</comment>
+            <returntype>boolean</returntype>
+        </method>
+        <method>
+            <name>RunningTaskInfo</name>
+            <comment>Gives information about the running tasks.
+ Declare and Initialize 3 lists
+list1: returns a unique id.
+list2: returns number of activities in this task.
+list3: returns number of activities that are currently running (not stopped and persisted) in this task.
+Return type: @return:</comment>
+            <returntype>java.util.List</returntype>
+            <parameter>
+                <name>maxNum</name>
+                <type>int</type>
+            </parameter>
+            <parameter>
+                <name>list1</name>
+                <type>java.util.List</type>
+            </parameter>
+            <parameter>
+                <name>list2</name>
+                <type>java.util.List</type>
+            </parameter>
+            <parameter>
+                <name>list3</name>
+                <type>java.util.List</type>
+            </parameter>
+        </method>
+        <method>
+            <name>killBackgroundProcesses</name>
+            <comment>Have the system immediately kill all background processes associated with the given package.
+packageName: </comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>packageName</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>calculateCPUusage</name>
+            <comment>This calculates the CPU usage.
+Return type: @return:</comment>
+            <returntype>float</returntype>
+        </method>
+        <method>
+            <name>physicalScreenWidth</name>
+            <comment>xdpi * widthPixels to calculate the Physical Width Screen
+Return type: @return:</comment>
+            <returntype>float</returntype>
+        </method>
+        <method>
+            <name>getRecentTasks</name>
+            <comment>Return a list of the tasks that the user has recently launched, with the most recent being first and older ones after in order.
+maxNum: 
+flags: 
+Return type: @return:</comment>
+            <returntype>java.util.List</returntype>
+            <parameter>
+                <name>maxNum</name>
+                <type>int</type>
+            </parameter>
+            <parameter>
+                <name>flags</name>
+                <type>int</type>
+            </parameter>
+        </method>
+        <method>
+            <name>myPid</name>
+            <comment>Returns the identifier of this process, which can be used with killProcess(int) and sendSignal(int, int).</comment>
+            <returntype>int</returntype>
+        </method>
+        <method>
+            <name>getAvailableBlocks</name>
+            <comment>The number of blocks that are free on the file system and available to applications.</comment>
+            <returntype>int</returntype>
+            <parameter>
+                <name>Path</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>Initialize</name>
+            <comment>Initializes the Operating System Library.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>ba</name>
+                <type>anywheresoftware.b4a.BA</type>
+            </parameter>
+            <parameter>
+                <name>EventName</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>getBlockCount</name>
+            <comment>The total number of blocks on the file system.</comment>
+            <returntype>int</returntype>
+            <parameter>
+                <name>Path</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>xdpi</name>
+            <comment>The exact physical pixels per inch of the screen in the X dimension.
+Return type: @return:</comment>
+            <returntype>float</returntype>
+        </method>
+        <method>
+            <name>widthPixels</name>
+            <comment>The absolute width of the display in pixels.
+Return type: @return:</comment>
+            <returntype>int</returntype>
+        </method>
+        <method>
+            <name>formatSize</name>
+            <comment></comment>
+            <returntype>java.lang.String</returntype>
+            <parameter>
+                <name>size</name>
+                <type>long</type>
+            </parameter>
+        </method>
+        <method>
+            <name>goToSleep</name>
+            <comment>Force the device to go to sleep. Overrides all the wake locks that are held
+ 
+ time	is used to order this correctly with the wake lock calls. The time should be in the SystemClock.uptimeMillis() time base.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>time</name>
+                <type>long</type>
+            </parameter>
+        </method>
+        <method>
+            <name>getBlockSize</name>
+            <comment>The size, in bytes, of a block on the file system.</comment>
+            <returntype>int</returntype>
+            <parameter>
+                <name>Path</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>installPackage</name>
+            <comment>Reboots the device in order to install the given update package.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>packageFile</name>
+                <type>java.io.File</type>
+            </parameter>
+        </method>
+        <method>
+            <name>RunningServiceInfo</name>
+            <comment>Gives information about the running services.
+ Declare and Initialize 3 lists
+list1: returns the service name.
+list2: returns the pid.
+list3: returns the service name and pid.
+Return type: @return:</comment>
+            <returntype>java.util.List</returntype>
+            <parameter>
+                <name>maxNum</name>
+                <type>int</type>
+            </parameter>
+            <parameter>
+                <name>list1</name>
+                <type>java.util.List</type>
+            </parameter>
+            <parameter>
+                <name>list2</name>
+                <type>java.util.List</type>
+            </parameter>
+            <parameter>
+                <name>list3</name>
+                <type>java.util.List</type>
+            </parameter>
+        </method>
+        <method>
+            <name>physicalScreenHeight</name>
+            <comment>ydpi * heightPixels to calculate the Physical Height Screen.
+Return type: @return:</comment>
+            <returntype>float</returntype>
+        </method>
+        <method>
+            <name>heightPixels</name>
+            <comment>The absolute height of the display in pixels.
+Return type: @return:</comment>
+            <returntype>int</returntype>
+        </method>
+        <method>
+            <name>myUid</name>
+            <comment>Returns the identifier of the calling thread, which be used with setThreadPriority(int, int).</comment>
+            <returntype>int</returntype>
+        </method>
+        <method>
+            <name>PackagesInfo</name>
+            <comment></comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>getUidForName</name>
+            <comment>Returns the UID assigned to a particular user name, or -1 if there is none.</comment>
+            <returntype>int</returntype>
+            <parameter>
+                <name>name</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>ReadCPUinfo</name>
+            <comment>Reads all info about the CPU.
+Return type: @return:</comment>
+            <returntype>java.lang.String</returntype>
+        </method>
+        <method>
+            <name>reboot</name>
+            <comment>Reboot the device. Will not return if the reboot is successful. 
+ reason	code to pass to the kernel (e.g., "recovery") to request special boot modes, or null.
+ Api level 8</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>Reason</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>RunningAppProcessInfo</name>
+            <comment>Gives information about the running app processes.
+ Declare and Initialize 3 lists
+list1: returns the process names.
+list2: returns the pid.
+list3: returns the process name and pid.
+Return type: @return:</comment>
+            <returntype>java.util.List</returntype>
+            <parameter>
+                <name>list1</name>
+                <type>java.util.List</type>
+            </parameter>
+            <parameter>
+                <name>list2</name>
+                <type>java.util.List</type>
+            </parameter>
+            <parameter>
+                <name>list3</name>
+                <type>java.util.List</type>
+            </parameter>
+        </method>
+        <method>
+            <name>rebootWipeUserData</name>
+            <comment>Reboots the device and wipes the user data partition.</comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>getFreeBlocks</name>
+            <comment>The total number of blocks that are free on the file system, including reserved blocks (that are not available to normal applications).</comment>
+            <returntype>int</returntype>
+            <parameter>
+                <name>Path</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>killProcess</name>
+            <comment>Kill the process with the given PID.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>pid</name>
+                <type>int</type>
+            </parameter>
+        </method>
+        <method>
+            <name>restat</name>
+            <comment>Perform a restat of the file system referenced by this object.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>Path</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>BatteryReceiver</name>
+            <comment>Registers the battery receiver. Call this before getBatteryLevel.</comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>myTid</name>
+            <comment>Returns the identifier of this process's user.</comment>
+            <returntype>int</returntype>
+        </method>
+        <property>
+            <name>User</name>
+            <returntype>java.lang.String</returntype>
+            <comment></comment>
+        </property>
+        <property>
+            <name>Brand</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the brand (e.g., carrier) the software is customized for, if any.</comment>
+        </property>
+        <property>
+            <name>CPUABI2</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the name of the second instruction set (CPU type + ABI convention) of native code.
+ Since api level 8.</comment>
+        </property>
+        <property>
+            <name>Model</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the end-user-visible name for the end product.</comment>
+        </property>
+        <property>
+            <name>Device</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the name of the industrial design.</comment>
+        </property>
+        <property>
+            <name>Host</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the host.</comment>
+        </property>
+        <property>
+            <name>Type</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the type of build, like "user" or "eng".</comment>
+        </property>
+        <property>
+            <name>RunningAppProcesses</name>
+            <returntype>java.util.List</returntype>
+            <comment>Returns a list of application processes that are running on the device.</comment>
+        </property>
+        <property>
+            <name>AvailableExternalMemorySize</name>
+            <returntype>long</returntype>
+            <comment>Returns the available external memory size.
+ Returns -1 if the external memory is unavailable.</comment>
+        </property>
+        <property>
+            <name>SDK</name>
+            <returntype>int</returntype>
+            <comment>The user-visible SDK version of the framework</comment>
+        </property>
+        <property>
+            <name>Fingerprint</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns a string that uniquely identifies this build. Do not attempt to parse this value.</comment>
+        </property>
+        <property>
+            <name>Manufacturer</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the manufacturer of the product/hardware.</comment>
+        </property>
+        <property>
+            <name>Time</name>
+            <returntype>long</returntype>
+            <comment>Returns the time.</comment>
+        </property>
+        <property>
+            <name>Threshold</name>
+            <returntype>long</returntype>
+            <comment>The threshold of availMem at which we consider memory to be low and start 
+ killing background services and other non-extraneous processes.</comment>
+        </property>
+        <property>
+            <name>ElaspedCPUTime</name>
+            <returntype>long</returntype>
+            <comment>Returns elapsed milliseconds of the time this process has run.</comment>
+        </property>
+        <property>
+            <name>ID</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns either a changelist number, or a label like "M4-rc20".</comment>
+        </property>
+        <property>
+            <name>TotalInternalMemorySize</name>
+            <returntype>long</returntype>
+            <comment>Returns the total internal memory size.</comment>
+        </property>
+        <property>
+            <name>Board</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the name of the underlying board, like "goldfish".</comment>
+        </property>
+        <property>
+            <name>Radio</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the name of the overall product.
+ Api Level 8</comment>
+        </property>
+        <property>
+            <name>CPUABI</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the name of the instruction set (CPU type + ABI convention) of native code.
+ Since api level 4.</comment>
+        </property>
+        <property>
+            <name>Codename</name>
+            <returntype>java.lang.String</returntype>
+            <comment>The current development codename, or the string "REL" if this is a release build.
+ API level 4.</comment>
+        </property>
+        <property>
+            <name>Product</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the name of the overall product.</comment>
+        </property>
+        <property>
+            <name>Incremental</name>
+            <returntype>java.lang.String</returntype>
+            <comment>The internal value used by the underlying source control to represent this build. E.g., a perforce changelist number or a git hash.</comment>
+        </property>
+        <property>
+            <name>Display</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns a build ID string meant for displaying to the user
+ API level 3</comment>
+        </property>
+        <property>
+            <name>AvailableMemory</name>
+            <returntype>long</returntype>
+            <comment>The total available memory on the system. This number should not be considered absolute: due to the nature of the kernel, 
+ a significant portion of this memory is actually in use and needed for the overall system to run well.</comment>
+        </property>
+        <property>
+            <name>BatteryLevel</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the battery level.</comment>
+        </property>
+        <property>
+            <name>RunningAppProcess</name>
+            <returntype>java.util.List</returntype>
+            <comment>Gets a list of all running application processess.</comment>
+        </property>
+        <property>
+            <name>Release</name>
+            <returntype>java.lang.String</returntype>
+            <comment>The user-visible version string. E.g., "1.0" or "3.4b5".</comment>
+        </property>
+        <property>
+            <name>Tags</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns Comma-separated tags describing the build, like "unsigned,debug".</comment>
+        </property>
+        <property>
+            <name>Serial</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the name of the overall product.
+ Api Level 9</comment>
+        </property>
+        <property>
+            <name>Bootloader</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the system bootloader version number.
+ Since api level 8.</comment>
+        </property>
+        <property>
+            <name>TotalExternalMemorySize</name>
+            <returntype>long</returntype>
+            <comment>Returns the available internal memory size.
+ Returns -1 if the internal memory is unavailable.</comment>
+        </property>
+        <property>
+            <name>Hardware</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Returns the name of the hardware (from the kernel command line or /proc).
+ API level 8.</comment>
+        </property>
+        <property>
+            <name>AvailableInternalMemorySize</name>
+            <returntype>long</returntype>
+            <comment>Returns the available internal memory size.</comment>
+        </property>
+        <field>
+            <name>OS</name>
+            <comment></comment>
+            <returntype>java.lang.String</returntype>
+        </field>
+    </class>
+    <version>1.4</version>
+    <author>XverhelstX</author>
+</root>

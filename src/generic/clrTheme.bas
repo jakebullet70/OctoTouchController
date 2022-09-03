@@ -51,7 +51,7 @@ Public Sub InitTheme(theme As String)
 		Case "blue"
 			Background = xui.Color_ARGB(255,53, 69, 85)
 			BackgroundHeader = xui.Color_ARGB(255,41, 57, 73)
-			BackgroundMenu = xui.Color_ARGB(255,54, 70, 86)
+			BackgroundMenu = xui.Color_ARGB(255,45, 62, 78)
 			
 		Case "red"
 			Background = xui.Color_ARGB(255,131, 21, 25)
@@ -61,18 +61,17 @@ Public Sub InitTheme(theme As String)
 		Case "green"
 			Background = xui.Color_ARGB(255,19, 62, 11)
 			BackgroundHeader = xui.Color_ARGB(255,10, 51, 6)
-			'BackgroundMenu = xui.Color_ARGB(255,24, 67, 16)
 			BackgroundMenu = xui.Color_ARGB(255,10, 53, 2)
 	
 		Case "gray"
 			Background = xui.Color_ARGB(255,90, 90, 90)
 			BackgroundHeader = xui.Color_ARGB(255,73, 73, 73)
-			BackgroundMenu = xui.Color_ARGB(255,97, 96, 95)
+			BackgroundMenu = xui.Color_ARGB(255,60, 60, 60)
 			
 		Case "dark"
 			Background = xui.Color_ARGB(255,18, 18, 18)
 			BackgroundHeader = xui.Color_ARGB(255,11, 11, 11)
-			BackgroundMenu = xui.Color_ARGB(255,22, 22, 22)
+			BackgroundMenu = xui.Color_ARGB(255,43, 43, 43)
 			
 	End Select
 End Sub

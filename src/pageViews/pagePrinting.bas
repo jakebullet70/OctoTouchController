@@ -184,9 +184,20 @@ private Sub UpdateFileName
 End Sub
 
 Public Sub Update_Printer_Temps
-	'--- temps
-	lblToolTemp.Text = IIf(oc.tool1Target = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.tool1Target)
-	lblBedTemp.Text = IIf(oc.BedTarget = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.BedTarget)
+	
+	'--- temps, only update the label if it has changed
+	Dim tmp As String
+	
+	tmp = IIf(oc.tool1Target = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.tool1Target)
+	If lblToolTemp.Text <> tmp Then
+		lblToolTemp.Text = tmp
+	End If
+	
+	tmp = IIf(oc.BedTarget = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.BedTarget)
+	If lblBedTemp.Text <> tmp Then
+		lblBedTemp.Text = tmp
+	End If
+	
 End Sub
 
 #Region "HEATER_PRESETS"

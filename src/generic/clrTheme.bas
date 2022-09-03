@@ -34,7 +34,7 @@ Public Sub Init(theme As String)
 
 	txtNormal = xui.Color_white
 	txtAccent = xui.Color_LightGray
-	btnDisableText = xui.Color_LightGray
+	btnDisableText = xui.Color_ARGB(50,192,192,192)
 	DividerColor = xui.Color_LightGray
 	
 	InitTheme(theme)
@@ -76,6 +76,7 @@ Public Sub InitTheme(theme As String)
 			txtNormal = xui.Color_ARGB(255,216, 91, 48)
 			txtAccent = xui.Color_LightGray
 			btnDisableText = xui.Color_ARGB(50,192,192,192)
+			DividerColor = xui.Color_Black
 		
 		Case Else ' --- "blue"
 			Background = xui.Color_ARGB(255,53, 69, 85)

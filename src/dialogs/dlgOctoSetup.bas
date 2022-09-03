@@ -97,7 +97,7 @@ private Sub Build_GUI
 	
 	pnlMain.Color = clrTheme.Background
 	guiHelpers.SetTextColorB4XFloatTextField( _
-			Array As B4XFloatTextField(txtOctoKey,txtPrinterDesc,txtPrinterIP,txtPrinterPort))
+			Array As B4XFloatTextField(txtPrinterDesc,txtPrinterIP,txtPrinterPort))
 	
 	txtPrinterDesc.HintText = "Printer Description"
 	txtPrinterDesc.NextField = txtPrinterIP
@@ -106,9 +106,9 @@ private Sub Build_GUI
 	txtPrinterIP.NextField = txtPrinterPort
 	
 	txtPrinterPort.HintText = "Octoprint Port"
-	txtPrinterPort.NextField = txtOctoKey
 	
-	txtOctoKey.HintText = "Octoprint API Key"
+	'txtPrinterPort.NextField = txtOctoKey
+	'txtOctoKey.HintText = "Octoprint API Key"
 
 	btnCheckConnection.Text= "Validate Connection"
 	btnGetOctoKey.Text = "Request Octoprint Key"

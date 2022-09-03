@@ -185,7 +185,8 @@ End Sub
 
 Public Sub Update_Printer_Temps
 	
-	'--- temps, only update the label if it has changed
+	'--- temps, only update the label if it has changed, 
+	'--- Autosize label ctrl flickers in some cases
 	Dim tmp As String
 	
 	tmp = IIf(oc.tool1Target = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.tool1Target)

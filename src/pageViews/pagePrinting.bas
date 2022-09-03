@@ -81,9 +81,10 @@ Private Sub Build_GUI
 		CircularProgressBar1.MainLabel.Font = xui.CreateDefaultFont(42)
 	End If
 
+	'--- scale font
 	Dim fn As B4XFont = _
-			xui.CreateDefaultFont(NumberFormat2(btnCancel.TextSize / guiHelpers.gFscale,1,0,0,False) - _
-			IIf(guiHelpers.gFscale > 1,3,0))
+			xui.CreateDefaultFont(NumberFormat2(btnCancel.TextSize / guiHelpers.gFscale,1,0,0,False) )
+				'- 	IIf(guiHelpers.gFscale > 1,4,0))
 	btnCancel.Font = fn 
 	btnPause.Font  = fn
 	btnPrint.Font  = fn

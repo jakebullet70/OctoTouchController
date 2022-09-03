@@ -491,7 +491,7 @@ Public Sub setTheme (t As Int)
 				ItemsBackgroundColor = 0xFF626262
 				SeparatorBackgroundColor = 0xFFC0C0C0
 				SeparatorTextColor = xui.Color_Black
-				TextColor = xui.Color_White
+				TextColor = clrTheme.txtNormal
 				DividerColor = 0xFF464646
 				Dialog.BackgroundColor = 0xFF555555
 				Dialog.ButtonsColor = 0xFF555555
@@ -500,7 +500,7 @@ Public Sub setTheme (t As Int)
 				DateTemplate.DaysInWeekColor = xui.Color_Gray
 				DateTemplate.SelectedColor = 0xFF0BA29B
 			Case THEME_LIGHT
-				ItemsBackgroundColor = xui.Color_White
+				ItemsBackgroundColor = clrTheme.txtNormal
 				SeparatorBackgroundColor = 0xFFD0D0D0
 				SeparatorTextColor = 0xFF4E4F50
 				TextColor = 0xFF5B5B5B

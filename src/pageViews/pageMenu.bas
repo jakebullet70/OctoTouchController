@@ -44,7 +44,7 @@ End Sub
 
 public Sub Set_focus()
 	
-	mPnlMain.Visible = True
+	mPnlMain.SetVisibleAnimated(500,True)
 	
 	'--- set bottom action btn if visible
 	btnBrightness.Visible = config.ChangeBrightnessSettingsFLAG
@@ -52,7 +52,7 @@ public Sub Set_focus()
 	If btnBrightness.Visible = False And btnScrnOff.Visible = True Then
 		btnScrnOff.Left = btnBrightness.Left
 	else If btnBrightness.Visible = True And btnScrnOff.Visible = True Then
-		btnScrnOff.Left = btnBrightness.Left - (btnBrightness.Width / 1.3 + IIf(guiHelpers.gScreenSizeAprox < 5.4,0dip,10dip))
+		btnScrnOff.Left = btnBrightness.Left - (btnBrightness.Width + IIf(guiHelpers.gScreenSizeAprox < 5.4,0dip,10dip))
 	End If
 	
 	btnSonoff.Visible = config.SonoffFLAG
@@ -61,7 +61,8 @@ End Sub
 
 
 public Sub Lost_focus()
-	mPnlMain.Visible = False
+	'mPnlMain.Visible = False
+	mPnlMain.SetVisibleAnimated(500,False)
 End Sub
 
 
@@ -73,7 +74,7 @@ Private Sub Build_GUI
 	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
 	
 	guiHelpers.SetTextColor(Array As B4XView(btnSonoff,btnScrnOff,btnBrightness))
-	
+		
 End Sub
 
 
@@ -92,6 +93,7 @@ Private Sub BuildMenuCard(mnuPanel As Panel,imgFile As String, Text As String, m
 			else if v.Tag Is AutoTextSizeLabel Then
 				Dim o6 As AutoTextSizeLabel = v.Tag
 				o6.Text = Text
+				o6.TextColor = clrTheme.txtNormal
 				
 			End If
 		End If

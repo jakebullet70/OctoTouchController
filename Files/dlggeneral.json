@@ -14,7 +14,8 @@
                 "Blue",
                 "Dark",
                 "Red",
-                "Gray"
+                "Gray",
+                "Prusa"
             ],
             "title": "Theme",
             "type": "Short Options",

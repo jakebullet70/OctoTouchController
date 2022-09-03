@@ -32,7 +32,7 @@ Public Sub SetEnableDisableColor(btnArr() As B4XView)
 			btn.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
 		Else
 			btn.TextColor = clrTheme.btnDisableText
-			btn.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_Gray,8dip)
+			btn.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.btnDisableText,8dip)
 		End If
 	Next
 End Sub
@@ -133,7 +133,7 @@ Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
 		btnCancel.Font = xui.CreateDefaultFont(NumberFormat2(btnCancel.Font.Size / gFscale,1,0,0,False))
 		btnCancel.Width = btnCancel.Width + 20dip
 		btnCancel.Left = btnCancel.Left - 28dip
-		btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,8dip)
+		btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
 	Catch
 		'Log(LastException)
 	End Try 'ignore
@@ -143,7 +143,7 @@ Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
 		btnOk.Font = xui.CreateDefaultFont(NumberFormat2(btnOk.Font.Size / gFscale,1,0,0,False))
 		btnOk.Width = btnOk.Width + 20dip
 		btnOk.Left = btnOk.Left - 48dip
-		btnOk.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,8dip)
+		btnOk.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
 	Catch
 		'Log(LastException)
 	End Try 'ignore
@@ -207,6 +207,7 @@ Public Sub ThemeDialogForm2(dlg As B4XDialog,title As String,txtSize As Int)
 	
 	dlg.TitleBarFont = xui.CreateDefaultFont(NumberFormat2(22 / gFscale,1,0,0,False))
 	dlg.TitleBarColor = clrTheme.BackgroundHeader
+	dlg.TitleBarTextColor = clrTheme.txtNormal
 	dlg.ButtonsTextColor = clrTheme.txtNormal
 	dlg.BorderColor = clrTheme.txtNormal
 	dlg.BackgroundColor = clrTheme.BackgroundMenu

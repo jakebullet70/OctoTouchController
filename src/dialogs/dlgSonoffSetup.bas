@@ -18,7 +18,7 @@ Sub Class_Globals
 	
 	Private B4XLoadingIndicator1 As B4XLoadingIndicator
 	Private btnCheckConnection As B4XView
-	Private B4XSwitch1 As B4XSwitch, lblSwitch As B4XView
+	Private B4XSwitch1 As B4XSwitch, lblSwitch,lblSonoffInfo As B4XView
 	
 	Private txtPrinterIP As B4XFloatTextField
 	Private pnlMain As B4XView
@@ -52,10 +52,13 @@ Public Sub Show
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "SAVE", "", "CLOSE")
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
+	guiHelpers.EnableDisableBtns(Array As B4XView(btnCheckConnection),True)	
+	guiHelpers.SetTextColor(Array As B4XView(lblSonoffInfo,lblSwitch))
 
 	ReadSettingsFile
 	InvalidateConnection
 	
+	SetSaveButtonState
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
 
 	'--- show KB	

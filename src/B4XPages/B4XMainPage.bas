@@ -125,6 +125,8 @@ Private Sub Build_GUI
 	
 	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	
+	guiHelpers.SetTextColor(Array As B4XView(lblStatus,lblTemp))
+	
 	Switch_Pages(gblConst.PAGE_MENU)
 	
 End Sub

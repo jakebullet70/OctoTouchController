@@ -29,6 +29,7 @@ Sub Class_Globals
 	Private lblToolTemp As AutoTextSizeLabel
 	Private lblPrintStats1,lblPrintStats3,lblPrintStats2 As AutoTextSizeLabel
 	
+	Private lblHeaderBed,lblHeaderTool As B4XView
 	
 End Sub
 
@@ -48,7 +49,7 @@ End Sub
 
 public Sub Set_focus()
 	
-	mPnlMain.Visible = True
+	mPnlMain.SetVisibleAnimated(500,True)
 	mPnlMain.Enabled = oc.isConnected
 
 	Update_Printer_Stats
@@ -61,14 +62,18 @@ public Sub Set_focus()
 End Sub
 
 public Sub Lost_focus()
-	mPnlMain.Visible = False
+	mPnlMain.SetVisibleAnimated(500,False)
+	'mPnlMain.Visible = False
 End Sub
 
 Private Sub Build_GUI
 	
 	guiHelpers.SetTextColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel, _
 								lblPrintStats1.BaseLabel,lblPrintStats2.BaseLabel,lblPrintStats3.BaseLabel, _
-								btnCancel,btnPause,btnPrint,CircularProgressBar1.MainLabel))
+								btnCancel,btnPause,btnPrint,CircularProgressBar1.MainLabel, _
+								lblFileName.BaseLabel,lblHeaderBed,lblHeaderTool))
+	
+	guiHelpers.SetEnableDisableColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel))
 	
 	CircularProgressBar1.ColorEmpty = clrTheme.txtNormal
 	CircularProgressBar1.ColorFull = clrTheme.BackgroundMenu

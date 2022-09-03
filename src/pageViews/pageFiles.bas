@@ -32,7 +32,8 @@ Sub Class_Globals
 	Private FilesCheckChangeIsBusyFLAG As Boolean = False
 	Private firstRun As Boolean = True
 	
-	Private lblFileName As AutoTextSizeLabel
+	Private lblFileName As AutoTextSizeLabel, lblHeaderFileName As B4XView
+	
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
@@ -49,7 +50,8 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 End Sub
 
 public Sub Set_focus()
-	mPnlMain.Visible = True
+	
+	mPnlMain.SetVisibleAnimated(500,True)
 	mPnlMain.Enabled = oc.isConnected  
 	
 	If firstRun = False Then
@@ -73,7 +75,8 @@ public Sub Set_focus()
 End Sub
 
 public Sub Lost_focus()
-	mPnlMain.Visible = False
+	'mPnlMain.Visible = False
+	mPnlMain.SetVisibleAnimated(500,False)
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 End Sub
 
@@ -93,7 +96,8 @@ public Sub Update_Printer_Btns
 		enableDisable = True
 	End If
 	
-	guiHelpers.EnableDisableBtns(Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete),enableDisable)
+	guiHelpers.EnableDisableBtns( _
+		Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete),enableDisable)
 
 End Sub
 
@@ -133,7 +137,9 @@ Private Sub Build_GUI
 	btnLoad.Text = "Load"
 	btnDelete.Text = "Delete"
 	
-	guiHelpers.SetTextColor(Array As B4XView(btnLoadAndPrint,btnLoad,btnDelete))
+	guiHelpers.SetTextColor(Array As B4XView( _
+			btnLoadAndPrint,btnLoad,btnDelete,lblFileName.BaseLabel,lblHeaderFileName))
+	
 	Dim fn As B4XFont = _
 				xui.CreateDefaultFont(NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - _
 				IIf(guiHelpers.gFscale > 1,2,0))
@@ -159,7 +165,7 @@ Private Sub btnAction_Click
 		Case "delete"
 			CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 			
-			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Question",540dip, 170dip,False)
+			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Question",500dip, 170dip,False)
 			Wait For (mb.Show("Delete file from Octoprint?",gblConst.MB_ICON_QUESTION,"Yes - Delete It","","No")) Complete (res As Int)
 			
 			If res = xui.DialogResponse_Positive Then
@@ -218,11 +224,16 @@ Sub CreateListItem(oData As typOctoFileInfo, Width As Int, Height As Int) As B4X
 	'--- add 20dip to height for larger screens
 	p.SetLayoutAnimated(0, 0, 0, Width, Height + IIf(guiHelpers.gScreenSizeAprox > 7.8,20dip,0dip))
 	p.LoadLayout("viewFiles")
+	
+	lblpnlFileViewTop.TextColor = clrTheme.txtNormal
 	lblpnlFileViewTop.font = xui.CreateDefaultFont( _
 			NumberFormat2(lblpnlFileViewTop.TextSize / guiHelpers.gFscale,1,0,0,False))
 	lblpnlFileViewTop.Text = fileHelpers.RemoveExtFromeFileName(oData.Name)
+	
+	lblpnlFileViewBottom.TextColor = clrTheme.txtNormal
 	lblpnlFileViewBottom.Font = lblpnlFileViewTop.Font
 	lblpnlFileViewBottom.Text = "Size: " &   fileHelpers.BytesToReadableString(oData.Size) '& " Uploaded: " & dt
+	
 	Return p
 	
 End Sub

@@ -29,6 +29,8 @@ Sub Class_Globals
 	Private btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback As B4XView
 	Private btnZup,btnZhome,btnZdown As B4XView
 	
+	Private lblGeneral,lblHeaderZ,lblHeaderXY As B4XView
+	
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
@@ -45,13 +47,13 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 End Sub
 
 public Sub Set_focus()
-	mPnlMain.Visible = True
+	mPnlMain.SetVisibleAnimated(500,True)
 	mPnlMain.Enabled = oc.isConnected
 	Update_Printer_Btns
 End Sub
 
 public Sub Lost_focus()
-	mPnlMain.Visible = False
+	mPnlMain.SetVisibleAnimated(500,False)
 End Sub
 
 
@@ -66,6 +68,8 @@ Private Sub Build_GUI
 	cboMovementSize.cmbBox.DropdownBackgroundColor = clrTheme.BackgroundHeader
 	cboMovementSize.cmbBox.DropdownTextColor = clrTheme.txtNormal
 	MoveJogSize = "1.0"
+	
+	guiHelpers.SetTextColor(Array As B4XView(lblGeneral,lblHeaderZ,lblHeaderXY))
 	
 End Sub
 

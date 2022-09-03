@@ -67,6 +67,7 @@ Public Sub Show(firstRun As Boolean)
 	guiHelpers.ThemeDialogForm(Dialog, mTitle)
 	Dim rs As ResumableSub = Dialog.ShowCustom(p, "SAVE", "", "CLOSE")
 	guiHelpers.ThemeInputDialogBtnsResize(Dialog)
+	guiHelpers.EnableDisableBtns(Array As B4XView(btnCheckConnection,btnGetOctoKey),True)
 
 	If firstRun = False Then ReadSettingsFile
 	InvalidateConnection

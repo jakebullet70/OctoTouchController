@@ -58,7 +58,6 @@ public Sub Set_focus()
 		'--- this happened already on 1st run
 		tmrFilesCheckChange_Tick '--- call the check change, it will turn on the timer
 		Sleep(500)
-		Update_Printer_Btns
 	Else
 		'--- 1st showing of tab page
 		If config.logFILE_EVENTS Then logMe.LogIt(firstRun,mModule)
@@ -71,6 +70,7 @@ public Sub Set_focus()
 	
 	Update_LoadedFileName
 	DisplayedFileName = oc.JobFileName
+	Update_Printer_Btns
 	
 	
 End Sub

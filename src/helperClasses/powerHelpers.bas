@@ -73,7 +73,7 @@ Public Sub ScreenOff
 End Sub
 
 Public Sub ReleaseLocks
-	pws.ReleasePartialLock
+	'pws.ReleasePartialLock
 	pws.ReleaseKeepAlive
 End Sub
 

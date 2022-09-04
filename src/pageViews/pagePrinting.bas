@@ -190,17 +190,19 @@ End Sub
 Public Sub Update_Printer_Temps
 	
 	'--- temps, only update the label if it has changed, 
-	'--- Autosize label ctrl flickers in some cases
+	'--- the Autosize label ctrl flickers in some cases
 	Dim tmp As String
 	
 	tmp = IIf(oc.tool1Target = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.tool1Target)
 	If lblToolTemp.Text <> tmp Then
-		lblToolTemp.Text = tmp
+		lblToolTemp.Text = tmp : Sleep(0)
+		lblToolTemp.BaseLabel.Font = xui.CreateDefaultFont(NumberFormat2(lblToolTemp.BaseLabel.TextSize / guiHelpers.gFscale,1,0,0,False) - 3)
 	End If
 	
 	tmp = IIf(oc.BedTarget = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.BedTarget)
 	If lblBedTemp.Text <> tmp Then
-		lblBedTemp.Text = tmp
+		lblBedTemp.Text = tmp : Sleep(0)
+		lblBedTemp.BaseLabel.Font = xui.CreateDefaultFont(NumberFormat2(lblBedTemp.BaseLabel.TextSize / guiHelpers.gFscale,1,0,0,False) - 3)
 	End If
 	
 End Sub

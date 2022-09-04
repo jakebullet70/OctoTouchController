@@ -52,6 +52,7 @@ Public Sub Show
 	'--- make it pretty
 	inputTemplate.mBase.Color = clrTheme.BackgroundMenu
 	inputTemplate.lblTitle.Text = mPrompt
+	inputTemplate.lblTitle.TextColor = clrTheme.txtNormal
 	
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)
 	Dim rs As ResumableSub = mDialog.ShowTemplate(inputTemplate, "SET", "", "CANCEL")

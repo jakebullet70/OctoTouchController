@@ -36,6 +36,8 @@ Sub Class_Globals
 	
 	'--- only show the dialog once (should not be needed)
 	Private mConnectionErrDlgShowingFLAG As Boolean = False
+	
+	Private PromptExitTwice As Boolean = False
 
 End Sub
 
@@ -59,9 +61,7 @@ Public Sub Initialize
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
 	clrTheme.Init(config.ColorTheme)
 	
-	'--- in about 15 minutes check for old logs, crash files (3 days old) and delete them
-	Starter.tmrTimerCallSub.CallSubDelayedPlus(Starter,"Clean_OldLogs",60000 * 13)
-	Starter.tmrTimerCallSub.CallSubDelayedPlus(Starter,"Clean_OldCrash",60000 * 17)
+	Starter.InitLogCleanup
 	
 	powerHelpers.Init(config.AndroidTakeOverSleepFLAG)
 	ConfigPowerOption
@@ -101,9 +101,20 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 		Return False '--- cancel close request
 	End If
 	
+	If PromptExitTwice = False Then
+		Show_toast(Chr(0xE879) & " Tap 'back' button again to exit",2200)
+		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Prompt_Exit_Reset",2200)
+		PromptExitTwice = True
+		Return False
+	End If
+	
 	powerHelpers.ReleaseLocks
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
-	B4XPages.GetNativeParent(Me).Finish '--- Needed to turn on 'UserClosed' var
+	
+	'--- Needed to turn on 'UserClosed' var in Main.Activity_Pause
+	'--- as 'back button' should turn it on but is not
+	B4XPages.GetNativeParent(Me).Finish 
+	
 	Return True '--- exit app
 	
 End Sub
@@ -119,7 +130,7 @@ End Sub
 Private Sub B4XPage_Foreground
 	CallSub(oPageCurrent,"Set_Focus")
 	CallSub2(Main,"TurnOnOff_MainTmr",True)
-	Log("B4XPage_Foreground - calling Set_Focus")
+	Log("B4XPage_Foreground - calling Set_Focus, main tmr on")
 End Sub
 
 Private Sub B4XPage_Background
@@ -149,11 +160,8 @@ End Sub
 
 
 Public Sub HideSplash_StartUp
-	
-	'TryOctoConnection
 	pnlSplash.Visible = False
 	pnlMaster.Visible = True
-	
 End Sub
 
 Private Sub TryOctoConnection
@@ -215,7 +223,6 @@ Public Sub Update_Printer_Btns
 		
 End Sub
 #end region
-
 
 #region "MENUS"
 Private Sub btnPageAction_Click
@@ -341,34 +348,21 @@ Public Sub PrinterSetup_Closed
 End Sub
 #end region
 
-
 Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 
 	If mConnectionErrDlgShowingFLAG Then Return
 	mConnectionErrDlgShowingFLAG = True
-	Log("starting error setup cfg")
+	'Log("starting error setup cfg")
 
 	'--- turn timers off
 	CallSub2(Main,"TurnOnOff_MainTmr",False)
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	
-	'CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	Dim Msg As String = guiHelpers.GetConnectionText(connectedButError)
 	
-	Dim Msg As StringBuilder : Msg.Initialize
-	Dim PowerCtrlAvail As String = ""
-	
-	If connectedButError Then
-		Msg.Append("Connected to Octoprint but there is an error.").Append(CRLF)
-		Msg.Append("Check that Octoprint is connected to the printer?").Append(CRLF)
-		Msg.Append("Make sure you can print from the Octoprint UI.")
-	Else
-		Msg.Append("No connection to Octoprint").Append(CRLF)
-		Msg.Append("Is Octoprint turned on?")
-		Msg.Append(CRLF).Append("Connected to the printer?")
-	End If
-
-	'--- if printer power is configed, show btn	
+	'--- if printer sonoff power is configed, show btn	
 	Dim PowerCtrl As dlgSonoffCtrl : PowerCtrl.Initialize(Null,"")
+	Dim PowerCtrlAvail As String = ""
 	PowerCtrl.ReadSettingsFile
 	If PowerCtrl.mIPaddr.Length <> 0 And PowerCtrl.mShowOnScreen = True Then
 		PowerCtrlAvail = "POWER ON"
@@ -377,7 +371,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	Dim Const JUSTIFY_BUTTON_2_LEFT As Boolean = True
 	Dim ErrorDlg As dlgMsgBox
 	ErrorDlg.Initialize(Root,"Connetion Problem",560dip, 180dip,JUSTIFY_BUTTON_2_LEFT)
-	Wait For (ErrorDlg.Show(Msg.ToString,gblConst.MB_ICON_WARNING, _
+	Wait For (ErrorDlg.Show(Msg,gblConst.MB_ICON_WARNING, _
 					"RETRY",PowerCtrlAvail,"SETUP")) Complete (res As Int)
 	
 	Select Case res
@@ -396,7 +390,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	
 	ConfigPowerOption
 	mConnectionErrDlgShowingFLAG = False
-	Log("exiting error setup cfg")
+	'Log("exiting error setup cfg")
 
 End Sub
 
@@ -422,5 +416,9 @@ Private Sub pnlScreenOff_Click
 	
 End Sub
 
-
+Private Sub Prompt_Exit_Reset
+	'--- user has to tap 'back' button twice to exit in 2 seconds
+	'--- this resets the var if they do not do it in 2 seconds
+	PromptExitTwice = False
+End Sub
 

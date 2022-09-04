@@ -94,3 +94,10 @@ Public Sub Clean_OldCrash
 End Sub
 
 
+Public Sub InitLogCleanup
+	'--- in about 15 minutes check for old logs, crash files (3 days old) and delete them
+	tmrTimerCallSub.CallSubDelayedPlus(Me,"Clean_OldLogs",60000 * 13)
+	tmrTimerCallSub.CallSubDelayedPlus(Me,"Clean_OldCrash",60000 * 17)
+End Sub
+
+

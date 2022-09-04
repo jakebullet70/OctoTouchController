@@ -53,6 +53,23 @@ Public Sub GetAboutText() As String
 	Return msg.ToString
 End Sub
 
+Public Sub GetConnectionText(connectedButError As Boolean) As String
+	
+	Dim Msg As StringBuilder : Msg.Initialize
+	
+	If connectedButError Then
+		Msg.Append("Connected to Octoprint but there is an error.").Append(CRLF)
+		Msg.Append("Check that Octoprint is connected to the printer?").Append(CRLF)
+		Msg.Append("Make sure you can print from the Octoprint UI.")
+	Else
+		Msg.Append("No connection to Octoprint").Append(CRLF)
+		Msg.Append("Is Octoprint turned on?")
+		Msg.Append(CRLF).Append("Connected to the printer?")
+	End If
+	
+	Return Msg.ToString
+End Sub
+
 '--- just an easy wat to Toast!!!!
 public Sub Show_toast(msg As String, ms As Int)
 	CallSub3(B4XPages.MainPage,"Show_Toast", msg, ms)

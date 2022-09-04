@@ -48,7 +48,7 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	mDataMap = data
 	
 	'--- make it pretty
-	ListTemplate.CustomListView1.DefaultTextBackgroundColor = clrTheme.BackgroundMenu
+	ListTemplate.CustomListView1.DefaultTextBackgroundColor = clrTheme.Background
 
 	'--- setup control
 	ListTemplate.Resize(width, height)

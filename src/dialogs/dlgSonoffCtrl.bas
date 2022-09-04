@@ -41,7 +41,13 @@ Public Sub Show
 	mDialog.Initialize(mMainObj.Root)
 	
 	Dim p As B4XView = xui.CreatePanel("")
-	p.SetLayoutAnimated(0, 0, 0, 260dip,240dip)
+	Dim h As Float
+	If guiHelpers.gScreenSizeAprox > 7 Then
+		h = 280dip
+	Else
+		h = 240dip
+	End If
+	p.SetLayoutAnimated(0, 0, 0, 260dip,h)
 	p.LoadLayout("viewSonoffCtrl")
 	
 	Build_GUI 
@@ -62,7 +68,7 @@ End Sub
 
 private Sub Build_GUI
 	
-	pnlMain.Color = clrTheme.Background
+	pnlMain.Color = clrTheme.BackgroundMenu
 	guiHelpers.SetEnableDisableColor(Array As B4XView(btnOff,btnOn))
 	
 	btnOff.Text= "Off"

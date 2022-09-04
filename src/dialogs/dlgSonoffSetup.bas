@@ -85,7 +85,7 @@ End Sub
 
 private Sub Build_GUI
 	
-	pnlMain.Color = clrTheme.Background
+	pnlMain.Color = clrTheme.BackgroundMenu
 	guiHelpers.SetTextColorB4XFloatTextField(Array As B4XFloatTextField(txtPrinterIP))
 	
 	txtPrinterIP.HintText = "Sonoff IP"

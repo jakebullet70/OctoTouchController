@@ -72,6 +72,7 @@ public Sub Set_focus()
 	Update_LoadedFileName
 	DisplayedFileName = oc.JobFileName
 	
+	
 End Sub
 
 public Sub Lost_focus()

@@ -47,7 +47,8 @@ Public Sub Show
 	Dim et As EditText = inputTemplate.TextField1
 	et.InputType = et.INPUT_TYPE_NUMBERS
 	inputTemplate.ConfigureForNumbers(False, False) 'AllowDecimals, AllowNegative
-	et.TextSize = 18 : et.TextColor = clrTheme.txtNormal : et.Gravity = Gravity.CENTER
+	'et.TextSize = 18 : 
+	
 	
 	'--- make it pretty
 	inputTemplate.mBase.Color = clrTheme.BackgroundMenu
@@ -58,6 +59,8 @@ Public Sub Show
 	Dim rs As ResumableSub = mDialog.ShowTemplate(inputTemplate, "SET", "", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 	SizeInputDialog(mDialog,inputTemplate)
+	
+	'guiHelpers.EnableDisableBtns(Array As B4XView(mDialog.GetButton(xui.DialogResponse_Positive)),False)
 	
 	'--- display dialog
 	Wait For(rs)complete(intResult As Int)
@@ -82,16 +85,17 @@ Private Sub SizeInputDialog(dlg As B4XDialog, input As B4XInputTemplate)
 	LB.Height = Round((input.mBase.Height / 2.6)).As(Float)
 	LB.Font = xui.CreateDefaultFont(NumberFormat2(22 / guiHelpers.gFscale,1,0,0,False))
 	
-	
+	ET.Gravity = Gravity.CENTER
 	ET.Height = Round(input.mBase.Height / 2).As(Float)
 	ET.top = LB.Top + LB.Height + 8dip  '(input.mBase.Height / 3)
 	ET.Width = input.mBase.Width - (ET.Left * 2)
 	ET.TextSize = NumberFormat2(20 / guiHelpers.gFscale,1,0,0,False)
+	ET.TextColor = clrTheme.txtNormal 
 	
 	Dim Cncl As B4XView = dlg.GetButton(xui.DialogResponse_Cancel)
 	Cncl.Top = ET.Top + ET.Height + 46dip
 	Dim ok As B4XView = dlg.GetButton(xui.DialogResponse_Positive)
-	ok.Top = ET.Top + ET.Height + 46dip
+	ok.Top = Cncl.Top 'ET.Top + ET.Height + 46dip
 	
 	dlg.Base.Height = ET.Height + LB.Height + ok.Height + 62dip
 End Sub

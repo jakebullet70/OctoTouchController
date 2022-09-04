@@ -61,7 +61,6 @@ End Sub
 
 
 public Sub Lost_focus()
-	'mPnlMain.Visible = False
 	mPnlMain.SetVisibleAnimated(500,False)
 End Sub
 

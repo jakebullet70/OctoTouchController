@@ -63,7 +63,6 @@ End Sub
 
 public Sub Lost_focus()
 	mPnlMain.SetVisibleAnimated(500,False)
-	'mPnlMain.Visible = False
 End Sub
 
 Private Sub Build_GUI
@@ -88,7 +87,7 @@ Private Sub Build_GUI
 
 	'--- scale font
 	Dim fn As B4XFont = _
-			xui.CreateDefaultFont(NumberFormat2(btnCancel.TextSize / guiHelpers.gFscale,1,0,0,False) )
+			xui.CreateDefaultFont(NumberFormat2(btnCancel.TextSize / guiHelpers.gFscale,1,0,0,False))
 				'- 	IIf(guiHelpers.gFscale > 1,4,0))
 	btnCancel.Font = fn 
 	btnPause.Font  = fn

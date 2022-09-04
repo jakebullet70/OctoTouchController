@@ -103,7 +103,7 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	
 	powerHelpers.ReleaseLocks
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
-	B4XPages.GetNativeParent(Me).Finish
+	B4XPages.GetNativeParent(Me).Finish '--- Needed to turn on 'UserClosed' var
 	Return True '--- exit app
 	
 End Sub
@@ -118,6 +118,7 @@ End Sub
 
 Private Sub B4XPage_Foreground
 	CallSub(oPageCurrent,"Set_Focus")
+	CallSub2(Main,"TurnOnOff_MainTmr",True)
 	Log("B4XPage_Foreground - calling Set_Focus")
 End Sub
 

@@ -408,6 +408,10 @@ Public Sub Dim_ActionBar(On_off As Int)
 			Dim r As Reflector
 			r.Target = Activity
 			r.RunMethod2("setSystemUiVisibility", On_off, "java.lang.int") '1 = SYSTEM_UI_FLAG_LOW_PROFILE
+		Else
+			If On_off = gblConst.ACTIONBAR_OFF Then 
+				Activity_WindowFocusChanged(True)
+			End If
 		End If
 		
 	Catch

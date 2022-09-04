@@ -59,7 +59,7 @@ Public Sub Show
 	ReadSettingsFile
 
 	Wait For (rs) Complete (Result As Int)
-	guiHelpers.RestoreImersiveIfNeeded
+	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 	
 	
 End Sub

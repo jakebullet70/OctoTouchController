@@ -66,7 +66,6 @@ Public Sub Show
 	
 	Wait For (rs) Complete (Result As Int)
 	
-	guiHelpers.RestoreImersiveIfNeeded
 	If Result = xui.DialogResponse_Positive Then
 		Save_settings
 		config.ReadSonoffCFG

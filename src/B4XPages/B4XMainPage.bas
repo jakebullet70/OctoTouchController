@@ -420,5 +420,6 @@ Private Sub Prompt_Exit_Reset
 	'--- user has to tap 'back' button twice to exit in 2 seconds
 	'--- this resets the var if they do not do it in 2 seconds
 	PromptExitTwice = False
+	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 End Sub
 

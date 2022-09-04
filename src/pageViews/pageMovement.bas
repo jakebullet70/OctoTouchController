@@ -54,6 +54,7 @@ End Sub
 
 public Sub Lost_focus()
 	mPnlMain.SetVisibleAnimated(500,False)
+	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 End Sub
 
 

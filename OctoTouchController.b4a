@@ -137,7 +137,6 @@ Sub Process_Globals
 	Public ActionBarHomeClicked As Boolean
 			
 	'--- timers need to be in 'Process_Globals'
-	Private tmrSplash As Timer
 	Private tmrMain As Timer
 	Private tmrFilesCheckChange As Timer
 	Private tmrScreen As Timer
@@ -156,18 +155,27 @@ End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	
+	Starter.FirstRun = FirstTime
+	
 	If FirstTime Then
-		
-		tmrScreen.Initialize("tmrScreenPower",15000)	'--- init, will be reset later
+		Log("Activity_Create - FirstTime = True")
 		#if debug
-		tmrSplash.Initialize("tmrSplash",1000)  '--- just a splash screen
+		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrSplash_Tick",1000)   '--- just a splash screen
 		#else
-		tmrSplash.Initialize("tmrSplash",3200)  '--- just a splash screen	
+		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrSplash_Tick",3500)   '--- just a splash screen
 		#End If
-		tmrFilesCheckChange.Initialize("tmrFilesCheckChange",8000) '--- octo files check
-		tmrMain.Initialize("tmrMain",2100) 					       '--- main loop
-		tmrSplash.Enabled = True
+	Else
+		Log("Activity_Create - FirstTime = False")
 	End If
+		
+	If tmrScreen.IsInitialized = False Then _
+		tmrScreen.Initialize("tmrScreenPower",15000)	'--- init, will be reset later
+	
+	If tmrFilesCheckChange.IsInitialized = False Then _
+		tmrFilesCheckChange.Initialize("tmrFilesCheckChange",8000) '--- octo files check change
+	
+	If tmrMain.IsInitialized = False Then _
+		tmrMain.Initialize("tmrMain",2100) 	'--- main loop
 		
 	SetupFullScrn
 	
@@ -244,7 +252,6 @@ Private Sub tmrFilesCheckChange_Tick
 End Sub
 
 Private Sub tmrSplash_Tick
-	tmrSplash.Enabled = False
 	CallSubDelayed(B4XPages.MainPage,"HideSplash_StartUp")
 End Sub
 
@@ -363,7 +370,7 @@ End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
 	B4XPages.Delegate.Activity_Pause
-	'powerHelpers.ScreenON(False)
+	Log("UserClosed:" & UserClosed)
 End Sub
 
 Sub Activity_PermissionResult (Permission As String, Result As Boolean)
@@ -411,18 +418,18 @@ End Sub
 
 
 Public Sub Restart_App
-	' TODO, errors out, needs work
-	guiHelpers.Show_toast("Re-Starting Application...",2000)
-	Activity.Finish
-	Sleep(2200)
-	Dim r, r2 As Reflector
-	r.Target = r.GetActivity
-	r.Target = r.RunMethod("getApplicationContext")
-	r2.Target = r.RunMethod("getPackageManager")
-	Dim I As Intent = r2.RunMethod2("getLaunchIntentForPackage", r.RunMethod("getPackageName"), "java.lang.String" )
-	r.Target = I
-	r.RunMethod2("addFlags",  67108864, "java.lang.int")
-	StartActivity(I)
+'	' TODO, errors out, needs work
+'	guiHelpers.Show_toast("Re-Starting Application...",2000)
+'	Activity.Finish
+'	Sleep(2200)
+'	Dim r, r2 As Reflector
+'	r.Target = r.GetActivity
+'	r.Target = r.RunMethod("getApplicationContext")
+'	r2.Target = r.RunMethod("getPackageManager")
+'	Dim I As Intent = r2.RunMethod2("getLaunchIntentForPackage", r.RunMethod("getPackageName"), "java.lang.String" )
+'	r.Target = I
+'	r.RunMethod2("addFlags",  67108864, "java.lang.int")
+'	StartActivity(I)
 End Sub
 
 

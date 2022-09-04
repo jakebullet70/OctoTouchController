@@ -11,6 +11,7 @@ Version=9.85
 
 Sub Process_Globals
 	Public tmrTimerCallSub As CallSubUtils
+	Public FirstRun As Boolean = True
 	
 	Private xui As XUI
 	Private logcat As LogCat
@@ -28,6 +29,7 @@ Sub Service_Start (StartingIntent As Intent)
 End Sub
 
 Sub Service_TaskRemoved
+	Log("Service_TaskRemoved")
 	'This event will be raised when the user removes the app from the recent apps list.
 End Sub
 

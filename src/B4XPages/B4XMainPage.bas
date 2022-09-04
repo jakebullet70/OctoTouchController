@@ -53,6 +53,7 @@ End Sub
 
 Public Sub Initialize
 	
+	Log("Initialize - B4XMainpage")
 	'fileHelpers.DeleteFiles(xui.DefaultFolder,"*.psettings") '--- DEV - delete all printer settings files
 	config.Init
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
@@ -64,7 +65,7 @@ Public Sub Initialize
 	
 	powerHelpers.Init(config.AndroidTakeOverSleepFLAG)
 	ConfigPowerOption
-	
+
 End Sub
 
 #Region "PAGE EVENTS"
@@ -79,12 +80,16 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	toast.DefaultTextColor = clrTheme.Background
 	toast.MaxHeight = 120dip
 	
-	
 	'--- splash screen
-	pnlMaster.Visible = False
-	pnlSplash.Visible = True
-	
+	If Starter.FirstRun Then
+		pnlMaster.Visible = False
+		pnlSplash.Visible = True
+	Else
+		Starter.FirstRun = False
+	End If
+
 	Build_GUI
+	TryOctoConnection
 	
 End Sub
 
@@ -98,21 +103,35 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	
 	powerHelpers.ReleaseLocks
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
+	B4XPages.GetNativeParent(Me).Finish
 	Return True '--- exit app
 	
 End Sub
 
 Private Sub B4XPage_Appear
+	Log("B4XPage_Appear")
 End Sub
 
 Private Sub B4APage_Disappear
+	Log("B4APage_Disappear")
 End Sub
 
-Private Sub B4XPages_Foreground
+Private Sub B4XPage_Foreground
+'	If oPageCurrent = oPageFiles Then
+'		Log("B4XPage_Foreground - file page")
+'		CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
+'	End If
+	CallSub(oPageCurrent,"Set_Focus")
+	Log("B4XPage_Foreground")
 End Sub
 
-Private Sub B4XPages_Background
+Private Sub B4XPage_Background
+	CallSub2(Main,"TurnOnOff_MainTmr",False)
+	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
+	CallSub2(Main,"TurnOnOff_ScreenTmr",False)
+	Log("B4XPage_Background - timers off")
 End Sub
+
 #end region
 
 Private Sub Build_GUI
@@ -134,7 +153,7 @@ End Sub
 
 Public Sub HideSplash_StartUp
 	
-	TryOctoConnection
+	'TryOctoConnection
 	pnlSplash.Visible = False
 	pnlMaster.Visible = True
 	

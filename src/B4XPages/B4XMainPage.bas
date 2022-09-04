@@ -117,12 +117,8 @@ Private Sub B4APage_Disappear
 End Sub
 
 Private Sub B4XPage_Foreground
-'	If oPageCurrent = oPageFiles Then
-'		Log("B4XPage_Foreground - file page")
-'		CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
-'	End If
 	CallSub(oPageCurrent,"Set_Focus")
-	Log("B4XPage_Foreground")
+	Log("B4XPage_Foreground - calling Set_Focus")
 End Sub
 
 Private Sub B4XPage_Background

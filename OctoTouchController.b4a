@@ -371,6 +371,7 @@ End Sub
 Sub Activity_Pause (UserClosed As Boolean)
 	B4XPages.Delegate.Activity_Pause
 	Log("UserClosed:" & UserClosed)
+	If UserClosed Then ExitApplication
 End Sub
 
 Sub Activity_PermissionResult (Permission As String, Result As Boolean)

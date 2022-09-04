@@ -20,7 +20,6 @@ Sub Class_Globals
 	
 	Private btnPresetTool, btnPresetBed, btnPresetMaster As B4XView
 	
-'	Private scrlblFileName As ScrollingLabel
 	Private lblFileName As AutoTextSizeLabel
 	Private CircularProgressBar1 As CircularProgressBar
 	

@@ -30,9 +30,7 @@ Sub Process_Globals
 	Public Const PAGE_PRINTING As String = "ppr"
 	Public Const PAGE_FILES As String = "pfi"
 	Public Const PAGE_MAIN As String = "MainPage"
-	Public Const PAGE_SETUP As String = "stp"
 	Public Const PAGE_MOVEMENT As String = "mve"
-	Public Const PAGE_HEATING As String = "het"
 	Public Const PAGE_MENU As String = "mnu"
 	
 	Public Const NO_FILE_LOADED As String = " No file loaded"

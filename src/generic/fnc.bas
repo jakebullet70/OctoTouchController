@@ -19,6 +19,7 @@ End Sub
 '-------------------------------------------------------------------------------------------
 
 Public Sub BlankScreen
+	Log("BlankScreen")
 	B4XPages.MainPage.pnlScreenOff.Visible = True
 	B4XPages.MainPage.pnlScreenOff.BringToFront
 	powerHelpers.SetScreenBrightnessAndSave(0.1,False)

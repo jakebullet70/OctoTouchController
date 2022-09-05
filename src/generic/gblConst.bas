@@ -10,7 +10,7 @@ Version=11.5
 #End Region
 Sub Process_Globals
 	
-	Public Const DEGREE_SYMBOL As String = Chr(248)
+	Public Const DEGREE_SYMBOL As String = "°" 'Chr(248)
 	Public const APP_TITLE As String = "OctoTC ™"
 	Public const VERSION As String = "V1.0.0 - Beta 1"
 	Public Const PRINTER_SETTING_BASE_FILE_NAME As String = "p_settings"

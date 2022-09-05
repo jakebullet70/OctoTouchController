@@ -1,5 +1,6 @@
 # OctoTouchController
 A dedicated touch screen controller for Octoprint supporting older Android phones / tablets (Android 4.X) 
+Device specs: Android 4.x or above, 4inch screen with a minimum resolution of 680x340
 
 ### Project Purpose
 Reclaim those old Phones / Tablets that are sitting around that *DO NOT* have access to the Google store anymore. 

@@ -257,8 +257,11 @@ End Sub
 
 
 Public Sub tmrScreenPower_Tick
+	
+	Set_ScreenTmr
+	
 	Dim InSub As String = "tmrScreenPower_Tick"
-	If config.logPOWER_EVENTS Then 
+	If config.logPOWER_EVENTS Or config.logTIMER_EVENTS Then 
 		logMe.LogIt2("tmrScreenPower_Tick fired: " & tmrScreen.Interval,mModule,InSub)
 	End If
 	If oc.isPrinting Then 
@@ -279,13 +282,13 @@ End Sub
 
 Public Sub Set_ScreenTmr()
 
+	If config.logTIMER_EVENTS Then logMe.LogIt("Set_ScreenTmr",mModule)
+	
 	Dim inSub As String = "Set_ScreenTmr"
 	tmrScreen.Enabled = False
 
 	If config.AndroidTakeOverSleepFLAG = False Then	
-		If config.logPOWER_EVENTS Then 
-			logMe.LogIt("Power control is off",mModule)
-		End If
+		If config.logPOWER_EVENTS Then logMe.LogIt("Power control is off",mModule)
 		Return
 	End If
 	
@@ -295,7 +298,7 @@ Public Sub Set_ScreenTmr()
 			If config.logPOWER_EVENTS Then 
 				logMe.LogIt2("AndroidPrintingScrnOffFLAG = True: Min: " & config.AndroidPrintingMinTill,mModule,inSub)
 			End If
-			tmrScreen.Interval = config.AndroidPrintingMinTill * 1000 * 60 '--- we are priting
+			tmrScreen.Interval = config.AndroidPrintingMinTill * 1000 * 60 '--- we are printing
 		Else
 			If config.logPOWER_EVENTS Then 
 				logMe.LogIt2("AndroidNotPrintingScrnOffFLAG = True: Min: " & config.AndroidNotPrintingMinTill,mModule,inSub)
@@ -310,17 +313,18 @@ Public Sub Set_ScreenTmr()
 End Sub
 
 Public Sub TurnOnOff_ScreenTmr(EnableDisable As Boolean)
-	logMe.LogIt("screen tmr on: " & EnableDisable,mModule)
+	If config.logTIMER_EVENTS Then logMe.LogIt("screen tmr on: " & EnableDisable,mModule)
 	tmrScreen.Enabled = EnableDisable
 End Sub
 
 Public Sub TurnOnOff_MainTmr(EnableDisable As Boolean)
-	logMe.LogIt("main tmr on: " & EnableDisable,mModule)
+	If config.logTIMER_EVENTS Then logMe.LogIt("main tmr on: " & EnableDisable,mModule)
 	tmrMain.Enabled = EnableDisable
 End Sub
 
 Public Sub TurnOnOff_FilesCheckChangeTmr(EnableDisable As Boolean)
 	If config.logFILE_EVENTS Then logMe.LogIt("file tmr on: " & EnableDisable,mModule)
+	If config.logTIMER_EVENTS Then logMe.LogIt("file tmr on: " & EnableDisable,mModule)
 	tmrFilesCheckChange.Enabled = EnableDisable
 End Sub
 

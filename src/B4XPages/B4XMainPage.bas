@@ -97,7 +97,7 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	
 	'--- catch the android BACK button
 	If oPageCurrent <> oPageMenu Then
-		Switch_Pages(gblConst.PAGE_MENU)
+		Switch_Pages(gblConst.PAGE_MENU)		
 		Return False '--- cancel close request
 	End If
 	
@@ -235,7 +235,9 @@ End Sub
 
 
 Public Sub Switch_Pages(action As String)
+	
 	'--- called from menu page class and back button
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 	'--- fire the lost focus event
 	If oPageCurrent <> Null Then
@@ -352,7 +354,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 
 	If mConnectionErrDlgShowingFLAG Then Return
 	mConnectionErrDlgShowingFLAG = True
-	'Log("starting error setup cfg")
+	Log("starting error setup cfg")
 
 	'--- turn timers off
 	CallSub2(Main,"TurnOnOff_MainTmr",False)
@@ -376,6 +378,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	
 	Select Case res
 		Case xui.DialogResponse_Positive '--- retry
+			Show_toast("Retrying connection...",1300)
 			oMasterController.Start
 			
 		Case xui.DialogResponse_Cancel	 '--- this runs setup
@@ -390,7 +393,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	
 	ConfigPowerOption
 	mConnectionErrDlgShowingFLAG = False
-	'Log("exiting error setup cfg")
+	Log("exiting error setup cfg")
 
 End Sub
 

@@ -105,6 +105,11 @@ End Sub
 
 Private Sub mnuCardImg_Click
 	
+	If oc.isConnected = False Then 
+		guiHelpers.Show_toast("No connection",1000)
+		Return
+	End If
+	
 	'--- pass the menu selection back to main page
 	Dim oo As lmB4XImageViewX : oo = Sender
 	Sleep(50)

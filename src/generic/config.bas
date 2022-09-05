@@ -36,6 +36,9 @@ Sub Process_Globals
 	Public logFILE_EVENTS As Boolean = False
 	Public logREQUEST_OCTO_KEY As Boolean = False
 	Public logREST_API As Boolean = False
+	
+	
+	Public logTIMER_EVENTS As Boolean = False '--- not in the general setup
 	'------------
 	
 	Public IsInit As Boolean = False

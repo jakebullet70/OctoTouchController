@@ -287,13 +287,15 @@ public Sub GetAllOctoFilesInfo
 		gMapOctoFilesList = o.StartParseAllFiles(Result)
 		
 		mGotFilesListFLAG = True '--- will stop it from firing in the main loop
-		mGotFilesListFLAG_IsBusy = False '--- reset the is busy flag
+		
 		
 	Else
 		
 		'oc.RestPrinterProfileVars
 		
 	End If
+	
+	mGotFilesListFLAG_IsBusy = False '--- reset the is busy flag
 	
 End Sub
 #end region

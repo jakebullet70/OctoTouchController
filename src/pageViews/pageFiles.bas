@@ -284,7 +284,10 @@ End Sub
 Public Sub CheckIfFilesChanged
 	
 	If FilesCheckChangeIsBusyFLAG Then Return
-	If mMainObj.MasterCtrlr.gMapOctoFilesList.IsInitialized = False Then Return
+	If mMainObj.MasterCtrlr.gMapOctoFilesList.IsInitialized = False Then
+		mMainObj.MasterCtrlr.GetAllOctoFilesInfo
+		Return
+	End If
 	
 	Dim oldListViewSize As Int = clvFiles.Size
 		

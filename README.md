@@ -15,4 +15,4 @@ Octoprint functions are feature complete, only UI work left. (Aug/1/2022)
 
 Beta 1 Released. (Sept/5/2022)
 
-![](./github_pics/print.jpg?raw=true "Printing")  
+![](./github_pics/printing.jpg?raw=true "Printing")  

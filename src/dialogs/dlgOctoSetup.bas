@@ -217,8 +217,11 @@ End Sub
 
 #region "REQUEST OCTO KEY"
 Private Sub btnGetOctoKey_Click
+	
+	If txtPrinterPort.Text.Length = 0 Then _
+		txtPrinterPort.Text = "80"
 
-	If txtPrinterIP.Text.Length = 0 Or txtPrinterPort.Text.Length = 0 Then
+	If txtPrinterIP.Text.Length = 0 Then
 		'--- custom dlgMSgBox not working inside another dialog object
 		'Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",540dip, 200dip)
 		'Wait For (mb.Show("Please check if your IP and Port Are Set", _
@@ -269,6 +272,7 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 		If Success Then
 			txtOctoKey.Text = result.As(String)
 			ValidConnection = True
+			guiHelpers.Show_toast("Requested API key OK!",1800)
 		Else
 			'--- custom dlgMSgBox not working inside another dialog object
 			'Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",540dip, 220dip)
@@ -297,12 +301,13 @@ Private Sub CheckInputs() As String
 	Do While True
 		
 		'If txtPrinterIP.Text.Length = 0 Or CheckValidIPAddr(txtPrinterIP.Text) Then
-		If txtPrinterIP.Text.Length = 0  Then
+		If txtPrinterIP.Text.Length = 0  Then 
 			msg = "Missing IP address" : Exit
 		End If
 		
 		If txtPrinterPort.Text.Length = 0  Then
-			msg = "Missing Port Number" : Exit
+			txtPrinterPort.Text = "80"
+			'msg = "Missing Port Number" : Exit
 		End If
 		
 		If txtOctoKey.Text.Length = 0 Then

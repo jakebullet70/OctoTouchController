@@ -129,7 +129,8 @@ End Sub
 
 Private Sub B4XPage_Foreground
 	CallSub(oPageCurrent,"Set_Focus")
-	If oc.isConnected Then CallSub2(Main,"TurnOnOff_MainTmr",True)
+	If oc.isConnected Then _
+		CallSub2(Main,"TurnOnOff_MainTmr",True)
 	Log("B4XPage_Foreground - calling Set_Focus, main tmr on")
 End Sub
 

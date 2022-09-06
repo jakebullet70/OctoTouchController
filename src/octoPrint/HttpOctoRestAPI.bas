@@ -33,14 +33,15 @@ End Sub
 Private Sub ProcessErrMsg(msg As String)
 	
 	msg = msg.ToLowerCase
-	If msg.Contains("failed to connect to") Or msg.Contains("ockettimeou") Then
+	If msg.Contains("ed to connect t") Or msg.Contains("ockettimeou") Or msg.Contains("lid or inco") Then
 		'--- ResponseError. Reason: java.net.ConnectException: Failed to connect to /192.168.1.236:5003, Response:
 		'--- java.net.SocketTimeoutException: failed to connect to /192.168.1.207 (port 80) after 30000ms
 		'--- java.net.SocketTimeoutException
+		'--- the server returned an invalid or incomplete response.
 		oc.ResetAllOctoVars
 		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)
 		Return
-	else If msg.Contains("is not operational") Then
+	else If msg.Contains("is not oper") Then
 		'--- ResponseError. Reason: CONFLICT, Response: {"error":"Printer is not operational"}
 		oc.ResetAllOctoVars
 		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",True)

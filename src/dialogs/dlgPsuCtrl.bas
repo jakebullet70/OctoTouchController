@@ -19,6 +19,8 @@ Sub Class_Globals
 	Private pnlMain As B4XView
 	Private mDialog As B4XDialog
 	
+	Private mPSU_Type As String = ""
+	
 	Private btnOff,btnOn As B4XView
 	Public mIPaddr As String
 	Public mShowOnScreen As Boolean
@@ -48,7 +50,7 @@ Public Sub Show
 		h = 240dip
 	End If
 	p.SetLayoutAnimated(0, 0, 0, 260dip,h)
-	p.LoadLayout("viewSonoffCtrl")
+	p.LoadLayout("viewPsuCtrl")
 	
 	Build_GUI 
 
@@ -91,20 +93,33 @@ End Sub
 
 Private Sub btnCtrl_Click
 	
-	Dim o As B4XView 
-	o = Sender
+	Dim o As B4XView : o = Sender
 	Wait For (SendCmd(o.Tag)) Complete(s As String)
 	mDialog.Close(-1) '--- close it, exit dialog
 	
 End Sub
 
-
 Public Sub SendCmd(cmd As String)As ResumableSub'ignore
+
+	Dim msg As String = $"Sending Power '${cmd.ToUpperCase}' Command"$
 	
-	Dim sm As HttpDownloadStr
-	sm.Initialize
-	guiHelpers.Show_toast($"Sending Power ${cmd.ToUpperCase} command, Please wait..."$,3000)
-	Wait For (sm.SendRequest($"http://${mIPaddr}/cm?cmnd=Power%20${cmd}"$)) Complete(s As String)
+	Select Case mPSU_Type
+		Case "sonoff"
+			Dim sm As HttpDownloadStr : sm.Initialize
+			Wait For (sm.SendRequest($"http://${mIPaddr}/cm?cmnd=Power%20${cmd}"$)) Complete(s As String)
+			
+		Case "octo_k"
+			mMainObj.MasterCtrlr.cn.PostRequest( _
+				oc.cPSU_CONTROL_K.Replace("!ONOFF!",IIf(cmd.ToLowerCase ="on","On","Off")))
+		
+		Case ""
+			
+		Case Else
+			msg = "PSU control config problem"
+			
+	End Select
+	
+	guiHelpers.Show_toast(msg,1500)
 	
 End Sub
 

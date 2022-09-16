@@ -12,6 +12,7 @@ Version=9.85
 Sub Process_Globals
 	Public tmrTimerCallSub As CallSubUtils
 	Public FirstRun As Boolean = True
+	Public kvs As KeyValueStore
 	
 	Private xui As XUI
 	Private logcat As LogCat
@@ -19,6 +20,8 @@ End Sub
 
 Sub Service_Create '--- This is the program entry point.
 	tmrTimerCallSub.Initialize
+	xui.SetDataFolder("kvs")
+	kvs.Initialize(xui.DefaultFolder, "kvs.sq3")
 	#if Release
 	logcat.LogCatStart(Array As String("-v","raw","*:F","B4A:v"), "logcat")
 	#end if

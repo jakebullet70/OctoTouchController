@@ -148,9 +148,9 @@ Private Sub btnSubBtnAction_Click
 			CallSub2(Main,"TurnOnOff_ScreenTmr",False)
 			fnc.BlankScreen
 			
-		Case "snof" '--- Sonoff crap
+		Case "snof" '--- Sonoff / power crap
 			Dim o1 As dlgPsuCtrl
-			o1.Initialize(mMainObj,"Sonoff Control")
+			o1.Initialize(mMainObj,"Power Control")
 			o1.Show
 				
 	End Select

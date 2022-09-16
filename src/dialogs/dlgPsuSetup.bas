@@ -19,9 +19,7 @@ Sub Class_Globals
 	Private xui As XUI
 	Private mTitle As String
 	
-	Private B4XLoadingIndicator1 As B4XLoadingIndicator
-	Private btnCheckConnection As B4XView
-	Private B4XSwitch1 As B4XSwitch, lblSwitch,lblSonoffInfo As B4XView
+	Private lblSwitch,lblSonoffInfo As B4XView
 	
 	Private txtPrinterIP As B4XFloatTextField
 	Private pnlMain As B4XView
@@ -29,6 +27,9 @@ Sub Class_Globals
 	Private mValidConnection As Boolean = False
 	Private mDialog As B4XDialog
 	
+	Private swPSUocto,swPsuCtrlOnOff,swSonoff As B4XSwitch
+	
+	Private lblPSUinfo As B4XView
 End Sub
 
 
@@ -47,26 +48,21 @@ Public Sub Show
 	mDialog.Initialize(mMainObj.Root)
 	
 	Dim p As B4XView = xui.CreatePanel("")
-	p.SetLayoutAnimated(0, 0, 0, 510dip, 300dip)
-	p.LoadLayout("viewPsuOnOff")
+	p.SetLayoutAnimated(0, 0, 0, 420dip, 270dip)
+	p.LoadLayout("viewPsuSetup")
 	
 	Build_GUI 
 
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "SAVE", "", "CLOSE")
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
-	guiHelpers.EnableDisableBtns(Array As B4XView(btnCheckConnection),True)	
-	guiHelpers.SetTextColor(Array As B4XView(lblSonoffInfo,lblSwitch))
+	guiHelpers.SetTextColor(Array As B4XView(lblSonoffInfo,lblSwitch,lblPSUinfo))
 
 	ReadSettingsFile
 	InvalidateConnection
 	
-	SetSaveButtonState
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
 
-	'--- show KB	
-	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Show_KB",400)
-	
 	Wait For (rs) Complete (Result As Int)
 	
 	If Result = xui.DialogResponse_Positive Then
@@ -80,20 +76,13 @@ Public Sub Show
 End Sub
 
 
-Private Sub Show_KB
-	txtPrinterIP.RequestFocusAndShowKeyboard
-End Sub
-
-
 private Sub Build_GUI
 	
 	pnlMain.Color = clrTheme.BackgroundMenu
 	guiHelpers.SetTextColorB4XFloatTextField(Array As B4XFloatTextField(txtPrinterIP))
 	
-	txtPrinterIP.HintText = "Sonoff IP"
-	
-	btnCheckConnection.Text= "Test"
-	btnCheckConnection.Font = xui.CreateDefaultFont(NumberFormat2(btnCheckConnection.Font.Size / guiHelpers.gFscale,1,0,0,False))
+	txtPrinterIP.HintText = "Tasmota IP"
+	swPSUocto.Value = True
 	
 End Sub
 
@@ -108,7 +97,7 @@ End Sub
 private Sub Save_settings
 	
 	Dim outMap As Map = CreateMap( _
-						gblConst.SONOFF_IP : txtPrinterIP.text, gblConst.SONOFF_ON : B4XSwitch1.Value.As(String))
+						gblConst.SONOFF_IP : txtPrinterIP.text, gblConst.SONOFF_ON : swPsuCtrlOnOff.Value.As(String))
 
 
 	guiHelpers.Show_toast("Saved",2500)							
@@ -118,102 +107,14 @@ private Sub Save_settings
 End Sub
 
 
-Private Sub SetSaveButtonState
-	Try
-		guiHelpers.EnableDisableBtns( _
-			Array As B4XView(mDialog.GetButton(xui.DialogResponse_Positive)),mValidConnection)	
-	Catch
-		'Log(LastException)
-	End Try 'ignore
-End Sub
-
-Private Sub EnableDisableBtns(en As Boolean)
-	
-	guiHelpers.EnableDisableBtns(Array As B4XView( _
-		mDialog.GetButton(xui.DialogResponse_Positive),mDialog.GetButton(xui.DialogResponse_Cancel), _
-		btnCheckConnection),en)
-			
-End Sub
-
-
-#Region "CONNECTION CHECK"
-Private Sub btnCheckConnection_Click
-	
-	'--- see if inputs are valid
-	Dim msg As String = CheckInputs
-	If msg.Length <> 0 Then
-		'--- custom dlgMSgBox not working inside another dialog object
-		'Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",580dip, 220dip)
-		'Wait For (mb.Show(msg,gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
-		Dim sf As Object = xui.Msgbox2Async($"Input Error! ${msg}"$, "Problem", "OK", "", "",Null)
-		Wait For (sf) Msgbox_Result (Result As Int)
-		Return
-	End If
-	
-	'--- disable dialog
-	pnlMain.Enabled = False
-	EnableDisableBtns(False)
-	B4XLoadingIndicator1.Show
-	Sleep(20)
-			
-	'--- run connection check
-	guiHelpers.Show_toast("Checking Sonoff Connection...",800)
-	
-	Dim o As HttpDownloadStr : o.Initialize
-	Wait For (o.SendRequest($"http://${txtPrinterIP.Text}"$)) Complete(s As String)
-
-	If s.Contains("Tasmota") Then
-		mValidConnection = True
-	Else If s.Length > 0 Then
-		If config.logREST_API Then
-			logMe.logit2(s,mModule,"btnCheckConnection_Click")
-		End If
-	End If
-	
-	B4XLoadingIndicator1.Hide
-	
-	If mValidConnection Then
-		guiHelpers.Show_toast("Connection OK",3000)
-	Else
-		'--- custom dlgMSgBox not working inside another dialog object
-		'Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",580dip, 220dip)
-		'Wait For (mb.Show(msg.ToString,gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
-		Dim oo As Object = xui.Msgbox2Async("Connection Failed. Check your IP", "Problem", "OK", "", "",Null)
-		Wait For (oo) Msgbox_Result (result1 As Int)
-	End If
-	
-	EnableDisableBtns(True)
-	SetSaveButtonState
-
-End Sub
-#end region
-
-
-
-Private Sub CheckInputs() As String
-
-	'--- Validation check
-	Dim msg As String = ""
-	If txtPrinterIP.Text.Length = 0  Then
-		msg = "Missing IP address" 
-	Else
-		If fnc.IsValidIPv4Address(txtPrinterIP.Text) = False Then
-			msg = "Invalid IPv4 address"
-		End If
-	End If
-	
-	Return msg
-	
-End Sub
-
 #Region "TEXT FIELD EVENTS"
 Private Sub txtPrinterIP_TextChanged (Old As String, New As String)
-	InvalidateConnection
+	If swPSUocto.Value = True Then 
+		InvalidateConnection
+	End If
 End Sub
-
-Private Sub InvalidateConnection
-	mValidConnection = False
-	SetSaveButtonState
+Private Sub txtPrinterIP_FocusChanged (HasFocus As Boolean)
+	txtPrinterIP.RequestFocusAndShowKeyboard
 End Sub
 #End Region
 
@@ -222,7 +123,23 @@ private Sub ReadSettingsFile
 
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE)
 	txtPrinterIP.Text = Data.Get(gblConst.SONOFF_IP)
-	B4XSwitch1.Value = Data.Get(gblConst.SONOFF_ON).As(Boolean)
+	swPsuCtrlOnOff.Value = Data.Get(gblConst.SONOFF_ON).As(Boolean)
 
 End Sub
+
+Private Sub InvalidateConnection
+	txtPrinterIP.mBase.Visible = Not (swPSUocto.Value)
+	mValidConnection = False
+End Sub
+
+'--- only Sonoff or PSU control ---
+Private Sub swSonoff_ValueChanged (Value As Boolean)
+	swPSUocto.Value = Not (Value)
+	InvalidateConnection
+End Sub
+Private Sub swPSUocto_ValueChanged (Value As Boolean)
+	swSonoff.Value = Not (Value)
+	InvalidateConnection
+End Sub
+'--------------------------------------
 

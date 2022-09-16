@@ -309,9 +309,9 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 	Select Case value
 		
 		Case "ab" '--- about
-			Dim msg As String = guiHelpers.GetAboutText()
 			Dim mb As dlgMsgBox : mb.Initialize(Root,"About",560dip, 200dip,False)
-			Wait For (mb.Show(msg,"splash.png","OK","","")) Complete (res As Int)
+			Wait For (mb.Show( _
+				 guiHelpers.GetAboutText() ,"splash.png","OK","","")) Complete (res As Int)
 			
 		Case "gn"  '--- general settings
 			Dim o3 As dlgGeneralOptions
@@ -329,7 +329,7 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			
 		Case "psu"  '--- sonoff / PSU control setup
 			Dim oA As dlgPsuSetup
-			oA.Initialize(Me,"Sonoff Connection")
+			oA.Initialize(Me,"PSU Config")
 			oA.Show
 		
 	End Select

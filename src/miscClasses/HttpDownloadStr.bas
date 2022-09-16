@@ -7,7 +7,7 @@ Version=5.5
 ' Author:  sadLogic
 #Region VERSIONS 
 ' V. 1.0	Aug/27/2022
-'			1st version. Generic HTTP download
+'			1st version. Generic HTTP download, can be used for other things to
 #End Region
 
 Sub Class_Globals
@@ -21,7 +21,7 @@ End Sub
 
 Public Sub SendRequest(target As String)As ResumableSub
 	
-	Dim insub As String = "PostMe"
+	Dim insub As String = "SendRequest"
 	Dim j As HttpJob: j.Initialize("", Me)
 	Dim retStr As String = ""
 	

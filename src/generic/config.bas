@@ -80,7 +80,7 @@ Private Sub LoadCfgs()
 	
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE) = False Then
-		Dim o1 As dlgSonoffSetup
+		Dim o1 As dlgPsuSetup
 		o1.Initialize(Null,"")
 		o1.CreateDefaultFile
 	End If

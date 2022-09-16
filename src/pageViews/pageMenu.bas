@@ -149,7 +149,7 @@ Private Sub btnSubBtnAction_Click
 			fnc.BlankScreen
 			
 		Case "snof" '--- Sonoff crap
-			Dim o1 As dlgSonoffCtrl
+			Dim o1 As dlgPsuCtrl
 			o1.Initialize(mMainObj,"Sonoff Control")
 			o1.Show
 				

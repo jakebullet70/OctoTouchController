@@ -11,7 +11,7 @@ Version=11.5
 
 Sub Class_Globals
 	
-	Private const mModule As String = "dlgSonoffCtrl"' 'ignore
+	Private const mModule As String = "dlgPsuCtrl"' 'ignore
 	Private mMainObj As B4XMainPage
 	Private xui As XUI
 	Private mTitle As String
@@ -60,6 +60,9 @@ Public Sub Show
 
 	Wait For (rs) Complete (Result As Int)
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
+	
+	'--- timer might be off, make sure it is on
+	'CallSub2(Main,"TurnOnOff_MainTmr",True)
 	
 	
 End Sub

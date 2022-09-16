@@ -6,12 +6,15 @@ Version=11.5
 @EndOfDesignText@
 ' Author:  sadLogic
 #Region VERSIONS 
+' V. 1.1	Sept/16/2022
+' 			Added suport for kantlivelong PSU octo plugin
 ' V. 1.0 	Aug/23/2022
+'			PSU control for SonOff - Tasmota firmware
 #End Region
 
 Sub Class_Globals
 	
-	Private const mModule As String = "dlgSonOff"' 'ignore
+	Private const mModule As String = "dlgPsuSetup"' 'ignore
 	Private mMainObj As B4XMainPage
 	Private xui As XUI
 	Private mTitle As String
@@ -45,7 +48,7 @@ Public Sub Show
 	
 	Dim p As B4XView = xui.CreatePanel("")
 	p.SetLayoutAnimated(0, 0, 0, 510dip, 300dip)
-	p.LoadLayout("viewSonOffSetup")
+	p.LoadLayout("viewPsuOnOff")
 	
 	Build_GUI 
 

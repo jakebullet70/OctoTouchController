@@ -180,7 +180,7 @@ Public Sub ThemePrefDialogForm(prefdlg As sadPreferencesDialog)
 		
 		prefdlg.ItemsBackgroundColor = clrTheme.BackgroundMenu
 		prefdlg.SeparatorBackgroundColor = clrTheme.BackgroundHeader
-		prefdlg.SeparatorTextColor = clrTheme.Background
+		prefdlg.SeparatorTextColor = clrTheme.txtAccent
 		prefdlg.TextColor = clrTheme.txtNormal
 		
 		

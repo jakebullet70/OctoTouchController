@@ -102,7 +102,8 @@ Module41=|relative|src\custom_controls\sadRoundSlider
 Module42=|relative|src\main\Starter
 Module43=|relative|src\helperClasses\strHelpers
 Module44=|relative|src\miscClasses\SysInfo
-Module45=|relative|src\miscClasses\WildCardFilesList
+Module45=|relative|src\main\Updater
+Module46=|relative|src\miscClasses\WildCardFilesList
 Module5=|relative|src\custom_controls\CircularProgressBar
 Module6=|relative|src\generic\clrTheme
 Module7=|relative|src\miscClasses\clvSelectionsX
@@ -110,12 +111,12 @@ Module8=|relative|src\generic\config
 Module9=|relative|src\dialogs\dlgBrightness
 NumberOfFiles=23
 NumberOfLibraries=16
-NumberOfModules=45
+NumberOfModules=46
 Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: OctoTC
-	#VersionCode: 3
+	#VersionCode: 4
 	#VersionName: 1.0
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: landscape

@@ -363,10 +363,8 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	Dim Msg As String = guiHelpers.GetConnectionText(connectedButError)
 	
 	'--- if printer sonoff power is configed, show btn	
-	Dim PowerCtrl As dlgPsuCtrl : PowerCtrl.Initialize(Null,"")
 	Dim PowerCtrlAvail As String = ""
-	PowerCtrl.ReadSettingsFile
-	If PowerCtrl.mIPaddr.Length <> 0 And PowerCtrl.mShowOnScreen = True Then
+	If Starter.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean) = True Then
 		PowerCtrlAvail = "POWER ON"
 	End If
 
@@ -385,7 +383,8 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 			OptionsMenu_Event(0,"oc")
 			
 		Case xui.DialogResponse_Negative '--- Power on 
-			Wait For (PowerCtrl.SendCmd("on")) Complete(s As String)
+			Dim o As dlgPsuCtrl : o.Initialize(Null,"")
+			Wait For (o.SendCmd("on")) Complete(s As String)
 			Sleep(3000)
 			oMasterController.Start
 			

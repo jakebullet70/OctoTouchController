@@ -10,9 +10,9 @@ Version=11.5
 #End Region
 Sub Process_Globals
 	
-	Public Const DEGREE_SYMBOL As String = "°" 'Chr(248)
+	Public Const DEGREE_SYMBOL As String = "°" 
 	Public const APP_TITLE As String = "OctoTC ™"
-	Public const VERSION As String = "V1.0.0 - Beta 2"
+	Public const VERSION As String = "V1.0.0 - Beta 3"
 	Public Const PRINTER_SETTING_BASE_FILE_NAME As String = "p_settings"
 	
 	Public Const PRINTER_DESC As String = "desc"
@@ -20,12 +20,13 @@ Sub Process_Globals
 	Public Const PRINTER_PORT As String = "port"
 	Public Const PRINTER_OCTO_KEY As String = "octokey"
 	
-	Public Const SONOFF_IP As String = "ip"
-	Public Const SONOFF_ON As String = "on"
+	Public Const PWR_SONOFF_IP As String = "pwr_sonoff_ip"
+	Public Const PWR_CTRL_ON As String = "pwr_on"
+	Public Const PWR_PSU_PLUGIN As String = "pwr_psu_on"
+	Public Const PWR_SONOFF_PLUGIN As String = "pwr_sonoff_on"
 	
 	Public Const POWER_OPTIONS_FILE As String = "power_options.map"
 	Public Const GENERAL_OPTIONS_FILE As String = "general_options.map"
-	Public Const SONOFF_OPTIONS_FILE As String = "sonoff_options.map"
 	
 	Public Const PAGE_PRINTING As String = "ppr"
 	Public Const PAGE_FILES As String = "pfi"

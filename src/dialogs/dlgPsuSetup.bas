@@ -19,17 +19,15 @@ Sub Class_Globals
 	Private xui As XUI
 	Private mTitle As String
 	
-	Private lblSwitch,lblSonoffInfo As B4XView
+	Private lblPSUinfo,lblSwitch,lblSonoffInfo As B4XView
 	
 	Private txtPrinterIP As B4XFloatTextField
 	Private pnlMain As B4XView
 	
-	Private mValidConnection As Boolean = False
 	Private mDialog As B4XDialog
 	
 	Private swPSUocto,swPsuCtrlOnOff,swSonoff As B4XSwitch
 	
-	Private lblPSUinfo As B4XView
 End Sub
 
 
@@ -48,7 +46,7 @@ Public Sub Show
 	mDialog.Initialize(mMainObj.Root)
 	
 	Dim p As B4XView = xui.CreatePanel("")
-	p.SetLayoutAnimated(0, 0, 0, 420dip, 270dip)
+	p.SetLayoutAnimated(0, 0, 0, 420dip, 280dip)
 	p.LoadLayout("viewPsuSetup")
 	
 	Build_GUI 
@@ -67,7 +65,7 @@ Public Sub Show
 	
 	If Result = xui.DialogResponse_Positive Then
 		Save_settings
-		config.ReadSonoffCFG
+		config.ReadPwrCFG
 		CallSub(mMainObj.oPageCurrent,"Set_focus")
 	End If
 	
@@ -86,23 +84,23 @@ private Sub Build_GUI
 	
 End Sub
 
-Public Sub CreateDefaultFile
-
-	File.WriteMap(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE, _
-		CreateMap(gblConst.SONOFF_IP : "", gblConst.SONOFF_ON : "false"))
+Public Sub CreateDefaultCfg
+	
+	Starter.kvs.Put(gblConst.PWR_CTRL_ON,False)
+	Starter.kvs.Put(gblConst.PWR_PSU_PLUGIN,True)
+	Starter.kvs.Put(gblConst.PWR_SONOFF_PLUGIN,False)
+	Starter.kvs.Put(gblConst.PWR_SONOFF_IP,"")
 	
 End Sub
 
 
 private Sub Save_settings
 	
-	Dim outMap As Map = CreateMap( _
-						gblConst.SONOFF_IP : txtPrinterIP.text, gblConst.SONOFF_ON : swPsuCtrlOnOff.Value.As(String))
-
-
-	guiHelpers.Show_toast("Saved",2500)							
-	fileHelpers.SafeKill(gblConst.SONOFF_OPTIONS_FILE)
-	File.WriteMap(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE,outMap)
+	guiHelpers.Show_toast("Saved",2500)
+	Starter.kvs.Put(gblConst.PWR_CTRL_ON,swPsuCtrlOnOff.Value)
+	Starter.kvs.Put(gblConst.PWR_PSU_PLUGIN,swPSUocto.Value)
+	Starter.kvs.Put(gblConst.PWR_SONOFF_PLUGIN,swSonoff.Value)
+	Starter.kvs.Put(gblConst.PWR_SONOFF_IP,txtPrinterIP.Text & "")
 	
 End Sub
 
@@ -114,22 +112,26 @@ Private Sub txtPrinterIP_TextChanged (Old As String, New As String)
 	End If
 End Sub
 Private Sub txtPrinterIP_FocusChanged (HasFocus As Boolean)
-	txtPrinterIP.RequestFocusAndShowKeyboard
+	If HasFocus Then 
+		txtPrinterIP.RequestFocusAndShowKeyboard
+	Else
+		'--- hide KB?
+	End If
 End Sub
 #End Region
 
 
 private Sub ReadSettingsFile
 
-	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE)
-	txtPrinterIP.Text = Data.Get(gblConst.SONOFF_IP)
-	swPsuCtrlOnOff.Value = Data.Get(gblConst.SONOFF_ON).As(Boolean)
+	txtPrinterIP.Text = Starter.kvs.GetDefault(gblConst.PWR_SONOFF_IP,"")
+	swSonoff.Value = Starter.kvs.Get(gblConst.PWR_SONOFF_PLUGIN).As(Boolean)
+	swPSUocto.Value = Starter.kvs.Get(gblConst.PWR_PSU_PLUGIN).As(Boolean)
+	swPsuCtrlOnOff.Value = Starter.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
 
 End Sub
 
 Private Sub InvalidateConnection
 	txtPrinterIP.mBase.Visible = Not (swPSUocto.Value)
-	mValidConnection = False
 End Sub
 
 '--- only Sonoff or PSU control ---

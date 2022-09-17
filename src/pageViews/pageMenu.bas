@@ -55,7 +55,7 @@ public Sub Set_focus()
 		btnScrnOff.Left = btnBrightness.Left - (btnBrightness.Width + IIf(guiHelpers.gScreenSizeAprox < 5.4,0dip,10dip))
 	End If
 	
-	btnSonoff.Visible = config.SonoffFLAG
+	btnSonoff.Visible = config.ShowPwrCtrlFLAG
 	
 End Sub
 

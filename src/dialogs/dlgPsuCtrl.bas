@@ -23,7 +23,6 @@ Sub Class_Globals
 	
 	Private btnOff,btnOn As B4XView
 	Public mIPaddr As String
-	Public mShowOnScreen As Boolean
 	
 End Sub
 
@@ -33,6 +32,7 @@ Public Sub Initialize(mobj As B4XMainPage, title As String)
 	
 	mMainObj = mobj
 	mTitle = title
+	ReadSettingsCfg
 	
 End Sub
 
@@ -58,8 +58,6 @@ Public Sub Show
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 
-	ReadSettingsFile
-
 	Wait For (rs) Complete (Result As Int)
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 	
@@ -82,11 +80,14 @@ private Sub Build_GUI
 End Sub
 
 
-Public Sub ReadSettingsFile
+Public Sub ReadSettingsCfg
 
-	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE)
-	mIPaddr = Data.Get(gblConst.SONOFF_IP)
-	mShowOnScreen = Data.Get(gblConst.SONOFF_ON).As(Boolean)
+	mIPaddr = Starter.kvs.GetDefault(gblConst.PWR_SONOFF_IP,"")
+	If Starter.kvs.Get(gblConst.PWR_SONOFF_PLUGIN).As(Boolean) = True Then
+		mPSU_Type = "sonoff"
+	Else
+		mPSU_Type = "octo_k"
+	End If
 
 End Sub
 
@@ -105,6 +106,10 @@ Public Sub SendCmd(cmd As String)As ResumableSub'ignore
 	
 	Select Case mPSU_Type
 		Case "sonoff"
+			If mIPaddr = "" Then 
+				guiHelpers.Show_toast("Missing SonOff IP address",2000)
+				Return 'ignore
+			End If
 			Dim sm As HttpDownloadStr : sm.Initialize
 			Wait For (sm.SendRequest($"http://${mIPaddr}/cm?cmnd=Power%20${cmd}"$)) Complete(s As String)
 			
@@ -112,8 +117,6 @@ Public Sub SendCmd(cmd As String)As ResumableSub'ignore
 			mMainObj.MasterCtrlr.cn.PostRequest( _
 				oc.cPSU_CONTROL_K.Replace("!ONOFF!",IIf(cmd.ToLowerCase ="on","On","Off")))
 		
-		Case ""
-			
 		Case Else
 			msg = "PSU control config problem"
 			

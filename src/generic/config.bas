@@ -43,9 +43,8 @@ Sub Process_Globals
 	
 	Public IsInit As Boolean = False
 	
-	'--- sonoff dlg
-	Public SonoffFLAG As Boolean = False
-	'Public SonoffIP As String = ""
+	'--- Printer power - sonoff
+	Public ShowPwrCtrlFLAG As Boolean = False
 
 End Sub
 
@@ -77,25 +76,19 @@ Private Sub LoadCfgs()
 	ReadPowerCFG
 	
 	'======================================================================
-	
-	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE) '--- Dev
-	If File.Exists(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE) = False Then
+
+	If Starter.kvs.ContainsKey(gblConst.PWR_CTRL_ON) = False Then	
 		Dim o1 As dlgPsuSetup
 		o1.Initialize(Null,"")
-		o1.CreateDefaultFile
+		o1.CreateDefaultCfg
 	End If
-	ReadSonoffCFG
+	ReadPwrCFG
 	
 End Sub
 
 
-Public Sub ReadSonoffCFG
-	
-	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.SONOFF_OPTIONS_FILE)
-	
-	'SonoffIP = Data.Get(gblConst.SONOFF_IP)
-	SonoffFLAG = Data.Get(gblConst.SONOFF_ON).As(Boolean)
-	
+Public Sub ReadPwrCFG
+	ShowPwrCtrlFLAG = Starter.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
 End Sub
 
 

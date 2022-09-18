@@ -425,3 +425,13 @@ Private Sub Prompt_Exit_Reset
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 End Sub
 
+
+
+Private Sub lblStatus_Click
+	'--- if not connected then popup the connection screen
+	If lblStatus.Text.Contains("No C") Or oc.isConnected = False Then
+		CallSetupErrorConnecting(False)
+	End If
+End Sub
+
+

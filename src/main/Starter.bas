@@ -12,16 +12,30 @@ Version=9.85
 Sub Process_Globals
 	Public tmrTimerCallSub As CallSubUtils
 	Public FirstRun As Boolean = True
+	Public kvs As KeyValueStore
 	
 	Private xui As XUI
 	Private logcat As LogCat
 End Sub
 
 Sub Service_Create '--- This is the program entry point.
+	
 	tmrTimerCallSub.Initialize
+	kvs.Initialize(xui.DefaultFolder, "kvs.db3")
+	
+	If kvs.ContainsKey("install_date") = False Then
+		kvs.Put("install_date",DateTime.Now)
+		kvs.Put("version_code",Application.VersionCode)
+	End If
+	
+	If Application.VersionCode <> kvs.Get("version_code").As(Int) Then
+		Updater.Run
+	End If
+	
 	#if Release
 	logcat.LogCatStart(Array As String("-v","raw","*:F","B4A:v"), "logcat")
 	#end if
+	
 End Sub
 
 Sub Service_Start (StartingIntent As Intent)

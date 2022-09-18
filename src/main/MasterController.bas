@@ -343,7 +343,7 @@ Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
 			cboStr = $"Set ${FilamentType} (Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
 			mapBedHeatingOptions.Put(cboStr,cboStr)
 			
-			cboStr = $"Set ${FilamentType} (Tool: ${ToolTemp}${gblConst.DEGREE_SYMBOL}C  / (Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
+			cboStr = $"Set ${FilamentType} (Tool: ${ToolTemp}${gblConst.DEGREE_SYMBOL}C  / Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
 			mapAllHeatingOptions.Put(cboStr,cboStr)
 		
 		Next

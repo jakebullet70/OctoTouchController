@@ -55,7 +55,7 @@ public Sub Set_focus()
 		btnScrnOff.Left = btnBrightness.Left - (btnBrightness.Width + IIf(guiHelpers.gScreenSizeAprox < 5.4,0dip,10dip))
 	End If
 	
-	btnSonoff.Visible = config.SonoffFLAG
+	btnSonoff.Visible = config.ShowPwrCtrlFLAG
 	
 End Sub
 
@@ -148,9 +148,9 @@ Private Sub btnSubBtnAction_Click
 			CallSub2(Main,"TurnOnOff_ScreenTmr",False)
 			fnc.BlankScreen
 			
-		Case "snof" '--- Sonoff crap
-			Dim o1 As dlgSonoffCtrl
-			o1.Initialize(mMainObj,"Sonoff Control")
+		Case "snof" '--- Sonoff / power crap
+			Dim o1 As dlgPsuCtrl
+			o1.Initialize(mMainObj,"Power Control")
 			o1.Show
 				
 	End Select
@@ -160,5 +160,27 @@ End Sub
 
 
 
+'---  change color of bitmap
+'--- https://www.b4x.com/android/forum/threads/b4x-bitmapcreator-change-color-of-bitmap.95518/#post-603416
+
+'Sub ChangeColorBasedOnAlphaLevel(bmp As B4XBitmap, NewColor As Int) As B4XBitmap
+'	Dim bc As BitmapCreator
+'	bc.Initialize(bmp.Width, bmp.Height)
+'	bc.CopyPixelsFromBitmap(bmp)
+'	Dim a1, a2 As ARGBColor
+'	bc.ColorToARGB(NewColor, a1)
+'	For y = 0 To bc.mHeight - 1
+'		For x = 0 To bc.mWidth - 1
+'			bc.GetARGB(x, y, a2)
+'			If a2.a > 0 Then
+'				a2.r = a1.r
+'				a2.g = a1.g
+'				a2.b = a1.b
+'				bc.SetARGB(x, y, a2)
+'			End If
+'		Next
+'	Next
+'	Return bc.Bitmap
+'End Sub
 
 

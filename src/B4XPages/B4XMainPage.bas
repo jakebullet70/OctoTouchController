@@ -129,8 +129,7 @@ End Sub
 
 Private Sub B4XPage_Foreground
 	CallSub(oPageCurrent,"Set_Focus")
-	If oc.isConnected Then _
-		CallSub2(Main,"TurnOnOff_MainTmr",True)
+	If oc.isConnected Then CallSub2(Main,"TurnOnOff_MainTmr",True)
 	Log("B4XPage_Foreground - calling Set_Focus, main tmr on")
 End Sub
 
@@ -287,7 +286,7 @@ Private Sub PopupMainMenu
 	
 	Dim popUpMemuItems As Map = _
 		CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc", _
-				  "Sonoff Connection":"snf","About":"ab")
+				  "PSU Control":"psu","About":"ab")
 		
 	If oc.isPrinting Or oc.IsPaused2 Then
 		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
@@ -310,9 +309,9 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 	Select Case value
 		
 		Case "ab" '--- about
-			Dim msg As String = guiHelpers.GetAboutText()
 			Dim mb As dlgMsgBox : mb.Initialize(Root,"About",560dip, 200dip,False)
-			Wait For (mb.Show(msg,"splash.png","OK","","")) Complete (res As Int)
+			Wait For (mb.Show( _
+				 guiHelpers.GetAboutText() ,"splash.png","OK","","")) Complete (res As Int)
 			
 		Case "gn"  '--- general settings
 			Dim o3 As dlgGeneralOptions
@@ -328,9 +327,9 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			Dim o1 As dlgPowerOptions : o1.Initialize(Me)
 			o1.Show
 			
-		Case "snf"  '--- sonoff setup
-			Dim oA As dlgSonoffSetup
-			oA.Initialize(Me,"Sonoff Connection")
+		Case "psu"  '--- sonoff / PSU control setup
+			Dim oA As dlgPsuSetup
+			oA.Initialize(Me,"PSU Config")
 			oA.Show
 		
 	End Select
@@ -364,10 +363,8 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	Dim Msg As String = guiHelpers.GetConnectionText(connectedButError)
 	
 	'--- if printer sonoff power is configed, show btn	
-	Dim PowerCtrl As dlgSonoffCtrl : PowerCtrl.Initialize(Null,"")
 	Dim PowerCtrlAvail As String = ""
-	PowerCtrl.ReadSettingsFile
-	If PowerCtrl.mIPaddr.Length <> 0 And PowerCtrl.mShowOnScreen = True Then
+	If Starter.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean) = True Then
 		PowerCtrlAvail = "POWER ON"
 	End If
 
@@ -386,7 +383,8 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 			OptionsMenu_Event(0,"oc")
 			
 		Case xui.DialogResponse_Negative '--- Power on 
-			Wait For (PowerCtrl.SendCmd("on")) Complete(s As String)
+			Dim o As dlgPsuCtrl : o.Initialize(Null,"")
+			Wait For (o.SendCmd("on")) Complete(s As String)
 			Sleep(3000)
 			oMasterController.Start
 			

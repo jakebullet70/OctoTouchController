@@ -30,6 +30,7 @@ Sub Class_Globals
 	
 	Private lblHeaderBed,lblHeaderTool As B4XView
 	
+	Private ivPreview As lmB4XImageViewX
 End Sub
 
 
@@ -57,6 +58,10 @@ public Sub Set_focus()
 	
 	UpdateFileName
 	DisplayedFileName = oc.JobFileName
+	
+	If ivPreview.mBase.Visible = True Then
+		LoadThumbNail
+	End If
 	
 End Sub
 
@@ -91,6 +96,11 @@ Private Sub Build_GUI
 	btnCancel.Font = fn 
 	btnPause.Font  = fn
 	btnPrint.Font  = fn
+	
+	ivPreview.Width = CircularProgressBar1.mBase.Width
+	ivPreview.Height = CircularProgressBar1.mBase.Height
+	ivPreview.top = CircularProgressBar1.mBase.Top
+	ivPreview.Left = CircularProgressBar1.mBase.Left
 	
 End Sub
 
@@ -283,7 +293,7 @@ Private Sub TempChange_Presets(selectedMsg As String, tag As Object)
 			msg = selectedMsg.Replace("Set","Setting")
 			
 		Case Else
-			'--- Example, Set ABS (Tool: 240øC  / (Bed: 105øC )
+			'--- Example, Set ABS (Tool: 240øC  / Bed: 105øC )
 			Dim toolMSG As String = Regex.Split("/",selectedMsg)(0)
 			Dim bedMSG  As String = Regex.Split("/",selectedMsg)(1)
 				
@@ -417,8 +427,51 @@ Private Sub btnAction_Click
 End Sub
 
 
+
 Private Sub CircularProgressBar1_Click
-	' TODO --  add pic of thumbnail and swap out thumbnail for progressbar on click
+	LoadThumbNail
+	CircularProgressBar1.Visible = False
+	ivPreview.mBase.Visible = True
 End Sub
+Private Sub ivPreview_Click
+	CircularProgressBar1.Visible = True
+	ivPreview.mBase.Visible = False
+End Sub
+
+Private Sub LoadThumbNail
+	
+	If mMainObj.MasterCtrlr.gMapOctoFilesList.IsInitialized = False Then
+		guiHelpers.Show_toast("Retriving info, try again later",1500)
+		Return
+	End If
+
+	'--- Same code as in pageFiles so...   TODO, make method and share code	
+	Dim currentFileInfo As typOctoFileInfo
+	currentFileInfo =  mMainObj.MasterCtrlr.gMapOctoFilesList.Get(oc.JobFileName)
+	
+	If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
+	
+		guiHelpers.Show_toast("Getting Thumbnail",2200)
+		If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
+		
+		Dim link As String = $"http://${mMainObj.MasterCtrlr.cn.gIP}:${mMainObj.MasterCtrlr.cn.gPort}/"$ & currentFileInfo.Thumbnail
+		mMainObj.MasterCtrlr.cn.Download_AndSaveFile(link,currentFileInfo.myThumbnail_filename_disk)
+		Sleep(2200)
+		
+		If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
+			ivPreview.Load(File.DirAssets,"no_thumbnail.jpg")
+		Else
+			ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
+		End If
+	Else
+		ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
+	End If
+	
+End Sub
+
+
+
+
+
 
 

@@ -74,7 +74,7 @@ Public Sub InitTheme(theme As String)
 			
 			'--- overide base white color
 			txtNormal = xui.Color_ARGB(255,216, 91, 48)
-			txtAccent = xui.Color_LightGray
+			txtAccent = 0xFFD77762' xui.Color_LightGray
 			btnDisableText = xui.Color_ARGB(50,192,192,192)
 			DividerColor = xui.Color_Black
 		

@@ -180,7 +180,7 @@ Public Sub ThemePrefDialogForm(prefdlg As sadPreferencesDialog)
 		
 		prefdlg.ItemsBackgroundColor = clrTheme.BackgroundMenu
 		prefdlg.SeparatorBackgroundColor = clrTheme.BackgroundHeader
-		prefdlg.SeparatorTextColor = xui.Color_LightGray
+		prefdlg.SeparatorTextColor = clrTheme.txtAccent
 		prefdlg.TextColor = clrTheme.txtNormal
 		
 		
@@ -217,7 +217,7 @@ Public Sub ThemeDialogForm2(dlg As B4XDialog,title As String,txtSize As Int)
 		'Log("ThemeDialogForm-set title: " & LastException)
 	End Try 'ignore
 	
-	dlg.TitleBarFont = xui.CreateDefaultFont(NumberFormat2(22 / gFscale,1,0,0,False))
+	dlg.TitleBarFont = xui.CreateDefaultFont(NumberFormat2(txtSize / gFscale,1,0,0,False))
 	dlg.TitleBarColor = clrTheme.BackgroundHeader
 	dlg.TitleBarTextColor = clrTheme.txtNormal
 	dlg.ButtonsTextColor = clrTheme.txtNormal

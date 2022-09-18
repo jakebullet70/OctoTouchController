@@ -68,6 +68,11 @@ Sub Process_Globals
 	Public JobPrintThumbnailSrc As String
 		
 	'======================================================================
+	
+	'https://github.com/kantlivelong/OctoPrint-PSUControl/wiki/API
+	Public Const cPSU_CONTROL_K As String = $"/api/plugin/psucontrol!!{"command":"turnPSU!ONOFF!"}"$ '--- POST
+	
+	'---
 	Public Const cAPI_KEY_PROBE As String = "/plugin/appkeys/probe" '--- GET
 	Public Const cAPI_KEY_REQUEST As String = $"/plugin/appkeys/request!!{"app": "!APP!"}"$ '--- POST
 	Public Const cAPI_KEY_PROBE_WAIT As String = "/plugin/appkeys/request/!APP_TOKEN!" '--- GET

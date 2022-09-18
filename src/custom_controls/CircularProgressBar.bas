@@ -5,6 +5,8 @@ Type=Class
 Version=7.3
 @EndOfDesignText@
 #Region VERSIONS 
+'	2.2.1		08/26/2022 - sadLogic, Kherson Ukraine
+'				Changed mBase to Public
 '	2.2.0		08/26/2022 - sadLogic, Kherson Ukraine
 '				Added click event
 '	2.1.1		08/13/2022 - sadLogic, Kherson Ukraine
@@ -32,7 +34,7 @@ Sub Class_Globals
 	Private cx, cy, radius As Float
 	Private stroke As Float
 	Private clrFull, clrEmpty As Int
-	Private mBase As B4XView
+	Public mBase As B4XView
 	Private currentValue As Float = 0
 	Private DurationFromZeroTo100 As Int
 	Private mUnit As String = ""
@@ -40,7 +42,7 @@ End Sub
 
 #Region "PROPERTIES"
 public Sub setVisible(Visible As Boolean)
-	mBase.Visible=Visible
+	mBase.Visible = Visible
 End Sub
 public Sub getVisible As Boolean
 	Return mBase.Visible

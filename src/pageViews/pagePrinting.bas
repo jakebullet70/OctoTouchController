@@ -26,11 +26,14 @@ Sub Class_Globals
 	Private btnCancel, btnPause, btnPrint As B4XView
 	Private lblBedTemp As AutoTextSizeLabel
 	Private lblToolTemp As AutoTextSizeLabel
-	Private lblPrintStats1,lblPrintStats3,lblPrintStats2 As AutoTextSizeLabel
+	Private lblPrintStats1 As AutoTextSizeLabel
+	Private lblPrintStats3,lblPrintStats2 As B4XView
+	Private lblPrintStatsTMP As AutoTextSizeLabel
 	
 	Private lblHeaderBed,lblHeaderTool As B4XView
 	
 	Private ivPreview As lmB4XImageViewX
+	
 End Sub
 
 
@@ -72,7 +75,7 @@ End Sub
 Private Sub Build_GUI
 	
 	guiHelpers.SetTextColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel, _
-								lblPrintStats1.BaseLabel,lblPrintStats2.BaseLabel,lblPrintStats3.BaseLabel, _
+								lblPrintStats1.BaseLabel,lblPrintStats2,lblPrintStats3, _
 								btnCancel,btnPause,btnPrint,CircularProgressBar1.MainLabel, _
 								lblFileName.BaseLabel,lblHeaderBed,lblHeaderTool))
 	
@@ -97,10 +100,15 @@ Private Sub Build_GUI
 	btnPause.Font  = fn
 	btnPrint.Font  = fn
 	
-	ivPreview.Width = CircularProgressBar1.mBase.Width
+	ivPreview.Width  = CircularProgressBar1.mBase.Width
 	ivPreview.Height = CircularProgressBar1.mBase.Height
-	ivPreview.top = CircularProgressBar1.mBase.Top
-	ivPreview.Left = CircularProgressBar1.mBase.Left
+	ivPreview.top    = CircularProgressBar1.mBase.Top
+	ivPreview.Left   = CircularProgressBar1.mBase.Left
+	
+	'--- figure out best font size
+	lblPrintStatsTMP.Text   = $"Job TTL Time:0:00:00:00"$ : Sleep(20)
+	lblPrintStats2.TextSize = lblPrintStatsTMP.BaseLabel.Font.Size
+	lblPrintStats3.TextSize = lblPrintStats2.TextSize
 	
 End Sub
 
@@ -168,8 +176,10 @@ Public Sub Update_Printer_Stats
 	End If
 
 	Dim tmp As String = $"File Size:${fileHelpers.BytesToReadableString(oc.JobFileSize)}"$
-	If lblPrintStats1.Text <> tmp Then lblPrintStats1.Text = tmp
-	'lblPrintStats1.Text = $"File Size:${fileHelpers.BytesToReadableString(oc.JobFileSize)}"$'
+	If lblPrintStats1.Text <> tmp Then 
+		lblPrintStats1.Text = tmp
+	End If
+	
 	If oc.JobPrintTime <> "-" Then
 		lblPrintStats2.Text = $"Job TTL Time:${fnc.ConvertSecondsToString(oc.JobPrintTime)}"$
 		lblPrintStats3.Text = $"Job Time Left:${fnc.ConvertSecondsToString(oc.JobPrintTimeLeft)}"$
@@ -429,6 +439,9 @@ End Sub
 
 
 Private Sub CircularProgressBar1_Click
+	If lblPrintStats3.Text = "" Then
+		Return '--- no file loaded
+	End If
 	LoadThumbNail
 	CircularProgressBar1.Visible = False
 	ivPreview.mBase.Visible = True
@@ -445,27 +458,32 @@ Private Sub LoadThumbNail
 		Return
 	End If
 
-	'--- Same code as in pageFiles so...   TODO, make method and share code	
-	Dim currentFileInfo As typOctoFileInfo
-	currentFileInfo =  mMainObj.MasterCtrlr.gMapOctoFilesList.Get(oc.JobFileName)
+	Try
+		'--- Same code as in pageFiles so...   TODO, make method and share code
+		Dim currentFileInfo As typOctoFileInfo
+		currentFileInfo =  mMainObj.MasterCtrlr.gMapOctoFilesList.Get(oc.JobFileName)
 	
-	If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
-	
-		guiHelpers.Show_toast("Getting Thumbnail",2200)
-		If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
-		
-		Dim link As String = $"http://${mMainObj.MasterCtrlr.cn.gIP}:${mMainObj.MasterCtrlr.cn.gPort}/"$ & currentFileInfo.Thumbnail
-		mMainObj.MasterCtrlr.cn.Download_AndSaveFile(link,currentFileInfo.myThumbnail_filename_disk)
-		Sleep(2200)
-		
 		If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
-			ivPreview.Load(File.DirAssets,"no_thumbnail.jpg")
+	
+			guiHelpers.Show_toast("Getting Thumbnail",2200)
+			If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
+		
+			Dim link As String = $"http://${mMainObj.MasterCtrlr.cn.gIP}:${mMainObj.MasterCtrlr.cn.gPort}/"$ & currentFileInfo.Thumbnail
+			mMainObj.MasterCtrlr.cn.Download_AndSaveFile(link,currentFileInfo.myThumbnail_filename_disk)
+			Sleep(2200)
+		
+			If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
+				ivPreview.Load(File.DirAssets,"no_thumbnail.jpg")
+			Else
+				ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
+			End If
 		Else
 			ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
 		End If
-	Else
-		ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
-	End If
+	Catch
+		guiHelpers.Show_toast("NULL Error loading thumbnail",2000) '--- happens when no file is loaded
+		Log(LastException)
+	End Try
 	
 End Sub
 

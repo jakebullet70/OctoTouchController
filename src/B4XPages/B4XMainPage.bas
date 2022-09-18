@@ -227,7 +227,7 @@ End Sub
 #region "MENUS"
 Private Sub btnPageAction_Click
 	If oPageCurrent = oPageMenu Then
-		PopupMainMenu
+		PopupMainOptionMenu
 	Else
 		Switch_Pages(gblConst.PAGE_MENU) '--- back key, go to main menu
 	End If
@@ -280,7 +280,7 @@ Public Sub Show_toast(msg As String, ms As Int)
 End Sub
 
 #Region "POPUP_MAIN_SETUP_MENU"
-Private Sub PopupMainMenu
+Private Sub PopupMainOptionMenu
 	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	

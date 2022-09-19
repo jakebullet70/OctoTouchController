@@ -19,6 +19,7 @@ Sub Class_Globals
 	Private CSelections As clvSelectionsX
 	Private Const NO_SELECTION As Int = -1
 	Private clvLastIndexClicked As Int = NO_SELECTION
+	 
 
 	Private clvFiles As CustomListView
 	Private ivPreview As lmB4XImageViewX
@@ -62,7 +63,7 @@ public Sub Set_focus()
 		'--- 1st showing of tab page
 		If config.logFILE_EVENTS Then logMe.LogIt(firstRun,mModule)
 		If clvFiles.Size > 0 Then 
-			clvFiles_ItemClick(0,mMainObj.MasterCtrlr.gMapOctoFilesList.GetKeyAt(0))
+			clvFiles_ItemClick(0,mMainObj.MasterCtrlr.gLstOctoFilesListSorted.Get(0))
 		End If
 		CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 		firstRun = False
@@ -127,7 +128,7 @@ Private Sub Build_GUI
 	If mMainObj.MasterCtrlr.gMapOctoFilesList.IsInitialized And mMainObj.MasterCtrlr.gMapOctoFilesList.Size > 0 Then
 		Build_ListViewFileList
 		'--- select the 1st item and load image
-		clvFiles_ItemClick(0,mMainObj.MasterCtrlr.gMapOctoFilesList.GetKeyAt(0))
+		clvFiles_ItemClick(0,mMainObj.MasterCtrlr.gLstOctoFilesListSorted.Get(0))
 	Else
 		clvFiles.Clear
 		'clvLastIndexClicked = NO_SELECTION
@@ -193,14 +194,20 @@ End Sub
 Public Sub Build_ListViewFileList()
 
 	clvFiles.Clear
+	mMainObj.MasterCtrlr.gLstOctoFilesListSorted.Initialize
+	mMainObj.MasterCtrlr.gLstOctoFilesListSorted = objHelpers.Map2List(mMainObj.MasterCtrlr.gMapOctoFilesList,True)
+	mMainObj.MasterCtrlr.gLstOctoFilesListSorted.SortCaseInsensitive(True)
+	
 	CSelections.Initialize(clvFiles) 
 	CSelections.Mode = CSelections.MODE_SINGLE_ITEM_PERMANENT
+	LogColor("Build_ListViewFileList",xui.Color_Green)
 	
-	For ndx = 0 To mMainObj.MasterCtrlr.gMapOctoFilesList.Size - 1
-	
-		Dim o As typOctoFileInfo  = mMainObj.MasterCtrlr.gMapOctoFilesList.GetValueAt(ndx)
-		clvFiles.InsertAt(ndx, _
-					CreateListItem(o, clvFiles.AsView.Width, 60dip), mMainObj.MasterCtrlr.gMapOctoFilesList.GetKeyAt(ndx))
+	Dim ndx As Int = 0
+	For Each kFileName As String In mMainObj.MasterCtrlr.gLstOctoFilesListSorted
+		
+		Dim o As typOctoFileInfo  = mMainObj.MasterCtrlr.gMapOctoFilesList.Get(kFileName)
+		clvFiles.InsertAt(ndx, CreateListItem(o, clvFiles.AsView.Width, 60dip), kFileName)
+		ndx = ndx + 1
 		
 	Next
 	
@@ -347,7 +354,7 @@ Public Sub CheckIfFilesChanged
 	If oldListViewSize <> clvFiles.Size Then
 		'--- highllight the first row
 		Sleep(200)
-		clvFiles_ItemClick(0,mMainObj.MasterCtrlr.gMapOctoFilesList.GetKeyAt(0))
+		clvFiles_ItemClick(0,mMainObj.MasterCtrlr.gLstOctoFilesListSorted.Get(0))
 		Sleep(200)
 	End If
 	
@@ -449,17 +456,15 @@ Private Sub SendDeleteCmdAndRemoveFromGrid
 	Dim ff As typOctoFileInfo
 
 	If clvFiles.Size > 1 Then
-		If clvLastIndexClicked <> 0 Then
+		If clvLastIndexClicked <> 0 Then 
 			clvLastIndexClicked = clvLastIndexClicked - 1
 		End If
-		ff = mMainObj.MasterCtrlr.gMapOctoFilesList.GetValueAt(clvLastIndexClicked)
+		ff = mMainObj.MasterCtrlr.gMapOctoFilesList.Get(clvFiles.GetValue(clvLastIndexClicked))
 		clvFiles_ItemClick(clvLastIndexClicked,ff.name)
-		
 	Else if clvFiles.Size = 1 Then
-		ff = mMainObj.MasterCtrlr.gMapOctoFilesList.GetValueAt(0)
-		clvFiles_ItemClick(0,ff.name)
 		clvLastIndexClicked = 0
-		
+		ff = mMainObj.MasterCtrlr.gMapOctoFilesList.Get(clvFiles.GetValue(clvLastIndexClicked))
+		clvFiles_ItemClick(clvLastIndexClicked,ff.name)
 	Else
 		clvFiles_ItemClick(0,Null)
 	End If

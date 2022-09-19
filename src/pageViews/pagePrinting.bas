@@ -439,7 +439,7 @@ End Sub
 
 
 Private Sub CircularProgressBar1_Click
-	If lblPrintStats3.Text = "" Then
+	If oc.JobFileName = "" Then
 		Return '--- no file loaded
 	End If
 	LoadThumbNail

@@ -8,10 +8,13 @@ This in *not a replacement* for Octoprint but a way to add a touch screen to you
 
 Add a dedicated touch screen to your 3D printer!
 
-Written in B4X, Work in progress... 
+### Supported Octoprint Plugins
+PSUControl	https://plugins.octoprint.org/plugins/psucontrol/
 
 ### Project Status
+Initialze release Aug/26/2022
+Beta 4 Released: Sept/20/2022
 
-Beta 3 Released. (Sept/18/2022)
+Written in B4X! https://www.b4x.com/
 
 ![](./github_pics/printing.jpg?raw=true "Printing")  

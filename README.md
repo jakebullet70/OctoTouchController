@@ -13,6 +13,7 @@ PSUControl	https://plugins.octoprint.org/plugins/psucontrol/
 
 ### Project Status
 Initialze release Aug/26/2022
+
 Beta 4 Released: Sept/20/2022
 
 Written in B4X! https://www.b4x.com/

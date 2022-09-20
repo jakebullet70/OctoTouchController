@@ -122,6 +122,13 @@ Public Sub SendCmd(cmd As String)As ResumableSub'ignore
 			
 	End Select
 	
+	If cmd.ToLowerCase = "off" Then
+		'---printer off, back to main menu
+		If mMainObj.oPageCurrent <> mMainObj.oPageMenu Then
+			CallSub2(mMainObj,"Switch_Pages",gblConst.PAGE_MENU)
+		End If
+	End If
+	
 	guiHelpers.Show_toast(msg,1500)
 	
 End Sub

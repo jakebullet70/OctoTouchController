@@ -66,6 +66,7 @@ Public Sub Show
 	If Result = xui.DialogResponse_Positive Then
 		Save_settings
 		config.ReadPwrCFG
+		CallSub(B4XPages.MainPage," ShowNoShow_PowerBtn")
 		CallSub(mMainObj.oPageCurrent,"Set_focus")
 	End If
 	

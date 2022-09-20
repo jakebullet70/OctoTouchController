@@ -26,8 +26,8 @@ End Sub
 
 public Sub CreateDefaultFile
 
-	If File.Exists(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE) = False Then
-		File.WriteMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE, _
+	If File.Exists(xui.DefaultFolder,gblConst.ANDROID_POWER_OPTIONS_FILE) = False Then
+		File.WriteMap(xui.DefaultFolder,gblConst.ANDROID_POWER_OPTIONS_FILE, _
 						CreateMap("TakePwr": "true", "NotPrintingScrnOff": "true","NotPrintingMinTill":90, _
 												"PrintingScrnOff": "false","PrintingMinTill":20))
 	End If
@@ -37,7 +37,7 @@ End Sub
 
 Public Sub Show
 	
-	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE)
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.ANDROID_POWER_OPTIONS_FILE)
 
 	Dim h As Float
 	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
@@ -63,7 +63,7 @@ Public Sub Show
 	If Result = xui.DialogResponse_Positive Then
 		
 		guiHelpers.Show_toast("Power Data Saved",1500)
-		File.WriteMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE,Data)
+		File.WriteMap(xui.DefaultFolder,gblConst.ANDROID_POWER_OPTIONS_FILE,Data)
 		config.ReadPowerCFG
 		fnc.ProcessPowerFlags
 		

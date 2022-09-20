@@ -25,14 +25,14 @@ Sub Class_Globals
 	Private pnlMaster As B4XView 
 	
 	'--- header
-	Private pnlHeader As B4XView, lblStatus As Label,  lblTemp As Label, btnPageAction As B4XView
+	Private pnlHeader As B4XView, lblStatus As Label,  lblTemp As Label
+	Private btnPower, btnPageAction As B4XView
 	
 	'--- page-panel classes
 	Public oPageCurrent As Object = Null
-	Private pnlMenu As B4XView,       oPageMenu As pageMenu
-	Private pnlFiles As B4XView,      oPageFiles As pageFiles
-	Private pnlPrinting As B4XView,   oPagePrinting As pagePrinting
-	Private pnlMovement As B4XView,   oPageMovement As pageMovement
+	Public oPageMenu As pageMenu, oPageFiles As pageFiles
+	Public oPagePrinting As pagePrinting, oPageMovement As pageMovement
+	Private pnlMovement, pnlPrinting, pnlFiles, pnlMenu As B4XView
 	
 	'--- only show the dialog once (should not be needed)
 	Private mConnectionErrDlgShowingFLAG As Boolean = False
@@ -55,8 +55,6 @@ End Sub
 
 Public Sub Initialize
 	
-	Log("Initialize - B4XMainpage")
-	'fileHelpers.DeleteFiles(xui.DefaultFolder,"*.psettings") '--- DEV - delete all printer settings files
 	config.Init
 	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
 	clrTheme.Init(config.ColorTheme)
@@ -64,7 +62,7 @@ Public Sub Initialize
 	Starter.InitLogCleanup
 	
 	powerHelpers.Init(config.AndroidTakeOverSleepFLAG)
-	ConfigPowerOption
+	CfgAndroidPowerOptions
 
 End Sub
 
@@ -152,7 +150,9 @@ Private Sub Build_GUI
 	
 	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	
-	guiHelpers.SetTextColor(Array As B4XView(lblStatus,lblTemp))
+	guiHelpers.SetTextColor(Array As B4XView(lblStatus,lblTemp,btnPower))
+	
+	btnPower.Visible = config.ShowPwrCtrlFLAG
 	
 	Switch_Pages(gblConst.PAGE_MENU)
 	
@@ -286,7 +286,7 @@ Private Sub PopupMainOptionMenu
 	
 	Dim popUpMemuItems As Map = _
 		CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc", _
-				  "PSU Control":"psu","About":"ab")
+				  "Plugins Menu":"plg","About":"ab")
 		
 	If oc.isPrinting Or oc.IsPaused2 Then
 		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
@@ -327,7 +327,10 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			Dim o1 As dlgPowerOptions : o1.Initialize(Me)
 			o1.Show
 			
-		Case "psu"  '--- sonoff / PSU control setup
+		Case "plg"  '--- plugins menu
+			PopupPluginOptionMenu
+			
+		Case "led"  '--- zled setup
 			Dim oA As dlgPsuSetup
 			oA.Initialize(Me,"PSU Config")
 			oA.Show
@@ -337,7 +340,7 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 	
 End Sub
 
-'--- callled from dlgOctoSetup on exit
+'--- called from dlgOctoSetup on exit
 Public Sub PrinterSetup_Closed
 
 	If oc.IsOctoConnectionVarsValid Then
@@ -348,6 +351,49 @@ Public Sub PrinterSetup_Closed
 	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	
 End Sub
+
+'--- called from PSU setup
+Public Sub  ShowNoShow_PowerBtn
+	btnPower.Visible = config.ShowPwrCtrlFLAG
+End Sub
+
+'--------------------------------------
+
+'--- options plugin sub menu
+Private Sub PopupPluginOptionMenu
+	
+	Dim popUpMemuItems As Map = CreateMap("PSU Control":"psu","ZLED Setup":"led","ws281x Setup":"ws2")
+		
+	Dim o1 As dlgListbox
+	o1.Initialize(Me,"Plugins Menu",Me,"PluginsMenu_Event")
+	o1.IsMenu = True
+	o1.Show(260dip,300dip,popUpMemuItems)
+	
+End Sub
+
+'--- callback for plugins options Menu
+Private Sub PluginsMenu_Event(value As String, tag As Object)
+	
+	If value.Length = 0 Then PopupMainOptionMenu
+	
+	Select Case value
+			
+		Case "psu"  '--- sonoff / PSU control setup
+			Dim oA As dlgPsuSetup
+			oA.Initialize(Me,"PSU Config")
+			oA.Show
+			
+		Case "led" '--- ZLED
+			
+		Case "ws2" '--- ws281x
+		
+	End Select
+	
+	
+End Sub
+
+
+
 #end region
 
 Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
@@ -362,7 +408,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	
 	Dim Msg As String = guiHelpers.GetConnectionText(connectedButError)
 	
-	'--- if printer sonoff power is configed, show btn	
+	'--- if printer / sonoff power is configed, show power btn	
 	Dim PowerCtrlAvail As String = ""
 	If Starter.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean) = True Then
 		PowerCtrlAvail = "POWER ON"
@@ -390,13 +436,13 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 			
 	End Select
 	
-	ConfigPowerOption
+	CfgAndroidPowerOptions
 	mConnectionErrDlgShowingFLAG = False
 	Log("exiting error setup cfg")
 
 End Sub
 
-Private Sub ConfigPowerOption
+Private Sub CfgAndroidPowerOptions
 	
 	If config.AndroidTakeOverSleepFLAG = False Then 
 		powerHelpers.ScreenON(False) '--- power options not configured
@@ -425,13 +471,18 @@ Private Sub Prompt_Exit_Reset
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 End Sub
 
-
-
 Private Sub lblStatus_Click
 	'--- if not connected then popup the connection screen
 	If lblStatus.Text.Contains("No C") Or oc.isConnected = False Then
 		CallSetupErrorConnecting(False)
 	End If
+End Sub
+
+Private Sub btnPower_Click
+	'--- printer on/off
+	Dim o1 As dlgPsuCtrl
+	o1.Initialize(Me,"Power Control")
+	o1.Show
 End Sub
 
 

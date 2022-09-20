@@ -24,7 +24,8 @@ Sub Class_Globals
 	Public Dialog As B4XDialog
 	
 	Private btnScrnOff,btnBrightness As B4XView
-	Private btnSonoff As B4XView
+	Private btnPlugin1,btnPlugin2,btnPlugin3 As B4XView
+	
 End Sub
 
 
@@ -55,7 +56,7 @@ public Sub Set_focus()
 		btnScrnOff.Left = btnBrightness.Left - (btnBrightness.Width + IIf(guiHelpers.gScreenSizeAprox < 5.4,0dip,10dip))
 	End If
 	
-	btnSonoff.Visible = config.ShowPwrCtrlFLAG
+	'btnSonoff.Visible = config.ShowPwrCtrlFLAG
 	
 End Sub
 
@@ -73,7 +74,8 @@ Private Sub Build_GUI
 	BuildMenuCard(mnuFiles,"menuFiles.png","Files",gblConst.PAGE_FILES)
 	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
 	
-	guiHelpers.SetTextColor(Array As B4XView(btnSonoff,btnScrnOff,btnBrightness))
+	guiHelpers.SetVisible(Array As B4XView(btnPlugin3,btnPlugin2,btnPlugin1),False)
+	guiHelpers.SetTextColor(Array As B4XView(btnPlugin3,btnPlugin2,btnPlugin1,btnScrnOff,btnBrightness))
 		
 End Sub
 

@@ -1,0 +1,36 @@
+{
+    "Version": 1.66,
+    "Theme": "Dark Theme",
+    "Items": [
+        {
+            "title": "LED \/ Lights",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "Show on screen",
+            "type": "Boolean",
+            "key": "sTurnOn",
+            "required": false
+        },
+        {
+            "title": "API Endpoint",
+            "type": "Text",
+            "key": "sEP",
+            "required": false
+        },
+        {
+            "title": "On command",
+            "type": "Text",
+            "key": "sOn",
+            "required": false
+        },
+        {
+            "title": "Off command",
+            "type": "Text",
+            "key": "sOff",
+            "required": false
+        }
+    ]
+}

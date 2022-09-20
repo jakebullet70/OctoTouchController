@@ -45,6 +45,8 @@ Sub Process_Globals
 	
 	'--- Printer power - sonoff
 	Public ShowPwrCtrlFLAG As Boolean = False
+	'--- Printer zled flag
+	Public ShowZLEDCtrlFLAG As Boolean = False
 
 End Sub
 
@@ -67,8 +69,8 @@ Private Sub LoadCfgs()
 	
 	'======================================================================
 	
-	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE) '--- Dev
-	If File.Exists(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE) = False Then
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.ANDROID_POWER_OPTIONS_FILE) '--- Dev
+	If File.Exists(xui.DefaultFolder,gblConst.ANDROID_POWER_OPTIONS_FILE) = False Then
 		Dim o2 As dlgPowerOptions
 		o2.Initialize(Null)  
 		o2.CreateDefaultFile
@@ -84,12 +86,26 @@ Private Sub LoadCfgs()
 	End If
 	ReadPwrCFG
 	
+	'======================================================================
+
+'	If Starter.kvs.ContainsKey(gblConst.ZLED_CTRL_ON) = False Then
+'		Dim ox As dlgZLEDSetup
+'		ox.Initialize(Null,"")
+'		ox.CreateDefaultCfg
+'	End If
+'	ReadZLED_CFG
+	
 End Sub
 
 
 Public Sub ReadPwrCFG
 	ShowPwrCtrlFLAG = Starter.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
 End Sub
+
+'Public Sub ReadZLED_CFG
+'	ShowZLEDCtrlFLAG = Starter.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
+'End Sub
+
 
 
 Public Sub ReadGeneralCFG
@@ -117,7 +133,7 @@ End Sub
 
 public Sub ReadPowerCFG
 	
-	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.POWER_OPTIONS_FILE)
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.ANDROID_POWER_OPTIONS_FILE)
 	
 	AndroidTakeOverSleepFLAG = Data.Get("TakePwr")
 	AndroidNotPrintingScrnOffFLAG = Data.Get("NotPrintingScrnOff")

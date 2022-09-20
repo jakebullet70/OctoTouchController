@@ -25,6 +25,12 @@ End Sub
 '=====================================================================================
 
 
+Public Sub SetVisible(btnArr() As B4XView,Visible As Boolean)
+	For Each v As B4XView In btnArr
+		v.Visible = Visible
+	Next
+End Sub
+
 Public Sub SetEnableDisableColor(btnArr() As B4XView)
 	For Each btn As B4XView In btnArr
 		If btn.enabled Then

@@ -95,8 +95,8 @@ Private Sub Build_GUI
 	'--- scale font
 	Dim fn As B4XFont = _
 			xui.CreateDefaultFont(NumberFormat2(btnCancel.TextSize / guiHelpers.gFscale,1,0,0,False))
-				'- 	IIf(guiHelpers.gFscale > 1,4,0))
-	btnCancel.Font = fn 
+	'- 	IIf(guiHelpers.gFscale > 1,4,0))
+	btnCancel.Font = fn
 	btnPause.Font  = fn
 	btnPrint.Font  = fn
 	
@@ -176,7 +176,7 @@ Public Sub Update_Printer_Stats
 	End If
 
 	Dim tmp As String = $"File Size:${fileHelpers.BytesToReadableString(oc.JobFileSize)}"$
-	If lblPrintStats1.Text <> tmp Then 
+	If lblPrintStats1.Text <> tmp Then
 		lblPrintStats1.Text = tmp
 	End If
 	
@@ -208,7 +208,7 @@ End Sub
 
 Public Sub Update_Printer_Temps
 	
-	'--- temps, only update the label if it has changed, 
+	'--- temps, only update the label if it has changed,
 	'--- the Autosize label ctrl flickers in some cases
 	Dim tmp As String
 	
@@ -283,7 +283,7 @@ Private Sub TempChange_Presets(selectedMsg As String, tag As Object)
 				msg = "Bed Off"
 			Else
 				mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
-				msg = "Tool Off"	
+				msg = "Tool Off"
 			End If
 			
 		Case selectedMsg.Contains("Tool") And Not (selectedMsg.Contains("Bed"))
@@ -417,7 +417,7 @@ Private Sub btnAction_Click
 		Case "cancel"
 			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Question",540dip, 170dip,False)
 			Wait For (mb.Show("Do you want to cancel this print?",gblConst.MB_ICON_QUESTION, _
-						"Yes - Cancel It","","No")) Complete (res As Int)
+			"Yes - Cancel It","","No")) Complete (res As Int)
 
 			If res = xui.DialogResponse_Positive Then
 				guiHelpers.Show_toast("Canceling...",2000)

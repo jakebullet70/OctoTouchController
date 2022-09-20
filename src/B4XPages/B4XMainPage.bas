@@ -227,7 +227,7 @@ End Sub
 #region "MENUS"
 Private Sub btnPageAction_Click
 	If oPageCurrent = oPageMenu Then
-		PopupMainMenu
+		PopupMainOptionMenu
 	Else
 		Switch_Pages(gblConst.PAGE_MENU) '--- back key, go to main menu
 	End If
@@ -280,7 +280,7 @@ Public Sub Show_toast(msg As String, ms As Int)
 End Sub
 
 #Region "POPUP_MAIN_SETUP_MENU"
-Private Sub PopupMainMenu
+Private Sub PopupMainOptionMenu
 	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
@@ -424,4 +424,14 @@ Private Sub Prompt_Exit_Reset
 	PromptExitTwice = False
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 End Sub
+
+
+
+Private Sub lblStatus_Click
+	'--- if not connected then popup the connection screen
+	If lblStatus.Text.Contains("No C") Or oc.isConnected = False Then
+		CallSetupErrorConnecting(False)
+	End If
+End Sub
+
 

@@ -20,7 +20,7 @@ Sub Class_Globals
 	
 End Sub
 
-Public Sub Initialize(mobj As B4XMainPage, dataFile As String, caption As String)
+Public Sub Initialize(mobj As B4XMainPage,  caption As String,dataFile As String)
 	
 	mMainObj   = mobj
 	mDataFile = dataFile
@@ -28,21 +28,26 @@ Public Sub Initialize(mobj As B4XMainPage, dataFile As String, caption As String
 	
 End Sub
 
-public Sub CreateDefaultFile(fname As String)
+Public Sub CreateDefaultFile
 	
-
-'	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
-'		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE, _
-'						CreateMap("themeclr": "blue", _
-'						 "chgBrightness": "true", _
-'						 "scrnoff": "true", _
-'						 "logall": "false", _
-'						 "logpwr": "false", _
-'						 "logfiles": "false", _
-'						 "logoctokey": "false", _
-'						 "logrest": "false"))
-'						 
-'	End If
+	If File.Exists(xui.DefaultFolder,mDataFile) = False Then
+		If mDataFile.ToLowerCase.Contains("zled") Then
+			
+			File.WriteMap(xui.DefaultFolder,mDataFile, CreateMap(gblConst.ZLED_CTRL_ON: "false", _
+						 gblConst.ZLED_ENDPOINT: "/api/plugin/wled", _
+						 gblConst.ZLED_CMD_ON: "lights_on", _
+						 gblConst.ZLED_CMD_OFF: "lights_off"))
+			
+		Else
+			
+			File.WriteMap(xui.DefaultFolder,mDataFile, CreateMap(gblConst.ZLED_CTRL_ON: "false", _
+						 gblConst.ZLED_ENDPOINT: "/api/plugin/ws281x_led_status", _
+						 gblConst.ZLED_CMD_ON: "lights_on", _
+						 gblConst.ZLED_CMD_OFF: "lights_off"))
+			
+		End If
+						 
+	End If
 
 End Sub
 
@@ -70,10 +75,14 @@ Public Sub Show
 	
 	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
-'		guiHelpers.Show_toast("General Data Saved",1500)
-'		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,Data)
-'		config.ReadGeneralCFG
-'		CallSub(mainObj.oPageCurrent,"Set_focus")
+		guiHelpers.Show_toast("General Data Saved",1500)
+		File.WriteMap(xui.DefaultFolder,mDataFile,Data)
+		If mDataFile.ToLowerCase.Contains("zled") Then
+			config.ReadZLED_CFG
+		Else
+			config.ReadWS281_CFG
+		End If
+		'CallSub(mMainObj.oPageCurrent,"Set_focus")
 	End If
 	
 End Sub

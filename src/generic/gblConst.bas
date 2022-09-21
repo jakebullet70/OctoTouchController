@@ -19,22 +19,29 @@ Sub Process_Globals
 	Public Const PRINTER_IP As String = "ip"
 	Public Const PRINTER_PORT As String = "port"
 	Public Const PRINTER_OCTO_KEY As String = "octokey"
+	'---------------------------------------------------------------------------------------------------------------------
 	
-	'--- data in kvs PWRControl
+	'--- data in kvs PWRControl -------------------------------------------------------------------------------
 	Public Const PWR_SONOFF_IP As String = "pwr_sonoff_ip"
 	Public Const PWR_CTRL_ON As String = "pwr_on"
 	Public Const PWR_PSU_PLUGIN As String = "pwr_psu_on"
 	Public Const PWR_SONOFF_PLUGIN As String = "pwr_sonoff_on"
+	'---------------------------------------------------------------------------------------------------------------------
 	
-	'---
+	'---------------------------------------------------------------------------------------------------------------------
 	Public Const ZLED_CTRL_ON As String = "sTurnOn"
 	Public Const ZLED_ENDPOINT As String = "sEP"
 	Public Const ZLED_CMD_ON As String = "sOn"
 	Public Const ZLED_CMD_OFF As String = "sOff"
+	'--- above const used in both configs below
 	Public Const ZLED_OPTIONS_FILE As String = "zled_options.map"
+	Public Const WS281_OPTIONS_FILE As String = "ws281_options.map"
+	'---------------------------------------------------------------------------------------------------------------------
 	
+	'---------------------------------------------------------------------------------------------------------------------
 	Public Const ANDROID_POWER_OPTIONS_FILE As String = "power_options.map"
 	Public Const GENERAL_OPTIONS_FILE As String = "general_options.map"
+	'---------------------------------------------------------------------------------------------------------------------
 	
 	'--- pages
 	Public Const PAGE_PRINTING As String = "ppr"

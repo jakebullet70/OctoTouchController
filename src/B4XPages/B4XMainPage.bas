@@ -384,8 +384,14 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			oA.Show
 			
 		Case "led" '--- ZLED
+			Dim oB As dlgZLEDSetup
+			oB.Initialize(Me,"ZLED Config",gblConst.ZLED_OPTIONS_FILE)
+			oB.Show
 			
 		Case "ws2" '--- ws281x
+			Dim o1 As dlgZLEDSetup
+			o1.Initialize(Me,"ws281x Config",gblConst.WS281_OPTIONS_FILE)
+			o1.Show
 		
 	End Select
 	

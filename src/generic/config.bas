@@ -14,6 +14,7 @@ Version=9.5
 Sub Process_Globals
 	Private xui As XUI
 	Private Const mModule As String = "config" 'ignore
+	Public IsInit As Boolean = False
 	
 	'Public MQTTserverOnFLAG As Boolean = False
 	'Public MQTTclientOnFLAG As Boolean = False
@@ -21,7 +22,7 @@ Sub Process_Globals
 	Public LastConnectedClient As String
 	Public pTurnOnDebugTabFLAG As Boolean
 	
-	'--- power dlg
+	'--- android power dlg
 	Public AndroidTakeOverSleepFLAG As Boolean = False
 	Public AndroidNotPrintingScrnOffFLAG As Boolean = False
 	Public AndroidNotPrintingMinTill As Int
@@ -41,21 +42,18 @@ Sub Process_Globals
 	Public logTIMER_EVENTS As Boolean = False '--- not in the general setup
 	'------------
 	
-	Public IsInit As Boolean = False
-	
 	'--- Printer power - sonoff
 	Public ShowPwrCtrlFLAG As Boolean = False
-	'--- Printer zled flag
+	'--- Printer zled or ws281z  flag
 	Public ShowZLEDCtrlFLAG As Boolean = False
+	Public ShowWS281CtrlFLAG As Boolean = False
 
 End Sub
-
 
 Public Sub Init
 	LoadCfgs
 	IsInit = True
 End Sub
-
 
 Private Sub LoadCfgs()
 	
@@ -88,24 +86,40 @@ Private Sub LoadCfgs()
 	
 	'======================================================================
 
-'	If Starter.kvs.ContainsKey(gblConst.ZLED_CTRL_ON) = False Then
-'		Dim ox As dlgZLEDSetup
-'		ox.Initialize(Null,"")
-'		ox.CreateDefaultCfg
-'	End If
-'	ReadZLED_CFG
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE) '--- Dev
+	If File.Exists(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE) = False Then
+		Dim ox As dlgZLEDSetup
+		ox.Initialize(Null,"",gblConst.ZLED_OPTIONS_FILE)
+		ox.CreateDefaultFile
+	End If
+	ReadZLED_CFG
+
+	'======================================================================
+
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE) '--- Dev
+	If File.Exists(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE) = False Then
+		Dim oi As dlgZLEDSetup
+		oi.Initialize(Null,"",gblConst.WS281_OPTIONS_FILE)
+		oi.CreateDefaultFile
+	End If
+	ReadWS281_CFG
 	
+End Sub
+
+
+Public Sub ReadZLED_CFG
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE)
+	ShowZLEDCtrlFLAG = Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean)
+End Sub
+Public Sub ReadWS281_CFG
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE)
+	ShowWS281CtrlFLAG = Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean) '--- this is correct
 End Sub
 
 
 Public Sub ReadPwrCFG
 	ShowPwrCtrlFLAG = Starter.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
 End Sub
-
-'Public Sub ReadZLED_CFG
-'	ShowZLEDCtrlFLAG = Starter.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
-'End Sub
-
 
 
 Public Sub ReadGeneralCFG

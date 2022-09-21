@@ -431,7 +431,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 			Show_toast("Retrying connection...",1300)
 			oMasterController.Start
 			
-		Case xui.DialogResponse_Cancel	 '--- this runs setup
+		Case xui.DialogResponse_Cancel	 '--- this runs printer setup
 			OptionsMenu_Event("oc","oc")
 			
 		Case xui.DialogResponse_Negative '--- Power on 

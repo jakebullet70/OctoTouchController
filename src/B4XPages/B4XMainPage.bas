@@ -426,7 +426,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 			oMasterController.Start
 			
 		Case xui.DialogResponse_Cancel	 '--- this runs setup
-			OptionsMenu_Event(0,"oc")
+			OptionsMenu_Event("oc","oc")
 			
 		Case xui.DialogResponse_Negative '--- Power on 
 			Dim o As dlgPsuCtrl : o.Initialize(Null,"")

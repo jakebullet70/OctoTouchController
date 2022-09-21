@@ -44,15 +44,16 @@ Public Sub Show
 	
 	'--- init
 	mDialog.Initialize(mMainObj.Root)
-	Dim w As Float
-	If guiHelpers.gScreenSizeAprox >= 7.5 Then
-		w = 540dip
+	
+	Dim w,h As Float
+	If guiHelpers.gScreenSizeAprox > 7.5 Then
+		w = 540dip : h = 310dip
 	Else
-		w = 420dip
+		w = 420dip : h = 280dip
 	End If
 	
 	Dim p As B4XView = xui.CreatePanel("")
-	p.SetLayoutAnimated(0, 0, 0, w, 280dip)
+	p.SetLayoutAnimated(0, 0, 0, w, h)
 	p.LoadLayout("viewPsuSetup")
 	
 	Build_GUI 
@@ -81,7 +82,7 @@ Public Sub Show
 End Sub
 
 
-private Sub Build_GUI
+Private Sub Build_GUI
 	
 	pnlMain.Color = clrTheme.BackgroundMenu
 	guiHelpers.SetTextColorB4XFloatTextField(Array As B4XFloatTextField(txtPrinterIP))
@@ -101,7 +102,7 @@ Public Sub CreateDefaultCfg
 End Sub
 
 
-private Sub Save_settings
+Private Sub Save_settings
 	
 	guiHelpers.Show_toast("Saved",2500)
 	Starter.kvs.Put(gblConst.PWR_CTRL_ON,swPsuCtrlOnOff.Value)
@@ -128,7 +129,7 @@ End Sub
 #End Region
 
 
-private Sub ReadSettingsFile
+Private Sub ReadSettingsFile
 
 	txtPrinterIP.Text = Starter.kvs.GetDefault(gblConst.PWR_SONOFF_IP,"")
 	swSonoff.Value = Starter.kvs.Get(gblConst.PWR_SONOFF_PLUGIN).As(Boolean)
@@ -141,7 +142,7 @@ Private Sub InvalidateConnection
 	txtPrinterIP.mBase.Visible = Not (swPSUocto.Value)
 End Sub
 
-'--- only Sonoff or PSU control ---
+'--- only can pick Sonoff or PSU control ---
 Private Sub swSonoff_ValueChanged (Value As Boolean)
 	swPSUocto.Value = Not (Value)
 	InvalidateConnection

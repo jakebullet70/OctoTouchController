@@ -7,6 +7,8 @@ Version=7.31
 ' Tweaker:  sadLogic-JakeBullet70
 #Region VERSIONS 
 ' My tweaks... (see TWEAKS comments)
+' V. 1.2 	Aug/29/2022
+'			Color / font changes
 ' V. 1.1 	Aug/29/2022
 '			Pulled from B4Xlib and added as internal class
 '			Still uses assets from PrefDialog b4xlib
@@ -500,7 +502,7 @@ Public Sub setTheme (t As Int)
 				DateTemplate.DaysInWeekColor = xui.Color_Gray
 				DateTemplate.SelectedColor = 0xFF0BA29B
 			Case THEME_LIGHT
-				ItemsBackgroundColor = clrTheme.txtNormal
+				'ItemsBackgroundColor = clrTheme.txtNormal
 				SeparatorBackgroundColor = 0xFFD0D0D0
 				SeparatorTextColor = 0xFF4E4F50
 				TextColor = 0xFF5B5B5B
@@ -513,6 +515,9 @@ Public Sub setTheme (t As Int)
 				DateTemplate.SelectedColor = 0xFF39D7CE
 				
 		End Select
+		
+		ItemsBackgroundColor = clrTheme.BackgroundMenu '--- sadLogic
+		
 		SearchTemplate.SearchField.TextField.TextColor = TextColor
 		SearchTemplate.SearchField.NonFocusedHintColor = TextColor
 		Dialog.BorderCornersRadius = 0

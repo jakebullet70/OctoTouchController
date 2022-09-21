@@ -435,7 +435,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 			OptionsMenu_Event("oc","oc")
 			
 		Case xui.DialogResponse_Negative '--- Power on 
-			Dim o As dlgPsuCtrl : o.Initialize(Null,"")
+			Dim o As dlgPsuCtrl : o.Initialize(Null)
 			Wait For (o.SendCmd("on")) Complete(s As String)
 			Sleep(3000)
 			oMasterController.Start
@@ -487,7 +487,7 @@ End Sub
 Private Sub btnPower_Click
 	'--- printer on/off
 	Dim o1 As dlgPsuCtrl
-	o1.Initialize(Me,"Power Control")
+	o1.Initialize(Me)
 	o1.Show
 End Sub
 

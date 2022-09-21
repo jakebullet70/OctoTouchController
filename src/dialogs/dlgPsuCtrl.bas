@@ -14,7 +14,6 @@ Sub Class_Globals
 	Private const mModule As String = "dlgPsuCtrl"' 'ignore
 	Private mMainObj As B4XMainPage
 	Private xui As XUI
-	Private mTitle As String
 	
 	Private pnlMain As B4XView
 	Private mDialog As B4XDialog
@@ -28,10 +27,9 @@ End Sub
 
 '--- Dual class, GUI and command
 
-Public Sub Initialize(mobj As B4XMainPage, title As String)
+Public Sub Initialize(mobj As B4XMainPage)
 	
 	mMainObj = mobj
-	mTitle = title
 	ReadSettingsCfg
 	
 End Sub
@@ -54,7 +52,7 @@ Public Sub Show
 	
 	Build_GUI 
 
-	guiHelpers.ThemeDialogForm(mDialog, mTitle)
+	guiHelpers.ThemeDialogForm(mDialog, "Power Control")
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 
@@ -99,6 +97,7 @@ Private Sub btnCtrl_Click
 	mDialog.Close(-1) '--- close it, exit dialog
 	
 End Sub
+
 
 Public Sub SendCmd(cmd As String)As ResumableSub'ignore
 

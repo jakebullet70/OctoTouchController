@@ -57,11 +57,11 @@ Public Sub Show
 	
 	Dim h As Float
 	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
-		h = 62%y
+		h = 52%y
 	Else If guiHelpers.gScreenSizeAprox >= 8 Then
-		h = 55%y
+		h = 45%y
 	Else '--- 4 to 5.9 inch
-		h = 80%y
+		h = 70%y
 	End If
 	
 	mDlg.Initialize(mMainObj.root, mCaption, 360dip, h)
@@ -69,7 +69,9 @@ Public Sub Show
 	mDlg.SetEventsListener(Me,"dlgSimple")
 	
 	guiHelpers.ThemePrefDialogForm(mDlg)
-	'mDlg.PutAtTop = False
+	If guiHelpers.gScreenSizeAprox > 6.5 Then
+		mDlg.PutAtTop = False
+	End If
 	Dim RS As ResumableSub = mDlg.ShowDialog(Data, "OK", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(mDlg.Dialog)
 	
@@ -82,7 +84,7 @@ Public Sub Show
 		Else
 			config.ReadWS281_CFG
 		End If
-		'CallSub(mMainObj.oPageCurrent,"Set_focus")
+		CallSub(mMainObj.oPageCurrent,"Set_focus")
 	End If
 	
 End Sub
@@ -110,32 +112,28 @@ End Sub
 
 
 Private Sub dlgSimple_BeforeDialogDisplayed (Template As Object)
-	'--- NOT USED BUT HERE IF NEEDED
 	
-'	Try
-'		
-'		For i = 0 To mGeneralDlg.PrefItems.Size - 1
-'			Dim pit As B4XPrefItem = mGeneralDlg.PrefItems.Get(i)
-'			Select Case pit.ItemType
-'				Case mGeneralDlg.TYPE_TEXT, mGeneralDlg.TYPE_PASSWORD, mGeneralDlg.TYPE_NUMBER, mGeneralDlg.TYPE_DECIMALNUMBER, mGeneralDlg.TYPE_MULTILINETEXT
-'					Dim ft As B4XFloatTextField = mGeneralDlg.CustomListView1.GetPanel(i).GetView(0).Tag
-'					ft.TextField.Font = xui.CreateDefaultBoldFont(20)
-	'
-'				Case mGeneralDlg.TYPE_OPTIONS
-'				Case mGeneralDlg.TYPE_SHORTOPTIONS
-'					Dim cmb As B4XComboBox = mGeneralDlg.CustomListView1.GetPanel(i).GetView(0).Tag
-	''				Dim options As List = PrefItem.Extra.Get("options")
-	''				cmb.SelectedIndex = Max(0, options.IndexOf(GetPrefItemValue(PrefItem, "", Data)))
-'				
-'			End Select
-	'
-'		Next
-'		
-'	Catch
-'		Log(LastException)
-'	End Try
-'	
+	Try
+		
+		For i = 0 To mDlg.PrefItems.Size - 1
+			Dim pit As B4XPrefItem = mDlg.PrefItems.Get(i)
+			
+			Select Case pit.ItemType
+				Case mDlg.TYPE_TEXT, mDlg.TYPE_PASSWORD, mDlg.TYPE_NUMBER, mDlg.TYPE_DECIMALNUMBER, mDlg.TYPE_MULTILINETEXT
+					Dim ft As B4XFloatTextField = mDlg.CustomListView1.GetPanel(i).GetView(0).Tag
+					ft.TextField.Font = xui.CreateDefaultFont(20)
 	
+				Case mDlg.TYPE_BOOLEAN
+					Dim p As B4XView = mDlg.CustomListView1.GetPanel(i).GetView(0)
+					p.Font = xui.CreateDefaultFont(20)
+				
+			End Select
+	
+		Next
+		
+	Catch
+		Log(LastException)
+	End Try
 	
 End Sub
 

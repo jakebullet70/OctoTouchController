@@ -189,11 +189,13 @@ Public Sub ThemePrefDialogForm(prefdlg As sadPreferencesDialog)
 		prefdlg.SeparatorTextColor = clrTheme.txtAccent
 		prefdlg.TextColor = clrTheme.txtNormal
 		
+		'prefdlg.Dialog.BackgroundColor = clrTheme.BackgroundMenu
+		'prefdlg.mBase.Color = clrTheme.BackgroundMenu
 		
+		'prefdlg.Dialog.Base.Color = clrTheme.BackgroundMenu
 		'prefdlg.CustomListView1.sv.SetColorAndBorder(xui.Color_Transparent,1dip,xui.Color_blue,0dip)
 		'prefdlg.mBase.SetColorAndBorder(xui.Color_Blue,2dip,xui.Color_White,5dip)
-		'prefdlg.mBase.Color = clrTheme.BackgroundMenu
-		'prefdlg.Dialog.BackgroundColor = xui.Color_Transparent
+		
 		'prefdlg.CustomListView1.AsView.Color = clrTheme.BackgroundMenu
 		'prefdlg.CustomListView1.GetBase.Color = clrTheme.BackgroundMenu
 		'prefdlg.CustomListView1. = clrTheme.BackgroundMenu

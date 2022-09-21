@@ -56,7 +56,8 @@ public Sub Set_focus()
 		btnScrnOff.Left = btnBrightness.Left - (btnBrightness.Width + IIf(guiHelpers.gScreenSizeAprox < 5.4,0dip,10dip))
 	End If
 	
-	'btnSonoff.Visible = config.ShowPwrCtrlFLAG
+	btnPlugin1.Visible = config.ShowWS281CtrlFLAG Or config.ShowZLEDCtrlFLAG
+	
 	
 End Sub
 
@@ -152,8 +153,13 @@ Private Sub btnSubBtnAction_Click
 			
 		Case "snof" '--- Sonoff / power crap
 			Dim o1 As dlgPsuCtrl
-			o1.Initialize(mMainObj,"Power Control")
+			o1.Initialize(mMainObj)
 			o1.Show
+			
+		Case "lt" '--- WLED - ws281x
+			Dim o3 As dlgOnOffCtrl
+			o3.Initialize(mMainObj,IIf(config.ShowZLEDCtrlFLAG,"ZLED","WS281x") & " Control")
+			o3.Show
 				
 	End Select
 	

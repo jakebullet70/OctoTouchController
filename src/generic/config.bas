@@ -111,16 +111,15 @@ Public Sub ReadZLED_CFG
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE)
 	ShowZLEDCtrlFLAG = Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean)
 End Sub
+
 Public Sub ReadWS281_CFG
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE)
 	ShowWS281CtrlFLAG = Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean) '--- this is correct
 End Sub
 
-
 Public Sub ReadPwrCFG
 	ShowPwrCtrlFLAG = Starter.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
 End Sub
-
 
 Public Sub ReadGeneralCFG
 	
@@ -143,7 +142,6 @@ Public Sub ReadGeneralCFG
 	End If
 	
 End Sub
-
 
 public Sub ReadPowerCFG
 	

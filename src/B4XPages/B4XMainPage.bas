@@ -19,7 +19,7 @@ Sub Class_Globals
 	Public pnlScreenOff As B4XView
 	
 	'--- splash screen crap
-	Private ivSpash As B4XView, pnlSplash As Panel
+	Private ivSpash As ImageView, pnlSplash As Panel
 	
 	'--- master base panel
 	Private pnlMaster As B4XView 
@@ -39,6 +39,9 @@ Sub Class_Globals
 	
 	Private PromptExitTwice As Boolean = False
 
+	'--- checking for app update - busy screen
+	Private pnlUpdate,lblUpdate As B4XView, ivUpdate As ImageView
+	
 End Sub
 
 '======================================================================================
@@ -286,7 +289,7 @@ Private Sub PopupMainOptionMenu
 	
 	Dim popUpMemuItems As Map = _
 		CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc", _
-				  "Plugins Menu":"plg","About":"ab")
+				  "Plugins Menu":"plg","Check For Update":"up","About":"ab")
 		
 	If oc.isPrinting Or oc.IsPaused2 Then
 		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
@@ -297,7 +300,7 @@ Private Sub PopupMainOptionMenu
 	Dim o1 As dlgListbox
 	o1.Initialize(Me,"Options Menu",Me,"OptionsMenu_Event")
 	o1.IsMenu = True
-	o1.Show(260dip,300dip,popUpMemuItems)
+	o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,310dip,260dip),300dip,popUpMemuItems)
 	
 End Sub
 
@@ -334,6 +337,10 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			Dim oA As dlgPsuSetup
 			oA.Initialize(Me,"PSU Config")
 			oA.Show
+			
+		Case "up" '--- check 4 update 
+			Check4Update
+			
 		
 	End Select
 	
@@ -490,5 +497,47 @@ Private Sub btnPower_Click
 	o1.Initialize(Me)
 	o1.Show
 End Sub
+
+Private Sub Check4Update
+	
+	'--- show checking for update panel
+	pnlUpdate.Visible = True
+	pnlUpdate.Color = clrTheme.Background : lblUpdate.TextColor = clrTheme.txtNormal
+	lblUpdate.Text = "Checking for update..."
+	Sleep(600)
+	
+	'--- check for update
+	Dim oP As AppUpdate : oP.Initialize
+	Wait For (oP.Check4Update) complete (ok As String)
+	pnlUpdate.Visible = False
+	If ok = "no" Then
+		guiHelpers.Show_toast("No update found",3200)
+		Return
+	Else If ok = "err" Then
+		guiHelpers.Show_toast("Error trying to find update",4000)
+		Return
+	End If
+
+	'--- prompt for download	
+	Dim mb As dlgMsgBox : mb.Initialize(Root,"About",560dip, 200dip,False)
+	Wait For (mb.Show( _
+		"Update found, Do your want to install?",gblConst.MB_ICON_QUESTION, _
+		"Yes" & CRLF & "Download","","CANCEL")) Complete (res As Int)
+	If res <> xui.DialogResponse_Positive Then
+		Return
+	End If
+	
+	'--- download
+	pnlUpdate.Visible = True
+	lblUpdate.Text = "Downloading Update..."
+	oP.DownloadAndInstallUpdate
+	
+	'--- hide checking for update panel
+	pnlUpdate.Visible = False
+	
+End Sub
+
+
+
 
 

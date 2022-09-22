@@ -50,12 +50,14 @@ FileGroup9=VIEWS
 Group=MAIN
 Library1=accessibility
 Library10=json
-Library11=okhttputils2
-Library12=oslibrary
-Library13=phone
-Library14=reflection
-Library15=xui views
-Library16=keyvaluestore
+Library11=keyvaluestore
+Library12=okhttputils2
+Library13=oslibrary
+Library14=phone
+Library15=reflection
+Library16=runtimepermissions
+Library17=xui views
+Library18=okhttp
 Library2=b4xcollections
 Library3=b4xpages
 Library4=b4xpreferencesdialog
@@ -64,58 +66,59 @@ Library6=byteconverter
 Library7=core
 Library8=dateutils
 Library9=javaobject
-ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'--- https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'--- Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~'--- Take over power functions~\n~AddPermission(android.permission.WAKE_LOCK)~\n~AddPermission(android.permission.WRITE_SETTINGS)~\n~~\n~~\n~~\n~''''https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~''''Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~'''CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~'''~\n~'''AddManifestText(~\n~'''~\n~'''	<Activity android:launchMode="singleInstance" />~\n~'''	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="18"/>~\n~'''	~\n~'''	<supports-screens android:largeScreens="true" ~\n~'''	    android:xlargeScreens="true"~\n~'''    	android:normalScreens="false" ~\n~'''    	android:smallScreens="false" ~\n~'''		android:requiresSmallestWidthDp="800"~\n~'''    	android:anyDensity="true"/>~\n~'''~\n~'''		~\n~'''	<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>~\n~'''	<uses-permission android:name="android.permission.GET_ACCOUNTS" />~\n~'''	~\n~''')~\n~'''~\n~'''SetActivityAttribute(main, android:windowSoftInputMode, adjustPan|stateHidden)~\n~'''~\n~'''SetApplicationAttribute(android:hardwareAccelerated, "true")~\n~'''SetApplicationAttribute(android:theme, "@android:style/Theme.Holo.Light")~\n~'''SetApplicationAttribute(android:icon, "@drawable/icon")~\n~'''SetApplicationAttribute(android:label, "$LABEL$")~\n~'''~\n~'''AddPermission(android.permission.REBOOT)~\n~'''AddPermission(android.permission.WAKE_LOCK)~\n~'''AddPermission(android.permission.ACCESS_NETWORK_STATE)~\n~'''~\n~'''#if not (KE)~\n~'''AddPermission(android.permission.MEDIA_UNMOUNTED)~\n~'''AddPermission(android.permission.MEDIA_MOUNTED)~\n~'''~\n~'''AddReceiverText(svrMediaHelper,~\n~'''<intent-filter>~\n~'''    <action android:name="android.intent.action.MEDIA_MOUNTED" />~\n~'''	<data android:scheme="file"/>~\n~'''</intent-filter>)~\n~'''~\n~'''AddReceiverText(svrMediaHelper,~\n~'''<intent-filter>~\n~'''    <action android:name="android.intent.action.MEDIA_UNMOUNTED" />~\n~'''	<data android:scheme="file"/>~\n~'''</intent-filter>)~\n~'''#end if~\n~'''~\n~'''#if not (KE)~\n~'''AddReceiverText(eu.dgconsulting.appupdating.newinst2,~\n~'''  <intent-filter>~\n~'''  <action android:name="android.intent.action.PACKAGE_REPLACED" />~\n~'''    <data android:scheme="package" />~\n~'''  </intent-filter>)~\n~''' #end if~\n~~\n~
-Module1=|relative|src\custom_controls\AutoTextSizeLabel
-Module10=|relative|src\dialogs\dlgGeneralOptions
-Module11=|relative|src\dialogs\dlgListbox
-Module12=|relative|src\dialogs\dlgMsgBox
-Module13=|relative|src\dialogs\dlgNumericInput
-Module14=|relative|src\dialogs\dlgOctoSetup
-Module15=|relative|src\dialogs\dlgOnOffCtrl
-Module16=|relative|src\dialogs\dlgPowerOptions
-Module17=|relative|src\dialogs\dlgPsuCtrl
-Module18=|relative|src\dialogs\dlgPsuSetup
-Module19=|relative|src\dialogs\dlgZLEDSetup
-Module2=|relative|src\B4XPages\B4XMainPage
-Module20=|relative|src\helperClasses\fileHelpers
-Module21=|relative|src\generic\fnc
-Module22=|relative|src\generic\gblConst
-Module23=|relative|src\helperClasses\guiHelpers
-Module24=|relative|src\miscClasses\HttpDownloadStr
-Module25=|relative|src\octoPrint\HttpOctoRestAPI
-Module26=|relative|src\octoPrint\JSONparsors\JsonParserFiles
-Module27=|relative|src\octoPrint\JSONparsors\JsonParserMasterPrinterSettings
-Module28=|relative|src\octoPrint\JSONparsors\JsonParsorConnectionStatus
-Module29=|relative|src\octoPrint\JSONparsors\JsonParsorMain
-Module3=|relative|src\miscClasses\CallSubUtils
-Module30=|relative|src\octoPrint\JSONparsors\JsonParsorOctoVersion
-Module31=|relative|src\custom_controls\lmB4XImageViewX
-Module32=|relative|src\generic\logMe
-Module33=|relative|src\main\MasterController
-Module34=|relative|src\helperClasses\objHelpers
-Module35=|relative|src\octoPrint\oc
-Module36=|relative|src\pageViews\pageFiles
-Module37=|relative|src\pageViews\pageMenu
-Module38=|relative|src\pageViews\pageMovement
-Module39=|relative|src\pageViews\pagePrinting
-Module4=|relative|src\octoPrint\CheckOctoConnection
-Module40=|relative|src\helperClasses\powerHelpers
-Module41=|relative|src\octoPrint\RequestApiKey
-Module42=|relative|src\custom_controls\sadPreferencesDialog
-Module43=|relative|src\custom_controls\sadRoundSlider
-Module44=|relative|src\main\Starter
-Module45=|relative|src\helperClasses\strHelpers
-Module46=|relative|src\miscClasses\SysInfo
-Module47=|relative|src\main\Updater
-Module48=|relative|src\miscClasses\WildCardFilesList
-Module5=|relative|src\custom_controls\CircularProgressBar
-Module6=|relative|src\generic\clrTheme
-Module7=|relative|src\miscClasses\clvSelectionsX
-Module8=|relative|src\generic\config
-Module9=|relative|src\dialogs\dlgBrightness
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'--- https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'--- Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~'--- Take over power functions~\n~AddPermission(android.permission.WAKE_LOCK)~\n~AddPermission(android.permission.WRITE_SETTINGS)~\n~AddPermission(android.permission.REQUEST_INSTALL_PACKAGES)~\n~~\n~~\n~~\n~''''https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~''''Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~'''CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~'''~\n~'''AddManifestText(~\n~'''~\n~'''	<Activity android:launchMode="singleInstance" />~\n~'''	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="18"/>~\n~'''	~\n~'''	<supports-screens android:largeScreens="true" ~\n~'''	    android:xlargeScreens="true"~\n~'''    	android:normalScreens="false" ~\n~'''    	android:smallScreens="false" ~\n~'''		android:requiresSmallestWidthDp="800"~\n~'''    	android:anyDensity="true"/>~\n~'''~\n~'''		~\n~'''	<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>~\n~'''	<uses-permission android:name="android.permission.GET_ACCOUNTS" />~\n~'''	~\n~''')~\n~'''~\n~'''SetActivityAttribute(main, android:windowSoftInputMode, adjustPan|stateHidden)~\n~'''~\n~'''SetApplicationAttribute(android:hardwareAccelerated, "true")~\n~'''SetApplicationAttribute(android:theme, "@android:style/Theme.Holo.Light")~\n~'''SetApplicationAttribute(android:icon, "@drawable/icon")~\n~'''SetApplicationAttribute(android:label, "$LABEL$")~\n~'''~\n~'''AddPermission(android.permission.REBOOT)~\n~'''AddPermission(android.permission.WAKE_LOCK)~\n~'''AddPermission(android.permission.ACCESS_NETWORK_STATE)~\n~'''~\n~'''#if not (KE)~\n~'''AddPermission(android.permission.MEDIA_UNMOUNTED)~\n~'''AddPermission(android.permission.MEDIA_MOUNTED)~\n~'''~\n~'''AddReceiverText(svrMediaHelper,~\n~'''<intent-filter>~\n~'''    <action android:name="android.intent.action.MEDIA_MOUNTED" />~\n~'''	<data android:scheme="file"/>~\n~'''</intent-filter>)~\n~'''~\n~'''AddReceiverText(svrMediaHelper,~\n~'''<intent-filter>~\n~'''    <action android:name="android.intent.action.MEDIA_UNMOUNTED" />~\n~'''	<data android:scheme="file"/>~\n~'''</intent-filter>)~\n~'''#end if~\n~'''~\n~'''#if not (KE)~\n~'''AddReceiverText(eu.dgconsulting.appupdating.newinst2,~\n~'''  <intent-filter>~\n~'''  <action android:name="android.intent.action.PACKAGE_REPLACED" />~\n~'''    <data android:scheme="package" />~\n~'''  </intent-filter>)~\n~''' #end if~\n~~\n~
+Module1=|relative|src\miscClasses\AppUpdate
+Module10=|relative|src\dialogs\dlgBrightness
+Module11=|relative|src\dialogs\dlgGeneralOptions
+Module12=|relative|src\dialogs\dlgListbox
+Module13=|relative|src\dialogs\dlgMsgBox
+Module14=|relative|src\dialogs\dlgNumericInput
+Module15=|relative|src\dialogs\dlgOctoSetup
+Module16=|relative|src\dialogs\dlgOnOffCtrl
+Module17=|relative|src\dialogs\dlgPowerOptions
+Module18=|relative|src\dialogs\dlgPsuCtrl
+Module19=|relative|src\dialogs\dlgPsuSetup
+Module2=|relative|src\custom_controls\AutoTextSizeLabel
+Module20=|relative|src\dialogs\dlgZLEDSetup
+Module21=|relative|src\helperClasses\fileHelpers
+Module22=|relative|src\miscClasses\FileProvider
+Module23=|relative|src\generic\fnc
+Module24=|relative|src\generic\gblConst
+Module25=|relative|src\helperClasses\guiHelpers
+Module26=|relative|src\miscClasses\HttpDownloadStr
+Module27=|relative|src\octoPrint\HttpOctoRestAPI
+Module28=|relative|src\octoPrint\JSONparsors\JsonParserFiles
+Module29=|relative|src\octoPrint\JSONparsors\JsonParserMasterPrinterSettings
+Module3=|relative|src\B4XPages\B4XMainPage
+Module30=|relative|src\octoPrint\JSONparsors\JsonParsorConnectionStatus
+Module31=|relative|src\octoPrint\JSONparsors\JsonParsorMain
+Module32=|relative|src\octoPrint\JSONparsors\JsonParsorOctoVersion
+Module33=|relative|src\custom_controls\lmB4XImageViewX
+Module34=|relative|src\generic\logMe
+Module35=|relative|src\main\MasterController
+Module36=|relative|src\helperClasses\objHelpers
+Module37=|relative|src\octoPrint\oc
+Module38=|relative|src\pageViews\pageFiles
+Module39=|relative|src\pageViews\pageMenu
+Module4=|relative|src\miscClasses\CallSubUtils
+Module40=|relative|src\pageViews\pageMovement
+Module41=|relative|src\pageViews\pagePrinting
+Module42=|relative|src\helperClasses\powerHelpers
+Module43=|relative|src\octoPrint\RequestApiKey
+Module44=|relative|src\custom_controls\sadPreferencesDialog
+Module45=|relative|src\custom_controls\sadRoundSlider
+Module46=|relative|src\main\Starter
+Module47=|relative|src\helperClasses\strHelpers
+Module48=|relative|src\miscClasses\SysInfo
+Module49=|relative|src\miscClasses\WildCardFilesList
+Module5=|relative|src\octoPrint\CheckOctoConnection
+Module6=|relative|src\custom_controls\CircularProgressBar
+Module7=|relative|src\generic\clrTheme
+Module8=|relative|src\miscClasses\clvSelectionsX
+Module9=|relative|src\generic\config
 NumberOfFiles=24
-NumberOfLibraries=16
-NumberOfModules=48
+NumberOfLibraries=18
+NumberOfModules=49
 Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
@@ -133,7 +136,9 @@ Version=11.8
 	'#DebuggerForceFullDeployment: true
 	'#DebuggerForceStandardAssets: true
 	#BridgeLogger: True
+	
 #End Region
+
 
 'open project objects folder: ide://run?File=%WINDIR%\explorer.exe&Args=%PROJECT%
 'Ctrl + click to export as zip: ide://run?=&File=%B4X%\Zipper.jar&Args=Project.zip
@@ -173,6 +178,13 @@ Sub Activity_Create(FirstTime As Boolean)
 	Else
 		Log("Activity_Create - FirstTime = False")
 	End If
+	
+'	If mSslFixIssue.IsInitialized = False Then
+'		mSslFixIssue.Initialize(Me)
+'		mSslFixIssue.TryToFix
+'		Wait For ("SslIssueFixed") Complete (Fixed As Boolean)
+'		Starter.SslIssueFixed = Fixed
+'	End If
 		
 	If tmrScreen.IsInitialized = False Then _
 		tmrScreen.Initialize("tmrScreenPower",15000)	'--- init, will be reset later
@@ -448,4 +460,75 @@ Public Sub Restart_App
 End Sub
 
 
+#Region "InApp-Update"
+'https://www.b4x.com/android/forum/threads/version-safe-apk-installation.87667/
+Public Sub InstallNewVersion
+	
+	
+	
+	Wait For (CheckInstallationRequirements) Complete (Result As Boolean)
+	If Result Then
+		SendInstallIntent
+	End If
+End Sub
 
+Private Sub CheckInstallationRequirements As ResumableSub
+	If File.ExternalWritable = False Then
+		MsgboxAsync("Storage card not available. Make sure that your device is not connected in USB storage mode.", "")
+		Return False
+	Else If ph.SdkVersion >= 26 And CanRequestPackageInstalls = False Then
+		MsgboxAsync("Please allow me to install applications.", "")
+		Wait For Msgbox_Result(Result As Int)
+		Dim in As Intent
+		in.Initialize("android.settings.MANAGE_UNKNOWN_APP_SOURCES", "package:" & Application.PackageName)
+		StartActivity(in)
+		Wait For Activity_Resume '<-- wait for Activity_Resume
+		Return CanRequestPackageInstalls
+	Else If CheckNonMarketAppsEnabled = False Then
+		MsgboxAsync("Please enable installation of non-market applications." & CRLF & "Under Settings - Security - Unknown sources" _
+			 & CRLF & "Or Settings - Applications - Unknown sources", "")
+		Return False
+	Else
+		Return True
+	End If
+End Sub
+
+Private Sub CanRequestPackageInstalls As Boolean
+	Dim ctxt As JavaObject
+	ctxt.InitializeContext
+	Dim PackageManager As JavaObject = ctxt.RunMethod("getPackageManager", Null)
+	Return PackageManager.RunMethod("canRequestPackageInstalls", Null)
+End Sub
+
+Private Sub CheckNonMarketAppsEnabled As Boolean
+	If ph.SdkVersion >= 26 Then Return True
+	If ph.SdkVersion < 17 Or ph.SdkVersion >= 21 Then
+		Return ph.GetSettings("install_non_market_apps") = "1"
+	Else
+		Dim context As JavaObject
+		context.InitializeContext
+		Dim resolver As JavaObject = context.RunMethod("getContentResolver", Null)
+		Dim global As JavaObject
+		global.InitializeStatic("android.provider.Settings.Global")
+		Return global.RunMethod("getString", Array(resolver, "install_non_market_apps")) = "1"
+	End If
+End Sub
+
+Private Sub SendInstallIntent
+	
+	Dim ApkName As String = "2nd_app.apk"
+	File.copy(File.DirAssets, ApkName, Starter.Provider.SharedFolder, ApkName)
+	
+	Dim i As Intent
+	If ph.SdkVersion >= 24 Then
+		i.Initialize("android.intent.action.INSTALL_PACKAGE", Starter.Provider.GetFileUri(ApkName))
+		i.Flags = Bit.Or(i.Flags, 1) 'FLAG_GRANT_READ_URI_PERMISSION
+	Else
+		i.Initialize(i.ACTION_VIEW, "file://" & File.Combine(Starter.Provider.SharedFolder, ApkName))
+		i.SetType("application/vnd.android.package-archive")
+	End If
+	StartActivity(i)
+	
+End Sub
+
+#end region

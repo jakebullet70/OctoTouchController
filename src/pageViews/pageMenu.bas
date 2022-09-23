@@ -71,7 +71,7 @@ End Sub
 Private Sub Build_GUI
 	
 	'--- build the main menu screen
-	BuildMenuCard(mnuMovement,"menuMovement.png","Move",gblConst.PAGE_MOVEMENT)
+	BuildMenuCard(mnuMovement,"menuMovement.png","Movement",gblConst.PAGE_MOVEMENT)
 	BuildMenuCard(mnuFiles,"menuFiles.png","Files",gblConst.PAGE_FILES)
 	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
 	

@@ -119,8 +119,28 @@ Sub Process_Globals
 	Public const cCMD_SET_TOOL_TEMP2 As String = $"${cPOST_PRINTER_TOOL}!!{"command": "target","targets": {"tool0": !VAL0!,	"tool1": !VAL1!}}"$
 	Public const cCMD_SET_TOOL_TEMP As String = $"${cPOST_PRINTER_TOOL}!!{"command": "target","targets": {"tool0": !VAL0!}}"$
 	
-		
 	'======================================================================
+	Public const cCONNECTION_INFO As String = "/api/connection"
+	Public Const cCMD_AUTO_CONNECT_STARTUP As String = $"${cCONNECTION_INFO}!!{ "command": "connect" }"$
+	'https://docs.octoprint.org/en/master/api/connection.html
+	'{"current": {
+	'	"state": "Operational",
+	'	"port": "/dev/ttyACM0",
+	'	"baudrate": 250000,
+	'	"printerProfile": "_default"
+	'	},
+	'	"options": {
+	'	"ports": ["/dev/ttyACM0", "VIRTUAL"],
+	'	"baudrates": [250000, 230400, 115200, 57600, 38400, 19200, 9600],
+	'	"printerProfiles": [{"name": "Default", "id": "_default"}],
+	'	"portPreference": "/dev/ttyACM0",
+	'	"baudratePreference": 250000,
+	'	"printerProfilePreference": "_default",
+	'	"autoconnect": True}
+	'	}
+	
+	
+	
 	'--- location – The location of the file for which to retrieve the information, either local or sdcard.
 	Public const cFILE_INFO As String = "/api/files/!LOCATION!/!FNAME!"   
 		'	{"name": "whistle_v2.gcode",
@@ -266,24 +286,6 @@ Sub Process_Globals
 	Public const cCURRENT_USER As String = "/api/currentuser"
 	'{"groups":["admins","users"],"name":"_api","permissions":
 	'["ADMIN","STATUS","CONNECTION","WEBCAM","SYSTEM","FILES_LIST","FILES_UPLOAD","FILES_DOWNLOAD","FILES_DELETE","FILES_SELECT","PRINT","GCODE_VIEWER","MONITOR_TERMINAL","CONTROL","SLICE","TIMELAPSE_LIST","TIMELAPSE_DOWNLOAD","TIMELAPSE_DELETE","TIMELAPSE_ADMIN","SETTINGS_READ","SETTINGS","PLUGIN_ACTION_COMMAND_NOTIFICATION_SHOW","PLUGIN_ACTION_COMMAND_NOTIFICATION_CLEAR","PLUGIN_ACTION_COMMAND_PROMPT_INTERACT","PLUGIN_ANNOUNCEMENTS_READ","PLUGIN_ANNOUNCEMENTS_MANAGE","PLUGIN_APPKEYS_ADMIN","PLUGIN_BACKUP_ACCESS","PLUGIN_FIRMWARE_CHECK_DISPLAY","PLUGIN_LOGGING_MANAGE","PLUGIN_PI_SUPPORT_STATUS","PLUGIN_PLUGINMANAGER_MANAGE","PLUGIN_PLUGINMANAGER_INSTALL","PLUGIN_SOFTWAREUPDATE_CHECK","PLUGIN_SOFTWAREUPDATE_UPDATE","PLUGIN_SOFTWAREUPDATE_CONFIGURE"]}
-
-	Public const cCONNECTION As String = "/api/connection"
-	'https://docs.octoprint.org/en/master/api/connection.html
-	'{"current": {
-	'	"state": "Operational",
-	'	"port": "/dev/ttyACM0",
-	'	"baudrate": 250000,
-	'	"printerProfile": "_default"
-	'	},
-	'	"options": {
-	'	"ports": ["/dev/ttyACM0", "VIRTUAL"],
-	'	"baudrates": [250000, 230400, 115200, 57600, 38400, 19200, 9600],
-	'	"printerProfiles": [{"name": "Default", "id": "_default"}],
-	'	"portPreference": "/dev/ttyACM0",
-	'	"baudratePreference": 250000,
-	'	"printerProfilePreference": "_default",
-	'	"autoconnect": True}
-	'	}
 	
 	Public const cPRINTER_MASTER_STATE As String = "/api/printer"
 	'	{

@@ -240,15 +240,19 @@ Private Sub GetJobStatus
 	
 End Sub
 
-
 Private Sub GetConnectionPrinterStatus
 	
 	'--- called once on 1st start
 	If oCN.IsInitialized = False Then
 		oCN.Initialize(oc.OctoIp ,oc.OctoPort,oc.OctoKey) 
 	End If
+
+	'---force a connection if its not there	
+	Dim rs As ResumableSub = oCN.PostRequest(oc.cCMD_AUTO_CONNECT_STARTUP)
+	Wait For(rs) Complete (Result As String)
 	
-	Dim rs As ResumableSub = oCN.SendRequestGetInfo(oc.cCONNECTION)
+	'--- get some info!
+	Dim rs As ResumableSub = oCN.SendRequestGetInfo(oc.cCONNECTION_INFO)
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
 		

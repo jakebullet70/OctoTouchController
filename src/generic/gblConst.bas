@@ -6,13 +6,13 @@ Version=11.5
 @EndOfDesignText@
 ' Author:  sadLogic
 #Region VERSIONS 
-' V. 1.0 	June/7/2022
+' V. 1.0 	June-Aug/2022
 #End Region
 Sub Process_Globals
 	
 	Public Const DEGREE_SYMBOL As String = "°" 
 	Public const APP_TITLE As String = "OctoTC ™"
-	Public const VERSION As String = "V1.0.0 - Beta 4"
+	Public const VERSION As String = "V1.0.0 - Beta 5"
 	
 	Public Const PRINTER_SETTING_BASE_FILE_NAME As String = "p_settings"
 	Public Const PRINTER_DESC As String = "desc"

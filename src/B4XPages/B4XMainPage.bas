@@ -287,9 +287,14 @@ Private Sub PopupMainOptionMenu
 	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
+'	Dim popUpMemuItems As Map = _
+'		CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc", _
+'				  "Plugins Menu":"plg","Check For Update":"up","About":"ab")
+
 	Dim popUpMemuItems As Map = _
 		CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc", _
-				  "Plugins Menu":"plg","Check For Update":"up","About":"ab")
+				  "Plugins Menu":"plg","About":"ab")
+
 		
 	If oc.isPrinting Or oc.IsPaused2 Then
 		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)

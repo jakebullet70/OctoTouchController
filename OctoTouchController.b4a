@@ -123,7 +123,7 @@ Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: OctoTC
-	#VersionCode: 5
+	#VersionCode: 6
 	#VersionName: 1.0
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: landscape

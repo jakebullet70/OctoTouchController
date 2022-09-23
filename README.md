@@ -10,11 +10,13 @@ Add a dedicated touch screen to your 3D printer!
 
 ### Supported Octoprint Plugins
 PSUControl	https://plugins.octoprint.org/plugins/psucontrol/
+ws281z LED	https://plugins.octoprint.org/plugins/ws281x_led_status/
+WLED		https://plugins.octoprint.org/plugins/wled/
 
 ### Project Status
 Initialze release Aug/26/2022
 
-Beta 4 Released: Sept/20/2022
+Beta 5 Released: Sept/23/2022
 
 Written in B4X! https://www.b4x.com/
 

@@ -264,7 +264,13 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	clvLastIndexClicked = Index
 	currentFileInfo =  mMainObj.MasterCtrlr.gMapOctoFilesList.Get(Value)
 	
+	If currentFileInfo.myThumbnail_filename_disk = "" Then
+		SetThumbnail2Nothing
+		Return
+	End If
+	
 	If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
+	
 	
 		guiHelpers.Show_toast("Getting Thumbnail",1500)
 		If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
@@ -285,6 +291,7 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	End If
 	
 End Sub
+
 
 #region "FILES_CHANGED_CHECK"
 

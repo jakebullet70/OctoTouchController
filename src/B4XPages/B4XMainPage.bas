@@ -424,6 +424,9 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	CallSub2(Main,"TurnOnOff_MainTmr",False)
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	
+	'--- back to the main menu
+	If oPageCurrent <> oPageMenu Then Switch_Pages(gblConst.PAGE_MENU)
+	
 	Dim Msg As String = guiHelpers.GetConnectionText(connectedButError)
 	
 	'--- if printer / sonoff power is configed, show power btn	

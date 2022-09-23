@@ -121,9 +121,12 @@ private Sub Parse(jsonTXT As String)
 			ff.Name = colfiles.Get("display")
 			ff.origin = colfiles.Get("origin")
 			
-			If ff.Thumbnail.Length <> 0 Then
+			If ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null" Then
 				ff.Thumbnail =  ff.Thumbnail.SubString2(0,ff.Thumbnail.IndexOf("?"))
 				ff.myThumbnail_filename_disk = fnc.BuildThumbnailTempFilename(fnc.GetFilenameFromHTTP(ff.Thumbnail))
+			Else
+				ff.Thumbnail = ""
+				ff.myThumbnail_filename_disk = ""
 			End If
 			
 			'Dim Type As String = colfiles.Get("type")
@@ -179,7 +182,7 @@ private Sub Parse(jsonTXT As String)
 			logMe.LogIt2("ParseFile 2: " & LastException,mModule,InSub)
 		End Try
 		
-		If mDownloadThumbnails And  ff.Thumbnail.Length <> 0 Then
+		If mDownloadThumbnails And  (ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null") Then
 			CallSub3(B4XPages.MainPage.MasterCtrlr,"Download_ThumbnailAndCache2File",ff.Thumbnail,ff.myThumbnail_filename_disk)
 		End If
 		

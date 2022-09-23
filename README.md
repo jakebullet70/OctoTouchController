@@ -9,9 +9,11 @@ This in *not a replacement* for Octoprint but a way to add a touch screen to you
 Add a dedicated touch screen to your 3D printer!
 
 ### Supported Octoprint Plugins
-PSUControl	https://plugins.octoprint.org/plugins/psucontrol/
-ws281z LED	https://plugins.octoprint.org/plugins/ws281x_led_status/
-WLED		https://plugins.octoprint.org/plugins/wled/
+Cura Thumbnails		https://github.com/jneilliii/OctoPrint-UltimakerFormatPackage
+Prusa Thumbnails	https://github.com/jneilliii/OctoPrint-PrusaSlicerThumbnails
+PSUControl			https://plugins.octoprint.org/plugins/psucontrol/
+ws281z LED			https://plugins.octoprint.org/plugins/ws281x_led_status/
+WLED				https://plugins.octoprint.org/plugins/wled/
 
 ### Project Status
 Initialze release Aug/26/2022

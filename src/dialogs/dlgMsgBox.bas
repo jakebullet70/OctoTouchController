@@ -60,6 +60,7 @@ Public Sub Show(txt  As String, icon_file As String, _
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)
 	Dim rs As ResumableSub = mDialog.ShowCustom(BasePnl,btn1,btn2,btn3)
 	ThemeInputDialogBtnsResize2(mDialog,mWidth)
+	guiHelpers.AnimateDialog(mDialog,"top")
 	
 	Wait For (rs) Complete (Result As Int)
 	Return Result

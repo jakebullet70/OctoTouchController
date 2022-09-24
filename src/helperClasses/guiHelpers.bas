@@ -244,3 +244,24 @@ public Sub SetTextColor(obj() As B4XView)
 	Next
 End Sub
 
+
+
+Public Sub AnimateDialog (dlg As B4XDialog, FromEdge As String)
+	Dim base As B4XView = dlg.Base
+	Dim top As Int = base.Top
+	Dim left As Int = base.Left
+	Select FromEdge.ToLowerCase
+		Case "bottom"
+			base.Top = base.Parent.Height
+		Case "top"
+			base.Top = -base.Height
+		Case "left"
+			base.Left = -base.Width
+		Case "right"
+			base.Left = base.Parent.Width
+	End Select
+	base.SetLayoutAnimated(220, left, top, base.Width, base.Height)
+End Sub
+
+
+

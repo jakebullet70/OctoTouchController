@@ -89,13 +89,13 @@ public Sub HidePageParentObjs(obj() As B4XView)
 End Sub
 
 
-Public Sub SetActionBtnColorIsConnected(btn As B4XView)
-	If oc.isConnected Then
-		btn.TextColor = clrTheme.ConnectionYes
-	Else
-		btn.TextColor = clrTheme.ConnectionNo
-	End If
-End Sub
+'Public Sub SetActionBtnColorIsConnected(btn As B4XView)
+'	If oc.isConnected Then
+'		btn.TextColor = clrTheme.ConnectionYes
+'	Else
+'		btn.TextColor = clrTheme.ConnectionNo
+'	End If
+'End Sub
 
 
 'public Sub ReSkinB4XComboBox(cb() As B4XComboBox)

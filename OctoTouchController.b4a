@@ -179,13 +179,7 @@ Sub Activity_Create(FirstTime As Boolean)
 		Log("Activity_Create - FirstTime = False")
 	End If
 	
-'	If mSslFixIssue.IsInitialized = False Then
-'		mSslFixIssue.Initialize(Me)
-'		mSslFixIssue.TryToFix
-'		Wait For ("SslIssueFixed") Complete (Fixed As Boolean)
-'		Starter.SslIssueFixed = Fixed
-'	End If
-		
+	
 	If tmrScreen.IsInitialized = False Then _
 		tmrScreen.Initialize("tmrScreenPower",15000)	'--- init, will be reset later
 	
@@ -459,76 +453,3 @@ Public Sub Restart_App
 '	StartActivity(I)
 End Sub
 
-
-#Region "InApp-Update"
-'https://www.b4x.com/android/forum/threads/version-safe-apk-installation.87667/
-Public Sub InstallNewVersion
-	
-	
-	
-	Wait For (CheckInstallationRequirements) Complete (Result As Boolean)
-	If Result Then
-		SendInstallIntent
-	End If
-End Sub
-
-Private Sub CheckInstallationRequirements As ResumableSub
-	If File.ExternalWritable = False Then
-		MsgboxAsync("Storage card not available. Make sure that your device is not connected in USB storage mode.", "")
-		Return False
-	Else If ph.SdkVersion >= 26 And CanRequestPackageInstalls = False Then
-		MsgboxAsync("Please allow me to install applications.", "")
-		Wait For Msgbox_Result(Result As Int)
-		Dim in As Intent
-		in.Initialize("android.settings.MANAGE_UNKNOWN_APP_SOURCES", "package:" & Application.PackageName)
-		StartActivity(in)
-		Wait For Activity_Resume '<-- wait for Activity_Resume
-		Return CanRequestPackageInstalls
-	Else If CheckNonMarketAppsEnabled = False Then
-		MsgboxAsync("Please enable installation of non-market applications." & CRLF & "Under Settings - Security - Unknown sources" _
-			 & CRLF & "Or Settings - Applications - Unknown sources", "")
-		Return False
-	Else
-		Return True
-	End If
-End Sub
-
-Private Sub CanRequestPackageInstalls As Boolean
-	Dim ctxt As JavaObject
-	ctxt.InitializeContext
-	Dim PackageManager As JavaObject = ctxt.RunMethod("getPackageManager", Null)
-	Return PackageManager.RunMethod("canRequestPackageInstalls", Null)
-End Sub
-
-Private Sub CheckNonMarketAppsEnabled As Boolean
-	If ph.SdkVersion >= 26 Then Return True
-	If ph.SdkVersion < 17 Or ph.SdkVersion >= 21 Then
-		Return ph.GetSettings("install_non_market_apps") = "1"
-	Else
-		Dim context As JavaObject
-		context.InitializeContext
-		Dim resolver As JavaObject = context.RunMethod("getContentResolver", Null)
-		Dim global As JavaObject
-		global.InitializeStatic("android.provider.Settings.Global")
-		Return global.RunMethod("getString", Array(resolver, "install_non_market_apps")) = "1"
-	End If
-End Sub
-
-Private Sub SendInstallIntent
-	
-	Dim ApkName As String = "2nd_app.apk"
-	File.copy(File.DirAssets, ApkName, Starter.Provider.SharedFolder, ApkName)
-	
-	Dim i As Intent
-	If ph.SdkVersion >= 24 Then
-		i.Initialize("android.intent.action.INSTALL_PACKAGE", Starter.Provider.GetFileUri(ApkName))
-		i.Flags = Bit.Or(i.Flags, 1) 'FLAG_GRANT_READ_URI_PERMISSION
-	Else
-		i.Initialize(i.ACTION_VIEW, "file://" & File.Combine(Starter.Provider.SharedFolder, ApkName))
-		i.SetType("application/vnd.android.package-archive")
-	End If
-	StartActivity(i)
-	
-End Sub
-
-#end region

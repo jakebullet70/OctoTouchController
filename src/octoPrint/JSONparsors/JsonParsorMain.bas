@@ -14,7 +14,6 @@ Sub Class_Globals
 	Private xui As XUI
 End Sub
 
-'Initializes the object. You can add parameters to this method if needed.
 Public Sub Initialize
 End Sub
 

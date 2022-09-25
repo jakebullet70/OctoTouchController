@@ -192,57 +192,86 @@ Private Sub btnAction_Click
 End Sub
 
 Public Sub Build_ListViewFileList()
+	
+	Dim inSub As String = "Build_ListViewFileList"
+	
+	Try ' DEBUG try-catch
 
-	clvFiles.Clear
-	mMainObj.MasterCtrlr.gLstOctoFilesListSorted.Initialize
-	mMainObj.MasterCtrlr.gLstOctoFilesListSorted = objHelpers.Map2List(mMainObj.MasterCtrlr.gMapOctoFilesList,True)
-	mMainObj.MasterCtrlr.gLstOctoFilesListSorted.SortCaseInsensitive(True)
+		clvFiles.Clear
+		mMainObj.MasterCtrlr.gLstOctoFilesListSorted.Initialize
+		mMainObj.MasterCtrlr.gLstOctoFilesListSorted = objHelpers.Map2List(mMainObj.MasterCtrlr.gMapOctoFilesList,True)
+		mMainObj.MasterCtrlr.gLstOctoFilesListSorted.SortCaseInsensitive(True)
 	
-	CSelections.Initialize(clvFiles) 
-	CSelections.Mode = CSelections.MODE_SINGLE_ITEM_PERMANENT
-	LogColor("Build_ListViewFileList",xui.Color_Green)
-	
-	Dim ndx As Int = 0
-	For Each kFileName As String In mMainObj.MasterCtrlr.gLstOctoFilesListSorted
-		
-		Dim o As typOctoFileInfo  = mMainObj.MasterCtrlr.gMapOctoFilesList.Get(kFileName)
-		clvFiles.InsertAt(ndx, CreateListItem(o, clvFiles.AsView.Width, 60dip), kFileName)
-		ndx = ndx + 1
-		
-	Next
-	
-	clvFiles.PressedColor = 0x721F1C1C  '--- alpha set to 128
-	CSelections.SelectionColor = clvFiles.PressedColor
-	clvFiles.DefaultTextColor  = clrTheme.txtNormal
-	clvFiles.DefaultTextBackgroundColor = xui.Color_Transparent
-	
-	If clvFiles.Size > 0 Then
-		'--- if we have data select the 1st one
-		CSelections.ItemClicked(0)
-		clvLastIndexClicked = 0
-	Else
-		clvLastIndexClicked = NO_SELECTION
-	End If
+		CSelections.Initialize(clvFiles)
+		CSelections.Mode = CSelections.MODE_SINGLE_ITEM_PERMANENT
+		LogColor("Build_ListViewFileList",xui.Color_Green)
+	Catch
+		logMe.LogIt2("Build_ListViewFileList (Lamensis) 1: " & LastException,mModule,inSub)
+	End Try
 
+	Try ' DEBUG try-catch
+		Dim ndx As Int = 0
+		For Each kFileName As String In mMainObj.MasterCtrlr.gLstOctoFilesListSorted
+		
+			Dim o As typOctoFileInfo  = mMainObj.MasterCtrlr.gMapOctoFilesList.Get(kFileName)
+			clvFiles.InsertAt(ndx, CreateListItem(o, clvFiles.AsView.Width, 60dip), kFileName)
+			ndx = ndx + 1
+		
+		Next
+		
+	Catch
+		logMe.LogIt2("Build_ListViewFileList 2: (Lamensis)" & LastException,mModule,inSub)
+	End Try
+	
+	
+	Try ' DEBUG try-catch
+		clvFiles.PressedColor = 0x721F1C1C  '--- alpha set to 128
+		CSelections.SelectionColor = clvFiles.PressedColor
+		clvFiles.DefaultTextColor  = clrTheme.txtNormal
+		clvFiles.DefaultTextBackgroundColor = xui.Color_Transparent
+	
+		If clvFiles.Size > 0 Then
+			'--- if we have data select the 1st one
+			CSelections.ItemClicked(0)
+			clvLastIndexClicked = 0
+		Else
+			clvLastIndexClicked = NO_SELECTION
+		End If
+	
+	Catch
+		logMe.LogIt2("Build_ListViewFileList 3: (Lamensis)" & LastException,mModule,inSub)
+	End Try
+	
 End Sub
 
 Sub CreateListItem(oData As typOctoFileInfo, Width As Int, Height As Int) As B4XView
 	
-	Dim p As B4XView = xui.CreatePanel("")
-	'--- add 20dip to height for larger screens
-	p.SetLayoutAnimated(0, 0, 0, Width, Height + IIf(guiHelpers.gScreenSizeAprox > 7.8,20dip,0dip))
-	p.LoadLayout("viewFiles")
+	Try ' DEBUG try-catch
+		Dim p As B4XView = xui.CreatePanel("")
+		'--- add 20dip to height for larger screens
+		p.SetLayoutAnimated(0, 0, 0, Width, Height + IIf(guiHelpers.gScreenSizeAprox > 7.8,20dip,0dip))
+		p.LoadLayout("viewFiles")
 	
-	lblpnlFileViewTop.TextColor = clrTheme.txtNormal
-	lblpnlFileViewTop.font = xui.CreateDefaultFont( _
+		lblpnlFileViewTop.TextColor = clrTheme.txtNormal
+		lblpnlFileViewTop.font = xui.CreateDefaultFont( _
 			NumberFormat2(lblpnlFileViewTop.TextSize / guiHelpers.gFscale,1,0,0,False))
-	lblpnlFileViewTop.Text = fileHelpers.RemoveExtFromeFileName(oData.Name)
+			
+		Try
+			lblpnlFileViewTop.Text = fileHelpers.RemoveExtFromeFileName(oData.Name)
+		Catch
+			logMe.LogIt2("CreatListItem 2: (Lamensis)" & LastException,mModule,"CreateListItem")
+		End Try	
 	
-	lblpnlFileViewBottom.TextColor = clrTheme.txtNormal
-	lblpnlFileViewBottom.Font = lblpnlFileViewTop.Font
-	lblpnlFileViewBottom.Text = "Size: " &   fileHelpers.BytesToReadableString(oData.Size) '& " Uploaded: " & dt
+		lblpnlFileViewBottom.TextColor = clrTheme.txtNormal
+		lblpnlFileViewBottom.Font = lblpnlFileViewTop.Font
+		lblpnlFileViewBottom.Text = "Size: " &   fileHelpers.BytesToReadableString(oData.Size) '& " Uploaded: " & dt
 	
-	Return p
+		Return p
+	Catch
+		logMe.LogIt2("CreatListItem 1: (Lamensis)" & LastException,mModule,"CreateListItem")
+	End Try
+	
+	
 	
 End Sub
 

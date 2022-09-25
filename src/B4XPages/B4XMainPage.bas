@@ -59,13 +59,13 @@ End Sub
 Public Sub Initialize
 	
 	config.Init
-	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
+	logMe.Init(xui.DefaultFolder,"_OCTOTC_","log")
 	clrTheme.Init(config.ColorTheme)
 	
-	'Starter.InitLogCleanup
-	fileHelpers.DeleteFiles(xui.DefaultFolder,"*.log")
-	logMe.LogIt("Clean log - start, beta test!  LOL","")
-
+	Starter.InitLogCleanup
+	'fileHelpers.DeleteFiles(xui.DefaultFolder,"*.log")
+	fileHelpers.DeleteFiles(xui.DefaultFolder,"sad_*.png") '--- delete all thumbnails
+	logMe.LogIt("App Startup...","")
 	
 	powerHelpers.Init(config.AndroidTakeOverSleepFLAG)
 	CfgAndroidPowerOptions

@@ -246,32 +246,26 @@ End Sub
 
 Sub CreateListItem(oData As typOctoFileInfo, Width As Int, Height As Int) As B4XView
 	
-	Try ' DEBUG try-catch
-		Dim p As B4XView = xui.CreatePanel("")
-		'--- add 20dip to height for larger screens
-		p.SetLayoutAnimated(0, 0, 0, Width, Height + IIf(guiHelpers.gScreenSizeAprox > 7.8,20dip,0dip))
-		p.LoadLayout("viewFiles")
-	
-		lblpnlFileViewTop.TextColor = clrTheme.txtNormal
-		lblpnlFileViewTop.font = xui.CreateDefaultFont( _
-			NumberFormat2(lblpnlFileViewTop.TextSize / guiHelpers.gFscale,1,0,0,False))
-			
-		Try
-			lblpnlFileViewTop.Text = fileHelpers.RemoveExtFromeFileName(oData.Name)
-		Catch
-			logMe.LogIt2("CreatListItem 2: (Lamensis)" & LastException,mModule,"CreateListItem")
-		End Try	
-	
-		lblpnlFileViewBottom.TextColor = clrTheme.txtNormal
-		lblpnlFileViewBottom.Font = lblpnlFileViewTop.Font
-		lblpnlFileViewBottom.Text = "Size: " &   fileHelpers.BytesToReadableString(oData.Size) '& " Uploaded: " & dt
-	
-		Return p
+	Dim p As B4XView = xui.CreatePanel("")
+	'--- add 20dip to height for larger screens
+	p.SetLayoutAnimated(0, 0, 0, Width, Height + IIf(guiHelpers.gScreenSizeAprox > 7.8,20dip,0dip))
+	p.LoadLayout("viewFiles")
+
+	lblpnlFileViewTop.TextColor = clrTheme.txtNormal
+	lblpnlFileViewTop.font = xui.CreateDefaultFont( _
+		NumberFormat2(lblpnlFileViewTop.TextSize / guiHelpers.gFscale,1,0,0,False))
+		
+	Try
+		lblpnlFileViewTop.Text = fileHelpers.RemoveExtFromeFileName(oData.Name)
 	Catch
-		logMe.LogIt2("CreatListItem 1: (Lamensis)" & LastException,mModule,"CreateListItem")
-	End Try
-	
-	
+		logMe.LogIt2("CreatListItem 2: (Lamensis)" & LastException,mModule,"CreateListItem")
+	End Try	
+
+	lblpnlFileViewBottom.TextColor = clrTheme.txtNormal
+	lblpnlFileViewBottom.Font = lblpnlFileViewTop.Font
+	lblpnlFileViewBottom.Text = "Size: " &   fileHelpers.BytesToReadableString(oData.Size) '& " Uploaded: " & dt
+
+	Return p
 	
 End Sub
 
@@ -300,13 +294,15 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	
 	If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
 	
-	
-		guiHelpers.Show_toast("Getting Thumbnail",1500)
+		guiHelpers.Show_toast("Getting Thumbnail...",2000)
+		Sleep(0)
+		
+		SetThumbnail2Nothing
 		If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
 		
 		Dim link As String = $"http://${mMainObj.MasterCtrlr.cn.gIP}:${mMainObj.MasterCtrlr.cn.gPort}/"$ & currentFileInfo.Thumbnail
 		mMainObj.MasterCtrlr.cn.Download_AndSaveFile(link,currentFileInfo.myThumbnail_filename_disk)
-		Sleep(1500)
+		Sleep(1800)
 		
 		If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
 			SetThumbnail2Nothing

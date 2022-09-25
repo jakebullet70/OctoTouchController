@@ -107,6 +107,8 @@ Private Sub Parse(jsonTXT As String)
 	Dim root As Map = parser.NextObject
 	'Dim total As String = root.Get("total")
 	Dim files As List = root.Get("files")
+	Dim cacheTTL As Int = 0
+	
 	For Each colfiles As Map In files
 
 		Dim ff As typOctoFileInfo
@@ -123,11 +125,11 @@ Private Sub Parse(jsonTXT As String)
 			Catch
 				logMe.LogIt2("Parse00: " & LastException,mModule,InSub)
 			End Try
-			Try
-				ff.Thumbnail_src = colfiles.Get("thumbnail_src")
-			Catch
-				logMe.LogIt2("Parse01: " & LastException,mModule,InSub)
-			End Try
+'			Try
+'				ff.Thumbnail_src = colfiles.Get("thumbnail_src")
+'			Catch
+'				logMe.LogIt2("Parse01: " & LastException,mModule,InSub)
+'			End Try
 			Try
 				ff.Thumbnail = colfiles.Get("thumbnail")
 				ff.Thumbnail_original = ff.Thumbnail '--- has date code appended to name
@@ -159,11 +161,11 @@ Private Sub Parse(jsonTXT As String)
 				ff.myThumbnail_filename_disk = ""
 			End Try
 			
-			Try
-				ff.Path = colfiles.Get("path")
-			Catch
-				logMe.LogIt2("Parse00x: " & LastException,mModule,InSub)
-			End Try
+'			Try
+'				ff.Path = colfiles.Get("path")
+'			Catch
+'				logMe.LogIt2("Parse00x: " & LastException,mModule,InSub)
+'			End Try
 			Try
 				ff.hash = colfiles.Get("hash")
 			Catch
@@ -198,7 +200,8 @@ Private Sub Parse(jsonTXT As String)
 			logMe.LogIt2("ParseFile 2: " & LastException,mModule,InSub)
 		End Try
 		
-		If mDownloadThumbnails And  (ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null") Then
+		If mDownloadThumbnails And  (ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null") And cacheTTL < 7 Then
+			cacheTTL = cacheTTL + 1
 			CallSub3(B4XPages.MainPage.MasterCtrlr,"Download_ThumbnailAndCache2File",ff.Thumbnail,ff.myThumbnail_filename_disk)
 		End If
 		

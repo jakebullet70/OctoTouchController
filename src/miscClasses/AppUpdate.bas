@@ -11,6 +11,7 @@ Version=8.5
 
 Sub Class_Globals
 	Private Const mModule As String = "AppUpdate" 'ignore
+	Private xui As XUI
 	
 	'--- testing 'working' branch
 	' --- have to click 'RAW' to get the file link
@@ -30,7 +31,11 @@ Public Sub RunPrgUpdate
 	'--- runs on app startup when a new version has been installed
 	'--- runs on app startup when a new version has been installed
 	
-	'#if release
+	fileHelpers.DeleteFiles(xui.DefaultFolder,"*.log")
+	fileHelpers.DeleteFiles(xui.DefaultFolder,"*.crash")
+	fileHelpers.DeleteFiles(xui.DefaultFolder,"sad_*.png") '--- thumbnails
+	
+	''''#if release
 	Dim PrevVer As Int = Starter.kvs.Get("version_code").As(Int)
 	
 	If PrevVer <= 3 Then  '--- V1.0.0 Beta 2
@@ -38,9 +43,9 @@ Public Sub RunPrgUpdate
 	End If
 	
 	'--- update the version
-	'#if release
+	#if release
 	Starter.kvs.Put("version_code",Application.VersionCode)
-	'#end if
+	#end if
 	
 End Sub
 

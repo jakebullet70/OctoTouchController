@@ -60,8 +60,8 @@ Public Sub Start
 End Sub
 
 Public Sub SetCallbackTargets(CallBack As Object,EventNameTemp As String, _
-																EventNameStatus As String, _
-																EventNameBtns As String)
+												 EventNameStatus As String, _
+												 EventNameBtns As String)
 	mEventNameTemp = EventNameTemp
 	mEventNameStatus = EventNameStatus
 	mEventNameBtns = EventNameBtns

@@ -31,6 +31,7 @@ Public Sub RunPrgUpdate
 	'--- runs on app startup when a new version has been installed
 	'--- runs on app startup when a new version has been installed
 	
+	Log("RunPrgUpdate")
 	fileHelpers.DeleteFiles(xui.DefaultFolder,"*.log")
 	fileHelpers.DeleteFiles(xui.DefaultFolder,"*.crash")
 	fileHelpers.DeleteFiles(xui.DefaultFolder,"sad_*.png") '--- thumbnails

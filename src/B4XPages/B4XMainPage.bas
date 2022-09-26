@@ -66,6 +66,7 @@ Public Sub Initialize
 	
 	'  debug - remove for release
 	fileHelpers.DeleteFiles(xui.DefaultFolder,"*.log")
+	'  debug - remove for release
 	
 	
 	fileHelpers.DeleteFiles(xui.DefaultFolder,"sad_*.png") '--- delete all thumbnails
@@ -128,7 +129,7 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 End Sub
 
 Private Sub B4XPage_Appear
-	Log("B4XPage_Appear")
+	'Log("B4XPage_Appear")
 End Sub
 
 Private Sub B4APage_Disappear
@@ -138,7 +139,7 @@ End Sub
 Private Sub B4XPage_Foreground
 	CallSub(oPageCurrent,"Set_Focus")
 	If oc.isConnected Then CallSub2(Main,"TurnOnOff_MainTmr",True)
-	Log("B4XPage_Foreground - calling Set_Focus, main tmr on")
+	'Log("B4XPage_Foreground - calling Set_Focus, main tmr on")
 End Sub
 
 Private Sub B4XPage_Background

@@ -391,12 +391,14 @@ Public Sub CheckIfFilesChanged
 	FilesCheckChangeIsBusyFLAG = False
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 	
-	If oldListViewSize <> clvFiles.Size And mMainObj.oMasterController.gLstOctoFilesListSorted > 0 Then
+	If oldListViewSize <> clvFiles.Size And mMainObj.oMasterController.gLstOctoFilesListSorted.Size > 0 Then
 		'--- highllight the first row
 		Sleep(200)
 		clvFiles_ItemClick(0,mMainObj.oMasterController.gLstOctoFilesListSorted.Get(0))
 		Sleep(200)
 	End If
+	
+	If mMainObj.oMasterController.gLstOctoFilesListSorted.Size = 0 Then SetThumbnail2Nothing
 	
 	Update_Printer_Btns
 	
@@ -512,7 +514,7 @@ Private Sub SendDeleteCmdAndRemoveFromGrid
 	End If
 	
 	Sleep(200)
-	CallSub(B4XPages.MainPage.MasterCtrlr,"tmrMain_Tick")
+	CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
 	Sleep(100)
 	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName2Scrn",500)
 	

@@ -63,7 +63,11 @@ Public Sub Initialize
 	clrTheme.Init(config.ColorTheme)
 	
 	Starter.InitLogCleanup
-	'fileHelpers.DeleteFiles(xui.DefaultFolder,"*.log")
+	
+	'  debug - remove for release
+	fileHelpers.DeleteFiles(xui.DefaultFolder,"*.log")
+	
+	
 	fileHelpers.DeleteFiles(xui.DefaultFolder,"sad_*.png") '--- delete all thumbnails
 	logMe.LogIt("App Startup...","")
 	

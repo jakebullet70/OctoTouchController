@@ -31,14 +31,10 @@ Public Sub Initialize(DownloadThumbnails As Boolean)
 End Sub
 
 #Region "CHECK_FOR_SOME_CHANGES"
-Public Sub CheckIfChanged(jsonTXT As String, originalMap As Map) As Boolean
-	'--- just tell them something has changed
-	Return ParseCompareCheck(jsonTXT,originalMap)
-End Sub
 
-
-Private Sub ParseCompareCheck(jsonTXT As String,oldMap As Map) As Boolean
+Public Sub CheckIfChanged(jsonTXT As String,oldMap As Map) As Boolean
 	
+	'--- just tell them something has changed
 	Dim InSub As String = "ParseCompareCheck"
 	Dim parser As JSONParser
 	parser.Initialize(jsonTXT)
@@ -56,7 +52,6 @@ Private Sub ParseCompareCheck(jsonTXT As String,oldMap As Map) As Boolean
 		Catch
 			logMe.LogIt2("ParseComp00: ",mModule,InSub)
 		End Try
-		
 
 		'--- see if we have this file in the original map
 		Dim ff As typOctoFileInfo
@@ -107,7 +102,11 @@ Private Sub Parse(jsonTXT As String)
 	Dim root As Map = parser.NextObject
 	'Dim total As String = root.Get("total")
 	Dim files As List = root.Get("files")
-	Dim cacheTTL As Int = 0
+	
+	'Dim cacheTTL As Int = 0
+	'-----------------------------------------------------------------------------------
+	'--- not download thumbnails at the momemnt, will downloaded whan needed
+	'-----------------------------------------------------------------------------------
 	
 	For Each colfiles As Map In files
 
@@ -115,8 +114,7 @@ Private Sub Parse(jsonTXT As String)
 		
 		Try
 			
-			Dim fType As String = colfiles.Get("type")
-			If fType = "folder" Then
+			If colfiles.Get("type") = "folder" Then
 				Continue '--- its a folder
 			End If
 			
@@ -125,11 +123,6 @@ Private Sub Parse(jsonTXT As String)
 			Catch
 				logMe.LogIt2("Parse00: " & LastException,mModule,InSub)
 			End Try
-'			Try
-'				ff.Thumbnail_src = colfiles.Get("thumbnail_src")
-'			Catch
-'				logMe.LogIt2("Parse01: " & LastException,mModule,InSub)
-'			End Try
 			Try
 				ff.Thumbnail = colfiles.Get("thumbnail")
 				ff.Thumbnail_original = ff.Thumbnail '--- has date code appended to name
@@ -147,6 +140,7 @@ Private Sub Parse(jsonTXT As String)
 				logMe.LogIt2("Parse05: " & LastException,mModule,InSub)
 			End Try
 
+			If ff.Name.StartsWith("3D") Then LogColor("starts with --> "&ff.Thumbnail,Colors.Green)
 			Try
 				If ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null" Then
 					ff.Thumbnail =  ff.Thumbnail.SubString2(0,ff.Thumbnail.IndexOf("?"))
@@ -193,17 +187,21 @@ Private Sub Parse(jsonTXT As String)
 				'--- thinking if we error out here - octoprint has not finished parsing the newly
 				'--- added file so the gcode analisys is incomplete
 				ff.missingData = True
-				logMe.LogIt2("ParseFile-missingData=True: " & LastException,mModule,InSub)
+				logMe.LogIt2("ParseFile-missingData=True",mModule,InSub)
 			End Try
 			
 		Catch
 			logMe.LogIt2("ParseFile 2: " & LastException,mModule,InSub)
 		End Try
 		
-		If mDownloadThumbnails And  (ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null") And cacheTTL < 7 Then
-			cacheTTL = cacheTTL + 1
-			CallSub3(B4XPages.MainPage.MasterCtrlr,"Download_ThumbnailAndCache2File",ff.Thumbnail,ff.myThumbnail_filename_disk)
-		End If
+'		If mDownloadThumbnails And (ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null") _
+'							   And cacheTTL < 7 Then
+'							   
+'			'--- cache files (random because of the sort)
+'			'cacheTTL = cacheTTL + 1
+'			'CallSub3(B4XPages.MainPage.MasterCtrlr,"Download_ThumbnailAndCache2File",ff.Thumbnail,ff.myThumbnail_filename_disk)
+'			
+'		End If
 		
 		'--- stash results to map
 		gMapFiles.Put(ff.Name,ff)

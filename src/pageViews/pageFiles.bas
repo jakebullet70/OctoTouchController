@@ -24,7 +24,7 @@ Sub Class_Globals
 	Private clvFiles As CustomListView
 	Private ivPreview As lmB4XImageViewX
 	Private btnDelete, btnLoad, btnLoadAndPrint As B4XView
-	Private currentFileInfo As typOctoFileInfo
+	Private mCurrentFileInfo As typOctoFileInfo
 	
 	'--- list view panel
 	Private lblpnlFileViewTop,lblpnlFileViewBottom As B4XView
@@ -69,7 +69,7 @@ public Sub Set_focus()
 		firstRun = False
 	End If
 	
-	Update_LoadedFileName
+	 Update_LoadedFileName2Scrn
 	DisplayedFileName = oc.JobFileName
 	Update_Printer_Btns
 	
@@ -116,7 +116,7 @@ Public Sub tmrFilesCheckChange_Tick
 	If (oc.JobFileName.Length = 0 And lblFileName.Text <> gblConst.NO_FILE_LOADED) Or _
 		(oc.JobFileName.Length <> 0 And lblFileName.Text = gblConst.NO_FILE_LOADED) Or _
 		(DisplayedFileName <> oc.JobFileName) Then
-		Update_LoadedFileName
+		 Update_LoadedFileName2Scrn
 	End If
 	
 	DisplayedFileName = oc.JobFileName
@@ -176,14 +176,14 @@ Private Sub btnAction_Click
 			CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 			
 		Case "load"
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_FILES_SELECT.Replace("!LOC!",currentFileInfo.Origin).Replace("!PATH!",currentFileInfo.Name))
+			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_FILES_SELECT.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
 			guiHelpers.Show_toast("Loading file...",2000)
 			Sleep(100)
 			CallSub(B4XPages.MainPage.MasterCtrlr,"tmrMain_Tick")
-			Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName",500)
+			Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName2Scrn",400)
 			
 		Case "loadandprint"
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_FILES_PRINT.Replace("!LOC!",currentFileInfo.Origin).Replace("!PATH!",currentFileInfo.Name))
+			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_FILES_PRINT.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
 			guiHelpers.EnableDisableBtns(Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete),False)
 			CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_PRINTING)
 			
@@ -204,7 +204,7 @@ Public Sub Build_ListViewFileList()
 	
 		CSelections.Initialize(clvFiles)
 		CSelections.Mode = CSelections.MODE_SINGLE_ITEM_PERMANENT
-		LogColor("Build_ListViewFileList",xui.Color_Green)
+		'LogColor("Build_ListViewFileList",xui.Color_Green)
 	Catch
 		logMe.LogIt2("Build_ListViewFileList (Lamensis) 1: " & LastException,mModule,inSub)
 	End Try
@@ -273,6 +273,11 @@ Private Sub SetThumbnail2Nothing
 	ivPreview.Load(File.DirAssets,"no_thumbnail.jpg")
 End Sub
 
+
+
+'Private Sub clvFiles_ItemLongClick (Index As Int, Value As Object)
+'	mCurrentFileInfo =  mMainObj.MasterCtrlr.gMapOctoFilesList.Get(Value)
+'End Sub
 Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
@@ -285,34 +290,35 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	
 	CSelections.ItemClicked(Index)
 	clvLastIndexClicked = Index
-	currentFileInfo =  mMainObj.MasterCtrlr.gMapOctoFilesList.Get(Value)
+	mCurrentFileInfo =  mMainObj.MasterCtrlr.gMapOctoFilesList.Get(Value)
 	
-	If currentFileInfo.myThumbnail_filename_disk = "" Then
+	If mCurrentFileInfo.myThumbnail_filename_disk = "" Then
 		SetThumbnail2Nothing
 		Return
 	End If
 	
-	If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
+	If File.Exists(xui.DefaultFolder,mCurrentFileInfo.myThumbnail_filename_disk) = False Then
 	
+		SetThumbnail2Nothing
 		guiHelpers.Show_toast("Getting Thumbnail...",2000)
 		Sleep(0)
 		
-		SetThumbnail2Nothing
-		If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
+		If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & mCurrentFileInfo.myThumbnail_filename_disk,mModule)
 		
-		Dim link As String = $"http://${mMainObj.MasterCtrlr.cn.gIP}:${mMainObj.MasterCtrlr.cn.gPort}/"$ & currentFileInfo.Thumbnail
-		mMainObj.MasterCtrlr.cn.Download_AndSaveFile(link,currentFileInfo.myThumbnail_filename_disk)
+		mMainObj.MasterCtrlr.cn.Download_AndSaveFile( _
+			$"http://${mMainObj.MasterCtrlr.cn.gIP}:${mMainObj.MasterCtrlr.cn.gPort}/"$ & mCurrentFileInfo.Thumbnail, _
+			mCurrentFileInfo.myThumbnail_filename_disk)
+			 
 		Sleep(1800)
 		
-		If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
+		If File.Exists(xui.DefaultFolder,mCurrentFileInfo.myThumbnail_filename_disk) = False Then
 			SetThumbnail2Nothing
 		Else
-			ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
+			ivPreview.Load(xui.DefaultFolder,mCurrentFileInfo.myThumbnail_filename_disk)
 		End If
 		
 	Else
-		ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
-		
+		ivPreview.Load(xui.DefaultFolder,mCurrentFileInfo.myThumbnail_filename_disk)
 	End If
 	
 End Sub
@@ -322,6 +328,7 @@ End Sub
 
 Public Sub CheckIfFilesChanged
 	
+	Dim inSub As String = "CheckIfFilesChanged"
 	If FilesCheckChangeIsBusyFLAG Then Return
 	If mMainObj.MasterCtrlr.gMapOctoFilesList.IsInitialized = False Then
 		mMainObj.MasterCtrlr.GetAllOctoFilesInfo
@@ -334,24 +341,25 @@ Public Sub CheckIfFilesChanged
 	FilesCheckChangeIsBusyFLAG = True
 	
 	'--- grab a list of files
-	Dim rs As ResumableSub =  mMainObj.MasterCtrlr.cn.SendRequestGetInfo( oc.cFILES)
+	Dim rs As ResumableSub =  mMainObj.MasterCtrlr.cn.SendRequestGetInfo(oc.cFILES)
 	Wait For(rs) Complete (Result As String)
 	
 	If Result.Length <> 0 Then
 	
 		'--- compare new list with old
 		Dim o As JsonParserFiles : o.Initialize(False) '--- DO NOT download thumbnails
-		Dim didChange As Boolean = o.CheckIfChanged(Result, mMainObj.MasterCtrlr.gMapOctoFilesList)
+		Dim didSomethingChange As Boolean = o.CheckIfChanged(Result, mMainObj.MasterCtrlr.gMapOctoFilesList)
 		Dim IncompleteData As Boolean = mMainObj.MasterCtrlr.IsIncompleteFileData
 		
 		Dim SizeMisMatch As Boolean = (clvFiles.Size <> mMainObj.MasterCtrlr.gMapOctoFilesList.Size) 
 		
-		If didChange Or IncompleteData Or SizeMisMatch Then
+		If didSomethingChange Or IncompleteData Or SizeMisMatch Then
 			
-			'--- ok, something changed
-			If config.logFILE_EVENTS Then 
-				logMe.LogIt($"did change:(incomplete:${IncompleteData})(SizeMisMatch:${SizeMisMatch})"$,mModule)
-			End If
+			'--- ok, something changed, missing data
+			If config.logFILE_EVENTS Then logMe.LogIt2($"did change:(incomplete:${IncompleteData})(SizeMisMatch:${SizeMisMatch})"$,mModule,inSub)
+			
+			logMe.LogIt2($"did change:(incomplete:${IncompleteData})(SizeMisMatch:${SizeMisMatch})"$,mModule,inSub)
+			
 			Dim mapNewFileList As Map = o.StartParseAllFiles(Result)
 			ProcessNewOldThumbnails(mapNewFileList)
 			
@@ -361,7 +369,7 @@ Public Sub CheckIfFilesChanged
 			If IncompleteData = False Then
 				Build_ListViewFileList
 			Else
-				If config.logFILE_EVENTS Then logMe.LogIt("Incomplete file data processed",mModule)
+				If config.logFILE_EVENTS Then logMe.LogIt2("Incomplete file data processed",mModule,inSub)
 			End If
 			
 	
@@ -374,7 +382,7 @@ Public Sub CheckIfFilesChanged
 		Else
 			
 			'--- nothing new
-			If config.logFILE_EVENTS Then logMe.LogIt("did change --- NO!!!!!!!!!!",mModule)
+			If config.logFILE_EVENTS Then logMe.LogIt2("did change --- NO!!!!!!!!!!",mModule,inSub)
 			
 		End If
 		
@@ -403,13 +411,16 @@ private Sub ProcessNewOldThumbnails(NewMap As Map)
 		'--- remove any old thumbnail files
 		Dim deletedFiles As Int = 0
 		If config.logFILE_EVENTS Then logMe.LogIt("ProcessThumbnails - start - remove any old thumbnail files",mModule)
+		
 		For Each oldMap As typOctoFileInfo In mMainObj.MasterCtrlr.gMapOctoFilesList.Values
 			
 			Dim oldMapKey As String = oldMap.Name
 			If NewMap.ContainsKey(oldMapKey) = False Then
 				
 				If config.logFILE_EVENTS Then logMe.LogIt("deleted old thumbnail: " & oldMap.myThumbnail_filename_disk,mModule)
+				
 				fileHelpers.SafeKill(oldMap.myThumbnail_filename_disk)
+				LogColor("del --> " & oldMap.myThumbnail_filename_disk,Colors.Yellow)
 				deletedFiles = deletedFiles + 1
 				
 			End If
@@ -420,14 +431,15 @@ private Sub ProcessNewOldThumbnails(NewMap As Map)
 		logMe.LogIt2(LastException,mModule,InSub)
 	End Try
 
-	If config.logFILE_EVENTS Then 
+	'If config.logFILE_EVENTS Then 
 		logMe.LogIt2("END - remove any old thumbnail files: #" & deletedFiles,mModule,InSub)
 		logMe.LogIt2("START - download new thumbnails for new and changed files",mModule,InSub)
-	End If
+	'End If
 	
 	Try
 
 		Dim changedFiles = 0, NewFiles = 0 As Int
+		
 		'--- download new thumbnails for new and changed files
 		For Each oNewMap As typOctoFileInfo In NewMap.Values
 
@@ -450,6 +462,7 @@ private Sub ProcessNewOldThumbnails(NewMap As Map)
 				'--- new file, need thumbnail
 				NewFiles = NewFiles + 1
 				If config.logFILE_EVENTS Then logMe.LogIt2("downloading new thumbnail; " & oNewMap.name,mModule,InSub)
+				
 				mMainObj.MasterCtrlr.Download_ThumbnailAndCache2File(oNewMap.Thumbnail,oNewMap.myThumbnail_filename_disk)
 								
 			End If
@@ -460,29 +473,26 @@ private Sub ProcessNewOldThumbnails(NewMap As Map)
 		logMe.LogIt2(LastException,mModule,InSub)
 	End Try
 	
-	If config.logFILE_EVENTS Then 
-		logMe.LogIt2("files changed #" & changedFiles & "   files new #" & NewFiles,mModule,InSub)
-	End If
-	
-	
+	If config.logFILE_EVENTS Then logMe.LogIt2("files changed #" & changedFiles & "   files new #" & NewFiles,mModule,InSub)
 	
 End Sub
 #end region
 
 Private Sub SendDeleteCmdAndRemoveFromGrid
 	
-	mMainObj.MasterCtrlr.cn.DeleteRequest(oc.cDELETE_FILES_DELETE.Replace("!LOC!",currentFileInfo.Origin).Replace("!PATH!",currentFileInfo.Name))
+	mMainObj.MasterCtrlr.cn.DeleteRequest(oc.cDELETE_FILES_DELETE.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
 	'Sleep(500)
 	
-	guiHelpers.Show_toast("Deleting File",1700)
+	guiHelpers.Show_toast("Deleting File",1200)
+	Sleep(0)
 	
 	'--- delete from thumbnail cache
-	fileHelpers.SafeKill (currentFileInfo.myThumbnail_filename_disk)
+	fileHelpers.SafeKill(mCurrentFileInfo.myThumbnail_filename_disk)
 	
 	'--- remove from grid
 	clvFiles.RemoveAt(clvLastIndexClicked)
 	CSelections.SelectedItems.Remove(clvLastIndexClicked)
-	mMainObj.MasterCtrlr.gMapOctoFilesList.Remove(currentFileInfo.Name)
+	mMainObj.MasterCtrlr.gMapOctoFilesList.Remove(mCurrentFileInfo.Name)
 	Sleep(200)
 	
 	Dim ff As typOctoFileInfo
@@ -504,16 +514,17 @@ Private Sub SendDeleteCmdAndRemoveFromGrid
 	Sleep(200)
 	CallSub(B4XPages.MainPage.MasterCtrlr,"tmrMain_Tick")
 	Sleep(100)
-	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName",500)
+	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName2Scrn",500)
 	
 End Sub
 
 
-private Sub Update_LoadedFileName
+Public Sub  Update_LoadedFileName2Scrn
 	If oc.isFileLoaded Then
 		lblFileName.Text = fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
 	Else
 		lblFileName.Text = gblConst.NO_FILE_LOADED
 	End If
 End Sub
+
 

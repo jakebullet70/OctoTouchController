@@ -451,6 +451,7 @@ Private Sub ivPreview_Click
 	ivPreview.mBase.Visible = False
 End Sub
 
+
 Private Sub LoadThumbNail
 	
 	If mMainObj.MasterCtrlr.gMapOctoFilesList.IsInitialized = False Then
@@ -458,11 +459,16 @@ Private Sub LoadThumbNail
 		Return
 	End If
 
+	Dim currentFileInfo As typOctoFileInfo
+	currentFileInfo =  mMainObj.MasterCtrlr.gMapOctoFilesList.Get(oc.JobFileName)
+	
+	If currentFileInfo.myThumbnail_filename_disk = "" Then
+		ivPreview.Load(File.DirAssets,"no_thumbnail.jpg")
+		Return
+	End If
+
 	Try
 		'--- Same code as in pageFiles so...   TODO, make method and share code
-		Dim currentFileInfo As typOctoFileInfo
-		currentFileInfo =  mMainObj.MasterCtrlr.gMapOctoFilesList.Get(oc.JobFileName)
-	
 		If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
 	
 			guiHelpers.Show_toast("Getting Thumbnail",2200)
@@ -481,8 +487,10 @@ Private Sub LoadThumbNail
 			ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
 		End If
 	Catch
+		
 		guiHelpers.Show_toast("NULL Error loading thumbnail",2000) '--- happens when no file is loaded
-		Log(LastException)
+		logMe.LogIt2(LastException,mModule,"LoadThumbNail")
+		
 	End Try
 	
 End Sub

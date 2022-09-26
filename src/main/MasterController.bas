@@ -60,8 +60,8 @@ Public Sub Start
 End Sub
 
 Public Sub SetCallbackTargets(CallBack As Object,EventNameTemp As String, _
-																EventNameStatus As String, _
-																EventNameBtns As String)
+												 EventNameStatus As String, _
+												 EventNameBtns As String)
 	mEventNameTemp = EventNameTemp
 	mEventNameStatus = EventNameStatus
 	mEventNameBtns = EventNameBtns
@@ -391,7 +391,8 @@ public Sub Download_ThumbnailAndCache2File(JobFileName As String,outFileName As 
 		
 	Catch
 		
-		If config.logFILE_EVENTS Then logMe.LogIt2(LastException,mModule,"Download_ThumbnailAndCache2File")
+		'If config.logFILE_EVENTS Then logMe.LogIt2(LastException,mModule,"Download_ThumbnailAndCache2File")
+		logMe.LogIt2(LastException,mModule,"Download_ThumbnailAndCache2File")
 		
 	End Try
 
@@ -404,9 +405,11 @@ Public Sub IsIncompleteFileData() As Boolean
 	For Each o As typOctoFileInfo In gMapOctoFilesList.Values
 		If o.missingData Then
 			If config.logFILE_EVENTS Then logMe.LogIt("Incomplete data in files array",mModule)
+			Log("incompleteData=True")
 			Return True
 		End If
 	Next
+	Log("incompleteData=False")
 	Return False
 End Sub
 

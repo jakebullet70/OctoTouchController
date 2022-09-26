@@ -155,47 +155,7 @@ End Sub
 'End Sub
 
 
-'========================================================================
-' Removes old file(s) from a folder if older then X amount days
-' Param - folder, the folder to search
-' Param - fileSpec, file spec to search for
-' Param - numOfDays, if file is older then X days then delete
-' --- Not sure where I found this at but I can amagine on the forum
-public Sub RemoveOldFiles(folder As String, fileSpec As String, numOfDays As Int) As Boolean
-	
-	
-	Dim o1 As WildCardFilesList : o1.Initialize
-	
-	Try
-		
-		Dim lstFolder As List = o1.GetFiles(folder,fileSpec,False,False)
-		For Each filename As String In lstFolder
-			
-			If File.IsDirectory(folder, filename) Then
-				Continue
-			End If
-			
-			Dim p As Period = DateUtils.PeriodBetween(File.LastModified(folder,filename),DateTime.Now)
-			logMe.LogIt("RemoveOldFiles: days: " & p.Days,mModule)
-			
-			If p.Days >= numOfDays Then
-				File.Delete(folder,filename)
-			End If
-			
-		Next
-		
-	Catch
-		
-		logMe.LogIt2(LastException,mModule,"RemoveOldFiles")
-		Return False
-		
-	End Try
-	
-	Return True
-	
-End Sub
-
-
+'--- DEBUGGER code, use when needed
 Public Sub DeleteFiles(folder As String, fileSpec As String)
 
 	Dim o1 As WildCardFilesList : o1.Initialize

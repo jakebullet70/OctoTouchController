@@ -89,13 +89,13 @@ public Sub HidePageParentObjs(obj() As B4XView)
 End Sub
 
 
-Public Sub SetActionBtnColorIsConnected(btn As B4XView)
-	If oc.isConnected Then
-		btn.TextColor = clrTheme.ConnectionYes
-	Else
-		btn.TextColor = clrTheme.ConnectionNo
-	End If
-End Sub
+'Public Sub SetActionBtnColorIsConnected(btn As B4XView)
+'	If oc.isConnected Then
+'		btn.TextColor = clrTheme.ConnectionYes
+'	Else
+'		btn.TextColor = clrTheme.ConnectionNo
+'	End If
+'End Sub
 
 
 'public Sub ReSkinB4XComboBox(cb() As B4XComboBox)
@@ -243,4 +243,25 @@ public Sub SetTextColor(obj() As B4XView)
 		o.TextColor = clrTheme.txtNormal
 	Next
 End Sub
+
+
+
+Public Sub AnimateDialog (dlg As B4XDialog, FromEdge As String)
+	Dim base As B4XView = dlg.Base
+	Dim top As Int = base.Top
+	Dim left As Int = base.Left
+	Select FromEdge.ToLowerCase
+		Case "bottom"
+			base.Top = base.Parent.Height
+		Case "top"
+			base.Top = -base.Height
+		Case "left"
+			base.Left = -base.Width
+		Case "right"
+			base.Left = base.Parent.Width
+	End Select
+	base.SetLayoutAnimated(220, left, top, base.Width, base.Height)
+End Sub
+
+
 

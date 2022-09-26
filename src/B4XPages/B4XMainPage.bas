@@ -59,14 +59,21 @@ End Sub
 Public Sub Initialize
 	
 	config.Init
-	logMe.Init(xui.DefaultFolder,"__OCTOTC__","log")
+	logMe.Init(xui.DefaultFolder,"_OCTOTC_","log")
 	clrTheme.Init(config.ColorTheme)
 	
 	Starter.InitLogCleanup
 	
+	'  debug - remove for release
+	fileHelpers.DeleteFiles(xui.DefaultFolder,"*.log")
+	
+	
+	fileHelpers.DeleteFiles(xui.DefaultFolder,"sad_*.png") '--- delete all thumbnails
+	logMe.LogIt("App Startup...","")
+	
 	powerHelpers.Init(config.AndroidTakeOverSleepFLAG)
 	CfgAndroidPowerOptions
-
+	
 End Sub
 
 #Region "PAGE EVENTS"
@@ -151,9 +158,9 @@ Private Sub Build_GUI
 	'--- hide all page views
 	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlMovement))
 	
-	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
+	'guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	
-	guiHelpers.SetTextColor(Array As B4XView(lblStatus,lblTemp,btnPower))
+	guiHelpers.SetTextColor(Array As B4XView(lblStatus,lblTemp,btnPower,btnPageAction))
 	
 	btnPower.Visible = config.ShowPwrCtrlFLAG
 	
@@ -202,7 +209,7 @@ End Sub
 
 Public Sub Update_Printer_Status
 	
-	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
+	'guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	If oc.isConnected Then
 		lblStatus.Text = oc.FormatedStatus
 	Else
@@ -289,7 +296,7 @@ Private Sub PopupMainOptionMenu
 	
 	Dim popUpMemuItems As Map = _
 		CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc", _
-				  "Plugins Menu":"plg","About":"ab")
+				  "Plugins Menu":"plg","Read Err File":"rt","About":"ab")
 
 		
 	If oc.isPrinting Or oc.IsPaused2 Then
@@ -339,8 +346,29 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			oA.Initialize(Me,"PSU Config")
 			oA.Show
 			
+		Case "rt" '---read text file
+			Dim vt As dlgViewText
+			vt.Initialize(Me,"Read Text")
+			Dim f As String = Gettxtfile
+			If f <> "" Then 
+				vt.Show(f)
+			Else
+				guiHelpers.Show_toast("no error file found",6000)
+			End If
+			
 	End Select
 	
+	
+End Sub
+
+Private Sub Gettxtfile() As String
+
+	Dim o1 As WildCardFilesList : o1.Initialize
+	Dim lstFolder As List = o1.GetFiles(xui.DefaultFolder,"*.log",False,False)
+	If lstFolder.Size > 0 Then
+		Return lstFolder.Get(0)
+	End If
+	Return ""
 	
 End Sub
 
@@ -352,7 +380,7 @@ Public Sub PrinterSetup_Closed
 		TryOctoConnection
 	End If
 	Sleep(100)
-	guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
+	'guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	
 End Sub
 

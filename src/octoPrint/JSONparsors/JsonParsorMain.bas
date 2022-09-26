@@ -11,82 +11,85 @@ Version=8.8
 #End Region
 Sub Class_Globals
 	Private Const mModule As String = "jsonParserMain" 'ignore
+	Private xui As XUI
 End Sub
 
-'Initializes the object. You can add parameters to this method if needed.
 Public Sub Initialize
 End Sub
 
 
 public Sub TempStatus(s As String)
 	Dim CallingSub As String = "TempStatus"
-	Dim m, mTemp, mBed, mTool1, mTool2 As Map
+	Dim m, mTemp, mBed, mTool1 As Map
 	Dim jp As JSONParser
+	
+	's = File.ReadString(File.DirAssets,"ptest.txt")
 	
 	Try
 		
 		oc.isHeating = False
-		Dim TargetBedCheck As Int
-		Dim TargetToolCheck As Int
+		Dim TargetBedCheck,TargetToolCheck As Int
 	
 		'--- populate vars from json
-		jp.Initialize(s)
-		m = jp.NextObject
-		mTemp = m.Get("temperature").As(Map)
+		Try
+			jp.Initialize(s)
+			m = jp.NextObject
+			mTemp = m.Get("temperature").As(Map)
+		Catch
+			logMe.LogIt2("temp 0:"$ & LastException,mModule,CallingSub)
+		End Try
+
+		'-----------------------------------------------------		
+		Try
+			mBed = mTemp.Get("bed").As(Map)
+		Catch
+			logMe.LogIt2("temp 1:"$ & LastException,mModule,CallingSub)
+		End Try
+		Try	
+			TargetBedCheck = CheckNull0(mBed.Get("target"))
+			oc.BedActual   = CheckNull0(mBed.Get("actual")) & gblConst.DEGREE_SYMBOL & "C"
+			oc.BedTarget   = TargetBedCheck.As(String)  & gblConst.DEGREE_SYMBOL & "C"
+		Catch
+			logMe.LogIt2("temp 11:"$ & LastException,mModule,CallingSub)
+		End Try
 		
-		mBed = mTemp.Get("bed").As(Map)
-		TargetBedCheck = CheckNull0(mBed.Get("target"))
-		oc.BedActual = CheckNull0(mBed.Get("actual")) & gblConst.DEGREE_SYMBOL & "C"
-		oc.BedTarget = TargetBedCheck.As(String)  & gblConst.DEGREE_SYMBOL & "C"
+		'-----------------------------------------------------
+		Try
+			mTool1 = mTemp.Get("tool0").As(Map)
 		
-		mTool1 = mTemp.Get("tool0").As(Map)
-		TargetToolCheck = CheckNull0(mTool1.Get("target"))
-		oc.Tool1ActualReal = CheckNull0(mTool1.Get("actual"))
-		oc.Tool1Actual = CheckNull0(mTool1.Get("actual")) & gblConst.DEGREE_SYMBOL & "C"
-		oc.Tool1Target = TargetToolCheck.As(String) & gblConst.DEGREE_SYMBOL & "C"
-			
-		'---  is there a tool 2
-		mTool2 = mTemp.Get("tool1").As(Map)
-		If mTool2.IsInitialized = True Then
-			oc.Tool2ActualReal = mTool2.Get("actual")
-			oc.Tool2Actual = mTool2.Get("actual") & gblConst.DEGREE_SYMBOL & "C"
-			oc.Tool2Target = mTool2.Get("target") & gblConst.DEGREE_SYMBOL & "C"
-		End If
+		Catch
+			logMe.LogIt2("temp 2:"$ & LastException,mModule,CallingSub)
+		End Try
+		Try	
+			TargetToolCheck = CheckNull0(mTool1.Get("target"))
+			oc.Tool1ActualReal = CheckNull0(mTool1.Get("actual"))
+			oc.Tool1Actual = CheckNull0(mTool1.Get("actual")) & gblConst.DEGREE_SYMBOL & "C"
+			oc.Tool1Target = TargetToolCheck.As(String) & gblConst.DEGREE_SYMBOL & "C"
+		Catch
+			logMe.LogIt2("temp 22:"$ & LastException,mModule,CallingSub)
+		End Try
 		
-		If TargetBedCheck <> 0 Or TargetToolCheck <> 0 Then
-			
+		'-----------------------------------------------------
+		Try
 			'--- bed / tool is set to heat
-			Dim bedCheckOffset As Int = 2
-			Dim toolCheckOffset As Int = 5
-			
-			Dim bedActual As Int = CheckNull0(mBed.Get("actual"))
-'			If mBed.Get("actual") = Null Then
-'				bedActual = 0
-'			Else
-'				bedActual = mBed.Get("actual")
-'			End If
-			
-			Dim toolActual As Int = CheckNull0(mTool1.Get("actual"))
-'			If mTool1.Get("actual") = Null Then
-'				toolActual = 0
-'			Else
-'				toolActual = mTool1.Get("actual")
-'			End If
-			
-			If (bedActual + bedCheckOffset <= TargetBedCheck) Or (toolActual + toolCheckOffset <= TargetToolCheck) Then
-				oc.isHeating = True
-			Else
-				oc.isHeating = False
+			If TargetBedCheck <> 0 Or TargetToolCheck <> 0 Then
+				Dim bedCheckOffset As Int = 2
+				Dim toolCheckOffset As Int = 5
+				Dim bedActual As Int = CheckNull0(mBed.Get("actual"))
+				Dim toolActual As Int = CheckNull0(mTool1.Get("actual"))
+				If (bedActual + bedCheckOffset <= TargetBedCheck) Or (toolActual + toolCheckOffset <= TargetToolCheck) Then
+					oc.isHeating = True
+				Else
+					oc.isHeating = False
+				End If
 			End If
-	
-		End If
-		
+		Catch
+			logMe.LogIt2("temp 3:"$ & LastException,mModule,CallingSub)
+		End Try
 			
 	Catch
-		
 		logMe.LogIt2(LastException,mModule,CallingSub)
 		oc.ResetTempVars
-		
 	End Try
 	
 End Sub
@@ -164,7 +167,7 @@ End Sub
 
 private Sub CheckNull(v As String) As String
 	Try
-		Return IIf(v = Null Or v = "null","",v)
+		Return IIf(v = Null Or v = "null" Or v = "","",v)
 	Catch
 		Return ""
 	End Try
@@ -173,7 +176,7 @@ End Sub
 
 private Sub CheckNull0(v As String) As String
 	Try
-		Return IIf(v = Null Or v = "null","0",v)
+		Return IIf(v = Null Or v = "null" Or v = "" Or v = "0.0","0",v)
 	Catch
 		Return "0"
 	End Try
@@ -181,7 +184,7 @@ End Sub
 
 private Sub CheckNullDash(v As String) As String
 	Try
-		Return IIf(v = Null Or v = "null","-",v)
+		Return IIf(v = Null Or v = "null" Or v = "","-",v)
 	Catch
 		Return "-"
 	End Try

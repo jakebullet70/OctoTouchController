@@ -156,7 +156,7 @@ Public Sub DownloadThumbnailAndShow(Link As String, iv As B4XImageView, fileName
 		Return
 	End If
 	
-	If fileName.Length <> 0 Then 	fileHelpers.SafeKill(fileName)
+	If fileName.Length <> 0 Then fileHelpers.SafeKill(fileName)
 		
 	Dim j As HttpJob :	j.Initialize("", Me)
 	j.Download(Link)
@@ -175,6 +175,7 @@ Public Sub DownloadThumbnailAndShow(Link As String, iv As B4XImageView, fileName
 				Out = File.OpenOutput(xui.DefaultFolder, fileName, False)
 				iv.Bitmap.WriteToStream(Out, 100, "PNG")
 				Out.Close
+				Log("DownloadThumbnailAndShow-dloading: " & fileName)
 				
 			End If
 		End If
@@ -221,7 +222,7 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String)
 			Out = File.OpenOutput(xui.DefaultFolder, fileName, False)
 			oo.WriteToStream(Out, 100, "PNG")
 			Out.Close
-			
+			Log("Download_AndSaveFile-dloading: " & fileName)
 		End If
 		
 	Catch

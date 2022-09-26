@@ -24,7 +24,7 @@ Sub Class_Globals
 	Private clvFiles As CustomListView
 	Private ivPreview As lmB4XImageViewX
 	Private btnDelete, btnLoad, btnLoadAndPrint As B4XView
-	Private mCurrentFileInfo As typOctoFileInfo
+	Private mCurrentFileInfo As tOctoFileInfo
 	
 	'--- list view panel
 	Private lblpnlFileViewTop,lblpnlFileViewBottom As B4XView
@@ -213,7 +213,7 @@ Public Sub Build_ListViewFileList()
 		Dim ndx As Int = 0
 		For Each kFileName As String In mMainObj.oMasterController.gLstOctoFilesListSorted
 		
-			Dim o As typOctoFileInfo  = mMainObj.oMasterController.gMapOctoFilesList.Get(kFileName)
+			Dim o As tOctoFileInfo  = mMainObj.oMasterController.gMapOctoFilesList.Get(kFileName)
 			clvFiles.InsertAt(ndx, CreateListItem(o, clvFiles.AsView.Width, 60dip), kFileName)
 			ndx = ndx + 1
 		
@@ -244,7 +244,7 @@ Public Sub Build_ListViewFileList()
 	
 End Sub
 
-Sub CreateListItem(oData As typOctoFileInfo, Width As Int, Height As Int) As B4XView
+Sub CreateListItem(oData As tOctoFileInfo, Width As Int, Height As Int) As B4XView
 	
 	Dim p As B4XView = xui.CreatePanel("")
 	'--- add 20dip to height for larger screens
@@ -414,7 +414,7 @@ Private Sub ProcessNewOldThumbnails(NewMap As Map)
 		Dim deletedFiles As Int = 0
 		If config.logFILE_EVENTS Then logMe.LogIt("ProcessThumbnails - start - remove any old thumbnail files",mModule)
 		
-		For Each oldMap As typOctoFileInfo In mMainObj.oMasterController.gMapOctoFilesList.Values
+		For Each oldMap As tOctoFileInfo In mMainObj.oMasterController.gMapOctoFilesList.Values
 			
 			Dim oldMapKey As String = oldMap.Name
 			If NewMap.ContainsKey(oldMapKey) = False Then
@@ -443,13 +443,13 @@ Private Sub ProcessNewOldThumbnails(NewMap As Map)
 		Dim changedFiles = 0, NewFiles = 0 As Int
 		
 		'--- download new thumbnails for new and changed files
-		For Each oNewMap As typOctoFileInfo In NewMap.Values
+		For Each oNewMap As tOctoFileInfo In NewMap.Values
 
 			Dim mapKey As String = oNewMap.Name
 			If mMainObj.oMasterController.gMapOctoFilesList.ContainsKey(mapKey) = True Then
 
 				'---  found a file, BUT... has the date changed?
-				Dim ffFileToWorkOn As typOctoFileInfo = mMainObj.oMasterController.gMapOctoFilesList.get(mapKey)
+				Dim ffFileToWorkOn As tOctoFileInfo = mMainObj.oMasterController.gMapOctoFilesList.get(mapKey)
 				If ffFileToWorkOn.Date <> oNewMap.Date Then '--- date changed
 				
 					If config.logFILE_EVENTS Then logMe.LogIt2("refreshing old thumbnail: " & oNewMap.Name,mModule,InSub)
@@ -497,7 +497,7 @@ Private Sub SendDeleteCmdAndRemoveFromGrid
 	mMainObj.oMasterController.gMapOctoFilesList.Remove(mCurrentFileInfo.Name)
 	Sleep(200)
 	
-	Dim ff As typOctoFileInfo
+	Dim ff As tOctoFileInfo
 
 	If clvFiles.Size > 1 Then
 		If clvLastIndexClicked <> 0 Then 

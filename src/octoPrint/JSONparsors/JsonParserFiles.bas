@@ -15,7 +15,7 @@ Sub Class_Globals
 	
 	Public gMapFiles As Map
 	
-	Type typOctoFileInfo(Name As String, Size As String, Date As String,Thumbnail As String, _
+	Type tOctoFileInfo(Name As String, Size As String, Date As String,Thumbnail As String, _
 						Origin As String, Path As String,Thumbnail_src As String,Volume As Double,  _
 						Length As Double, Depth As Double, Width As Double, Height As Double, _
 						myThumbnail_filename_disk As String,Thumbnail_original As String, _
@@ -54,7 +54,7 @@ Public Sub CheckIfChanged(jsonTXT As String,oldMap As Map) As Boolean
 		End Try
 
 		'--- see if we have this file in the original map
-		Dim ff As typOctoFileInfo
+		Dim ff As tOctoFileInfo
 		ff = oldMap.Get(fileName)
 
 		If ff = Null Then
@@ -110,7 +110,7 @@ Private Sub Parse(jsonTXT As String)
 	
 	For Each colfiles As Map In files
 
-		Dim ff As typOctoFileInfo
+		Dim ff As tOctoFileInfo
 		
 		Try
 			

@@ -459,7 +459,7 @@ Private Sub LoadThumbNail
 		Return
 	End If
 
-	Dim currentFileInfo As typOctoFileInfo
+	Dim currentFileInfo As tOctoFileInfo
 	currentFileInfo =  mMainObj.oMasterController.gMapOctoFilesList.Get(oc.JobFileName)
 	
 	If currentFileInfo.myThumbnail_filename_disk = "" Then

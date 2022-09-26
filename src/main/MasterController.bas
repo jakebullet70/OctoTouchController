@@ -402,7 +402,7 @@ End Sub
 
 
 Public Sub IsIncompleteFileData() As Boolean
-	For Each o As typOctoFileInfo In gMapOctoFilesList.Values
+	For Each o As tOctoFileInfo In gMapOctoFilesList.Values
 		If o.missingData Then
 			If config.logFILE_EVENTS Then logMe.LogIt("Incomplete data in files array",mModule)
 			'Log("incompleteData=True")

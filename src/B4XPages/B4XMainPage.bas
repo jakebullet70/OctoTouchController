@@ -448,7 +448,9 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	'--- back to the main menu
 	If oPageCurrent <> oPageMenu Then Switch_Pages(gblConst.PAGE_MENU)
 	
-	Dim Msg As String = guiHelpers.GetConnectionText(connectedButError)
+	If B4XPages.MainPage.pnlScreenOff.Visible = True Then
+		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"ScreenOff_2Front",600)
+	End If
 	
 	'--- if printer / sonoff power is configed, show power btn	
 	Dim PowerCtrlAvail As String = ""
@@ -456,6 +458,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 		PowerCtrlAvail = "POWER ON"
 	End If
 
+	Dim Msg As String = guiHelpers.GetConnectionText(connectedButError)
 	Dim Const JUSTIFY_BUTTON_2_LEFT As Boolean = True
 	Dim ErrorDlg As dlgMsgBox
 	ErrorDlg.Initialize(Root,"Connetion Problem",560dip, 180dip,JUSTIFY_BUTTON_2_LEFT)
@@ -482,6 +485,10 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	mConnectionErrDlgShowingFLAG = False
 	Log("exiting error setup cfg")
 
+End Sub
+
+Private Sub ScreenOff_2Front
+	B4XPages.MainPage.pnlScreenOff.BringToFront
 End Sub
 
 Private Sub CfgAndroidPowerOptions

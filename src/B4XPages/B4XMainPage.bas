@@ -12,7 +12,7 @@ Sub Class_Globals
 	Private Const mModule As String = "B4XMainPage" 'ignore
 	Public Root As B4XView
 	Private xui As XUI
-	Private oMasterController As MasterController
+	Public oMasterController As MasterController
 	Private toast As BCToast
 
 	'--- panel to cover screen for power ctrl
@@ -51,10 +51,10 @@ End Sub
 '
 '======================================================================================
 
-Public Sub getMasterCtrlr() As MasterController
-	'--- master Octo controller / methods
-	Return oMasterController
-End Sub
+'Public Sub getMasterCtrlr() As MasterController
+'	'--- master Octo controller / methods
+'	Return oMasterController
+'End Sub
 
 Public Sub Initialize
 	

@@ -271,12 +271,12 @@ End Sub
 #region "TIMERS"
 Private Sub tmrMain_Tick
 	'--- master loop timer
-	CallSub(B4XPages.MainPage.MasterCtrlr,"tmrMain_Tick")
+	CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
 End Sub
 
 Private Sub tmrFilesCheckChange_Tick
 	'--- when files page is in focus, check files
-	CallSub(B4XPages.MainPage.MasterCtrlr,"tmrFilesCheckChange_Tick")
+	CallSub(B4XPages.MainPage.oMasterController,"tmrFilesCheckChange_Tick")
 End Sub
 
 Private Sub tmrSplash_Tick

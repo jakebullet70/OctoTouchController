@@ -235,7 +235,7 @@ Private Sub btnPresetMaster_Click
 	
 	Dim o1 As dlgListbox
 	o1.Initialize(mMainObj,"Heater Presets",Me,"TempChange_Presets")
-	o1.Show(220dip,450dip,mMainObj.MasterCtrlr.mapAllHeatingOptions)
+	o1.Show(220dip,450dip,mMainObj.oMasterController.mapAllHeatingOptions)
 	
 End Sub
 
@@ -253,8 +253,8 @@ Private Sub btnPresetTemp_Click
 	o1.Initialize(mMainObj,IIf(btn.tag = "tool","Tool Presets","Bed Presets"),Me,"TempChange_Presets")
 	o1.Tag = btn.tag
 	o1.Show(280dip,290dip,IIf(btn.Tag = "tool", _
-				mMainObj.MasterCtrlr.mapToolHeatingOptions, _
-				mMainObj.MasterCtrlr.mapBedHeatingOptions))
+				mMainObj.oMasterController.mapToolHeatingOptions, _
+				mMainObj.oMasterController.mapBedHeatingOptions))
 	
 End Sub
 
@@ -266,7 +266,7 @@ Private Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	If selectedMsg.Length = 0 Then Return
 	
 	If selectedMsg = "alloff" Then
-		mMainObj.MasterCtrlr.AllHeaters_Off
+		mMainObj.oMasterController.AllHeaters_Off
 		guiHelpers.Show_toast("Tool / Bed Off",1200)
 		Return
 	End If
@@ -279,10 +279,10 @@ Private Sub TempChange_Presets(selectedMsg As String, tag As Object)
 		
 		Case selectedMsg.EndsWith("off")
 			If tagme = "bed" Then
-				mMainObj.MasterCtrlr.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",0))
+				mMainObj.oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",0))
 				msg = "Bed Off"
 			Else
-				mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
+				mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
 				msg = "Tool Off"
 			End If
 			
@@ -291,7 +291,7 @@ Private Sub TempChange_Presets(selectedMsg As String, tag As Object)
 			startNDX = selectedMsg.IndexOf(": ")
 			endNDX = selectedMsg.IndexOf(gblConst.DEGREE_SYMBOL)
 			getTemp = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
+			mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
 			msg = selectedMsg.Replace("Set","Setting")
 			
 		Case selectedMsg.Contains("Bed") And Not (selectedMsg.Contains("Tool"))
@@ -299,7 +299,7 @@ Private Sub TempChange_Presets(selectedMsg As String, tag As Object)
 			startNDX = selectedMsg.IndexOf(": ")
 			endNDX = selectedMsg.IndexOf(gblConst.DEGREE_SYMBOL)
 			getTemp = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
-			mMainObj.MasterCtrlr.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
+			mMainObj.oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
 			msg = selectedMsg.Replace("Set","Setting")
 			
 		Case Else
@@ -310,12 +310,12 @@ Private Sub TempChange_Presets(selectedMsg As String, tag As Object)
 			startNDX = toolMSG.IndexOf(": ")
 			endNDX = toolMSG.IndexOf(gblConst.DEGREE_SYMBOL)
 			getTemp = toolMSG.SubString2(startNDX + 2,endNDX).Trim
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
+			mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
 				
 			startNDX = bedMSG.IndexOf(": ")
 			endNDX = bedMSG.IndexOf(gblConst.DEGREE_SYMBOL)
 			getTemp = bedMSG.SubString2(startNDX + 2,endNDX).Trim
-			mMainObj.MasterCtrlr.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
+			mMainObj.oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
 			msg = selectedMsg.Replace("Set","Setting")
 			
 	End Select
@@ -358,7 +358,7 @@ Private Sub TempChange_Bed(value As String)
 		Return
 	End If
 		
-	mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",value))
+	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",value))
 	guiHelpers.Show_toast("Bed Temperature Change",1400)
 	
 End Sub
@@ -373,7 +373,7 @@ Private Sub TempChange_Tool1(value As String)
 		Return
 	End If
 		
-	mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))
+	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))
 		
 	guiHelpers.Show_toast("Tool Temperature Change",1400)
 	
@@ -399,7 +399,7 @@ Private Sub btnAction_Click
 				
 			Else
 				
-				CallSub(B4XPages.MainPage.MasterCtrlr,"tmrMain_Tick")
+				CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
 				Sleep(50) '--- do we need this?
 				
 				If oc.isCanceling = True Then
@@ -408,7 +408,7 @@ Private Sub btnAction_Click
 				End If
 				
 				guiHelpers.Show_toast("Starting Print...",2000)
-				mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_PRINT)
+				mMainObj.oMasterController.cn.PostRequest(oc.cCMD_PRINT)
 				'Sleep(500)
 				'lblPrintStats.RefreshView
 
@@ -421,16 +421,16 @@ Private Sub btnAction_Click
 
 			If res = xui.DialogResponse_Positive Then
 				guiHelpers.Show_toast("Canceling...",2000)
-				mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_CANCEL)
+				mMainObj.oMasterController.cn.PostRequest(oc.cCMD_CANCEL)
 			End If
 			
 		Case "pause"
 			guiHelpers.Show_toast("Pausing...",2000)
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_PAUSE)
+			mMainObj.oMasterController.cn.PostRequest(oc.cCMD_PAUSE)
 			
 		Case "resume"
 			guiHelpers.Show_toast("Resuming...",2000)
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_RESUME)
+			mMainObj.oMasterController.cn.PostRequest(oc.cCMD_RESUME)
 			
 	End Select
 	
@@ -454,13 +454,13 @@ End Sub
 
 Private Sub LoadThumbNail
 	
-	If mMainObj.MasterCtrlr.gMapOctoFilesList.IsInitialized = False Then
+	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized = False Then
 		guiHelpers.Show_toast("Retriving info, try again later",1500)
 		Return
 	End If
 
 	Dim currentFileInfo As typOctoFileInfo
-	currentFileInfo =  mMainObj.MasterCtrlr.gMapOctoFilesList.Get(oc.JobFileName)
+	currentFileInfo =  mMainObj.oMasterController.gMapOctoFilesList.Get(oc.JobFileName)
 	
 	If currentFileInfo.myThumbnail_filename_disk = "" Then
 		ivPreview.Load(File.DirAssets,"no_thumbnail.jpg")
@@ -474,8 +474,8 @@ Private Sub LoadThumbNail
 			guiHelpers.Show_toast("Getting Thumbnail",2200)
 			If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
 		
-			Dim link As String = $"http://${mMainObj.MasterCtrlr.cn.gIP}:${mMainObj.MasterCtrlr.cn.gPort}/"$ & currentFileInfo.Thumbnail
-			mMainObj.MasterCtrlr.cn.Download_AndSaveFile(link,currentFileInfo.myThumbnail_filename_disk)
+			Dim link As String = $"http://${mMainObj.oMasterController.cn.gIP}:${mMainObj.oMasterController.cn.gPort}/"$ & currentFileInfo.Thumbnail
+			mMainObj.oMasterController.cn.Download_AndSaveFile(link,currentFileInfo.myThumbnail_filename_disk)
 			Sleep(2200)
 		
 			If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then

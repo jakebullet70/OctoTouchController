@@ -132,21 +132,21 @@ Private Sub btnXYZ_Click
 	Select Case btn.Tag
 		
 		Case "Zhome"
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cJOG_Z_HOME)
+			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_Z_HOME)
 		Case "XYhome"
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cJOG_XY_HOME)
+			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_XY_HOME)
 		Case "Zup"
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!",$"${IIf(oc.PrinterProfileInvertedZ,"-","")}"$ & MoveJogSize).Replace("!DIR!","z"))
+			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!",$"${IIf(oc.PrinterProfileInvertedZ,"-","")}"$ & MoveJogSize).Replace("!DIR!","z"))
 		Case "Zdown"
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!",$"${IIf(oc.PrinterProfileInvertedZ,"","-")}"$ & MoveJogSize).Replace("!DIR!","z"))
+			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!",$"${IIf(oc.PrinterProfileInvertedZ,"","-")}"$ & MoveJogSize).Replace("!DIR!","z"))
 		Case "XYleft"
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!","-" & MoveJogSize).Replace("!DIR!","x")) 'TODO, add inverted check code
+			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!","-" & MoveJogSize).Replace("!DIR!","x")) 'TODO, add inverted check code
 		Case "XYright"
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!","" & MoveJogSize).Replace("!DIR!","x"))
+			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!","" & MoveJogSize).Replace("!DIR!","x"))
 		Case "XYforward"
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!","-" & MoveJogSize).Replace("!DIR!","y"))
+			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!","-" & MoveJogSize).Replace("!DIR!","y"))
 		Case "XYback"
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!","" & MoveJogSize).Replace("!DIR!","y"))
+			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!","" & MoveJogSize).Replace("!DIR!","y"))
 	
 	End Select
 	guiHelpers.Show_toast("Command Sent",1200)
@@ -175,7 +175,7 @@ Private Sub HeatChangeRequest
 	
 	Dim o1 As dlgListbox
 	o1.Initialize(mMainObj,"Tool Presets",Me,"HeatTempChange_Tool")
-	o1.Show(250dip,220dip,mMainObj.MasterCtrlr.mapToolHeatValuesOnly)
+	o1.Show(250dip,220dip,mMainObj.oMasterController.mapToolHeatValuesOnly)
 	
 End Sub
 Private Sub HeatTempChange_Tool(value As String, tag As String)
@@ -196,7 +196,7 @@ Private Sub HeatTempChange_Tool(value As String, tag As String)
 		Return
 	End If
 		
-	mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))
+	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))
 		
 	guiHelpers.Show_toast("Tool Temperature Change",1400)
 	
@@ -247,13 +247,13 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 		Case "bl" '--- bed level
 			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)
 			If ret = xui.DialogResponse_Cancel Then Return
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","G29"))
+			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","G29"))
 			msg = msg & "Start Bed Leveling"
 			
 		Case "cfl" '--- Change filament
 			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)
 			If ret = xui.DialogResponse_Cancel Then Return
-			mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","M600"))
+			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","M600"))
 			msg = msg & "Sending M600"
 			
 		Case Else
@@ -276,14 +276,14 @@ Private Sub ExtrudeRetract(Extrude As Boolean)
 		guiHelpers.Show_toast("Tool is not hot enough",1600)
 		Return
 	End If
-	mMainObj.MasterCtrlr.cn.PostRequest(oc.cCMD_TOOL_EXTRUDE_RETRACT.Replace("!LEN!", IIf(Extrude,"","-") & ExtruderLengthSize))
+	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_TOOL_EXTRUDE_RETRACT.Replace("!LEN!", IIf(Extrude,"","-") & ExtruderLengthSize))
 	guiHelpers.Show_toast(IIf(Extrude,"Extrusion","Retraction") & ": " & ExtruderLengthSize & "mm",1200)
 	
 End Sub
 
 Private Sub MotorsOff
 	'--- DISABLE_ALL_STEPPERS
-	mMainObj.MasterCtrlr.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","M18"))
+	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","M18"))
 	guiHelpers.Show_toast("Command sent: Motors Off",1800)
 End Sub
 #end region

@@ -105,7 +105,7 @@ Public Sub SendCmd(cmd As String)As ResumableSub'ignore
 						IIf(cmd = "on",Data.Get(gblConst.ZLED_cmd_on),Data.Get(gblConst.ZLED_CMD_OFF)))
 						
 	LogColor(template,xui.Color_Green)
-	mMainObj.MasterCtrlr.cn.PostRequest(template)
+	mMainObj.oMasterController.cn.PostRequest(template)
 
 End Sub
 
@@ -125,7 +125,7 @@ End Sub
 '			Wait For (sm.SendRequest($"http://${mIPaddr}/cm?cmnd=Power%20${cmd}"$)) Complete(s As String)
 '			
 '		Case "octo_k"
-'			mMainObj.MasterCtrlr.cn.PostRequest( _
+'			mMainObj.oMasterController.cn.PostRequest( _
 '				oc.cPSU_CONTROL_K.Replace("!ONOFF!",IIf(cmd.ToLowerCase ="on","On","Off")))
 '		
 '		Case Else

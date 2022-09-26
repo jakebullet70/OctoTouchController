@@ -140,7 +140,7 @@ Private Sub Parse(jsonTXT As String)
 				logMe.LogIt2("Parse05: " & LastException,mModule,InSub)
 			End Try
 
-			If ff.Name.StartsWith("3D") Then LogColor("starts with --> "&ff.Thumbnail,Colors.Green)
+			'If ff.Name.StartsWith("3D") Then LogColor("starts with --> "&ff.Thumbnail,Colors.Green)
 			Try
 				If ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null" Then
 					ff.Thumbnail =  ff.Thumbnail.SubString2(0,ff.Thumbnail.IndexOf("?"))

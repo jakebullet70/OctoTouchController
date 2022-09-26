@@ -409,7 +409,7 @@ Public Sub IsIncompleteFileData() As Boolean
 			Return True
 		End If
 	Next
-	Log("incompleteData=False")
+	'Log("incompleteData=False")
 	Return False
 End Sub
 

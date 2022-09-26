@@ -222,7 +222,7 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String)
 			Out = File.OpenOutput(xui.DefaultFolder, fileName, False)
 			oo.WriteToStream(Out, 100, "PNG")
 			Out.Close
-			Log("Download_AndSaveFile-dloading: " & fileName)
+			'Log("Download_AndSaveFile-dloading: " & fileName)
 		End If
 		
 	Catch

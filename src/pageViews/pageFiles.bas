@@ -97,7 +97,7 @@ public Sub Update_Printer_Btns
 	mPnlMain.Enabled = oc.isConnected
 	Dim enableDisable As Boolean
 
-	If oc.isPrinting Or oc.IsPaused2 Or oc.isHeating Or (clvLastIndexClicked = NO_SELECTION) Then
+	If oc.isPrinting Or oc.IsPaused2 Or (clvLastIndexClicked = NO_SELECTION) Then
 		enableDisable = False
 	Else
 		enableDisable = True
@@ -146,6 +146,8 @@ Private Sub Build_GUI
 		clvFiles_ItemClick(0,Null)
 	End If
 	
+	lblSort.Text = Chr(0xF160)
+	
 	btnLoadAndPrint.Text = "Load" & CRLF & "Print"
 	btnLoad.Text = "Load"
 	btnDelete.Text = "Delete"
@@ -160,11 +162,6 @@ Private Sub Build_GUI
 	btnDelete.Font = fn
 	btnLoad.Font  = fn
 	btnLoadAndPrint.Font  = fn
-	
-'	clvFiles.PressedColor = 0x721F1C1C  '--- alpha set to 128
-'	CSelections.SelectionColor = clvFiles.PressedColor
-'	clvFiles.DefaultTextColor  = clrTheme.txtNormal
-'	clvFiles.DefaultTextBackgroundColor = xui.Color_Transparent
 	
 End Sub
 
@@ -212,9 +209,6 @@ Private Sub GetFileSortOrder() As String
 	Select Case cboSort.SelectedItem.ToLowerCase
 		Case "file name" 	: Return "file_name"
 		Case "date added" 	: Return "date_added"
-		Case Else
-			LogColor("Case else - GetFileSortOrder",Colors.Cyan)
-			Return "file_name"
 	End Select
 End Sub
 
@@ -403,13 +397,6 @@ Public Sub CheckIfFilesChanged
 				If config.logFILE_EVENTS Then logMe.LogIt2("Incomplete file data processed",mModule,inSub)
 			End If
 			
-	
-'			If mMainObj.oMasterController.gMapOctoFilesList.Size > 0 Then
-'				clvFiles_ItemClick(0,mMainObj.oMasterController.gMapOctoFilesList.GetKeyAt(0))
-'			Else
-'				clvFiles_ItemClick(0,Null)
-'			End If
-			
 		Else
 			
 			'--- nothing new
@@ -422,12 +409,13 @@ Public Sub CheckIfFilesChanged
 	FilesCheckChangeIsBusyFLAG = False
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 	
-	If oldListViewSize <> clvFiles.Size And Starter.db.GetTotalRecs > 0 Then
+	Dim ttlRecsInDB As Int = Starter.db.GetTotalRecs
+	If oldListViewSize <> clvFiles.Size And ttlRecsInDB > 0 Then
 		'--- highllight the first row
 		Sleep(100) : Show1stFile
 	End If
 	
-	If Starter.db.GetTotalRecs = 0 Then SetThumbnail2Nothing
+	If ttlRecsInDB = 0 Then SetThumbnail2Nothing
 	
 	Update_Printer_Btns
 	
@@ -574,6 +562,7 @@ Private Sub cboSort_SelectedIndexChanged (Index As Int)
 	Else
 		SortAscDesc = True
 	End If
+	lblSort.Text = IIf(SortAscDesc,Chr(0xF160),Chr(0xF161))
 	guiHelpers.Show_toast("Sorting file list - " & IIf(SortAscDesc,"Ascending","Descending") ,1800)
 	Build_ListViewFileList
 	Show1stFile

@@ -261,7 +261,7 @@ Public Sub CheckTempRange(what As String, value As Int) As Boolean
 			Return False			
 		End If
 	Else
-		If value > 300 Then
+		If value > 350 Then
 			Return False
 		End If
 	End If

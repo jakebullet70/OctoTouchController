@@ -448,7 +448,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	'--- back to the main menu
 	If oPageCurrent <> oPageMenu Then Switch_Pages(gblConst.PAGE_MENU)
 	
-	If B4XPages.MainPage.pnlScreenOff.Visible = True Then
+	If pnlScreenOff.Visible = True Then
 		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"ScreenOff_2Front",600)
 	End If
 	
@@ -458,11 +458,10 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 		PowerCtrlAvail = "POWER ON"
 	End If
 
-	Dim Msg As String = guiHelpers.GetConnectionText(connectedButError)
 	Dim Const JUSTIFY_BUTTON_2_LEFT As Boolean = True
 	Dim ErrorDlg As dlgMsgBox
 	ErrorDlg.Initialize(Root,"Connetion Problem",560dip, 180dip,JUSTIFY_BUTTON_2_LEFT)
-	Wait For (ErrorDlg.Show(Msg,gblConst.MB_ICON_WARNING, _
+	Wait For (ErrorDlg.Show(guiHelpers.GetConnectionText(connectedButError),gblConst.MB_ICON_WARNING, _
 					"RETRY",PowerCtrlAvail,"SETUP")) Complete (res As Int)
 	
 	Select Case res
@@ -488,7 +487,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 End Sub
 
 Private Sub ScreenOff_2Front
-	B4XPages.MainPage.pnlScreenOff.BringToFront
+	pnlScreenOff.BringToFront
 End Sub
 
 Private Sub CfgAndroidPowerOptions

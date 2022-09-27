@@ -61,13 +61,10 @@ End Sub
 Private Sub Build_GUI
 	
 	'--- movement / jog sizes
-	Dim options As List : options.initialize2(Array As String("0.1mm","1.0mm","10mm","100mm"))
-	cboMovementSize.setitems(options)
+	cboMovementSize.setitems(Array As String("0.1mm","1.0mm","10mm","100mm"))
 	cboMovementSize.SelectedIndex = 1
-	cboMovementSize.cmbBox.TextColor = clrTheme.txtNormal
-	cboMovementSize.cmbBox.Color = clrTheme.BackgroundHeader
-	cboMovementSize.cmbBox.DropdownBackgroundColor = clrTheme.BackgroundHeader
-	cboMovementSize.cmbBox.DropdownTextColor = clrTheme.txtNormal
+	guiHelpers.ReSkinB4XComboBox(Array As B4XComboBox(cboMovementSize))
+
 	MoveJogSize = "1.0"
 	
 	guiHelpers.SetTextColor(Array As B4XView(lblGeneral,lblHeaderZ,lblHeaderXY))

@@ -79,6 +79,7 @@ End Sub
 '--- just an easy wat to Toast!!!!
 public Sub Show_toast(msg As String, ms As Int)
 	CallSub3(B4XPages.MainPage,"Show_Toast", msg, ms)
+	Sleep(0)
 End Sub
 
 public Sub HidePageParentObjs(obj() As B4XView)
@@ -98,31 +99,20 @@ End Sub
 'End Sub
 
 
-'public Sub ReSkinB4XComboBox(cb() As B4XComboBox)
-'	
-'	For Each v As B4XComboBox In cb
-'		Try
-'			'v.mBase.Color = clrTheme.DialogButtonsColor '---this is the arrow
-'			'v.cmbBox.Color = clrTheme.PanelBG '--- NOPE
-'			''
-'			''			v.cmbBox.DropdownBackgroundColor=clrTheme.PanelBG
-'			''			v.cmbBox.DropdownTextColor= clrTheme.txtNormal
-'			''			v.cmbBox.TextColor = clrTheme.txtNormal
-'			''			v.cmbBox.Prompt = "PROMT!" '--- NOTHING
-'			''
-'			''	'			Dim bb As B4XView
-'			''	'			bb = v.mBase.GetView(0)
-'			''			'Dim oo As B4XFont = xui.CreateDefaultFont(22)
-'			''			v.cmbBox.TextSize = 22
-'			''	'			'bb.TextColor = xui.Color_Green
-'			''			'--- TODO - HOW TO CHANGE SIZE-COLOR OF CBO - SPINNER ARROW
-'			''
-'			'v.mBase.GetView(0).TextColor
-'		Catch
-'			Log(LastException)
-'		End Try
-'	Next
-'End Sub
+public Sub ReSkinB4XComboBox(cbo() As B4XComboBox)
+	
+	For Each cb As B4XComboBox In cbo
+		Try
+			
+			cb.cmbBox.TextColor = clrTheme.txtNormal
+			cb.cmbBox.Color = clrTheme.BackgroundHeader
+			cb.cmbBox.DropdownBackgroundColor = clrTheme.BackgroundHeader
+			cb.cmbBox.DropdownTextColor = clrTheme.txtNormal
+		Catch
+			Log(LastException)
+		End Try
+	Next
+End Sub
 
 'public Sub SetTextColor(views() As B4XView, txtColor As Int)
 '	

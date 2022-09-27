@@ -68,8 +68,7 @@ public Sub Set_focus()
 		'--- 1st showing of tab page
 		If config.logFILE_EVENTS Then logMe.LogIt(firstRun,mModule)
 		If clvFiles.Size > 0 Then 
-			rsFiles.Position = 0
-			clvFiles_ItemClick(0,rsFiles.GetString("file_name"))
+			Show1stFile
 		End If
 		CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 		firstRun = False
@@ -140,7 +139,7 @@ Private Sub Build_GUI
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized And mMainObj.oMasterController.gMapOctoFilesList.Size > 0 Then
 		Build_ListViewFileList
 		'--- select the 1st item and load image
-		rsFiles.Position = 0 : clvFiles_ItemClick(0,rsFiles.GetString("file_name"))
+		Show1stFile
 	Else
 		clvFiles.Clear
 		'clvLastIndexClicked = NO_SELECTION
@@ -161,6 +160,11 @@ Private Sub Build_GUI
 	btnDelete.Font = fn
 	btnLoad.Font  = fn
 	btnLoadAndPrint.Font  = fn
+	
+'	clvFiles.PressedColor = 0x721F1C1C  '--- alpha set to 128
+'	CSelections.SelectionColor = clvFiles.PressedColor
+'	clvFiles.DefaultTextColor  = clrTheme.txtNormal
+'	clvFiles.DefaultTextBackgroundColor = xui.Color_Transparent
 	
 End Sub
 
@@ -221,6 +225,7 @@ Public Sub Build_ListViewFileList()
 	Try ' DEBUG try-catch
 
 		clvFiles.Clear
+		If rsFiles.IsInitialized Then rsFiles.Close
 		Starter.db.BuildTable
 		Starter.db.SeedTable(mMainObj.oMasterController.gMapOctoFilesList)
 
@@ -419,9 +424,7 @@ Public Sub CheckIfFilesChanged
 	
 	If oldListViewSize <> clvFiles.Size And Starter.db.GetTotalRecs > 0 Then
 		'--- highllight the first row
-		Sleep(100)
-		rsFiles.Position = 0 : clvFiles_ItemClick(0,rsFiles.GetString("file_name"))
-		Sleep(100)
+		Sleep(100) : Show1stFile
 	End If
 	
 	If Starter.db.GetTotalRecs = 0 Then SetThumbnail2Nothing
@@ -556,8 +559,15 @@ Public Sub Update_LoadedFileName2Scrn
 	End If
 End Sub
 
+Private Sub	Show1stFile
+	If Starter.db.GetTotalRecs = 0 Then Return
+	rsFiles.Position = 0 : clvFiles_ItemClick(0,rsFiles.GetString("file_name"))
+	clvFiles.JumpToItem(0)
+	Sleep(100)
+End Sub
 
 #Region "GRID SORT"
+
 Private Sub cboSort_SelectedIndexChanged (Index As Int)
 	If LastSort = cboSort.SelectedItem Then
 		SortAscDesc = Not (SortAscDesc)
@@ -566,7 +576,9 @@ Private Sub cboSort_SelectedIndexChanged (Index As Int)
 	End If
 	guiHelpers.Show_toast("Sorting file list - " & IIf(SortAscDesc,"Ascending","Descending") ,1800)
 	Build_ListViewFileList
-	LastSort  = cboSort.SelectedItem
+	Show1stFile
+	LastSort = cboSort.SelectedItem
+	
 End Sub
 
 Private Sub lblSort_Click

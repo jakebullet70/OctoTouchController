@@ -17,20 +17,23 @@ Sub Class_Globals
 	
 	Private mDialog As B4XDialog
 	
-	
-	Private fUnloadLen As Int
-	Private fUnloadSpeed As Int
+	Private fUnloadLen,fUnloadSpeed As Int
 	Private fLoadLen As Int
 	Private fLoadSpeed As Int
-	Private fPauseBeforePark As Boolean
-	Private fRetractBeforePark As Boolean
-	Private fHomeBeforePark As Boolean
-	Private fXPark As Int
-	Private fYPark As Int
+	Private fHomeBeforePark,fRetractBeforePark,fPauseBeforePark As Boolean
+	Private fYPark,fXPark As Int
 	Private fZLift As Boolean
 	Private fParkSpeed As Int
 	
-	Private pnlMain As B4XView
+	Private pnlMain As B4XView, lblStatus As AutoTextSizeLabel
+	Private tmrWait4Temp As Timer
+	
+	Private mContinue As Boolean = False
+	Private mCanceled As Boolean = False
+	Private mLoadUnload As String
+	
+	
+	
 End Sub
 
 
@@ -44,7 +47,80 @@ End Sub
 
 Public Sub Show(LoadUnload As String)
 	
+	mLoadUnload = LoadUnload
+	
+	'--- get the target temp
+	Log("ddd")
+	Wait For (Show_SelectTemp) Complete (Result As Int)
+	Log("ddddddddd")
+	If mCanceled = True Then 
+		guiHelpers.Show_toast($"Filament Change Canceled"$,2000)
+		Return
+	End If
+	
+	'--- lets do it!
+	Wait For (Show_Wizard) Complete (Result As Int)
+	
+End Sub
+
+
+#region "SHOW TEMP SELECT"
+Private Sub Show_SelectTemp
+	
+	Dim o1 As dlgListbox
+	o1.Initialize(mMainObj,$"Filament Change ${strHelpers.ProperCase(mLoadUnload)}"$ ,Me,"HeatTempChange_Tool")
+	Dim mapTmp As Map = objHelpers.CopyMap(mMainObj.oMasterController.mapToolHeatValuesOnly)
+	mapTmp.Remove("Tool Off")
+	o1.Show(250dip,220dip,mapTmp)
+	
+End Sub
+
+Private Sub HeatTempChange_Tool(value As String, tag As Object)
+	
+	'--- callback for Show_SelectTemp
+	If value.Length = 0 Then 
+		mCanceled = True
+		Return
+	End If
+	
+	If value = "ev" Then
+		TypeInHeatChangeRequest '--- type in a value
+		Return
+	End If
+	
+	If fnc.CheckTempRange("tool", value) = False Then
+		guiHelpers.Show_toast("Invalid Temperature",1800)
+		Return
+	End If
+		
+	mMainObj.oMasterController.cn.PostRequest( _
+				oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))
+		
+	guiHelpers.Show_toast("Heating tool for filament change",1400)
+	
+End Sub
+
+Private Sub TypeInHeatChangeRequest
+		
+	Dim o1 As dlgNumericInput
+	o1.Initialize(mMainObj,"Tool Temperature","Enter Temperature",Me,"HeatTempChange_ToolEdit")
+	o1.Show
+	
+End Sub
+
+Private Sub HeatTempChange_ToolEdit(value As String)
+	'--- callback for TypeInHeatChangeRequest
+	HeatTempChange_Tool(value,"")
+End Sub
+#END REGION
+
+
+Private Sub Show_Wizard() As ResumableSub 'ignore
+	
 	'--- init
+	tmrWait4Temp.Initialize("tmrTempCheck",500)
+	tmrWait4Temp.Enabled = True
+	
 	mDialog.Initialize(mMainObj.Root)
 	
 	Dim p As B4XView = xui.CreatePanel("")
@@ -54,30 +130,37 @@ Public Sub Show(LoadUnload As String)
 	Else
 		h = 240dip
 	End If
-	p.SetLayoutAnimated(0, 0, 0, 260dip,h)
+	p.SetLayoutAnimated(0, 0, 0, 360dip,h)
 	p.LoadLayout("viewFilamentCtrl")
-	Build_GUI 
+	Build_GUI
 
-	guiHelpers.ThemeDialogForm(mDialog, LoadUnload & " Filament")
+	guiHelpers.ThemeDialogForm(mDialog, mLoadUnload & " Filament")
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 
 	Wait For (rs) Complete (Result As Int)
+	
+	
+	tmrWait4Temp.Enabled = False
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
-	
-	'--- timer might be off, make sure it is on
-	'CallSub2(Main,"TurnOnOff_MainTmr",True)
-	
 	
 End Sub
 
+
+Private Sub tmrTempCheck_Tick
+	If oc.Tool1ActualReal >= oc.Tool1TargetReal Then
+		tmrWait4Temp.Enabled = False
+		Sleep(999) '--- settle for a second
+		mContinue = True
+	End If
+End Sub
 
 
 private Sub Build_GUI
 	
 	pnlMain.Color = clrTheme.BackgroundMenu
+	lblStatus.Text = "Waiting for tempature"	
 	'guiHelpers.SetEnableDisableColor(Array As B4XView(btnOff,btnOn))
-	
 	
 End Sub
 

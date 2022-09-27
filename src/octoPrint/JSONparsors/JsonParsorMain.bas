@@ -62,6 +62,7 @@ public Sub TempStatus(s As String)
 		End Try
 		Try	
 			TargetToolCheck = CheckNull0(mTool1.Get("target"))
+			oc.Tool1TargetReal = CheckNull0(mTool1.Get("target"))
 			oc.Tool1ActualReal = CheckNull0(mTool1.Get("actual"))
 			oc.Tool1Actual = CheckNull0(mTool1.Get("actual")) & gblConst.DEGREE_SYMBOL & "C"
 			oc.Tool1Target = TargetToolCheck.As(String) & gblConst.DEGREE_SYMBOL & "C"

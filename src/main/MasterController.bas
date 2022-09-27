@@ -18,7 +18,6 @@ Sub Class_Globals
 	
 	'--- populated by a REST calls, will be grabbed by their pages
 	Public gMapOctoFilesList As Map
-	Public gLstOctoFilesListSorted As List
 		
 	Private mapMasterOctoTempSettings As Map
 	

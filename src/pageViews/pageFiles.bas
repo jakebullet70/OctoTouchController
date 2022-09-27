@@ -35,6 +35,11 @@ Sub Class_Globals
 	
 	Private lblFileName As AutoTextSizeLabel, lblHeaderFileName As B4XView
 	
+	Private lblSort As AutoTextSizeLabel
+	Private cboSort As B4XComboBox, rsFiles As ResultSet
+	Private SortAscDesc As Boolean = True
+	Private	LastSort As String
+	
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
@@ -63,13 +68,14 @@ public Sub Set_focus()
 		'--- 1st showing of tab page
 		If config.logFILE_EVENTS Then logMe.LogIt(firstRun,mModule)
 		If clvFiles.Size > 0 Then 
-			clvFiles_ItemClick(0,mMainObj.oMasterController.gLstOctoFilesListSorted.Get(0))
+			rsFiles.Position = 0
+			clvFiles_ItemClick(0,rsFiles.GetString("file_name"))
 		End If
 		CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 		firstRun = False
 	End If
 	
-	 Update_LoadedFileName2Scrn
+	Update_LoadedFileName2Scrn
 	DisplayedFileName = oc.JobFileName
 	Update_Printer_Btns
 	
@@ -125,10 +131,16 @@ End Sub
 
 Private Sub Build_GUI
 	
+	guiHelpers.ReSkinB4XComboBox(Array As B4XComboBox(cboSort))
+	cboSort.setitems(Array As String("File Name","Date Added"))
+	cboSort.SelectedIndex = 0
+	cboSort.cmbBox.Prompt = "Sort Order"
+	LastSort = "File Name"
+	
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized And mMainObj.oMasterController.gMapOctoFilesList.Size > 0 Then
 		Build_ListViewFileList
 		'--- select the 1st item and load image
-		clvFiles_ItemClick(0,mMainObj.oMasterController.gLstOctoFilesListSorted.Get(0))
+		rsFiles.Position = 0 : clvFiles_ItemClick(0,rsFiles.GetString("file_name"))
 	Else
 		clvFiles.Clear
 		'clvLastIndexClicked = NO_SELECTION
@@ -140,7 +152,8 @@ Private Sub Build_GUI
 	btnDelete.Text = "Delete"
 	
 	guiHelpers.SetTextColor(Array As B4XView( _
-			btnLoadAndPrint,btnLoad,btnDelete,lblFileName.BaseLabel,lblHeaderFileName))
+			btnLoadAndPrint,btnLoad,btnDelete,lblFileName.BaseLabel, _
+			lblHeaderFileName,lblSort.BaseLabel))
 	
 	Dim fn As B4XFont = _
 				xui.CreateDefaultFont(NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - _
@@ -191,6 +204,16 @@ Private Sub btnAction_Click
 		
 End Sub
 
+Private Sub GetFileSortOrder() As String
+	Select Case cboSort.SelectedItem.ToLowerCase
+		Case "file name" 	: Return "file_name"
+		Case "date added" 	: Return "date_added"
+		Case Else
+			LogColor("Case else - GetFileSortOrder",Colors.Cyan)
+			Return "file_name"
+	End Select
+End Sub
+
 Public Sub Build_ListViewFileList()
 	
 	Dim inSub As String = "Build_ListViewFileList"
@@ -198,29 +221,32 @@ Public Sub Build_ListViewFileList()
 	Try ' DEBUG try-catch
 
 		clvFiles.Clear
-		mMainObj.oMasterController.gLstOctoFilesListSorted.Initialize
-		mMainObj.oMasterController.gLstOctoFilesListSorted = objHelpers.Map2List(mMainObj.oMasterController.gMapOctoFilesList,True)
-		mMainObj.oMasterController.gLstOctoFilesListSorted.SortCaseInsensitive(True)
-	
+		Starter.db.BuildTable
+		Starter.db.SeedTable(mMainObj.oMasterController.gMapOctoFilesList)
+
 		CSelections.Initialize(clvFiles)
 		CSelections.Mode = CSelections.MODE_SINGLE_ITEM_PERMANENT
-		'LogColor("Build_ListViewFileList",xui.Color_Green)
 	Catch
-		logMe.LogIt2("Build_ListViewFileList (Lamensis) 1: " & LastException,mModule,inSub)
+		logMe.LogIt2("Build_ListViewFileList1: " & LastException,mModule,inSub)
 	End Try
 
 	Try ' DEBUG try-catch
 		Dim ndx As Int = 0
-		For Each kFileName As String In mMainObj.oMasterController.gLstOctoFilesListSorted
+		Dim fname As String
 		
-			Dim o As tOctoFileInfo  = mMainObj.oMasterController.gMapOctoFilesList.Get(kFileName)
-			clvFiles.InsertAt(ndx, CreateListItem(o, clvFiles.AsView.Width, 60dip), kFileName)
+		If rsFiles.IsInitialized Then rsFiles.Close
+		rsFiles = Starter.db.sql.ExecQuery( _
+						$"SELECT * FROM files ORDER BY ${GetFileSortOrder} ${IIf(SortAscDesc,"ASC","DESC")}"$)
+		
+		Do While rsFiles.NextRow
+			fname = rsFiles.GetString("file_name")
+			Dim o As tOctoFileInfo  = mMainObj.oMasterController.gMapOctoFilesList.Get(fname)
+			clvFiles.InsertAt(ndx, CreateListItem(o, clvFiles.AsView.Width, 60dip), fname)
 			ndx = ndx + 1
-		
-		Next
+		Loop
 		
 	Catch
-		logMe.LogIt2("Build_ListViewFileList 2: (Lamensis)" & LastException,mModule,inSub)
+		logMe.LogIt2("Build_ListViewFileList 2:" & LastException,mModule,inSub)
 	End Try
 	
 	
@@ -239,7 +265,7 @@ Public Sub Build_ListViewFileList()
 		End If
 	
 	Catch
-		logMe.LogIt2("Build_ListViewFileList 3: (Lamensis)" & LastException,mModule,inSub)
+		logMe.LogIt2("Build_ListViewFileList 3: " & LastException,mModule,inSub)
 	End Try
 	
 End Sub
@@ -391,14 +417,14 @@ Public Sub CheckIfFilesChanged
 	FilesCheckChangeIsBusyFLAG = False
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 	
-	If oldListViewSize <> clvFiles.Size And mMainObj.oMasterController.gLstOctoFilesListSorted.Size > 0 Then
+	If oldListViewSize <> clvFiles.Size And Starter.db.GetTotalRecs > 0 Then
 		'--- highllight the first row
-		Sleep(200)
-		clvFiles_ItemClick(0,mMainObj.oMasterController.gLstOctoFilesListSorted.Get(0))
-		Sleep(200)
+		Sleep(100)
+		rsFiles.Position = 0 : clvFiles_ItemClick(0,rsFiles.GetString("file_name"))
+		Sleep(100)
 	End If
 	
-	If mMainObj.oMasterController.gLstOctoFilesListSorted.Size = 0 Then SetThumbnail2Nothing
+	If Starter.db.GetTotalRecs = 0 Then SetThumbnail2Nothing
 	
 	Update_Printer_Btns
 	
@@ -433,10 +459,10 @@ Private Sub ProcessNewOldThumbnails(NewMap As Map)
 		logMe.LogIt2(LastException,mModule,InSub)
 	End Try
 
-	'If config.logFILE_EVENTS Then 
+	If config.logFILE_EVENTS Then 
 		logMe.LogIt2("END - remove any old thumbnail files: #" & deletedFiles,mModule,InSub)
 		logMe.LogIt2("START - download new thumbnails for new and changed files",mModule,InSub)
-	'End If
+	End If
 	
 	Try
 
@@ -495,7 +521,8 @@ Private Sub SendDeleteCmdAndRemoveFromGrid
 	clvFiles.RemoveAt(clvLastIndexClicked)
 	CSelections.SelectedItems.Remove(clvLastIndexClicked)
 	mMainObj.oMasterController.gMapOctoFilesList.Remove(mCurrentFileInfo.Name)
-	Sleep(200)
+	Starter.db.DeleteFileRec(mCurrentFileInfo.Name) 
+	Sleep(100)
 	
 	Dim ff As tOctoFileInfo
 
@@ -521,7 +548,7 @@ Private Sub SendDeleteCmdAndRemoveFromGrid
 End Sub
 
 
-Public Sub  Update_LoadedFileName2Scrn
+Public Sub Update_LoadedFileName2Scrn
 	If oc.isFileLoaded Then
 		lblFileName.Text = fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
 	Else
@@ -529,4 +556,21 @@ Public Sub  Update_LoadedFileName2Scrn
 	End If
 End Sub
 
+
+#Region "GRID SORT"
+Private Sub cboSort_SelectedIndexChanged (Index As Int)
+	If LastSort = cboSort.SelectedItem Then
+		SortAscDesc = Not (SortAscDesc)
+	Else
+		SortAscDesc = True
+	End If
+	guiHelpers.Show_toast("Sorting file list - " & IIf(SortAscDesc,"Ascending","Descending") ,1800)
+	Build_ListViewFileList
+	LastSort  = cboSort.SelectedItem
+End Sub
+
+Private Sub lblSort_Click
+	cboSort_SelectedIndexChanged(cboSort.SelectedIndex)
+End Sub
+#end region
 

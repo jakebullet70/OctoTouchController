@@ -10,10 +10,12 @@ Version=9.85
 #End Region
 
 Sub Process_Globals
+	Private Const mModule As String = "Starter" 'ignore
 	Public tmrTimerCallSub As CallSubUtils
 	Public FirstRun As Boolean = True
 	Public kvs As KeyValueStore
 	Public Provider As FileProvider
+	Public db As InMemDB
 	
 	Private xui As XUI
 	Private logcat As LogCat
@@ -30,15 +32,22 @@ Sub Service_Create '--- This is the program entry point.
 		kvs.Put("version_code",Application.VersionCode)
 	End If
 	
+	db.Initialize
+	
 	If Application.VersionCode <> kvs.Get("version_code").As(Int) Then
 		Dim oo As AppUpdate : oo.Initialize : oo.RunPrgUpdate
 	End If
+	
+	
 	
 	#if Release
 	logcat.LogCatStart(Array As String("-v","raw","*:F","B4A:v"), "logcat")
 	#end if
 	
 End Sub
+
+
+
 
 Sub Service_Start (StartingIntent As Intent)
 	Service.StopAutomaticForeground 'Starter service can start in the foreground state in some edge cases.

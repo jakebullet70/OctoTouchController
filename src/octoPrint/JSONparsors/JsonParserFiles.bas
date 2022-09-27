@@ -52,6 +52,7 @@ Public Sub CheckIfChanged(jsonTXT As String,oldMap As Map) As Boolean
 		Catch
 			logMe.LogIt2("ParseComp00: ",mModule,InSub)
 		End Try
+		'Log(fileName & fileDate)
 
 		'--- see if we have this file in the original map
 		Dim ff As tOctoFileInfo

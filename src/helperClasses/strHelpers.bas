@@ -18,6 +18,16 @@ public Sub ConvertLinuxLineEndings2Windows(s As String) As String
 	Return s.Replace(Chr(10),Chr(13) & Chr(10))
 End Sub
 
+Public Sub ProperCase(s As String) As String
+	s = s.ToLowerCase
+	Dim m As Matcher = Regex.Matcher("\b(\w)", s)
+	Do While m.Find
+		Dim i As Int = m.GetStart(1)
+		s = s.SubString2(0, i) & s.SubString2(i, i + 1).ToUpperCase & s.SubString(i + 1)
+	Loop
+	Return s
+End Sub
+
 
 public Sub Join(sepChar As String, Strings As List) As String
 	

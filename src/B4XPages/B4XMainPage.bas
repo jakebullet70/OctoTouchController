@@ -37,6 +37,8 @@ Sub Class_Globals
 	'--- only show the dialog once (should not be needed)
 	Private mConnectionErrDlgShowingFLAG As Boolean = False
 	
+	Public pPrinterCfgDlgShowingFLAG As Boolean = False
+	
 	Private PromptExitTwice As Boolean = False
 
 	'--- checking for app update - busy screen
@@ -437,7 +439,7 @@ End Sub
 
 Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 
-	If mConnectionErrDlgShowingFLAG Then Return
+	If mConnectionErrDlgShowingFLAG Or pPrinterCfgDlgShowingFLAG Then Return
 	mConnectionErrDlgShowingFLAG = True
 	Log("starting error setup cfg")
 

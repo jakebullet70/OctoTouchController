@@ -47,6 +47,8 @@ End Sub
 
 Public Sub Show(firstRun As Boolean)
 	
+	mMainObj.pPrinterCfgDlgShowingFLAG = True
+	
 	'--- init
 	Dialog.Initialize(mMainObj.Root)
 	
@@ -77,6 +79,8 @@ Public Sub Show(firstRun As Boolean)
 	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Show_KB",100)
 	
 	Wait For (rs) Complete (Result As Int)
+	
+	mMainObj.pPrinterCfgDlgShowingFLAG = False
 	
 	If Result = xui.DialogResponse_Positive Then
 		Save_settings

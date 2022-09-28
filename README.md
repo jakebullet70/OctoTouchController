@@ -24,7 +24,7 @@ Arc Welder Aware
 ### Project Status
 Initialze release Aug/26/2022
 
-Beta 6 Released: Sept/26/2022
+Beta 7 Released: Sept/28/2022
 
 Written in B4X! https://www.b4x.com/
 

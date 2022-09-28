@@ -76,8 +76,19 @@ Public Sub GetConnectionText(connectedButError As Boolean) As String
 	Return Msg.ToString
 End Sub
 
+Public Sub GetOctoPluginWarningTxt() As String
+	
+	Dim Msg As StringBuilder : Msg.Initialize
+	Msg.Append("When setting up a connection here to an Octoprint ")
+	Msg.Append("plugin make sure it is working in Octoprint first ")
+	Msg.Append("before you complete the setup here.").Append(CRLF)
+	
+	Return Msg.ToString
+	
+End Sub
+
 '--- just an easy wat to Toast!!!!
-public Sub Show_toast(msg As String, ms As Int)
+Public Sub Show_toast(msg As String, ms As Int)
 	CallSub3(B4XPages.MainPage,"Show_Toast", msg, ms)
 	Sleep(0)
 End Sub
@@ -90,16 +101,7 @@ public Sub HidePageParentObjs(obj() As B4XView)
 End Sub
 
 
-'Public Sub SetActionBtnColorIsConnected(btn As B4XView)
-'	If oc.isConnected Then
-'		btn.TextColor = clrTheme.ConnectionYes
-'	Else
-'		btn.TextColor = clrTheme.ConnectionNo
-'	End If
-'End Sub
-
-
-public Sub ReSkinB4XComboBox(cbo() As B4XComboBox)
+Public Sub ReSkinB4XComboBox(cbo() As B4XComboBox)
 	
 	For Each cb As B4XComboBox In cbo
 		Try
@@ -114,16 +116,8 @@ public Sub ReSkinB4XComboBox(cbo() As B4XComboBox)
 	Next
 End Sub
 
-'public Sub SetTextColor(views() As B4XView, txtColor As Int)
-'	
-'	For Each o As B4XView In views
-'		o.TextColor = txtColor
-'	Next
-'	
-'End Sub
 
-
-public Sub SetTextColorB4XFloatTextField(views() As B4XFloatTextField)
+Public Sub SetTextColorB4XFloatTextField(views() As B4XFloatTextField)
 	
 	For Each o As B4XFloatTextField In views
 		o.TextField.TextColor = clrTheme.txtNormal

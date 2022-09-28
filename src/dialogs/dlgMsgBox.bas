@@ -27,6 +27,8 @@ Sub Class_Globals
 	Private mDialog As B4XDialog
 	
 	Private lmB4XImageViewX1 As lmB4XImageViewX
+	Private mKvStr As String
+	
 End Sub
 
 
@@ -47,6 +49,11 @@ Public Sub Initialize(parentObj As B4XView, title As String, width As Float, hei
 	
 End Sub
 
+Public Sub SetAsOptionalMsgBox(kvKey As String)
+	mKvStr = kvKey
+	Starter.kvs.Put(mKvStr,False.As(String))
+End Sub
+
 
 Public Sub Show(txt  As String, icon_file As String, _
 				btn1 As String, btn2 As String, btn3 As String)As ResumableSub
@@ -62,9 +69,22 @@ Public Sub Show(txt  As String, icon_file As String, _
 	ThemeInputDialogBtnsResize2(mDialog,mWidth)
 	guiHelpers.AnimateDialog(mDialog,"top")
 	
+	If mKvStr <> "" Then CreateDoNotShowCheckbox
+	
 	Wait For (rs) Complete (Result As Int)
 	Return Result
 	
+End Sub
+
+Private Sub CreateDoNotShowCheckbox
+	Dim chk As CheckBox : chk.Initialize("DoNotShow")
+	chk.Text = "Touch to not show again"
+	chk.TextColor = clrTheme.txtNormal
+	chk.TextSize = 18
+	mDialog.Base.AddView(chk,6dip,mDialog.Base.Height-50dip,250dip,40dip)
+End Sub
+Private Sub DoNotShow_CheckedChange(Checked As Boolean)
+	Starter.kvs.Put(mKvStr,Checked.As(String))
 End Sub
 
 

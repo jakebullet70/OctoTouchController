@@ -39,7 +39,12 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	mPnlMain.LoadLayout("pageMenu")
 	
 	Build_GUI
+	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"showver",2000)
 	
+End Sub
+
+Sub showver
+	guiHelpers.Show_toast("Version: " & gblConst.VERSION,2200)
 End Sub
 
 

@@ -19,8 +19,7 @@ Sub Class_Globals
 	Private CSelections As clvSelectionsX
 	Private Const NO_SELECTION As Int = -1
 	Private clvLastIndexClicked As Int = NO_SELECTION
-	 
-
+	
 	Private clvFiles As CustomListView
 	Private ivPreview As lmB4XImageViewX
 	Private btnDelete, btnLoad, btnLoadAndPrint As B4XView
@@ -34,13 +33,14 @@ Sub Class_Globals
 	Private firstRun As Boolean = True
 	
 	Private lblFileName As AutoTextSizeLabel, lblHeaderFileName As B4XView
+	Private lblBusy As B4XView
 	
 	Private lblSort As AutoTextSizeLabel
 	Private cboSort As B4XComboBox, rsFiles As ResultSet
 	Private SortAscDesc As Boolean = True
 	Private	LastSort As String
 	
-	Private lblBusy As B4XView
+	
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
@@ -143,11 +143,9 @@ Private Sub Build_GUI
 	
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized And mMainObj.oMasterController.gMapOctoFilesList.Size > 0 Then
 		Build_ListViewFileList
-		'--- select the 1st item and load image
-		Show1stFile
+		Show1stFile '--- select the 1st item and load image
 	Else
 		clvFiles.Clear
-		'clvLastIndexClicked = NO_SELECTION
 		clvFiles_ItemClick(0,Null)
 	End If
 	

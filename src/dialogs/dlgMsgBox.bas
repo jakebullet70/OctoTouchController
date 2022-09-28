@@ -78,10 +78,11 @@ End Sub
 
 Private Sub CreateDoNotShowCheckbox
 	Dim chk As CheckBox : chk.Initialize("DoNotShow")
-	chk.Text = "Touch to not show again"
+	chk.Text = " Touch to not show again"
 	chk.TextColor = clrTheme.txtNormal
 	chk.TextSize = 18
-	mDialog.Base.AddView(chk,6dip,mDialog.Base.Height-50dip,250dip,40dip)
+	guiHelpers.SetCBDrawable(chk, clrTheme.txtNormal, 1,clrTheme.txtNormal, Chr(8730), Colors.LightGray, 32dip, 2dip)
+	mDialog.Base.AddView(chk,10dip,mDialog.Base.Height - 50dip,250dip,36dip)
 End Sub
 Private Sub DoNotShow_CheckedChange(Checked As Boolean)
 	Starter.kvs.Put(mKvStr,Checked.As(String))

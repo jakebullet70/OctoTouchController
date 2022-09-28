@@ -249,3 +249,59 @@ End Sub
 
 
 
+'Change the size and color of a Checkbox graphic. Set the tick character and color, as well as the box size and color
+'and padding (distance from the box to the edge of the graphic) and a disabled fill color
+'Pass "Fill" as the TickChar to fill the box with TickColor when selected.
+Public Sub SetCBDrawable(CB As CheckBox,BoxColor As Int,BoxWidth As Int, _
+			TickColor As Int,TickChar As String,DisabledColor As Int,Size As Int,Padding As Int)
+			
+	Dim SLD As StateListDrawable
+	SLD.Initialize
+
+	Dim BMEnabled,BMChecked,BMDisabled As Bitmap
+	BMEnabled.InitializeMutable(Size,Size)
+	BMChecked.InitializeMutable(Size,Size)
+	BMDisabled.InitializeMutable(Size,Size)
+	'Draw Enabled State
+	Dim CNV As Canvas
+	CNV.Initialize2(BMEnabled)
+	Dim Rect1 As Rect
+	Rect1.Initialize(Padding ,Padding ,Size - Padding ,Size - Padding)
+	CNV.DrawRect(Rect1,BoxColor,False,BoxWidth)
+	Dim Enabled,Checked,Disabled As BitmapDrawable
+	Enabled.Initialize(BMEnabled)
+	'Draw Selected state
+	Dim CNV1 As Canvas
+	CNV1.Initialize2(BMChecked)
+	If TickChar = "Fill" Then
+		CNV1.DrawRect(Rect1,TickColor,True,BoxWidth)
+		CNV1.DrawRect(Rect1,BoxColor,False,BoxWidth)
+	Else
+		CNV1.DrawRect(Rect1,BoxColor,False,BoxWidth)
+		'Start small and find the largest font that allows the tick to fit in the box
+		Dim FontSize As Int = 6
+		Do While CNV.MeasureStringHeight(TickChar,Typeface.DEFAULT,FontSize) < Size - (BoxWidth * 2) - (Padding * 2)
+			FontSize = FontSize + 1
+		Loop
+		FontSize = FontSize - 1
+		'Draw the TickChar centered in the box
+		CNV1.DrawText(TickChar,Size/2,(Size + CNV.MeasureStringHeight(TickChar,Typeface.DEFAULT,FontSize))/2,Typeface.DEFAULT,FontSize,TickColor,"CENTER")
+	End If
+	Checked.Initialize(BMChecked)
+	'Draw disabled State
+	Dim CNV2 As Canvas
+	CNV2.Initialize2(BMDisabled)
+	CNV2.DrawRect(Rect1,DisabledColor,True,BoxWidth)
+	CNV2.DrawRect(Rect1,BoxColor,False,BoxWidth)
+	Disabled.Initialize(BMDisabled)
+
+	'Add to the StateList Drawable
+	SLD.AddState(SLD.State_Disabled,Disabled)
+	SLD.AddState(SLD.State_Checked,Checked)
+	SLD.AddState(SLD.State_Enabled,Enabled)
+	SLD.AddCatchAllState(Enabled)
+	'Add SLD to the Checkbox
+	Dim JO As JavaObject = CB
+	JO.RunMethod("setButtonDrawable",Array As Object(SLD))
+End Sub
+

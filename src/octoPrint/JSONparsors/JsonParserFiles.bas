@@ -22,6 +22,7 @@ Sub Class_Globals
 						missingData As Boolean,hash As String)
 						
 	Private mDownloadThumbnails As Boolean
+	Public cacheTarget As Int = 4
 	
 	
 End Sub
@@ -104,10 +105,7 @@ Private Sub Parse(jsonTXT As String)
 	'Dim total As String = root.Get("total")
 	Dim files As List = root.Get("files")
 	
-	'Dim cacheTTL As Int = 0
-	'-----------------------------------------------------------------------------------
-	'--- not download thumbnails at the momemnt, will downloaded whan needed
-	'-----------------------------------------------------------------------------------
+	Dim cacheTTL As Int = 0
 	
 	For Each colfiles As Map In files
 
@@ -195,14 +193,16 @@ Private Sub Parse(jsonTXT As String)
 			logMe.LogIt2("ParseFile 2: " & LastException,mModule,InSub)
 		End Try
 		
-'		If mDownloadThumbnails And (ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null") _
-'							   And cacheTTL < 7 Then
-'							   
-'			'--- cache files (random because of the sort)
-'			'cacheTTL = cacheTTL + 1
-'			'CallSub3(B4XPages.MainPage.MasterCtrlr,"Download_ThumbnailAndCache2File",ff.Thumbnail,ff.myThumbnail_filename_disk)
-'			
-'		End If
+		If mDownloadThumbnails And (ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null") _
+							   And cacheTTL < cacheTarget Then
+							   
+			'--- cache files (will be random because of the sort)
+			'--- but if you only have a few files will not really matter
+			
+			cacheTTL = cacheTTL + 1
+			CallSub3(B4XPages.MainPage.oMasterController,"Download_ThumbnailAndCache2File",ff.Thumbnail,ff.myThumbnail_filename_disk)
+			
+		End If
 		
 		'--- stash results to map
 		gMapFiles.Put(ff.Name,ff)

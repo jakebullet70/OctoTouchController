@@ -40,6 +40,7 @@ Sub Class_Globals
 	Private SortAscDesc As Boolean = True
 	Private	LastSort As String
 	
+	Private lblBusy As B4XView
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
@@ -136,6 +137,10 @@ Private Sub Build_GUI
 	cboSort.cmbBox.Prompt = "Sort Order"
 	LastSort = "File Name"
 	
+	lblBusy.Visible = True
+	lblBusy.SetColorAndBorder(clrTheme.BackgroundHeader,2dip,clrTheme.txtNormal,8dip)
+	lblBusy.TextColor = clrTheme.txtNormal
+	
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized And mMainObj.oMasterController.gMapOctoFilesList.Size > 0 Then
 		Build_ListViewFileList
 		'--- select the 1st item and load image
@@ -205,7 +210,7 @@ Private Sub btnAction_Click
 		
 End Sub
 
-Private Sub GetFileSortOrder() As String
+Private Sub GetFileSortOrder() As String 'ignore
 	Select Case cboSort.SelectedItem.ToLowerCase
 		Case "file name" 	: Return "file_name"
 		Case "date added" 	: Return "date_added"
@@ -267,6 +272,8 @@ Public Sub Build_ListViewFileList()
 		logMe.LogIt2("Build_ListViewFileList 3: " & LastException,mModule,inSub)
 	End Try
 	
+	lblBusy.Visible = False
+	
 End Sub
 
 Sub CreateListItem(oData As tOctoFileInfo, Width As Int, Height As Int) As B4XView
@@ -326,7 +333,6 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	
 		SetThumbnail2Nothing
 		guiHelpers.Show_toast("Getting Thumbnail...",2000)
-		Sleep(0)
 		
 		If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & mCurrentFileInfo.myThumbnail_filename_disk,mModule)
 		
@@ -350,6 +356,7 @@ End Sub
 
 
 #region "FILES_CHANGED_CHECK"
+
 
 Public Sub CheckIfFilesChanged
 	

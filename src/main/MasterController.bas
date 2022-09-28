@@ -91,12 +91,6 @@ Public Sub tmrMain_Tick
 	GetTemps
 	GetJobStatus
 	
-	'Update_PrintingButtonsStatus
-	
-'	If config.pTurnOnDebugTabFLAG  Then
-'	'	CallSubDelayed(oTabHome.oSubTab,"Update_DebuggingWindow")
-'	End If
-	
 	'--- do we have a valid printer profile?
 	If mGotProfileInfoFLAG = False And mGotProfileInfoFLAG_IsBusy = False Then
 		GetPrinterProfileInfo
@@ -293,7 +287,6 @@ public Sub GetAllOctoFilesInfo
 		
 		mGotFilesListFLAG = True '--- will stop it from firing in the main loop
 		
-		
 	Else
 		
 		'oc.RestPrinterProfileVars
@@ -301,6 +294,7 @@ public Sub GetAllOctoFilesInfo
 	End If
 	
 	mGotFilesListFLAG_IsBusy = False '--- reset the is busy flag
+
 	
 End Sub
 #end region

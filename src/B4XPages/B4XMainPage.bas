@@ -344,11 +344,6 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 		Case "plg"  '--- plugins menu
 			PopupPluginOptionMenu
 			
-'		Case "led"  '--- zled setup
-'			Dim oA As dlgPsuSetup
-'			oA.Initialize(Me,"PSU Config")
-'			oA.Show
-			
 		Case "rt" '---read text file
 			Dim vt As dlgViewText
 			vt.Initialize(Me,"Read Text")

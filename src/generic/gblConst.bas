@@ -41,6 +41,7 @@ Sub Process_Globals
 	'---------------------------------------------------------------------------------------------------------------------
 	Public Const ANDROID_POWER_OPTIONS_FILE As String = "power_options.map"
 	Public Const GENERAL_OPTIONS_FILE As String = "general_options.map"
+	Public Const FILAMENT_CHANGE_FILE As String = "fil_loadunload.map"
 	'---------------------------------------------------------------------------------------------------------------------
 	
 	'--- pages
@@ -61,5 +62,15 @@ Sub Process_Globals
 	
 	Public Const ACTIONBAR_OFF As Int = 1
 	Public Const ACTIONBAR_ON As Int = 0
+
+	'---------------------------------------------------------------------------------------------------------------------
+	Public filHomeBeforePark As String = "hbp",filRetractBeforePark As String = "rbp"
+	Public filPauseBeforePark As String = "pbp"
+	Public filUnloadLen As String = "ulen",filUnloadSpeed As String = "uspd"
+	Public filLoadLen As String = "llen", filLoadSpeed As String = "lspd"
+	Public filYPark As String = "yp",filXPark As String = "xp"
+	Public filZLiftRel As String = "zrel", filParkSpeed As String = "pmspd"
+	Public filShow As String = "mnu"
+	
 	
 End Sub

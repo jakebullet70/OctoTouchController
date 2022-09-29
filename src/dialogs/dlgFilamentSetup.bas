@@ -16,6 +16,9 @@ Sub Class_Globals
 	Private xui As XUI
 	Private mDlg As sadPreferencesDialog
 	
+	'-------------------------------------------------------------
+	
+	
 End Sub
 
 Public Sub Initialize(mobj As B4XMainPage)
@@ -27,18 +30,18 @@ End Sub
 public Sub CreateDefaultFile
 	
 
-'	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
-'		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE, _
-'						CreateMap("themeclr": "blue", _
-'						 "chgBrightness": "true", _
-'						 "scrnoff": "true", _
-'						 "logall": "false", _
-'						 "logpwr": "false", _
-'						 "logfiles": "false", _
-'						 "logoctokey": "false", _
-'						 "logrest": "false"))
-'						 
-'	End If
+	If File.Exists(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE) = False Then
+		File.WriteMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE, _
+						CreateMap(gblConst.filShow: "true", _
+						 gblConst.filPauseBeforePark: "true", _
+						 gblConst.filRetractBeforePark: "true", _
+						 gblConst.filHomeBeforePark: "true", _
+						 gblConst.filXPark: "0",gblConst.filYPark: "0", _
+						 gblConst.filZLiftRel: "30", gblConst.filParkSpeed: "6000", _
+						 gblConst.filUnloadLen:"500", gblConst.filUnloadSpeed:"1600", _
+						 gblConst.filLoadLen:"50",gblConst.filLoadSpeed:"60"))
+						 
+	End If
 
 End Sub
 
@@ -55,9 +58,9 @@ Public Sub Show
 		h = 80%y
 	End If
 	
-	mDlg.Initialize(mainObj.root, "General Settings", 360dip, h)
-	mDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgGeneral.json"))
-	mDlg.SetEventsListener(Me,"dlgGeneral")
+	mDlg.Initialize(mainObj.root, "Filament Change Settings", 360dip, h)
+	mDlg.LoadFromJson(File.ReadString(File.DirAssets, gblConst.FILAMENT_CHANGE_FILE))
+	mDlg.SetEventsListener(Me,"dlgEvent")
 	
 	guiHelpers.ThemePrefDialogForm(mDlg)
 	mDlg.PutAtTop = False
@@ -67,7 +70,7 @@ Public Sub Show
 	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
 		guiHelpers.Show_toast("General Data Saved",1500)
-		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,Data)
+		File.WriteMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE,Data)
 		config.ReadGeneralCFG
 		CallSub(mainObj.oPageCurrent,"Set_focus")
 	End If
@@ -75,7 +78,7 @@ Public Sub Show
 End Sub
 
 
-Private Sub dlgGeneral_IsValid (TempData As Map) As Boolean 'ignore
+Private Sub dlgEvent_IsValid (TempData As Map) As Boolean 'ignore
 	Return True '--- all is good!
 	'--- NOT USED BUT HERE IF NEEDED
 	
@@ -96,7 +99,7 @@ End Sub
 
 
 
-Private Sub dlgGeneral_BeforeDialogDisplayed (Template As Object)
+Private Sub dlgEvent_BeforeDialogDisplayed (Template As Object)
 	'--- NOT USED BUT HERE IF NEEDED
 	
 '	Try

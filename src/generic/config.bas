@@ -47,6 +47,9 @@ Sub Process_Globals
 	'--- Printer zled or ws281z  flag
 	Public ShowZLEDCtrlFLAG As Boolean = False
 	Public ShowWS281CtrlFLAG As Boolean = False
+	'---
+	Public ShowFilamentChangeFLAG As Boolean = False
+	
 
 End Sub
 
@@ -104,8 +107,23 @@ Private Sub LoadCfgs()
 	End If
 	ReadWS281_CFG
 	
+	'======================================================================
+
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE) '--- Dev
+	If File.Exists(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE) = False Then
+		Dim oiz As dlgFilamentSetup
+		oiz.Initialize(Null)
+		oiz.CreateDefaultFile
+	End If
+	ReadFilamentChange_CFG
+	
 End Sub
 
+
+Public Sub ReadFilamentChange_CFG
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
+	ShowFilamentChangeFLAG = Data.Get(gblConst.filShow).As(Boolean)
+End Sub
 
 Public Sub ReadZLED_CFG
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE)

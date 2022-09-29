@@ -1,0 +1,99 @@
+{
+    "Version": 1.66,
+    "Theme": "Dark Theme",
+    "Items": [
+        {
+            "title": "Add To Function Menu ",
+            "type": "Boolean",
+            "key": "mnu",
+            "required": true
+        },
+        {
+            "title": "** Print head settings **",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "Pause Before Park (M0)",
+            "type": "Boolean",
+            "key": "pbp",
+            "required": true
+        },
+        {
+            "title": "Retract Before Park",
+            "type": "Boolean",
+            "key": "rbp",
+            "required": true
+        },
+        {
+            "title": "Home Before Park",
+            "type": "Boolean",
+            "key": "hbp",
+            "required": true
+        },
+        {
+            "options": [
+                "The Y axis is where the head will be moved when loading or unloading. The X axis is where the head will be moved when loading or unloading. Depending on the filament path, may be best set to the midpoint of the X axis."
+            ],
+            "title": "X - Y Park Overview",
+            "type": "Explanation",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "X Park Position",
+            "type": "Number",
+            "key": "xp",
+            "required": true
+        },
+        {
+            "title": "Y Park Position",
+            "type": "Number",
+            "key": "yp",
+            "required": true
+        },
+        {
+            "title": "Z Lift Relative When Unloading",
+            "type": "Number",
+            "key": "zrel",
+            "required": true
+        },
+        {
+            "title": "Park Movement Speed",
+            "type": "Number",
+            "key": "pmspd",
+            "required": true
+        },
+        {
+            "title": "** Extruder Settings **",
+            "type": "Separator",
+            "key": "xp",
+            "required": false
+        },
+        {
+            "title": "Unload Length",
+            "type": "Number",
+            "key": "ulen",
+            "required": true
+        },
+        {
+            "title": "Unload Speed",
+            "type": "Number",
+            "key": "uspd",
+            "required": true
+        },
+        {
+            "title": "Load Length",
+            "type": "Number",
+            "key": "llen",
+            "required": true
+        },
+        {
+            "title": "Load Speed",
+            "type": "Number",
+            "key": "lspd",
+            "required": true
+        }
+    ]
+}

@@ -70,7 +70,7 @@ Public Sub Show
 		CallSub2(mCallback,mEventName,"")
 	End If
 	
-	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
+	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 
 End Sub
 

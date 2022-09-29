@@ -73,7 +73,7 @@ Public Sub Show(firstRun As Boolean)
 
 	If firstRun = False Then ReadSettingsFile
 	InvalidateConnection
-	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
+	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
 
 	'--- show KB	
 	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Show_KB",100)
@@ -87,7 +87,7 @@ Public Sub Show(firstRun As Boolean)
 		CallSub(mMainObj,mEventName)
 	End If
 	
-	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
+	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 	
 End Sub
 

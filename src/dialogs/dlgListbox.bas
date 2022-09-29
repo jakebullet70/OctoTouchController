@@ -65,7 +65,7 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 	
 	'--- display dialog
-	Wait For(rs)complete(intResult As Int)
+	Wait For(rs) complete(intResult As Int)
 	If intResult = xui.DialogResponse_Positive Then
 		CallSub3(mCallback,mEventName,mDataMap.Get(ListTemplate.SelectedItem),mTag)
 	Else

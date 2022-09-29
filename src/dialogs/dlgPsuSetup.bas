@@ -75,7 +75,7 @@ Public Sub Show
 	ReadSettingsFile
 	InvalidateConnection
 	
-	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
+	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
 
 	Wait For (rs) Complete (Result As Int)
 	
@@ -86,7 +86,7 @@ Public Sub Show
 		CallSub(mMainObj.oPageCurrent,"Set_focus")
 	End If
 	
-	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
+	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 	
 End Sub
 

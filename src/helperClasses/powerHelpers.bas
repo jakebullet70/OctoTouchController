@@ -59,7 +59,7 @@ Public Sub ScreenON(takeOverPower As Boolean)
 		If config.logPOWER_EVENTS Then Log("KeepAlive - OFF")
 	End If
 	
-	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON) 
+	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON) 
 	
 End Sub
 

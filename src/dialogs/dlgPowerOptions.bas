@@ -69,6 +69,8 @@ Public Sub Show
 		
 	End If
 	
+	Starter.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
+	
 End Sub
 
 
@@ -93,31 +95,7 @@ End Sub
 
 
 Private Sub dlgPower_BeforeDialogDisplayed (Template As Object)
-
-	'--- NOT USED BUT HERE IF NEEDED
-	
-'	Dim pref As PreferencesDialog = Template
-'	Dim dlg As B4XDialog = pref.Dialog
-'	dlg.PutAtTop = False
-'	mPowerDlg.Dialog.BackgroundColor = xui.Color_Cyan
-'	mPowerDlg.Dialog.PutAtTop = False
-'	Log(mPowerDlg.Dialog.PutAtTop)
-'	Sleep(50)
-	
-	'mPowerDlg.CustomListView1.sv.Height = mPowerDlg.CustomListView1.sv.ScrollViewInnerPanel.Height + 10dip
-	'mPowerDlg.CustomListView1.GetPanel(0).GetView(0).Color = xui.Color_Transparent
-	'mPowerDlg.CustomListView1.sv.ScrollViewInnerPanel.Color = xui.Color_Transparent
-	
-'	Dim btnCancel As B4XView = PrefDialog1.Dialog.GetButton(xui.DialogResponse_Cancel)
-'	btnCancel.Width = btnCancel.Width + 60dip
-'	btnCancel.Left = btnCancel.Left - 60dip
-'	btnCancel.TextColor = xui.Color_Red
-'	Dim btnOk As B4XView = PrefDialog1.Dialog.GetButton(xui.DialogResponse_Positive)
-'	If btnOk.IsInitialized Then
-'		btnOk.Width = btnOk.Width + 20dip
-'		btnOk.Left = btnCancel.Left - btnOk.Width
-'	End If
-
+	guiHelpers.pref_BeforeDialogDisplayed(mPowerDlg,Template)
 End Sub
 
 

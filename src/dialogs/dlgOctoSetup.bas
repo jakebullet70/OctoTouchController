@@ -68,6 +68,7 @@ Public Sub Show(firstRun As Boolean)
 
 	guiHelpers.ThemeDialogForm(Dialog, mTitle)
 	Dim rs As ResumableSub = Dialog.ShowCustom(p, "SAVE", "", "CLOSE")
+	Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
 	guiHelpers.ThemeInputDialogBtnsResize(Dialog)
 	guiHelpers.EnableDisableBtns(Array As B4XView(btnCheckConnection,btnGetOctoKey),True)
 
@@ -164,11 +165,9 @@ Private Sub btnCheckConnection_Click
 	Dim msg As String = CheckInputs
 	If msg.Length <> 0 Then
 		B4XLoadingIndicator1.Hide
-		'--- custom dlgMSgBox not working inside another dialog object
-		'Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",580dip, 220dip)
-		'Wait For (mb.Show(msg,gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
-		Dim sf As Object = xui.Msgbox2Async($"Input Error! ${msg}"$, "Problem", "OK", "", "",Null)
-		Wait For (sf) Msgbox_Result (Result As Int)
+		Dim mb As dlgMsgBox
+		mb.Initialize(mMainObj.Root,"Problem",480dip, 220dip,False)
+		Wait For (mb.Show(msg,gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
 		Return
 	End If
 	
@@ -205,14 +204,8 @@ Public Sub connect_Complete (result As Object, success As Object)
 	If ValidConnection Then
 		guiHelpers.Show_toast("Connection OK",3000)
 	Else
-		Dim msg As StringBuilder : msg.Initialize
-		msg.Append("Connection Failed.").Append(CRLF).Append("A couple of things to think about.").Append(CRLF)
-		msg.Append("Is Octoprint turned on?").Append(CRLF).Append("Are Your IP And Port correct?")
-		'--- custom dlgMSgBox not working inside another dialog object
-		'Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",580dip, 220dip)
-		'Wait For (mb.Show(msg.ToString,gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
-		Dim oo As Object = xui.Msgbox2Async($"${msg}"$, "Problem", "OK", "", "",Null)
-		Wait For (oo) Msgbox_Result (result1 As Int)
+		Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",480dip, 220dip,False)
+		Wait For (mb.Show(guiHelpers.GetConnectFailedMsg,gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
 	End If
 	
 End Sub
@@ -240,12 +233,11 @@ Private Sub btnGetOctoKey_Click
 	msg.Append("Press the OK button and go to your Octoprint web interface. ")
 	msg.Append("You will need to click OK in Octoprint to confirm that this app can have access").Append(CRLF & CRLF)
 	msg.Append("Press OK when ready") '.Append(CRLF)
-	'--- custom dlgMSgBox not working inside another dialog object
-	'Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"About",500dip, 220dip)
-	'mb.lblTxt.Font = xui.CreateDefaultFont(20)
-	'Wait For (mb.Show(msg.ToString,gblConst.MB_ICON_INFO,"OK","","")) Complete (res As Int)
-	Dim o1 As Object = xui.Msgbox2Async(msg.ToString, "About", "OK", "", "CANCEL",Null)
-	Wait For (o1) Msgbox_Result (res As Int)
+
+	Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"About",500dip, 220dip,False)
+	Wait For (mb.Show(msg.ToString,gblConst.MB_ICON_INFO,"OK","","")) Complete (res As Int)
+	'Dim o1 As Object = xui.Msgbox2Async(msg.ToString, "About", "OK", "", "CANCEL",Null)
+	'Wait For (o1) Msgbox_Result (res As Int)
 	If res <> xui.DialogResponse_Positive Then
 		Return
 	End If
@@ -278,11 +270,8 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 			ValidConnection = True
 			guiHelpers.Show_toast("Requested API key OK!",1800)
 		Else
-			'--- custom dlgMSgBox not working inside another dialog object
-			'Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",540dip, 220dip)
-			'Wait For (mb.Show(result.As(String),gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
-			Dim oo As Object = xui.Msgbox2Async(result.As(String), "Problem", "OK", "", "",Null)
-			Wait For (oo) Msgbox_Result (result1 As Int)
+			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",500dip, 220dip,False)
+			Wait For (mb.Show(result.As(String),gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
 		End If
 		
 	Catch

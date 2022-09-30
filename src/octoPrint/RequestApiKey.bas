@@ -66,10 +66,7 @@ Public Sub RequestAvailable()
 		End If
 	Else
 		'--- we did not even get a connection
-		Dim msg As StringBuilder : msg.Initialize
-		msg.Append("Connection Failed.").Append(CRLF).Append("A couple of things to think about").Append(CRLF)
-		msg.Append("Is Octoprint turned on?").Append(CRLF).Append("Are Your IP And Port correct?").Append(CRLF)
-		resultStr = msg.ToString
+		resultStr = guiHelpers.GetConnectFailedMsg
 	End If
 	
 	j.Release '--- free up resources

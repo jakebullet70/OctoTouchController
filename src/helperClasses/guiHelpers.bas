@@ -23,7 +23,12 @@ End Sub
 '=====================================================================================
 '  Generic GUI helper methods
 '=====================================================================================
-
+Public Sub GetConnectFailedMsg() As String
+	Dim msg As StringBuilder : msg.Initialize
+	msg.Append("Connection Failed.").Append(CRLF)
+	msg.Append("Is Octoprint turned on?").Append(CRLF).Append("Are Your IP And Port correct?").Append(CRLF)
+	Return msg.ToString
+End Sub
 
 Public Sub SetVisible(btnArr() As B4XView,Visible As Boolean)
 	For Each v As B4XView In btnArr
@@ -121,11 +126,42 @@ Public Sub SetTextColorB4XFloatTextField(views() As B4XFloatTextField)
 	
 	For Each o As B4XFloatTextField In views
 		o.TextField.TextColor = clrTheme.txtNormal
+		o.NonFocusedHintColor = clrTheme.txtAccent
 		o.HintColor = clrTheme.txtAccent
 		o.Update
 	Next
 	
 End Sub
+
+Public Sub pref_BeforeDialogDisplayed(mDlg As sadPreferencesDialog, Template As Object)
+	
+	Dim fnt0 As B4XFont = xui.CreateDefaultFont(20)
+	
+	Try
+		
+		For i = 0 To mDlg.PrefItems.Size - 1
+			Dim pit As B4XPrefItem = mDlg.PrefItems.Get(i)
+			
+			Select Case pit.ItemType
+				Case mDlg.TYPE_TEXT, mDlg.TYPE_PASSWORD, mDlg.TYPE_NUMBER, mDlg.TYPE_DECIMALNUMBER, mDlg.TYPE_MULTILINETEXT
+					Dim ft As B4XFloatTextField = mDlg.CustomListView1.GetPanel(i).GetView(0).Tag
+					ft.TextField.Font = fnt0
+					SetTextColorB4XFloatTextField(Array As B4XFloatTextField(ft))
+	
+				Case mDlg.TYPE_BOOLEAN
+					Dim p As B4XView = mDlg.CustomListView1.GetPanel(i).GetView(0)
+					p.Font = xui.CreateDefaultFont(20)
+				
+			End Select
+	
+		Next
+		
+	Catch
+		Log(LastException)
+	End Try
+	
+End Sub
+
 
 
 Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)

@@ -115,12 +115,12 @@ Private Sub LoadCfgs()
 		oiz.Initialize(Null)
 		oiz.CreateDefaultFile
 	End If
-	ReadFilamentChange_CFG
+	ReadFilamentChangeCFG
 	
 End Sub
 
 
-Public Sub ReadFilamentChange_CFG
+Public Sub ReadFilamentChangeCFG
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
 	ShowFilamentChangeFLAG = Data.Get(gblConst.filShow).As(Boolean)
 End Sub

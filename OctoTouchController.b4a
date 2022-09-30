@@ -435,10 +435,8 @@ public boolean _onCreateOptionsMenu(android.view.Menu menu) {
 
 '--- 1 = off, 0 = on 
 Public Sub Dim_ActionBar(On_off As Int)
-	
 	'--- Android 4 thing, you can dim the action bar
 	'--- Android 4.4 has Imersive mode so we skip it
-	
 	Try
 			
 		If ph.SdkVersion >= API_ANDROID_4_0 And ph.SdkVersion < API_ANDROID_4_4 Then
@@ -456,7 +454,9 @@ Public Sub Dim_ActionBar(On_off As Int)
 	End Try 'ignore
 	
 End Sub
-
+Public Sub Dim_ActionBar_Off
+	Dim_ActionBar(gblConst.ACTIONBAR_OFF)
+End Sub
 
 
 Public Sub Restart_App

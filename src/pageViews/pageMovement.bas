@@ -222,13 +222,17 @@ End Sub
 #Region "FUNCTION_MENU"
 private Sub FunctionMenu
 	
-	Dim mapOptions As Map = CreateMap( _
-			"Auto Bed Leveling (G29)":"bl","Load Filament":"lf","UnLoad Filament":"uf")
-	'Dim mapOptions As Map = CreateMap("Auto Bed Leveling (G29)":"bl")
 	Dim o1 As dlgListbox
 	o1.Initialize(mMainObj,"Function Menu",Me,"FunctionMenu_Event")
-	o1.Show(250dip,320dip,mapOptions)
+	o1.Show(250dip,320dip,BuildFunctionMnu)
 	
+End Sub
+
+Private Sub BuildFunctionMnu() As Map
+	Dim m As Map : m.Initialize
+	m.Put("Auto Bed Leveling (G29)","bl")
+	If config.ShowFilamentChangeFLAG Then m.Put("Change Filament","cf")
+	Return m
 End Sub
 
 Private Sub FunctionMenu_Event(value As String, tag As Object)
@@ -252,10 +256,10 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 '			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","M600"))
 '			msg = msg & "Sending M600"
 			
-		Case "uf","lf" '--- unload / load filament
+		Case "cf"'--- unload / load filament
 			Dim o1 As dlgFilamentCtrl
 			o1.Initialize(mMainObj)
-			o1.Show(IIf(value = "lf","Load","Unload"))
+			o1.Show
 			
 		Case Else
 			msg = " ...TODO... "

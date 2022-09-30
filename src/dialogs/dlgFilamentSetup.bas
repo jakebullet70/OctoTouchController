@@ -47,7 +47,7 @@ End Sub
 
 Public Sub Show
 	
-	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
 	
 	Dim h As Float
 	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
@@ -59,7 +59,7 @@ Public Sub Show
 	End If
 	
 	mDlg.Initialize(mainObj.root, "Filament Change Settings", 360dip, h)
-	mDlg.LoadFromJson(File.ReadString(File.DirAssets, gblConst.FILAMENT_CHANGE_FILE))
+	mDlg.LoadFromJson(File.ReadString(File.DirAssets,"dlgFilamentCtrl.json"))
 	mDlg.SetEventsListener(Me,"dlgEvent")
 	
 	guiHelpers.ThemePrefDialogForm(mDlg)
@@ -69,9 +69,9 @@ Public Sub Show
 	
 	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
-		guiHelpers.Show_toast("General Data Saved",1500)
+		guiHelpers.Show_toast("Filament Change Data Saved",1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE,Data)
-		config.ReadGeneralCFG
+		config.ReadFilamentChangeCFG
 		CallSub(mainObj.oPageCurrent,"Set_focus")
 	End If
 	
@@ -100,33 +100,7 @@ End Sub
 
 
 Private Sub dlgEvent_BeforeDialogDisplayed (Template As Object)
-	'--- NOT USED BUT HERE IF NEEDED
-	
-'	Try
-'		
-'		For i = 0 To mGeneralDlg.PrefItems.Size - 1
-'			Dim pit As B4XPrefItem = mGeneralDlg.PrefItems.Get(i)
-'			Select Case pit.ItemType
-'				Case mGeneralDlg.TYPE_TEXT, mGeneralDlg.TYPE_PASSWORD, mGeneralDlg.TYPE_NUMBER, mGeneralDlg.TYPE_DECIMALNUMBER, mGeneralDlg.TYPE_MULTILINETEXT
-'					Dim ft As B4XFloatTextField = mGeneralDlg.CustomListView1.GetPanel(i).GetView(0).Tag
-'					ft.TextField.Font = xui.CreateDefaultBoldFont(20)
-'
-'				Case mGeneralDlg.TYPE_OPTIONS
-'				Case mGeneralDlg.TYPE_SHORTOPTIONS
-'					Dim cmb As B4XComboBox = mGeneralDlg.CustomListView1.GetPanel(i).GetView(0).Tag
-''				Dim options As List = PrefItem.Extra.Get("options")
-''				cmb.SelectedIndex = Max(0, options.IndexOf(GetPrefItemValue(PrefItem, "", Data)))
-'				
-'			End Select
-'
-'		Next
-'		
-'	Catch
-'		Log(LastException)
-'	End Try
-'	
-	
-	
+	guiHelpers.pref_BeforeDialogDisplayed(mDlg,Template)
 End Sub
 
 

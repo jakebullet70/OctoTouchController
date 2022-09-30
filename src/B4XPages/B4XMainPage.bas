@@ -53,10 +53,6 @@ End Sub
 '
 '======================================================================================
 
-'Public Sub getMasterCtrlr() As MasterController
-'	'--- master Octo controller / methods
-'	Return oMasterController
-'End Sub
 
 Public Sub Initialize
 	
@@ -99,7 +95,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 		Starter.FirstRun = False
 	End If
 
-	Build_GUI
+	BuildGUI
 	TryOctoConnection
 	
 End Sub
@@ -153,7 +149,7 @@ End Sub
 
 #end region
 
-Private Sub Build_GUI
+Private Sub BuildGUI
 	
 	pnlMaster.Color = clrTheme.Background
 	pnlHeader.Color	 = clrTheme.BackgroundHeader
@@ -168,6 +164,7 @@ Private Sub Build_GUI
 	btnPower.Visible = config.ShowPwrCtrlFLAG
 	
 	Switch_Pages(gblConst.PAGE_MENU)
+	Starter.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
 	
 End Sub
 
@@ -299,7 +296,7 @@ Private Sub PopupMainOptionMenu
 	
 	Dim popUpMemuItems As Map = _
 		CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc", _
-				  "Plugins Menu":"plg","Read Err File":"rt","About":"ab")
+				  "Functions Menu":"fn","Plugins Menu":"plg","Read Err File":"rt","About":"ab")
 
 		
 	If oc.isPrinting Or oc.IsPaused2 Then
@@ -344,6 +341,9 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 		Case "plg"  '--- plugins menu
 			PopupPluginOptionMenu
 			
+		Case "fn"  '--- functions menu
+			PopupFunctionOptionsMnu
+			
 		Case "rt" '---read text file
 			Dim vt As dlgViewText
 			vt.Initialize(Me,"Read Text")
@@ -386,6 +386,39 @@ End Sub
 Public Sub  ShowNoShow_PowerBtn
 	btnPower.Visible = config.ShowPwrCtrlFLAG
 End Sub
+
+
+'--- options plugin sub menu
+Private Sub PopupFunctionOptionsMnu
+	
+	Dim popUpMemuItems As Map = CreateMap("Filament Control":"fl")
+		
+	Dim o1 As dlgListbox
+	o1.Initialize(Me,"Functions Menu",Me,"FncMenu_Event")
+	o1.IsMenu = True
+	o1.Show(260dip,300dip,popUpMemuItems)
+	
+End Sub
+
+'--- callback for plugins options Menu
+Private Sub FncMenu_Event(value As String, tag As Object)
+	
+	If value.Length = 0 Then PopupMainOptionMenu
+	
+	Select Case value
+			
+		Case "fl" '--- filament control
+			Dim oB As dlgFilamentSetup
+			oB.Initialize(Me)
+			oB.Show
+			
+	End Select
+	
+	
+End Sub
+
+
+
 
 '--------------------------------------
 

@@ -6,7 +6,7 @@
             "title": "Add To Function Menu ",
             "type": "Boolean",
             "key": "mnu",
-            "required": true
+            "required": false
         },
         {
             "title": "** Print head settings **",
@@ -15,55 +15,46 @@
             "required": false
         },
         {
-            "title": "Pause Before Park (M0)",
+            "title": "Pause Octoprint Before Park (M0)",
             "type": "Boolean",
             "key": "pbp",
-            "required": true
+            "required": false
         },
         {
-            "title": "Retract Before Park",
+            "title": "Small rectration Before Park",
             "type": "Boolean",
             "key": "rbp",
-            "required": true
+            "required": false
         },
         {
             "title": "Home Before Park",
             "type": "Boolean",
             "key": "hbp",
-            "required": true
-        },
-        {
-            "options": [
-                "The Y axis is where the head will be moved when loading or unloading. The X axis is where the head will be moved when loading or unloading. Depending on the filament path, may be best set to the midpoint of the X axis."
-            ],
-            "title": "X - Y Park Overview",
-            "type": "Explanation",
-            "key": "",
             "required": false
         },
         {
             "title": "X Park Position",
             "type": "Number",
             "key": "xp",
-            "required": true
+            "required": false
         },
         {
             "title": "Y Park Position",
             "type": "Number",
             "key": "yp",
-            "required": true
+            "required": false
         },
         {
             "title": "Z Lift Relative When Unloading",
             "type": "Number",
             "key": "zrel",
-            "required": true
+            "required": false
         },
         {
             "title": "Park Movement Speed",
             "type": "Number",
             "key": "pmspd",
-            "required": true
+            "required": false
         },
         {
             "title": "** Extruder Settings **",
@@ -75,25 +66,25 @@
             "title": "Unload Length",
             "type": "Number",
             "key": "ulen",
-            "required": true
+            "required": false
         },
         {
             "title": "Unload Speed",
             "type": "Number",
             "key": "uspd",
-            "required": true
+            "required": false
         },
         {
             "title": "Load Length",
             "type": "Number",
             "key": "llen",
-            "required": true
+            "required": false
         },
         {
             "title": "Load Speed",
             "type": "Number",
             "key": "lspd",
-            "required": true
+            "required": false
         }
     ]
 }

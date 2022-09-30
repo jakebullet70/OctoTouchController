@@ -95,6 +95,7 @@ Public Sub Show
 		End If
 		CallSub(mMainObj.oPageCurrent,"Set_focus")
 	End If
+	Starter.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
 	
 End Sub
 
@@ -121,29 +122,7 @@ End Sub
 
 
 Private Sub dlgSimple_BeforeDialogDisplayed (Template As Object)
-	
-	Try
-		
-		For i = 0 To mDlg.PrefItems.Size - 1
-			Dim pit As B4XPrefItem = mDlg.PrefItems.Get(i)
-			
-			Select Case pit.ItemType
-				Case mDlg.TYPE_TEXT, mDlg.TYPE_PASSWORD, mDlg.TYPE_NUMBER, mDlg.TYPE_DECIMALNUMBER, mDlg.TYPE_MULTILINETEXT
-					Dim ft As B4XFloatTextField = mDlg.CustomListView1.GetPanel(i).GetView(0).Tag
-					ft.TextField.Font = xui.CreateDefaultFont(20)
-	
-				Case mDlg.TYPE_BOOLEAN
-					Dim p As B4XView = mDlg.CustomListView1.GetPanel(i).GetView(0)
-					p.Font = xui.CreateDefaultFont(20)
-				
-			End Select
-	
-		Next
-		
-	Catch
-		Log(LastException)
-	End Try
-	
+	guiHelpers.pref_BeforeDialogDisplayed(mDlg,Template)
 End Sub
 
 

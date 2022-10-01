@@ -30,13 +30,10 @@ Sub Class_Globals
 	Private btnBack As B4XView
 End Sub
 
-
-
 Public Sub Initialize(mobj As B4XMainPage)
 	mMainObj = mobj
 	mData = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
 End Sub
-
 
 Private Sub BuildGUI
 	pnlMain.Color = clrTheme.Background : pnlWorking.Color = clrTheme.Background
@@ -78,8 +75,6 @@ Public Sub Show
 	p.LoadLayout("viewFilamentCtrl")
 	BuildGUI
 	
-	'SetTempMonitorTimer
-		
 	guiHelpers.ThemeDialogForm(mDialog, "Filament Change")
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CLOSE")
 	mDialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
@@ -93,7 +88,7 @@ Public Sub Show
 		mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
 	End If
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF) '--- turn it off if its on
-	mTmrOff = True '--- if tmr is running will turn it off
+	mTmrOff = True '--- if temp tmr is running will turn it off
 	
 End Sub
 
@@ -105,7 +100,7 @@ Private Sub tmrTempCheck_Tick
 	
 	If mTmrOff Then Return
 	lblTemp.Text = oc.Tool1Actual
-	Log(oc.Tool1TargetReal)
+	'Log("Tmr fired")
 	If oc.Tool1TargetReal = 0 Then 
 		SetTempMonitorTimer
 		Return '--- waiting for target var to be set from the HTTP read
@@ -154,7 +149,6 @@ Private Sub btnStuff_Click
 		Return
 	End If
 	
-	SetStatusLabel("Working...") : Sleep(100)
 	If mLoadUnload = "load" Then
 		SetStatusLabel("Filament load") : Sleep(100)
 		SendMGcode("M83") : Sleep(100)
@@ -172,9 +166,8 @@ End Sub
 
 Private Sub ParkNozzle() As ResumableSub 'ignore
 	
-	Log("ParkNozzle")
+	CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Parking Nozzle...", 2600)
 	
-	CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Parking Nozzle...", 1600)
 	If mData.GetDefault(gblConst.filPauseBeforePark,False).As(Boolean) = True Then
 		SendMGcode("M0") : Sleep(100)
 	End If
@@ -198,15 +191,11 @@ Private Sub ParkNozzle() As ResumableSub 'ignore
 	tmp = $"G0 Y${mData.Get(gblConst.filYPark)} X${mData.Get(gblConst.filXPark)} F${mData.Get(gblConst.filParkSpeed)}"$
 	SendMGcode(tmp) : Sleep(100)
 	
-	'SetStatusLabel("Nozzle parked") : Sleep(100)
-	
 End Sub
-
 
 Private Sub SendMGcode(code As String)
 	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",code))
 End Sub
-
 
 Private Sub SetStatusLabel(txt As String)
 	lblStatus.Text = txt & CRLF
@@ -214,8 +203,7 @@ End Sub
 
 Private Sub btnCtrl_Click
 	Dim btn As B4XView : btn = Sender
-	mLoadUnload = ""
-	mTmrOff = True
+	mLoadUnload = "" : mTmrOff = True
 	btnStuff.Text = "Continue" ': btnStuff.Visible = True
 	Select Case btn.Tag
 		Case "ht" 	: PromptHeater
@@ -239,6 +227,7 @@ Private Sub ShowWorkingPnl
 		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Tool heater not set", 3000)
 		Return
 	End If
+	lblTemp.Text = "heating"
 	mTmrOff = False
 	pnlMain.Visible = False : pnlWorking.Visible = True
 	pnlWorking.BringToFront
@@ -250,6 +239,7 @@ Private Sub ShowMainPnl
 	pnlMain.Visible = True : pnlWorking.Visible = False
 	pnlMain.BringToFront
 End Sub
+
 
 #region "SHOW TEMP SELECT"
 Public Sub PromptHeater

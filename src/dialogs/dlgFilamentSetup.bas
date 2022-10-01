@@ -32,7 +32,7 @@ public Sub CreateDefaultFile
 
 	If File.Exists(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE) = False Then
 		File.WriteMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE, _
-						CreateMap(gblConst.filShow: "true", _
+						CreateMap(gblConst.filShow: "false", _
 						 gblConst.filPauseBeforePark: "true", _
 						 gblConst.filRetractBeforePark: "true", _
 						 gblConst.filHomeBeforePark: "true", _

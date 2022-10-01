@@ -7,6 +7,8 @@ Version=11.5
 ' Author:  sadLogic
 #Region VERSIONS 
 ' V. 1.0 	Sept/24/2022
+'			This is UGLY! Been through about 4 revisions...
+'			It works but...
 #End Region
 
 Sub Class_Globals
@@ -19,7 +21,7 @@ Sub Class_Globals
 	Private pnlMain As B4XView, lblStatus As AutoTextSizeLabel
 	Private btnStuff As B4XView, lblTemp As Label
 	
-	Private mCanceled As Boolean = False, mLoadUnload As String
+	Private mTmrOff As Boolean = False, mLoadUnload As String
 	Private mData As Map, tmp As String
 	
 	Private pnlWorking As B4XView
@@ -32,6 +34,7 @@ End Sub
 
 Public Sub Initialize(mobj As B4XMainPage)
 	mMainObj = mobj
+	mData = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
 End Sub
 
 
@@ -44,18 +47,24 @@ Private Sub BuildGUI
 	btnLoad.Font = fn : btnHeat.Font = fn
 	
 	guiHelpers.SetEnableDisableColor(Array As B4XView(btnBack, btnStuff,btnHeat,btnLoad,btnPark,btnUnload))
-	
+	btnBack.BringToFront
+	btnBack.SetColorAndBorder(xui.Color_Transparent,0,clrTheme.txtNormal,0)
 	guiHelpers.SetTextColor(Array As B4XView(lblTemp,lblStatus.BaseLabel))
 	ShowMainPnl
 End Sub
 
 Private Sub BuildChkbox
 	chkHeatOff.Initialize("TurnOffHeat")
-	chkHeatOff.Text = " Touch to turn off heat on close"
+	chkHeatOff.Text = " Turn off heater on close"
 	chkHeatOff.TextColor = clrTheme.txtNormal
 	chkHeatOff.TextSize = 18
 	guiHelpers.SetCBDrawable(chkHeatOff, clrTheme.txtNormal, 1,clrTheme.txtNormal, Chr(8730), Colors.LightGray, 32dip, 2dip)
 	mDialog.Base.AddView(chkHeatOff,10dip,mDialog.Base.Height - 50dip,280dip,36dip)
+	'chkHeatOff.Checked = Starter.kvs.GetDefault(FIL_WIZ_TURN_OFF_ON_HEAT,False)
+End Sub
+
+Private Sub TurnOffHeat_CheckedChange(Checked As Boolean)
+	'Starter.kvs.Put(FIL_WIZ_TURN_OFF_ON_HEAT,Checked)
 End Sub
 
 Public Sub Show
@@ -78,40 +87,34 @@ Public Sub Show
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 
 	Wait For (rs) Complete (Result As Int)
-	If Result = xui.DialogResponse_Cancel Then
-		EndWizard
-		Return
-	End If
 	
-End Sub
-
-
-Private Sub EndWizard 'ignore
 	If chkHeatOff.Checked Then
 		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Tool Heater Off", 1600)
 		mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
 	End If
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF) '--- turn it off if its on
-	mCanceled = True
+	mTmrOff = True '--- if tmr is running will turn it off
+	
 End Sub
 
 
+'=================================================================
 
 
 Private Sub tmrTempCheck_Tick
 	
-	If mCanceled Then Return
-	'Log(oc.Tool1TargetReal)
+	If mTmrOff Then Return
+	lblTemp.Text = oc.Tool1Actual
+	Log(oc.Tool1TargetReal)
 	If oc.Tool1TargetReal = 0 Then 
 		SetTempMonitorTimer
-		Return '--- waiting for target var to be set from thee HTTP read
+		Return '--- waiting for target var to be set from the HTTP read
 	End If
 	
 	If oc.Tool1ActualReal >= oc.Tool1TargetReal Then
-		Sleep(1000) '--- settle for a second 
+		Sleep(999) '--- settle for a second 
 		LoadUnLoadFil
 	Else
-		lblTemp.Text = oc.Tool1Actual
 		SetTempMonitorTimer
 	End If
 	
@@ -124,10 +127,9 @@ End Sub
 Private Sub LoadUnLoadFil
 	
 	BeepMe
+	btnStuff.Visible = True
 	If mLoadUnload.ToLowerCase = "load" Then
-		SetStatusLabel("Insert filament and touch the 'Continue' button to load")
-		btnStuff.Text = "Continue"
-		btnStuff.Visible = True
+		SetStatusLabel("Insert filament and touch the 'Continue' button to load")	
 	Else
 		SetStatusLabel("Touch The 'Continue' button to start unload")
 	End If
@@ -145,57 +147,39 @@ Private Sub BeepMe
 End Sub
 
 Private Sub btnStuff_Click
+	
+	If btnStuff.Text.StartsWith("E") Then 
+		SendMGcode("G1 E5") '--- Extrude 5mm more
+		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Extruding 5mm...", 1000)
+		Return
+	End If
+	
 	SetStatusLabel("Working...") : Sleep(100)
-	SendCmds
-	mDialog.Close(xui.DialogResponse_Positive) '--- close it, exit dialog
-End Sub
-
-
-Public Sub SendCmds
-	
-	mData = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
-	
-	'Wait For (ParkNozzle)   Complete(i As Int)
-	If mLoadUnload.ToLowerCase = "load" Then
-		Wait For (LoadFilament) Complete(i As Int)
+	If mLoadUnload = "load" Then
+		SetStatusLabel("Filament load") : Sleep(100)
+		SendMGcode("M83") : Sleep(100)
+		SendMGcode($"G1 E${mData.Get(gblConst.filLoadLen)} F${mData.Get(gblConst.filLoadSpeed)}"$) ': Sleep(100)
+		btnStuff.Text = "Extrude" & CRLF & "5mm more"
 	Else
-		Wait For (UnLoadFilament) Complete(i As Int)
+		SetStatusLabel("UnLoading filament") : Sleep(100)
+		SendMGcode("M83") : Sleep(100)
+		SendMGcode($"G1 E-${mData.Get(gblConst.filUnLoadLen)} F${mData.Get(gblConst.filUnLoadSpeed)}"$) : Sleep(100)
+		SendMGcode("M18 E") : Sleep(100)
 	End If
 	
 End Sub
-
-Private Sub UnLoadFilament() As ResumableSub 'ignore
-	
-	SetStatusLabel("UnLoading filament") : Sleep(100)
-	
-	SendMGcode("M83") : Sleep(100)
-	SendMGcode($"G1 E-${mData.Get(gblConst.filUnLoadLen)} F${mData.Get(gblConst.filUnLoadSpeed)}"$) : Sleep(100)
-	SendMGcode("M18 E") : Sleep(100)
-	
-End Sub
-
-
-Private Sub LoadFilament() As ResumableSub 'ignore
-	
-	SetStatusLabel("Loading filament") : Sleep(100)
-	
-	SendMGcode("M83") : Sleep(100)
-	SendMGcode($"G1 E${mData.Get(gblConst.filLoadLen)} F${mData.Get(gblConst.filLoadSpeed)}"$) : Sleep(100)
-	
-End Sub
-
 
 
 Private Sub ParkNozzle() As ResumableSub 'ignore
 	
-	'SetStatusLabel("Parking nozzle") : Sleep(100)
+	Log("ParkNozzle")
 	
 	CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Parking Nozzle...", 1600)
-	If mData.Get(gblConst.filPauseBeforePark).As(Boolean) = True Then
+	If mData.GetDefault(gblConst.filPauseBeforePark,False).As(Boolean) = True Then
 		SendMGcode("M0") : Sleep(100)
 	End If
 	
-	If mData.Get(gblConst.filRetractBeforePark).As(Boolean) = True Then
+	If mData.GetDefault(gblConst.filRetractBeforePark,False).As(Boolean) = True Then
 		SendMGcode("M83") : Sleep(100)
 		SendMGcode("G1 E-5 F50") : Sleep(100)
 	End If
@@ -205,7 +189,7 @@ Private Sub ParkNozzle() As ResumableSub 'ignore
 	tmp = $"G0 Z${mData.Get(gblConst.filZLiftRel)} F${mData.Get(gblConst.filParkSpeed)}"$
 	SendMGcode(tmp) : Sleep(100)
 	
-	If mData.Get(mData.Get(gblConst.filHomeBeforePark)).As(Boolean) = True Then
+	If mData.GetDefault(mData.Get(gblConst.filHomeBeforePark),False).As(Boolean) = True Then
 		SendMGcode("G28 X0 Y0") : Sleep(100)
 	End If
 	
@@ -230,42 +214,50 @@ End Sub
 
 Private Sub btnCtrl_Click
 	Dim btn As B4XView : btn = Sender
+	mLoadUnload = ""
+	mTmrOff = True
+	btnStuff.Text = "Continue" ': btnStuff.Visible = True
 	Select Case btn.Tag
-		Case "ht" 	'--- heater
-			PromptHeater
-		Case "pk"	'--- park
-			ParkNozzle
+		Case "ht" 	: PromptHeater
+		Case "pk"	: ParkNozzle
 		Case "ld"	'--- load
-			'If oc.Tool1Target.ToLowerCase = "off" Then
-			'End If
+			mLoadUnload = "load"
 			ShowWorkingPnl
 			
 		Case "ul"	'--- unload
 			ShowWorkingPnl
 			
 		Case "bk" 	'--- back btn
-			pnlMain.Visible = True : pnlWorking.Visible = False
+			ShowMainPnl
 	End Select
 	
 End Sub
 
 Private Sub ShowWorkingPnl
+	Dim Const TOOL_NOT_HEATING As String = "0" & gblConst.DEGREE_SYMBOL & "C"
+	If oc.Tool1Target = TOOL_NOT_HEATING Then
+		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Tool heater not set", 3000)
+		Return
+	End If
+	mTmrOff = False
 	pnlMain.Visible = False : pnlWorking.Visible = True
+	pnlWorking.BringToFront
 	btnStuff.Visible = False
-	'SetStatusLabel("Waiting for temperature...")
-	SetStatusLabel("Working...")
+	SetStatusLabel("Waiting for temperature...")
+	SetTempMonitorTimer '--- turn on the timer and monitor temp
 End Sub
 Private Sub ShowMainPnl
 	pnlMain.Visible = True : pnlWorking.Visible = False
+	pnlMain.BringToFront
 End Sub
 
 #region "SHOW TEMP SELECT"
 Public Sub PromptHeater
 	Dim o1 As dlgListbox
 	o1.Initialize(mMainObj,"Filament Change",Me,"HeatTempChange_Tool")
-	Dim mapTmp As Map = objHelpers.CopyMap(mMainObj.oMasterController.mapToolHeatValuesOnly)
-	mapTmp.Remove("Tool Off")
-	o1.Show(250dip,270dip,mapTmp)
+	'Dim mapTmp As Map = objHelpers.CopyMap(mMainObj.oMasterController.mapToolHeatValuesOnly)
+	'mapTmp.Remove("Tool Off")
+	o1.Show(250dip,270dip,mMainObj.oMasterController.mapToolHeatValuesOnly)
 	Wait For HeatTempChange_Tool(value As String, tag As Object)
 	ProcessHeatTempChange(value,tag)
 End Sub
@@ -275,7 +267,7 @@ Private Sub ProcessHeatTempChange(value As String, tag As Object) 'ignore
 	
 	'--- callback for Show_SelectTemp
 	If value.Length = 0 Then
-		mCanceled = True
+		mTmrOff = True
 		Return
 	End If
 
@@ -284,6 +276,7 @@ Private Sub ProcessHeatTempChange(value As String, tag As Object) 'ignore
 		Return
 	End If
 	
+	If value.EndsWith("off") Then value = 0 '--- tool off
 	If fnc.CheckTempRange("tool", value) = False Then
 		guiHelpers.Show_toast("Invalid Temperature",1800)
 		Return
@@ -291,7 +284,10 @@ Private Sub ProcessHeatTempChange(value As String, tag As Object) 'ignore
 		
 	mMainObj.oMasterController.cn.PostRequest( _
 				oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))
-		
+
+	oc.Tool1Target = "1" 
+	mTmrOff = False
+	
 End Sub
 
 Private Sub TypeInHeatChangeRequest

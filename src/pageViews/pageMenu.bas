@@ -82,6 +82,7 @@ Private Sub Build_GUI
 	
 	guiHelpers.SetVisible(Array As B4XView(btnPlugin3,btnPlugin2,btnPlugin1),False)
 	guiHelpers.SetTextColor(Array As B4XView(btnPlugin3,btnPlugin2,btnPlugin1,btnScrnOff,btnBrightness))
+	
 		
 End Sub
 

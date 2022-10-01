@@ -6,7 +6,7 @@
             "title": "Add To Function Menu ",
             "type": "Boolean",
             "key": "mnu",
-            "required": false
+            "required": true
         },
         {
             "title": "** Print head settings **",
@@ -18,43 +18,43 @@
             "title": "Pause Octoprint Before Park (M0)",
             "type": "Boolean",
             "key": "pbp",
-            "required": false
+            "required": true
         },
         {
             "title": "Small rectration Before Park",
             "type": "Boolean",
             "key": "rbp",
-            "required": false
+            "required": true
         },
         {
             "title": "Home Before Park",
             "type": "Boolean",
             "key": "hbp",
-            "required": false
+            "required": true
         },
         {
             "title": "X Park Position",
             "type": "Number",
             "key": "xp",
-            "required": false
+            "required": true
         },
         {
             "title": "Y Park Position",
             "type": "Number",
             "key": "yp",
-            "required": false
+            "required": true
         },
         {
             "title": "Z Lift Relative When Unloading",
             "type": "Number",
             "key": "zrel",
-            "required": false
+            "required": true
         },
         {
             "title": "Park Movement Speed",
             "type": "Number",
             "key": "pmspd",
-            "required": false
+            "required": true
         },
         {
             "title": "** Extruder Settings **",
@@ -66,25 +66,25 @@
             "title": "Unload Length",
             "type": "Number",
             "key": "ulen",
-            "required": false
+            "required": true
         },
         {
             "title": "Unload Speed",
             "type": "Number",
             "key": "uspd",
-            "required": false
+            "required": true
         },
         {
             "title": "Load Length",
             "type": "Number",
             "key": "llen",
-            "required": false
+            "required": true
         },
         {
             "title": "Load Speed",
             "type": "Number",
             "key": "lspd",
-            "required": false
+            "required": true
         }
     ]
 }

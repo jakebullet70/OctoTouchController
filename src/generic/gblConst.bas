@@ -70,7 +70,7 @@ Sub Process_Globals
 	Public filLoadLen As String = "llen", filLoadSpeed As String = "lspd"
 	Public filYPark As String = "yp",filXPark As String = "xp"
 	Public filZLiftRel As String = "zrel", filParkSpeed As String = "pmspd"
-	Public filShow As String = "mnu"
+	Public filShow As String = "mnu", filSmallExtBeforeUload as String = "extb"
 	
 	
 End Sub

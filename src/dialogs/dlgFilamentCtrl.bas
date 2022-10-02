@@ -149,16 +149,40 @@ Private Sub btnStuff_Click
 		Return
 	End If
 	
+	Dim aLen(), sLen As String
 	If mLoadUnload = "load" Then
 		SetStatusLabel("Filament load") : Sleep(100)
 		SendMGcode("M83") : Sleep(100)
-		SendMGcode($"G1 E${mData.Get(gblConst.filLoadLen)} F${mData.Get(gblConst.filLoadSpeed)}"$) ': Sleep(100)
+		sLen = mData.Get(gblConst.filLoadLen)
+		If sLen.Contains(",") Then '--- multi lengths as marlin has EXTRUDE_MAXLENGTH set low
+			aLen = Regex.Split(",",sLen)
+			For Each partLen As String In aLen
+				SendMGcode($"G1 E${partLen} F${mData.Get(gblConst.filLoadSpeed)}"$) : Sleep(400)
+			Next
+		Else
+			SendMGcode($"G1 E${sLen} F${mData.Get(gblConst.filLoadSpeed)}"$) ': Sleep(100)
+		End If
 		btnStuff.Text = "Extrude" & CRLF & "5mm more"
 	Else
+		btnStuff.Visible = False 
 		SetStatusLabel("UnLoading filament") : Sleep(100)
+		Sleep(0)
 		SendMGcode("M83") : Sleep(100)
-		SendMGcode($"G1 E-${mData.Get(gblConst.filUnLoadLen)} F${mData.Get(gblConst.filUnLoadSpeed)}"$) : Sleep(100)
+		If mData.Get(gblConst.filSmallExtBeforeUload).As(Boolean) = True Then
+			SendMGcode("G1 E16 F100") : Sleep(100)
+		End If
+		sLen = mData.Get(gblConst.filUnLoadLen)
+		If sLen.Contains(",") Then '--- multi lengths as marlin has EXTRUDE_MAXLENGTH set low
+			aLen = Regex.Split(",",sLen)
+			For Each partLen As String In aLen
+				SendMGcode($"G1 E-${partLen} F${mData.Get(gblConst.filUnLoadSpeed)}"$) : Sleep(400)
+			Next
+		Else
+			SendMGcode($"G1 E-${sLen} F${mData.Get(gblConst.filUnLoadSpeed)}"$) : Sleep(100)
+		End If
 		SendMGcode("M18 E") : Sleep(100)
+		Sleep(600)
+		ShowMainPnl
 	End If
 	
 End Sub

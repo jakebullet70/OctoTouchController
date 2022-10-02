@@ -63,8 +63,14 @@
             "required": false
         },
         {
+            "title": "Small extrusion before unload",
+            "type": "Boolean",
+            "key": "extb",
+            "required": false
+        },
+        {
             "title": "Unload Length",
-            "type": "Number",
+            "type": "Text",
             "key": "ulen",
             "required": true
         },
@@ -76,7 +82,7 @@
         },
         {
             "title": "Load Length",
-            "type": "Number",
+            "type": "Text",
             "key": "llen",
             "required": true
         },

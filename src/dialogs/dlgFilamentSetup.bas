@@ -39,7 +39,8 @@ public Sub CreateDefaultFile
 						 gblConst.filXPark: "0",gblConst.filYPark: "0", _
 						 gblConst.filZLiftRel: "30", gblConst.filParkSpeed: "6000", _
 						 gblConst.filUnloadLen:"500", gblConst.filUnloadSpeed:"1600", _
-						 gblConst.filLoadLen:"50",gblConst.filLoadSpeed:"60"))
+						 gblConst.filLoadLen:"50",gblConst.filLoadSpeed:"60", _
+						 gblConst.filSmallExtBeforeUload:"true"))
 						 
 	End If
 

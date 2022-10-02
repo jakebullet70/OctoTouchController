@@ -160,7 +160,7 @@ Private Sub btnStuff_Click
 				SendMGcode($"G1 E${partLen} F${mData.Get(gblConst.filLoadSpeed)}"$) : Sleep(400)
 			Next
 		Else
-			SendMGcode($"G1 E${sLen} F${mData.Get(gblConst.filLoadSpeed)}"$) ': Sleep(100)
+			SendMGcode($"G1 E${sLen} F${mData.Get(gblConst.filLoadSpeed)}"$) : Sleep(100)
 		End If
 		btnStuff.Text = "Extrude" & CRLF & "5mm more"
 	Else

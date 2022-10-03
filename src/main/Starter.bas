@@ -14,11 +14,14 @@ Sub Process_Globals
 	Public tmrTimerCallSub As CallSubUtils
 	Public FirstRun As Boolean = True
 	Public kvs As KeyValueStore
+	
 	Public Provider As FileProvider
+	
 	Public db As InMemDB
 	
 	Private xui As XUI
 	Private logcat As LogCat
+	
 End Sub
 
 Sub Service_Create '--- This is the program entry point.

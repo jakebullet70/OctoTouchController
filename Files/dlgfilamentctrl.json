@@ -69,25 +69,25 @@
             "required": false
         },
         {
-            "title": "Unload Length",
+            "title": "Unload Length (30,180,180)",
             "type": "Text",
             "key": "ulen",
             "required": true
         },
         {
-            "title": "Unload Speeds (60,1500)",
+            "title": "Unload Speeds (60,2500)",
             "type": "Text",
             "key": "uspd",
             "required": true
         },
         {
-            "title": "Load Length",
+            "title": "Load Length (180,180,30)",
             "type": "Text",
             "key": "llen",
             "required": true
         },
         {
-            "title": "Load Speeds (1500,60)",
+            "title": "Load Speeds (2500,60)",
             "type": "Text",
             "key": "lspd",
             "required": true

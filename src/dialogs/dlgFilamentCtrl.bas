@@ -176,7 +176,7 @@ Private Sub btnStuff_Click
 		SendMGcode("M83") : Sleep(100)
 		
 		If mData.Get(gblConst.filSmallExtBeforeUload).As(Boolean) = True Then
-			SendMGcode($"G1 E12 F${speed1}"$) : Sleep(500) '--- small push to avoid blobs
+			SendMGcode($"G1 E10 F${speed1}"$) : Sleep(500) '--- small push to avoid blobs
 		End If
 		
 		sLen = mData.Get(gblConst.filUnLoadLen)
@@ -204,14 +204,15 @@ Private Sub btnStuff_Click
 		Dim first As Boolean = True
 		If sLen.Contains(",") Then '--- multi lengths as marlin has EXTRUDE_MAXLENGTH set low
 			aLen = Regex.Split(",",sLen)
+			Dim isLast As Int = 0
 			For Each partLen As String In aLen
-				SendMGcode($"G1 E${partLen} F${IIf(first,speed1,speed2)}"$) : Sleep(400)
-				first = False
+				SendMGcode($"G1 E${partLen} F${IIf(isLast = aLen.Length - 1,speed2,speed1)}"$) : Sleep(400)
+				isLast = isLast + 1
 			Next
 		Else
 			SendMGcode($"G1 E${sLen} F${speed2}"$) : Sleep(100)
 		End If
-		btnStuff.Text = "Extrude" & CRLF & "5mm more"
+		btnStuff.Text = "Extrude" & CRLF & "5mm More"
 	
 	End If
 	

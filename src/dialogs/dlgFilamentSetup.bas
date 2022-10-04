@@ -95,7 +95,7 @@ Private Sub ShowInfoLoad_Click
 	msg.Append("To overcome that we divide the extrude in segments. ")
 	msg.Append("So if your printer has a path of 500mm we set it up like this:").Append(CRLF)
 	msg.Append("Extrude Length: '160,160,150,30' <-- total 500mm").Append(CRLF)
-	msg.Append("Extrude Speed: '2500,60' <-- last segment above will be extruded at 60 speed. ")
+	msg.Append("Extrude Speed:  '2500,60' <-- last segment above will be extruded at 60mm/s speed. ")
 	msg.Append("Unload works in reverse.")
 	msg.Append(CRLF)
 	Dim msgDlg As dlgMsgBox

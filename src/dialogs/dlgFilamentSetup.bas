@@ -85,7 +85,7 @@ Private Sub BuildAboutLabel
 	lblAboutLoadUnload.Text = "Help"
 	lblAboutLoadUnload.TextColor = Colors.White
 	lblAboutLoadUnload.TextSize = 20
-	mPrefDlg.Dialog.Base.AddView(lblAboutLoadUnload,14dip,mPrefDlg.Dialog.Base.Height - 47dip,280dip,36dip)
+	mPrefDlg.Dialog.Base.AddView(lblAboutLoadUnload,14dip,mPrefDlg.Dialog.Base.Height - 47dip,80dip,36dip)
 End Sub
 
 

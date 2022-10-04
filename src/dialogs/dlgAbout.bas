@@ -35,8 +35,9 @@ Public Sub Show
 	mDialog.Initialize(mMainObj.Root)
 	
 	Dim p As B4XView = xui.CreatePanel("")
-	p.SetLayoutAnimated(0, 0, 0, 580dip,280dip)
-		'IIf(guiHelpers.gScreenSizeAprox < 6,460dip,560dip),IIf(guiHelpers.gScreenSizeAprox < 6,224dip,280dip))
+	Dim w As Float = IIf(guiHelpers.gScreenSizeAprox < 6,460dip,640dip)
+	p.SetLayoutAnimated(0, 0, 0, w,300dip)
+		
 		
 	p.LoadLayout("viewAbout")
 	BuildGUI
@@ -67,20 +68,24 @@ Private Sub BuildAboutLabel
 	lblCheck4NewVer.TextColor = Colors.White
 	lblCheck4NewVer.TextSize = 20
 	mDialog.Base.AddView(lblCheck4NewVer,14dip,mDialog.Base.Height - 47dip,280dip,36dip)
+	
+	lblCheck4NewVer.Visible = False '--- just disable for the moment
+	
 End Sub
 
 Private Sub Check4NewVer_Click
 '	mDialog.Close(-1) '--- close it, exit dialog	
+	
 End Sub
 
 
 Private Sub GetAboutText() As String
 	Dim msg As StringBuilder : msg.Initialize
-	msg.Append("OctoTouchController " & gblConst.VERSION).Append(CRLF)
-	msg.Append("A dedicated touch screen controller").Append(CRLF)
-	msg.Append("for Octoprint using older Android devices").Append(CRLF).Append(CRLF)
-	msg.Append("(c)sadLogic 2022, Kherson Ukraine!").Append(CRLF)
-	msg.Append("Open Source - Freeware")
+	msg.Append("OctoTouchController™ " & gblConst.VERSION).Append(CRLF)
+	msg.Append("A dedicated touch screen controller for Octoprint using older Android devices").Append(CRLF).Append(CRLF)
+	msg.Append("(©)sadLogic 2022").Append(CRLF)
+	msg.Append("Kherson Ukraine!").Append(CRLF)
+	'msg.Append("Open Source / Freeware")
 	Return msg.ToString
 End Sub
 

@@ -90,17 +90,21 @@ End Sub
 
 
 Private Sub ShowInfoLoad_Click
-	Dim msg As StringBuilder : msg.Initialize
-	msg.Append("Marlin firmware has a flag to stop extruding large amounts: EXTRUDE_MAXLENGTH").Append(CRLF)
-	msg.Append("To overcome that we divide the extrude in segments. ")
-	msg.Append("So if your printer has a path of 500mm we set it up like this:").Append(CRLF)
-	msg.Append("Extrude Length: '160,160,150,30' <-- total 500mm").Append(CRLF)
-	msg.Append("Extrude Speed:  '2500,60' <-- last segment above will be extruded at 60mm/s speed. ")
-	msg.Append("Unload works in reverse.")
-	msg.Append(CRLF)
+	
+	Dim s As String= $"Marlin firmware uses the EXTRUDE_MAXLENGTH setting to stop extruding large amounts.
+To ensure that that you don't hit the limit, divide the extrude length into segments.
+For example, if your printer has a path of 500mm, set it up like this, each segment
+length less then the EXTRUDE_MAXLENGTH:
+
+Extrude Length: `160,160,150,30` (total is 500mm)
+Extrude Speed: `2500,60` (last segment is extruded at 60mm/s)
+
+Note: Unload works in reverse."$
+	
+
 	Dim msgDlg As dlgMsgBox
-	msgDlg.Initialize(mainObj.root,"About Setting up Load/UnLoad",560dip, 180dip,False)
-	Wait For (msgDlg.Show(msg.tostring, gblConst.MB_ICON_INFO,"OK","","")) Complete (res As Int)
+	msgDlg.Initialize(mainObj.root,"About Setting up Load/UnLoad",660dip, 240dip,False)
+	Wait For (msgDlg.Show(s, gblConst.MB_ICON_INFO,"OK","","")) Complete (res As Int)
 End Sub
 
 

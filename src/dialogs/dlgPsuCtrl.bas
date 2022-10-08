@@ -113,8 +113,12 @@ Public Sub SendCmd(cmd As String)As ResumableSub'ignore
 			Wait For (sm.SendRequest($"http://${mIPaddr}/cm?cmnd=Power%20${cmd}"$)) Complete(s As String)
 			
 		Case "octo_k"
-			mMainObj.oMasterController.cn.PostRequest( _
-				oc.cPSU_CONTROL_K.Replace("!ONOFF!",IIf(cmd.ToLowerCase ="on","On","Off")))
+			If oc.isConnected Then
+				mMainObj.oMasterController.cn.PostRequest( _
+					oc.cPSU_CONTROL_K.Replace("!ONOFF!",IIf(cmd.ToLowerCase ="on","On","Off")))
+			Else
+				CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Octoprint not connected", 2000)
+			End If
 		
 		Case Else
 			msg = "PSU control config problem"

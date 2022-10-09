@@ -47,12 +47,16 @@ Public Sub Show
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	
 	Dim h As Float
-	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
-		h = 62%y
-	Else If guiHelpers.gScreenSizeAprox >= 8 Then
-		h = 55%y
-	Else '--- 4 to 5.9 inch
-		h = 80%y
+	If guiHelpers.gIsLandScape Then
+		If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
+			h = 62%y
+		Else If guiHelpers.gScreenSizeAprox >= 8 Then
+			h = 55%y
+		Else '--- 4 to 5.9 inch
+			h = 80%y
+		End If
+	Else
+		h = 490dip
 	End If
 	
 	mGeneralDlg.Initialize(mainObj.root, "General Settings", 360dip, h)

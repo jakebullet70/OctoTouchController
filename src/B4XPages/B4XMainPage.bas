@@ -63,7 +63,7 @@ Public Sub Initialize
 	Starter.InitLogCleanup
 	
 	'  debug - remove for release
-	fileHelpers.DeleteFiles(xui.DefaultFolder,"*.log")
+	'fileHelpers.DeleteFiles(xui.DefaultFolder,"*.log")
 	'  debug - remove for release
 	
 	
@@ -308,7 +308,12 @@ Private Sub PopupMainOptionMenu
 	Dim o1 As dlgListbox
 	o1.Initialize(Me,"Options Menu",Me,"OptionsMenu_Event")
 	o1.IsMenu = True
-	o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,310dip,260dip),300dip,popUpMemuItems)
+	If guiHelpers.gIsLandScape Then
+		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,310dip,260dip),300dip,popUpMemuItems)
+	Else
+		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,360dip,260dip),300dip,popUpMemuItems)
+	End If
+	
 	
 End Sub
 
@@ -487,7 +492,13 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 
 	Dim Const JUSTIFY_BUTTON_2_LEFT As Boolean = True
 	Dim ErrorDlg As dlgMsgBox
-	ErrorDlg.Initialize(Root,"Connetion Problem",560dip, 180dip,JUSTIFY_BUTTON_2_LEFT)
+	Dim h,w As Float
+	If guiHelpers.gIsLandScape Then
+		h = 180dip : w = 560dip
+	Else
+		h = 310dip : w = 360dip
+	End If
+	ErrorDlg.Initialize(Root,"Connetion Problem",w, h,JUSTIFY_BUTTON_2_LEFT)
 	Wait For (ErrorDlg.Show(guiHelpers.GetConnectionText(connectedButError),gblConst.MB_ICON_WARNING, _
 					"RETRY",PowerCtrlAvail,"SETUP")) Complete (res As Int)
 	

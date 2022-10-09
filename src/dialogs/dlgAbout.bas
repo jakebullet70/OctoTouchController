@@ -35,7 +35,13 @@ Public Sub Show
 	mDialog.Initialize(mMainObj.Root)
 	
 	Dim p As B4XView = xui.CreatePanel("")
-	Dim w As Float = IIf(guiHelpers.gScreenSizeAprox < 6,460dip,640dip)
+	Dim w As Float 
+	If guiHelpers.gIsLandScape Then
+		w = IIf(guiHelpers.gScreenSizeAprox < 6,460dip,640dip)
+	Else
+	 	w = IIf(guiHelpers.gScreenSizeAprox < 6,440dip,540dip)
+	End If
+	
 	p.SetLayoutAnimated(0, 0, 0, w,300dip)
 		
 		

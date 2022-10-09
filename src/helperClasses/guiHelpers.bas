@@ -56,14 +56,6 @@ Public Sub EnableDisableBtns(btnArr() As B4XView,EnableDisable As Boolean)
 End Sub
 
 
-Public Sub GetAboutText() As String
-	Dim msg As StringBuilder : msg.Initialize
-	msg.Append("OctoTouchController " & gblConst.VERSION).Append(CRLF)
-	msg.Append("A dedicated touch screen controller").Append(CRLF).Append("for Octoprint using older Android devices").Append(CRLF)
-	msg.Append(CRLF).Append("(c)sadLogic 2022 - Open Source - Freeware").Append(CRLF)
-	Return msg.ToString
-End Sub
-
 Public Sub GetConnectionText(connectedButError As Boolean) As String
 	
 	Dim Msg As StringBuilder : Msg.Initialize

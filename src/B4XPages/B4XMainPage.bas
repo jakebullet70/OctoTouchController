@@ -320,13 +320,11 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 	Select Case value
 		
 		Case "ab" '--- about
-			Dim mb As dlgMsgBox : mb.Initialize(Root,"About",560dip, 200dip,False)
-			Wait For (mb.Show( _
-				 guiHelpers.GetAboutText() ,"splash.png","OK","","")) Complete (res As Int)
+			Dim o2 As dlgAbout : o2.Initialize(Me)
+			o2.Show
 			
 		Case "gn"  '--- general settings
-			Dim o3 As dlgGeneralOptions
-			o3.Initialize(Me)
+			Dim o3 As dlgGeneralOptions : o3.Initialize(Me)
 			o3.Show
 			
 		Case "oc"  '--- octo setup
@@ -345,8 +343,7 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			PopupFunctionOptionsMnu
 			
 		Case "rt" '---read text file
-			Dim vt As dlgViewText
-			vt.Initialize(Me,"Read Text")
+			Dim vt As dlgViewText : vt.Initialize(Me,"Read Text")
 			Dim f As String = Gettxtfile
 			If f <> "" Then 
 				vt.Show(f)

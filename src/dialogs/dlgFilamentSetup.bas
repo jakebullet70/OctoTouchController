@@ -14,10 +14,9 @@ Sub Class_Globals
 	Private const mModule As String = "dlgFilamentSetup"' 'ignore
 	Private mainObj As B4XMainPage
 	Private xui As XUI
-	Private mDlg As sadPreferencesDialog
+	Private mPrefDlg As sadPreferencesDialog
 	
-	'-------------------------------------------------------------
-	
+	Private lblAboutLoadUnload As  Label
 	
 End Sub
 
@@ -38,8 +37,9 @@ public Sub CreateDefaultFile
 						 gblConst.filHomeBeforePark: "true", _
 						 gblConst.filXPark: "0",gblConst.filYPark: "0", _
 						 gblConst.filZLiftRel: "30", gblConst.filParkSpeed: "6000", _
-						 gblConst.filUnloadLen:"500", gblConst.filUnloadSpeed:"1600", _
-						 gblConst.filLoadLen:"50",gblConst.filLoadSpeed:"60"))
+						 gblConst.filUnloadLen:"30,150,150,150", gblConst.filUnloadSpeed:"60,2600", _
+						 gblConst.filLoadLen:"150,150,150,30",gblConst.filLoadSpeed:"2600,60", _
+						 gblConst.filSmallExtBeforeUload:"true"))
 						 
 	End If
 
@@ -58,14 +58,16 @@ Public Sub Show
 		h = 80%y
 	End If
 	
-	mDlg.Initialize(mainObj.root, "Filament Change Settings", 360dip, h)
-	mDlg.LoadFromJson(File.ReadString(File.DirAssets,"dlgFilamentCtrl.json"))
-	mDlg.SetEventsListener(Me,"dlgEvent")
+	mPrefDlg.Initialize(mainObj.root, "Filament Change Settings", 360dip, h)
+	mPrefDlg.LoadFromJson(File.ReadString(File.DirAssets,"dlgFilamentCtrl.json"))
+	mPrefDlg.SetEventsListener(Me,"dlgEvent")
 	
-	guiHelpers.ThemePrefDialogForm(mDlg)
-	mDlg.PutAtTop = False
-	Dim RS As ResumableSub = mDlg.ShowDialog(Data, "OK", "CANCEL")
-	guiHelpers.ThemeInputDialogBtnsResize(mDlg.Dialog)
+	guiHelpers.ThemePrefDialogForm(mPrefDlg)
+	mPrefDlg.PutAtTop = False
+	Dim RS As ResumableSub = mPrefDlg.ShowDialog(Data, "OK", "CANCEL")
+	mPrefDlg.Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
+	guiHelpers.ThemeInputDialogBtnsResize(mPrefDlg.Dialog)
+	BuildAboutLabel
 	
 	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
@@ -75,6 +77,34 @@ Public Sub Show
 		CallSub(mainObj.oPageCurrent,"Set_focus")
 	End If
 	
+End Sub
+
+
+Private Sub BuildAboutLabel
+	lblAboutLoadUnload.Initialize("ShowInfoLoad")
+	lblAboutLoadUnload.Text = "Help"
+	lblAboutLoadUnload.TextColor = Colors.White
+	lblAboutLoadUnload.TextSize = 20
+	mPrefDlg.Dialog.Base.AddView(lblAboutLoadUnload,14dip,mPrefDlg.Dialog.Base.Height - 47dip,80dip,36dip)
+End Sub
+
+
+Private Sub ShowInfoLoad_Click
+	
+	Dim s As String= $"Marlin firmware uses the EXTRUDE_MAXLENGTH setting to stop extruding large amounts.
+To ensure that that you don't hit the limit, divide the extrude length into segments.
+For example, if your printer has a path of 500mm, set it up like this, each segment
+length less then the EXTRUDE_MAXLENGTH:
+
+Extrude Length: `160,160,150,30` (total is 500mm)
+Extrude Speed: `2500,60` (last segment is extruded at 60mm/s)
+
+Note: Unload works in reverse."$
+	
+
+	Dim msgDlg As dlgMsgBox
+	msgDlg.Initialize(mainObj.root,"About Setting up Load/UnLoad",660dip, 240dip,False)
+	Wait For (msgDlg.Show(s, gblConst.MB_ICON_INFO,"OK","","")) Complete (res As Int)
 End Sub
 
 
@@ -100,7 +130,7 @@ End Sub
 
 
 Private Sub dlgEvent_BeforeDialogDisplayed (Template As Object)
-	guiHelpers.pref_BeforeDialogDisplayed(mDlg,Template)
+	guiHelpers.pref_BeforeDialogDisplayed(mPrefDlg,Template)
 End Sub
 
 

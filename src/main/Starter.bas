@@ -14,18 +14,21 @@ Sub Process_Globals
 	Public tmrTimerCallSub As CallSubUtils
 	Public FirstRun As Boolean = True
 	Public kvs As KeyValueStore
-	Public Provider As FileProvider
+	
+	'Public Provider As FileProvider 
+	
 	Public db As InMemDB
 	
 	Private xui As XUI
 	Private logcat As LogCat
+	
 End Sub
 
 Sub Service_Create '--- This is the program entry point.
 	
 	tmrTimerCallSub.Initialize
 	kvs.Initialize(xui.DefaultFolder, "kvs.db3")
-	Provider.Initialize
+	'Provider.Initialize
 	
 	If kvs.ContainsKey("install_date") = False Then
 		kvs.Put("install_date",DateTime.Now)

@@ -12,7 +12,7 @@ Sub Process_Globals
 	
 	Public Const DEGREE_SYMBOL As String = "°" 
 	Public const APP_TITLE As String = "OctoTC ™"
-	Public const VERSION As String = "V1.0.0 - Beta 7"
+	Public const VERSION As String = "V1.0.1"
 	
 	Public Const PRINTER_SETTING_BASE_FILE_NAME As String = "p_settings"
 	Public Const PRINTER_DESC As String = "desc"
@@ -70,7 +70,7 @@ Sub Process_Globals
 	Public filLoadLen As String = "llen", filLoadSpeed As String = "lspd"
 	Public filYPark As String = "yp",filXPark As String = "xp"
 	Public filZLiftRel As String = "zrel", filParkSpeed As String = "pmspd"
-	Public filShow As String = "mnu"
+	Public filShow As String = "mnu", filSmallExtBeforeUload As String = "extb"
 	
 	
 End Sub

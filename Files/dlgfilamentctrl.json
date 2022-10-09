@@ -63,26 +63,32 @@
             "required": false
         },
         {
-            "title": "Unload Length",
-            "type": "Number",
+            "title": "Small extrusion before unload",
+            "type": "Boolean",
+            "key": "extb",
+            "required": false
+        },
+        {
+            "title": "Unload Length (30,180,180)",
+            "type": "Text",
             "key": "ulen",
             "required": true
         },
         {
-            "title": "Unload Speed",
-            "type": "Number",
+            "title": "Unload Speeds (60,2500)",
+            "type": "Text",
             "key": "uspd",
             "required": true
         },
         {
-            "title": "Load Length",
-            "type": "Number",
+            "title": "Load Length (180,180,30)",
+            "type": "Text",
             "key": "llen",
             "required": true
         },
         {
-            "title": "Load Speed",
-            "type": "Number",
+            "title": "Load Speeds (2500,60)",
+            "type": "Text",
             "key": "lspd",
             "required": true
         }

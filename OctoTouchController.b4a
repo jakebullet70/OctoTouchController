@@ -46,7 +46,7 @@ FileGroup21=Default Group
 FileGroup22=MISC
 FileGroup23=DIALOG_CUSTOM_VIEWS
 FileGroup24=DIALOG_CUSTOM_VIEWS
-FileGroup25=VIEWS_PAGES
+FileGroup25=DIALOG_CUSTOM_VIEWS
 FileGroup26=DIALOG_CUSTOM_VIEWS
 FileGroup27=DIALOG_CUSTOM_VIEWS
 FileGroup28=DIALOG_CUSTOM_VIEWS
@@ -145,7 +145,7 @@ Version=11.8
 	#VersionCode: 10
 	#VersionName: 1.0
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
-	#SupportedOrientations: landscape
+	#SupportedOrientations: unspecified
 	#CanInstallToExternalStorage: false
 #End Region
 
@@ -153,7 +153,7 @@ Version=11.8
 	#FullScreen: True
 	#IncludeTitle: False
 	'#DebuggerForceFullDeployment: true
-	#DebuggerForceStandardAssets: true
+	'#DebuggerForceStandardAssets: true
 	#BridgeLogger: True
 	
 #End Region
@@ -252,6 +252,9 @@ Private Sub SetupFullScrn
 	End If
 	
 	guiHelpers.gScreenSizeAprox = lv.ApproximateScreenSize
+	guiHelpers.gIsLandScape = Not (lv.Height > lv.Width)
+	guiHelpers.gWidth = lv.Width
+	guiHelpers.gHeight = lv.Height
 	Dim ac As Accessibility : guiHelpers.gFscale = ac.GetUserFontScale
 	
 End Sub

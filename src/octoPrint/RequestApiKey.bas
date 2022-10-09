@@ -150,7 +150,12 @@ private Sub Wait4Key(poleLocation As String)
 	Dim mapOut As Map
 	Dim resultStr As String = ""
 	Dim AllGood As Boolean = False
-	Dim ErrMsgDeniedOrTimeout As String = "Octoprint Key Wait Error: Request Denied Or Timed Out"
+	
+	Dim ErrMsgDeniedOrTimeout As String = "Octoprint Key Wait Error." & CRLF & "Request Denied Or Timed Out."
+	If guiHelpers.gIsLandScape Then
+		ErrMsgDeniedOrTimeout = ErrMsgDeniedOrTimeout.Replace(CRLF," ")
+	End If
+	 
 	
 	Do While (loopNum < MaxLoop) Or KeyDenied Or AllGood
 

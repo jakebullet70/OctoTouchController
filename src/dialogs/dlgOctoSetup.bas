@@ -167,7 +167,8 @@ Private Sub btnCheckConnection_Click
 	If msg.Length <> 0 Then
 		B4XLoadingIndicator1.Hide
 		Dim mb As dlgMsgBox
-		mb.Initialize(mMainObj.Root,"Problem",480dip, 220dip,False)
+		Dim w As Float = IIf(guiHelpers.gIsLandScape,460dip,390dip)
+		mb.Initialize(mMainObj.Root,"Problem",w, 220dip,False)
 		Wait For (mb.Show(msg,gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
 		Return
 	End If
@@ -205,7 +206,10 @@ Public Sub connect_Complete (result As Object, success As Object)
 	If ValidConnection Then
 		guiHelpers.Show_toast("Connection OK",3000)
 	Else
-		Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",480dip, 220dip,False)
+		
+		Dim w As Float = IIf(guiHelpers.gIsLandScape,500dip,390dip)
+
+		Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",w, 220dip,False)
 		Wait For (mb.Show(guiHelpers.GetConnectFailedMsg,gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
 	End If
 	
@@ -216,16 +220,21 @@ End Sub
 #region "REQUEST OCTO KEY"
 Private Sub btnGetOctoKey_Click
 	
-	If txtPrinterPort.Text.Length = 0 Then _
-		txtPrinterPort.Text = "80"
+	If txtPrinterPort.Text.Length = 0 Then txtPrinterPort.Text = "80"
 
+	Dim w As Float
+	If guiHelpers.gIsLandScape Then
+		w = 500dip
+	Else
+		w = 390dip
+	End If
+	
 	If txtPrinterIP.Text.Length = 0 Then
 		'--- custom dlgMSgBox not working inside another dialog object
-		'Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",540dip, 200dip)
-		'Wait For (mb.Show("Please check if your IP and Port Are Set", _
-		'			gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
-		Dim oo As Object = xui.Msgbox2Async("Please check if your IP and Port Are Set", "Problem", "OK", "", "",Null)
-		Wait For (oo) Msgbox_Result (result1 As Int)
+		Dim mb As dlgMsgBox 
+		mb.Initialize(mMainObj.Root,"Problem",w, 200dip,False)
+		Wait For (mb.Show("Please check if your IP and Port Are Set", _
+					gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
 		Return
 	End If
 	
@@ -235,7 +244,8 @@ Private Sub btnGetOctoKey_Click
 	msg.Append("You will need to click OK in Octoprint to confirm that this app can have access").Append(CRLF & CRLF)
 	msg.Append("Press OK when ready") '.Append(CRLF)
 
-	Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Request Octo Key",500dip, 220dip,False)
+	Dim mb As dlgMsgBox 
+	mb.Initialize(mMainObj.Root,"Request Octo Key", w, 220dip,False)
 	Wait For (mb.Show(msg.ToString,gblConst.MB_ICON_INFO,"OK","","")) Complete (res As Int)
 	'Dim o1 As Object = xui.Msgbox2Async(msg.ToString, "About", "OK", "", "CANCEL",Null)
 	'Wait For (o1) Msgbox_Result (res As Int)
@@ -271,7 +281,8 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 			ValidConnection = True
 			guiHelpers.Show_toast("Requested API key OK!",1800)
 		Else
-			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",500dip, 220dip,False)
+			Dim w As Float = IIf(guiHelpers.gIsLandScape,500dip,390dip)
+			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",w, 220dip,False)
 			Wait For (mb.Show(result.As(String),gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
 		End If
 		

@@ -235,7 +235,8 @@ Private Sub btnPresetMaster_Click
 	
 	Dim o1 As dlgListbox
 	o1.Initialize(mMainObj,"Heater Presets",Me,"TempChange_Presets")
-	o1.Show(220dip,450dip,mMainObj.oMasterController.mapAllHeatingOptions)
+	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,390dip)
+	o1.Show(220dip,w,mMainObj.oMasterController.mapAllHeatingOptions)
 	
 End Sub
 
@@ -400,7 +401,6 @@ Private Sub btnAction_Click
 			Else
 				
 				CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
-				Sleep(50) '--- do we need this?
 				
 				If oc.isCanceling = True Then
 					guiHelpers.Show_toast("Printer Is Canceling, Please Wait...",2000)
@@ -409,15 +409,14 @@ Private Sub btnAction_Click
 				
 				guiHelpers.Show_toast("Starting Print...",2000)
 				mMainObj.oMasterController.cn.PostRequest(oc.cCMD_PRINT)
-				'Sleep(500)
-				'lblPrintStats.RefreshView
 
 			End If
 			
 		Case "cancel"
-			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Question",540dip, 170dip,False)
+			Dim w As Float = IIf(guiHelpers.gIsLandScape,500dip,380dip)
+			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Question",w, 170dip,False)
 			Wait For (mb.Show("Do you want to cancel this print?",gblConst.MB_ICON_QUESTION, _
-			"Yes - Cancel It","","No")) Complete (res As Int)
+							"Yes - Cancel It","","No")) Complete (res As Int)
 
 			If res = xui.DialogResponse_Positive Then
 				guiHelpers.Show_toast("Canceling...",2000)

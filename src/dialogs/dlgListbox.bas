@@ -57,8 +57,15 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	ListTemplate.CustomListView1.PressedColor = clrTheme.BackgroundHeader
 	ListTemplate.CustomListView1.DefaultTextColor = clrTheme.txtNormal
 	ListTemplate.options = objHelpers.Map2List(mDataMap,True)
+	
+	
 	Dim l As B4XView = ListTemplate.CustomListView1.DesignerLabel
-	l.Font = xui.CreateDefaultFont(NumberFormat2(26 / guiHelpers.gFscale,1,0,0,False))
+	If guiHelpers.gIsLandScape Then
+		l.Font = xui.CreateDefaultFont(NumberFormat2(26 / guiHelpers.gFscale,1,0,0,False))
+	Else
+		l.Font = xui.CreateDefaultFont(NumberFormat2(22 / guiHelpers.gFscale,1,0,0,False))
+	End If
+	
 	
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)
 	Dim rs As ResumableSub = mDialog.ShowTemplate(ListTemplate, "", "",IIf(IsMenu,"CLOSE","CANCEL"))

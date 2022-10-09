@@ -39,7 +39,7 @@ Public Sub Show
 	If guiHelpers.gIsLandScape Then
 		w = IIf(guiHelpers.gScreenSizeAprox < 6,460dip,640dip)
 	Else
-	 	w = IIf(guiHelpers.gScreenSizeAprox < 6,440dip,540dip)
+	 	w = IIf(guiHelpers.gScreenSizeAprox < 6,guiHelpers.gWidth - 40dip,520dip)
 	End If
 	
 	p.SetLayoutAnimated(0, 0, 0, w,300dip)

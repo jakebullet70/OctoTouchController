@@ -303,7 +303,6 @@ Private Sub PopupMainOptionMenu
 		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
 		popUpMemuItems.Remove("Octoprint Connection")
 	End If
-	Sleep(20)
 	
 	Dim o1 As dlgListbox
 	o1.Initialize(Me,"Options Menu",Me,"OptionsMenu_Event")
@@ -311,7 +310,7 @@ Private Sub PopupMainOptionMenu
 	If guiHelpers.gIsLandScape Then
 		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,310dip,260dip),300dip,popUpMemuItems)
 	Else
-		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,360dip,260dip),300dip,popUpMemuItems)
+		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,380dip,260dip),300dip,popUpMemuItems)
 	End If
 	
 	

@@ -22,7 +22,7 @@ public Sub TempStatus(s As String)
 	Dim CallingSub As String = "TempStatus"
 	Dim m, mTemp, mBed, mTool1 As Map
 	Dim jp As JSONParser
-	
+	Dim tmpTool, tmpBed As Int '--- tmp vars to stip the decimals
 	's = File.ReadString(File.DirAssets,"ptest.txt")
 	
 	Try
@@ -47,7 +47,8 @@ public Sub TempStatus(s As String)
 		End Try
 		Try	
 			TargetBedCheck = CheckNull0(mBed.Get("target"))
-			oc.BedActual   = CheckNull0(mBed.Get("actual")) & gblConst.DEGREE_SYMBOL & "C"
+			tmpBed = CheckNull0(mBed.Get("actual"))
+			oc.BedActual   = tmpBed & gblConst.DEGREE_SYMBOL & "C"
 			oc.BedTarget   = TargetBedCheck.As(String)  & gblConst.DEGREE_SYMBOL & "C"
 		Catch
 			logMe.LogIt2("temp 11:"$ & LastException,mModule,CallingSub)
@@ -56,7 +57,6 @@ public Sub TempStatus(s As String)
 		'-----------------------------------------------------
 		Try
 			mTool1 = mTemp.Get("tool0").As(Map)
-		
 		Catch
 			logMe.LogIt2("temp 2:"$ & LastException,mModule,CallingSub)
 		End Try
@@ -64,7 +64,8 @@ public Sub TempStatus(s As String)
 			TargetToolCheck = CheckNull0(mTool1.Get("target"))
 			oc.Tool1TargetReal = CheckNull0(mTool1.Get("target"))
 			oc.Tool1ActualReal = CheckNull0(mTool1.Get("actual"))
-			oc.Tool1Actual = CheckNull0(mTool1.Get("actual")) & gblConst.DEGREE_SYMBOL & "C"
+			tmpTool = CheckNull0(mTool1.Get("actual"))
+			oc.Tool1Actual = tmpTool & gblConst.DEGREE_SYMBOL & "C"
 			oc.Tool1Target = TargetToolCheck.As(String) & gblConst.DEGREE_SYMBOL & "C"
 		Catch
 			logMe.LogIt2("temp 22:"$ & LastException,mModule,CallingSub)

@@ -17,6 +17,9 @@ Sub Process_Globals
 	Public gScreenSizeDPI As Int = 0
 	Public gIsLandScape As Boolean 
 	Public gFscale As Double
+	Public gWidth As Float
+	Public gHeight As Float
+	
 	
 End Sub
 

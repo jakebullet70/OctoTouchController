@@ -103,7 +103,8 @@ Note: Unload works in reverse."$
 	
 
 	Dim msgDlg As dlgMsgBox
-	msgDlg.Initialize(mainObj.root,"About Setting up Load/UnLoad",660dip, 240dip,False)
+	Dim w As Float = IIf(guiHelpers.gIsLandScape,660dip,guiHelpers.gWidth-40dip)
+	msgDlg.Initialize(mainObj.root,"About Setting up Load/UnLoad",w, 240dip,False)
 	Wait For (msgDlg.Show(s, gblConst.MB_ICON_INFO,"OK","","")) Complete (res As Int)
 End Sub
 

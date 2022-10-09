@@ -56,7 +56,8 @@ Public Sub Show(firstRun As Boolean)
 	Dim w, h As Float
 	
 	If guiHelpers.gScreenSizeAprox < 8 Then
-		w = 80%x : h = 74%y
+		w = 80%x
+		h = IIf(guiHelpers.gIsLandScape,74%y,65%y)
 	Else
 		w = 74%x : h = 70%y
 	End If
@@ -234,7 +235,7 @@ Private Sub btnGetOctoKey_Click
 	msg.Append("You will need to click OK in Octoprint to confirm that this app can have access").Append(CRLF & CRLF)
 	msg.Append("Press OK when ready") '.Append(CRLF)
 
-	Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"About",500dip, 220dip,False)
+	Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Request Octo Key",500dip, 220dip,False)
 	Wait For (mb.Show(msg.ToString,gblConst.MB_ICON_INFO,"OK","","")) Complete (res As Int)
 	'Dim o1 As Object = xui.Msgbox2Async(msg.ToString, "About", "OK", "", "CANCEL",Null)
 	'Wait For (o1) Msgbox_Result (res As Int)

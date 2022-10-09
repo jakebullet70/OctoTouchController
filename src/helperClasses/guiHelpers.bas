@@ -15,6 +15,7 @@ Sub Process_Globals
 	
 	Public gScreenSizeAprox As Double = 7 '--- asume a small tablet
 	Public gScreenSizeDPI As Int = 0
+	Public gIsLandScape As Boolean 
 	Public gFscale As Double
 	
 End Sub
@@ -65,8 +66,7 @@ Public Sub GetConnectionText(connectedButError As Boolean) As String
 		Msg.Append("Check that Octoprint is connected to the printer?").Append(CRLF)
 		Msg.Append("Make sure you can print from the Octoprint UI.")
 	Else
-		Msg.Append("No connection to Octoprint").Append(CRLF)
-		Msg.Append("Is Octoprint turned on?")
+		Msg.Append("No connection to Octoprint. Is Octoprint turned on?")
 		Msg.Append(CRLF).Append("Connected to the printer?")
 	End If
 	

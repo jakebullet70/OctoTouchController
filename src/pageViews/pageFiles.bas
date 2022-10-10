@@ -518,7 +518,6 @@ Private Sub SendDeleteCmdAndRemoveFromGrid
 	'Sleep(500)
 	
 	guiHelpers.Show_toast("Deleting File",1200)
-	Sleep(0)
 	
 	'--- delete from thumbnail cache
 	fileHelpers.SafeKill(mCurrentFileInfo.myThumbnail_filename_disk)

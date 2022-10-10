@@ -33,6 +33,7 @@ Sub Class_Globals
 	Private lblHeaderBed,lblHeaderTool As B4XView
 	
 	Private ivPreview As lmB4XImageViewX
+	Private mTmpTemps As String
 	
 End Sub
 
@@ -46,7 +47,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	mPnlMain.SetLayoutAnimated(0,0,masterPanel.top,masterPanel.Width,masterPanel.Height)
 	mPnlMain.LoadLayout("pagePrinting")
 	
-	Build_GUI
+	BuildGUI
 	
 End Sub
 
@@ -72,7 +73,7 @@ public Sub Lost_focus()
 	mPnlMain.SetVisibleAnimated(500,False)
 End Sub
 
-Private Sub Build_GUI
+Private Sub BuildGUI
 	
 	guiHelpers.SetTextColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel, _
 								lblPrintStats1.BaseLabel,lblPrintStats2,lblPrintStats3, _
@@ -95,18 +96,19 @@ Private Sub Build_GUI
 	'--- scale font
 	Dim fn As B4XFont = _
 			xui.CreateDefaultFont(NumberFormat2(btnCancel.TextSize / guiHelpers.gFscale,1,0,0,False))
-	'- 	IIf(guiHelpers.gFscale > 1,4,0))
+	
 	btnCancel.Font = fn
 	btnPause.Font  = fn
 	btnPrint.Font  = fn
 	
+	'---thumbnail preview is same size as progressbar
 	ivPreview.Width  = CircularProgressBar1.mBase.Width
 	ivPreview.Height = CircularProgressBar1.mBase.Height
 	ivPreview.top    = CircularProgressBar1.mBase.Top
 	ivPreview.Left   = CircularProgressBar1.mBase.Left
 	
 	'--- figure out best font size
-	lblPrintStatsTMP.Text   = $"Job TTL Time:0:00:00:00"$ : Sleep(20)
+	lblPrintStatsTMP.Text   = $"Total Time:0:00:00:00"$ 
 	lblPrintStats2.TextSize = lblPrintStatsTMP.BaseLabel.Font.Size
 	lblPrintStats3.TextSize = lblPrintStats2.TextSize
 	
@@ -181,8 +183,8 @@ Public Sub Update_Printer_Stats
 	End If
 	
 	If oc.JobPrintTime <> "-" Then
-		lblPrintStats2.Text = $"Job TTL Time:${fnc.ConvertSecondsToString(oc.JobPrintTime)}"$
-		lblPrintStats3.Text = $"Job Time Left:${fnc.ConvertSecondsToString(oc.JobPrintTimeLeft)}"$
+		lblPrintStats2.Text = $"Total Time:${fnc.ConvertSecondsToString(oc.JobPrintTime)}"$
+		lblPrintStats3.Text = $"Time Left:${fnc.ConvertSecondsToString(oc.JobPrintTimeLeft)}"$
 	Else
 		lblPrintStats2.Text = ""
 		lblPrintStats3.Text = ""
@@ -210,17 +212,16 @@ Public Sub Update_Printer_Temps
 	
 	'--- temps, only update the label if it has changed,
 	'--- the Autosize label ctrl flickers in some cases
-	Dim tmp As String
 	
-	tmp = IIf(oc.tool1Target = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.tool1Target)
-	If lblToolTemp.Text <> tmp Then
-		lblToolTemp.Text = tmp : Sleep(0)
+	mTmpTemps = IIf(oc.tool1Target = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.tool1Target)
+	If lblToolTemp.Text <> mTmpTemps Then
+		lblToolTemp.Text = mTmpTemps
 		lblToolTemp.BaseLabel.Font = xui.CreateDefaultFont(NumberFormat2(lblToolTemp.BaseLabel.TextSize / guiHelpers.gFscale,1,0,0,False) - 3)
 	End If
 	
-	tmp = IIf(oc.BedTarget = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.BedTarget)
-	If lblBedTemp.Text <> tmp Then
-		lblBedTemp.Text = tmp : Sleep(0)
+	mTmpTemps = IIf(oc.BedTarget = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.BedTarget)
+	If lblBedTemp.Text <> mTmpTemps Then
+		lblBedTemp.Text = mTmpTemps
 		lblBedTemp.BaseLabel.Font = xui.CreateDefaultFont(NumberFormat2(lblBedTemp.BaseLabel.TextSize / guiHelpers.gFscale,1,0,0,False) - 3)
 	End If
 	

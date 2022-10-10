@@ -90,7 +90,6 @@ End Sub
 '--- just an easy wat to Toast!!!!
 Public Sub Show_toast(msg As String, ms As Int)
 	CallSub3(B4XPages.MainPage,"Show_Toast", msg, ms)
-	Sleep(0)
 End Sub
 
 public Sub HidePageParentObjs(obj() As B4XView)

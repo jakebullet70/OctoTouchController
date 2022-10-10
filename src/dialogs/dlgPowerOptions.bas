@@ -61,7 +61,6 @@ Public Sub Show
 	mPowerDlg.PutAtTop = False
 	Dim RS As ResumableSub = mPowerDlg.ShowDialog(Data, "OK", "Cancel")
 	guiHelpers.ThemeInputDialogBtnsResize(mPowerDlg.Dialog)
-	Sleep(0)
 		
 	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then

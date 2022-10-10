@@ -473,8 +473,10 @@ Private Sub LoadThumbNail
 			guiHelpers.Show_toast("Getting Thumbnail",2200)
 			If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
 		
-			Dim link As String = $"http://${mMainObj.oMasterController.cn.gIP}:${mMainObj.oMasterController.cn.gPort}/"$ & currentFileInfo.Thumbnail
-			mMainObj.oMasterController.cn.Download_AndSaveFile(link,currentFileInfo.myThumbnail_filename_disk)
+			mMainObj.oMasterController.cn.Download_AndSaveFile( _
+					$"http://${mMainObj.oMasterController.cn.gIP}:${mMainObj.oMasterController.cn.gPort}/"$ & currentFileInfo.Thumbnail, _
+					currentFileInfo.myThumbnail_filename_disk)
+					
 			Sleep(2200)
 		
 			If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then

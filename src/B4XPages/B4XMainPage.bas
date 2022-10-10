@@ -43,6 +43,7 @@ Sub Class_Globals
 
 	'--- checking for app update - busy screen
 	Private pnlUpdate,lblUpdate As B4XView, ivUpdate As ImageView
+	Private mToastTxtSize As Int	
 	
 End Sub
 
@@ -72,6 +73,7 @@ Public Sub Initialize
 	
 	powerHelpers.Init(config.AndroidTakeOverSleepFLAG)
 	CfgAndroidPowerOptions
+	mToastTxtSize = IIf(guiHelpers.gScreenSizeAprox > 5,24,22)
 	
 End Sub
 
@@ -286,7 +288,7 @@ End Sub
 
 Public Sub Show_toast(msg As String, ms As Int)
 	toast.DurationMs = ms
-	toast.Show("[TextSize=24][b]" & msg & "[/b][/TextSize]")
+	toast.Show($"[TextSize=${mToastTxtSize}][b][FontAwesome=0xF05A/]  ${msg}[/b][/TextSize]"$)
 End Sub
 
 #Region "POPUP_MAIN_SETUP_MENU"
@@ -378,7 +380,7 @@ Public Sub PrinterSetup_Closed
 		guiHelpers.Show_toast("Trying to connect...",3000)		
 		TryOctoConnection
 	End If
-	Sleep(100)
+	'Sleep(100)
 	'guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	
 End Sub
@@ -546,6 +548,7 @@ Private Sub pnlScreenOff_Click
 	pnlScreenOff.SendToBack
 	powerHelpers.SetScreenBrightness2
 	fnc.ProcessPowerFlags
+	
 	
 End Sub
 

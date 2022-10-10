@@ -24,6 +24,7 @@ Sub Class_Globals
 	Private ivPreview As lmB4XImageViewX
 	Private btnDelete, btnLoad, btnLoadAndPrint As B4XView
 	Private mCurrentFileInfo As tOctoFileInfo
+	Private pnlPortraitDivide As B4XView
 	
 	'--- list view panel
 	Private lblpnlFileViewTop,lblpnlFileViewBottom As B4XView
@@ -39,6 +40,7 @@ Sub Class_Globals
 	Private cboSort As B4XComboBox, rsFiles As ResultSet
 	Private SortAscDesc As Boolean = True
 	Private	LastSort As String
+	
 	
 	
 End Sub
@@ -138,8 +140,10 @@ Private Sub Build_GUI
 	LastSort = "File Name"
 	
 	lblBusy.Visible = True
-	lblBusy.SetColorAndBorder(clrTheme.BackgroundHeader,2dip,clrTheme.txtNormal,8dip)
+	lblBusy.SetColorAndBorder(clrTheme.BackgroundHeader,1dip,clrTheme.txtNormal,8dip)
 	lblBusy.TextColor = clrTheme.txtNormal
+	
+	pnlPortraitDivide.SetColorAndBorder(clrTheme.BackgroundHeader,2dip,clrTheme.BackgroundHeader,8dip)
 	
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized And mMainObj.oMasterController.gMapOctoFilesList.Size > 0 Then
 		Build_ListViewFileList
@@ -151,7 +155,12 @@ Private Sub Build_GUI
 	
 	lblSort.Text = Chr(0xF160)
 	
-	btnLoadAndPrint.Text = "Load" & CRLF & "Print"
+	If guiHelpers.gIsLandScape = False And guiHelpers.gScreenSizeAprox < 5.2 Then
+		btnLoadAndPrint.Text = "Print"
+	Else
+		btnLoadAndPrint.Text = "Load" & CRLF & "Print"
+	End If
+	
 	btnLoad.Text = "Load"
 	btnDelete.Text = "Delete"
 	

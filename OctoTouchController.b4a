@@ -253,7 +253,7 @@ Private Sub SetupFullScrn
 	
 	guiHelpers.gScreenSizeAprox = lv.ApproximateScreenSize
 	guiHelpers.gIsLandScape = Not (lv.Height > lv.Width)
-	guiHelpers.gWidth = lv.Width
+	guiHelpers.gWidth  = lv.Width
 	guiHelpers.gHeight = lv.Height
 	Dim ac As Accessibility : guiHelpers.gFscale = ac.GetUserFontScale
 	

@@ -54,10 +54,15 @@ Public Sub Show
 	mDialog.Initialize(mMainObj.Root)
 	
 	Dim w,h As Float
-	If guiHelpers.gScreenSizeAprox > 7.5 Then
+	If guiHelpers.gScreenSizeAprox > 6.5 Then
 		w = 540dip : h = 310dip
 	Else
-		w = 420dip : h = 280dip
+		If guiHelpers.gIsLandScape Then
+			w = 420dip
+		Else
+			w = 360dip
+		End If
+		h = 280dip
 	End If
 	
 	Dim p As B4XView = xui.CreatePanel("")

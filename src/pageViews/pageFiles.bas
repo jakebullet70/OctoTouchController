@@ -193,7 +193,8 @@ Private Sub btnAction_Click
 		Case "delete"
 			CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 			
-			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Question",500dip, 170dip,False)
+			Dim mb As dlgMsgBox 
+			mb.Initialize(mMainObj.Root,"Question", IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip), 170dip,False)
 			Wait For (mb.Show("Delete file from Octoprint?",gblConst.MB_ICON_QUESTION,"Yes - Delete It","","No")) Complete (res As Int)
 			
 			If res = xui.DialogResponse_Positive Then
@@ -204,7 +205,7 @@ Private Sub btnAction_Click
 		Case "load"
 			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_FILES_SELECT.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
 			guiHelpers.Show_toast("Loading file...",2000)
-			Sleep(100)
+			'Sleep(100)
 			CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
 			Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName2Scrn",400)
 			

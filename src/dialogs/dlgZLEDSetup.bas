@@ -56,7 +56,7 @@ Public Sub Show
 	'--- show info about setting octoprint plugins first TODO, same code as in dlgPsuSetup
 	If Starter.kvs.GetDefault("ledWarning",False).As(Boolean) = False Then
 		Dim mb As dlgMsgBox
-		mb.Initialize(mMainObj.root,"Information",580dip,260dip,False)
+		mb.Initialize(mMainObj.root,"Information",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip),260dip,False)
 		mb.SetAsOptionalMsgBox("ledWarning")
 		Wait For (mb.Show(guiHelpers.GetOctoPluginWarningTxt, _
 					gblConst.MB_ICON_INFO,"OK","","")) Complete (Result As Int)

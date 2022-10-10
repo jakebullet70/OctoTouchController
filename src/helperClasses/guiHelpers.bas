@@ -27,6 +27,22 @@ End Sub
 '=====================================================================================
 '  Generic GUI helper methods
 '=====================================================================================
+
+'Public Sub FontAwesomeToBitmap(Text As String, FontSize As Float) As B4XBitmap
+'	Dim xui As XUI
+'	Dim p As Panel = xui.CreatePanel("")
+'	p.SetLayoutAnimated(0, 0, 0, 32dip, 32dip)
+'	Dim cvs1 As B4XCanvas
+'	cvs1.Initialize(p)
+'	Dim fnt As B4XFont = xui.CreateFontAwesome(FontSize)
+'	Dim r As B4XRect = cvs1.MeasureText(Text, fnt)
+'	Dim BaseLine As Int = cvs1.TargetRect.CenterY - r.Height / 2 - r.Top
+'	cvs1.DrawText(Text, cvs1.TargetRect.CenterX, BaseLine, fnt, xui.Color_White, "CENTER")
+'	Dim b As B4XBitmap = cvs1.CreateBitmap
+'	cvs1.Release
+'	Return b
+'End Sub
+
 Public Sub GetConnectFailedMsg() As String
 	Dim msg As StringBuilder : msg.Initialize
 	msg.Append("Connection Failed.").Append(CRLF)

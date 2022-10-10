@@ -32,6 +32,7 @@ Public Sub ProcessPowerFlags()
 				(config.AndroidNotPrintingScrnOffFLAG Or config.AndroidPrintingScrnOffFLAG))
 				
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off if enabled
+	Starter.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
 	
 End Sub
 

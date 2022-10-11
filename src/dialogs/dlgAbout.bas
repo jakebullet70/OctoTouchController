@@ -77,12 +77,17 @@ Private Sub BuildAboutLabel
 	lblCheck4NewVer.TextSize = 20
 	mDialog.Base.AddView(lblCheck4NewVer,14dip,mDialog.Base.Height - 47dip,280dip,36dip)
 	
-	lblCheck4NewVer.Visible = False '--- just disable for the moment
+	'lblCheck4NewVer.Visible = False '--- just disable for the moment
 	
 End Sub
 
 Private Sub Check4NewVer_Click
-'	mDialog.Close(-1) '--- close it, exit dialog	
+	
+	mDialog.Close(-1) '--- close it, exit dialog	
+	
+	Dim oo As dlgAppUpdate
+	oo.Initialize(mMainObj.Root)
+	oo.Show
 	
 End Sub
 

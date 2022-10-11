@@ -15,7 +15,7 @@ Sub Process_Globals
 	Public FirstRun As Boolean = True
 	Public kvs As KeyValueStore
 	
-	'Public Provider As FileProvider 
+	Public Provider As FileProvider 
 	
 	Public db As InMemDB
 	
@@ -28,7 +28,7 @@ Sub Service_Create '--- This is the program entry point.
 	
 	tmrTimerCallSub.Initialize
 	kvs.Initialize(xui.DefaultFolder, "kvs.db3")
-	'Provider.Initialize
+	Provider.Initialize
 	
 	If kvs.ContainsKey("install_date") = False Then
 		kvs.Put("install_date",DateTime.Now)
@@ -41,11 +41,12 @@ Sub Service_Create '--- This is the program entry point.
 		Dim oo As AppUpdate : oo.Initialize : oo.RunPrgUpdate
 	End If
 	
-	
-	
 	#if Release
 	logcat.LogCatStart(Array As String("-v","raw","*:F","B4A:v"), "logcat")
 	#end if
+	
+	Dim o As ftp_support : o.Initialize(Null,"","",0,"","")
+	o.CleanUpApkDownload
 	
 End Sub
 

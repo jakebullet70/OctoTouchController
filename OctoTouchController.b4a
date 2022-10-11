@@ -16,14 +16,15 @@ File21=pagePrinting.bal
 File22=ptest.txt
 File23=splash.png
 File24=viewAbout.bal
-File25=viewFilamentCtrl.bal
-File26=viewfiles.bal
-File27=viewMsgBox.bal
-File28=viewOctoSetup.bal
-File29=viewPsuCtrl.bal
+File25=viewAppUpdate.bal
+File26=viewFilamentCtrl.bal
+File27=viewfiles.bal
+File28=viewMsgBox.bal
+File29=viewOctoSetup.bal
 File3=dlgLogging.json
-File30=viewPsuSetup.bal
-File31=viewRoundSlider.bal
+File30=viewPsuCtrl.bal
+File31=viewPsuSetup.bal
+File32=viewRoundSlider.bal
 File4=dlgPower.json
 File5=dlgSimpleApiOnOff.json
 File6=dlgViewText.bal
@@ -55,6 +56,7 @@ FileGroup29=DIALOG_CUSTOM_VIEWS
 FileGroup3=JSON_CONFIGS
 FileGroup30=DIALOG_CUSTOM_VIEWS
 FileGroup31=DIALOG_CUSTOM_VIEWS
+FileGroup32=DIALOG_CUSTOM_VIEWS
 FileGroup4=JSON_CONFIGS
 FileGroup5=JSON_CONFIGS
 FileGroup6=DIALOG_CUSTOM_VIEWS
@@ -74,6 +76,7 @@ Library17=reflection
 Library18=runtimepermissions
 Library19=xui views
 Library2=audio
+Library20=net
 Library3=b4xcollections
 Library4=b4xpages
 Library5=b4xpreferencesdialog
@@ -85,61 +88,63 @@ ManifestCode='This code will be applied to the manifest file during compilation.
 Module1=|relative|src\miscClasses\AppUpdate
 Module10=|relative|src\generic\config
 Module11=|relative|src\dialogs\dlgAbout
-Module12=|relative|src\dialogs\dlgBrightness
-Module13=|relative|src\dialogs\dlgFilamentCtrl
-Module14=|relative|src\dialogs\dlgFilamentSetup
-Module15=|relative|src\dialogs\dlgGeneralOptions
-Module16=|relative|src\dialogs\dlgListbox
-Module17=|relative|src\dialogs\dlgMsgBox
-Module18=|relative|src\dialogs\dlgNumericInput
-Module19=|relative|src\dialogs\dlgOctoSetup
+Module12=|relative|src\dialogs\dlgAppUpdate
+Module13=|relative|src\dialogs\dlgBrightness
+Module14=|relative|src\dialogs\dlgFilamentCtrl
+Module15=|relative|src\dialogs\dlgFilamentSetup
+Module16=|relative|src\dialogs\dlgGeneralOptions
+Module17=|relative|src\dialogs\dlgListbox
+Module18=|relative|src\dialogs\dlgMsgBox
+Module19=|relative|src\dialogs\dlgNumericInput
 Module2=|relative|src\custom_controls\AutoTextSizeLabel
-Module20=|relative|src\dialogs\dlgOnOffCtrl
-Module21=|relative|src\dialogs\dlgPowerOptions
-Module22=|relative|src\dialogs\dlgPsuCtrl
-Module23=|relative|src\dialogs\dlgPsuSetup
-Module24=|relative|src\dialogs\dlgViewText
-Module25=|relative|src\dialogs\dlgZLEDSetup
-Module26=|relative|src\helperClasses\fileHelpers
-Module27=|relative|src\miscClasses\FileProvider
-Module28=|relative|src\generic\fnc
-Module29=|relative|src\generic\gblConst
+Module20=|relative|src\dialogs\dlgOctoSetup
+Module21=|relative|src\dialogs\dlgOnOffCtrl
+Module22=|relative|src\dialogs\dlgPowerOptions
+Module23=|relative|src\dialogs\dlgPsuCtrl
+Module24=|relative|src\dialogs\dlgPsuSetup
+Module25=|relative|src\dialogs\dlgViewText
+Module26=|relative|src\dialogs\dlgZLEDSetup
+Module27=|relative|src\helperClasses\fileHelpers
+Module28=|relative|src\miscClasses\FileProvider
+Module29=|relative|src\generic\fnc
 Module3=|relative|src\B4XPages\B4XMainPage
-Module30=|relative|src\helperClasses\guiHelpers
-Module31=|relative|src\miscClasses\HttpDownloadStr
-Module32=|relative|src\octoPrint\HttpOctoRestAPI
-Module33=|relative|src\miscClasses\InMemDB
-Module34=|relative|src\octoPrint\JSONparsors\JsonParserFiles
-Module35=|relative|src\octoPrint\JSONparsors\JsonParserMasterPrinterSettings
-Module36=|relative|src\octoPrint\JSONparsors\JsonParsorConnectionStatus
-Module37=|relative|src\octoPrint\JSONparsors\JsonParsorMain
-Module38=|relative|src\octoPrint\JSONparsors\JsonParsorOctoVersion
-Module39=|relative|src\custom_controls\lmB4XImageViewX
+Module30=|relative|src\miscClasses\ftp_support
+Module31=|relative|src\generic\gblConst
+Module32=|relative|src\helperClasses\guiHelpers
+Module33=|relative|src\miscClasses\HttpDownloadStr
+Module34=|relative|src\octoPrint\HttpOctoRestAPI
+Module35=|relative|src\miscClasses\InMemDB
+Module36=|relative|src\octoPrint\JSONparsors\JsonParserFiles
+Module37=|relative|src\octoPrint\JSONparsors\JsonParserMasterPrinterSettings
+Module38=|relative|src\octoPrint\JSONparsors\JsonParsorConnectionStatus
+Module39=|relative|src\octoPrint\JSONparsors\JsonParsorMain
 Module4=|relative|src\miscClasses\Beeper
-Module40=|relative|src\generic\logMe
-Module41=|relative|src\main\MasterController
-Module42=|relative|src\helperClasses\objHelpers
-Module43=|relative|src\octoPrint\oc
-Module44=|relative|src\pageViews\pageFiles
-Module45=|relative|src\pageViews\pageMenu
-Module46=|relative|src\pageViews\pageMovement
-Module47=|relative|src\pageViews\pagePrinting
-Module48=|relative|src\helperClasses\powerHelpers
-Module49=|relative|src\octoPrint\RequestApiKey
+Module40=|relative|src\octoPrint\JSONparsors\JsonParsorOctoVersion
+Module41=|relative|src\custom_controls\lmB4XImageViewX
+Module42=|relative|src\generic\logMe
+Module43=|relative|src\main\MasterController
+Module44=|relative|src\helperClasses\objHelpers
+Module45=|relative|src\octoPrint\oc
+Module46=|relative|src\pageViews\pageFiles
+Module47=|relative|src\pageViews\pageMenu
+Module48=|relative|src\pageViews\pageMovement
+Module49=|relative|src\pageViews\pagePrinting
 Module5=|relative|src\miscClasses\CallSubUtils
-Module50=|relative|src\custom_controls\sadPreferencesDialog
-Module51=|relative|src\custom_controls\sadRoundSlider
-Module52=|relative|src\main\Starter
-Module53=|relative|src\helperClasses\strHelpers
-Module54=|relative|src\miscClasses\SysInfo
-Module55=|relative|src\miscClasses\WildCardFilesList
+Module50=|relative|src\helperClasses\powerHelpers
+Module51=|relative|src\octoPrint\RequestApiKey
+Module52=|relative|src\custom_controls\sadPreferencesDialog
+Module53=|relative|src\custom_controls\sadRoundSlider
+Module54=|relative|src\main\Starter
+Module55=|relative|src\helperClasses\strHelpers
+Module56=|relative|src\miscClasses\SysInfo
+Module57=|relative|src\miscClasses\WildCardFilesList
 Module6=|relative|src\octoPrint\CheckOctoConnection
 Module7=|relative|src\custom_controls\CircularProgressBar
 Module8=|relative|src\generic\clrTheme
 Module9=|relative|src\miscClasses\clvSelectionsX
-NumberOfFiles=31
-NumberOfLibraries=19
-NumberOfModules=55
+NumberOfFiles=32
+NumberOfLibraries=20
+NumberOfModules=57
 Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
@@ -180,6 +185,7 @@ Sub Globals
 	Private Const API_ANDROID_4_0 As Int = 14
 	Private Const API_ANDROID_4_4 As Int = 19
 	Private ph As Phone	
+	
 End Sub
 
 
@@ -482,3 +488,66 @@ Public Sub Restart_App
 '	StartActivity(I)
 End Sub
 
+
+
+
+#region "IN APP UPDATE - NON MARKET"
+'https://www.b4x.com/android/forum/threads/version-safe-apk-installation.87667/
+
+Public Sub CheckInstallationRequirements As ResumableSub
+	If File.ExternalWritable = False Then
+		MsgboxAsync("Storage card not available. Make sure that your device is not connected in USB storage mode.", "")
+		Return False
+	Else If ph.SdkVersion >= 26 And CanRequestPackageInstalls = False Then
+		MsgboxAsync("Please allow me to install applications.", "")
+		Wait For Msgbox_Result(Result As Int)
+		Dim in As Intent
+		in.Initialize("android.settings.MANAGE_UNKNOWN_APP_SOURCES", "package:" & Application.PackageName)
+		StartActivity(in)
+		Wait For Activity_Resume '<-- wait for Activity_Resume
+		Return CanRequestPackageInstalls
+	Else If CheckNonMarketAppsEnabled = False Then
+		MsgboxAsync("Please enable installation of non-market applications." & CRLF & "Under Settings - Security - Unknown sources" _
+			 & CRLF & "Or Settings - Applications - Unknown sources", "")
+		Return False
+	Else
+		Return True
+	End If
+End Sub
+
+Private Sub CanRequestPackageInstalls As Boolean
+	Dim ctxt As JavaObject
+	ctxt.InitializeContext
+	Dim PackageManager As JavaObject = ctxt.RunMethod("getPackageManager", Null)
+	Return PackageManager.RunMethod("canRequestPackageInstalls", Null)
+End Sub
+
+Private Sub CheckNonMarketAppsEnabled As Boolean
+	If ph.SdkVersion >= 26 Then Return True
+	If ph.SdkVersion < 17 Or ph.SdkVersion >= 21 Then
+		Return ph.GetSettings("install_non_market_apps") = "1"
+	Else
+		Dim context As JavaObject
+		context.InitializeContext
+		Dim resolver As JavaObject = context.RunMethod("getContentResolver", Null)
+		Dim global As JavaObject
+		global.InitializeStatic("android.provider.Settings.Global")
+		Return global.RunMethod("getString", Array(resolver, "install_non_market_apps")) = "1"
+	End If
+End Sub
+
+Private Sub SendInstallIntent 'ignore
+	'Dim ApkName As String = "2nd_app.apk"
+	'File.copy(File.DirAssets, ApkName, Starter.Provider.SharedFolder, ApkName)
+	Dim i As Intent
+	If ph.SdkVersion >= 24 Then
+		i.Initialize("android.intent.action.INSTALL_PACKAGE", Starter.Provider.GetFileUri(gblConst.APK_NAME))
+		i.Flags = Bit.Or(i.Flags, 1) '--- FLAG_GRANT_READ_URI_PERMISSION
+	Else
+		i.Initialize(i.ACTION_VIEW, "file://" & File.Combine(Starter.Provider.SharedFolder, gblConst.APK_NAME))
+		i.SetType("application/vnd.android.package-archive")
+	End If
+	StartActivity(i)
+End Sub
+
+#end region

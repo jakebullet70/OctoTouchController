@@ -93,7 +93,7 @@ Private Sub GetAboutText() As String
 	msg.Append("A dedicated touch screen controller for Octoprint using older Android devices").Append(CRLF).Append(CRLF)
 	msg.Append("(©)sadLogic 2022").Append(CRLF)
 	msg.Append("Kherson Ukraine!").Append(CRLF)
-	'msg.Append("Open Source / Freeware")
+	msg.Append("AGPL-3.0 license")
 	Return msg.ToString
 End Sub
 

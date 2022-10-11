@@ -22,9 +22,9 @@ ws281z LED			  https://plugins.octoprint.org/plugins/ws281x_led_status/
 ** Arc Welder Aware **
 
 ### Project Status
-Initialze release Aug/26/2022
+Initialze release Aug/26/2022  
+Released V1.1.2: Oct/11/2022
 
-Released V1.1.2: Oct/11/2022  
 See the [GitHub Wiki](https://github.com/jakebullet70/OctoTouchController/wiki) for some helpful hints.
 
 Written in [B4X](https://www.b4x.com/)

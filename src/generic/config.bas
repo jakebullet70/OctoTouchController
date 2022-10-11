@@ -14,6 +14,7 @@ Version=9.5
 Sub Process_Globals
 	Private xui As XUI
 	Private Const mModule As String = "config" 'ignore
+	Private Const LICENSE_FILE As String = "LICENSE.txt"
 	Public IsInit As Boolean = False
 	
 	'Public MQTTserverOnFLAG As Boolean = False
@@ -54,8 +55,14 @@ Sub Process_Globals
 End Sub
 
 Public Sub Init
+	
 	LoadCfgs
 	IsInit = True
+	
+	If File.Exists(xui.DefaultFolder,LICENSE_FILE) = False Then
+		File.Copy(File.DirAssets,LICENSE_FILE,xui.DefaultFolder,LICENSE_FILE)
+	End If
+	
 End Sub
 
 Private Sub LoadCfgs()

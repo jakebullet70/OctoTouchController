@@ -1,6 +1,7 @@
 # OctoTouchController
-A dedicated touch screen controller for Octoprint supporting older Android phones / tablets (Android 4.X) 
-Device specs: Android 4.x or above, 4inch screen with a minimum resolution of 680x340
+A dedicated touch screen controller for Octoprint supporting older Android phones / tablets (Android 4.X)  
+Device specs: Android 4.x or above, 4inch screen with a minimum resolution of 680x340.  
+It is Free Software and released under the [GNU Affero General Public License V3](https://www.gnu.org/licenses/agpl-3.0.html).
 
 ### Project Purpose
 Reclaim those old Phones / Tablets that are sitting around that *DO NOT* have access to the Google store anymore. 
@@ -24,7 +25,7 @@ Arc Welder Aware
 ### Project Status
 Initialze release Aug/26/2022
 
-Released V1.1.0: Oct/10/2022
+Released V1.1.2: Oct/11/2022
 
 Written in B4X! https://www.b4x.com/
 

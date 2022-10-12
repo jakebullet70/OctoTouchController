@@ -14,19 +14,25 @@ Sub Class_Globals
 	
 	Private Const mModule As String = "ftp_support" 'ignore
 	Private xui As XUI
+	Private mCtr As Int
 	
 	Private mCallbackMod As Object
 	Private mCallbackEvent As String
+	Private mCallbackEventProgress As String
 	
 	Public FTP As FTP
+	Public DownloadDir As String
+	Public TotalBytes As Long
 	
 End Sub
 
-Public Sub Initialize(callback_mod As Object,callback_event As String, _
-				host As String, port As Int, user As String, pw As String)
+Public Sub Initialize(callback_mod As Object,callback_event_ok As String, _
+						callback_event_progress As String, _
+						host As String, port As Int, user As String, pw As String)
 	
-	mCallbackEvent = callback_event
+	mCallbackEvent = callback_event_ok
 	mCallbackMod   = callback_mod
+	mCallbackEventProgress = callback_event_progress
 	
 	FTP.Initialize("ftp",host,port,user,pw)
 		
@@ -36,30 +42,67 @@ Public Sub CleanUpApkDownload
 	
 	fileHelpers.SafeKill2(Starter.Provider.SharedFolder,gblConst.APK_NAME)
 	fileHelpers.SafeKill2(Starter.Provider.SharedFolder,gblConst.APK_FILE_INFO)
+	fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.APK_NAME)
+	fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.APK_FILE_INFO)
 	
 End Sub
 
 Public Sub Download(file2dload As String,dLoadServerPath As String,isAscII As Boolean) As ResumableSub
 	
 	Dim dLoadMe As String = File.Combine(dLoadServerPath,file2dload)
-	Log("dload start")
+	DownloadDir = Starter.Provider.SharedFolder
+	Log("dload start-1st folder: " & DownloadDir)
 	FTP.UseSSL = False
 	FTP.PassiveMode = False
+	'FTP.UseSSLExplicit = False
 	FTP.TimeoutMs = 20000 '--- 20 seconds
 	
-	Dim sf As Object = FTP.DownloadFile(dLoadMe, isAscII, Starter.Provider.SharedFolder,file2dload)
-	Wait For (sf) ftp_DownloadCompleted (ServerPath As String, Success As Boolean)
+	Dim TryMeAgain As Boolean = False
+	Do While True
+		
+		Dim sf As Object = FTP.DownloadFile(dLoadMe, isAscII, DownloadDir,file2dload)
+		Wait For (sf) ftp_DownloadCompleted (ServerPath As String, Success As Boolean)
+		If LastException.Message.Contains("EACCES") And TryMeAgain = False Then
+			
+			DownloadDir = xui.DefaultFolder & "/shared"
+			Try
+				File.MakeDir(xui.DefaultFolder,"shared")
+			Catch
+				Log(LastException)
+			End Try
+			TryMeAgain = True
+			Continue 'Do
+			
+		End If
+		Exit 'Do
+	Loop
 	
-	CallSubDelayed3(mCallbackMod,mCallbackEvent,Success,file2dload)
+	Log("download dir: " & DownloadDir)
 	
-	Log("dload end")
+	If SubExists(mCallbackMod,mCallbackEvent) Then
+		Dim m As Map : m.Initialize
+		m.Put("ok",Success)
+		m.Put("file",file2dload)
+		m.Put("err",LastException.Message)
+		CallSubDelayed2(mCallbackMod,mCallbackEvent,m)
+	End If
+	
+	Log("dload end: " & Success)
 	
 	FTP.Close
+	Return Null
 	
 End Sub
 
-Private Sub ftp_DownloadProgress (ServerPath As String, TotalDownloaded As Long, Total As Long)
-	Log("progress")
+Private Sub ftp_DownloadProgress(ServerPath As String, TotalDownloaded As Long, Total As Long)
+	
+	#if release
+	mCtr = mCtr + 1
+	If ((mCtr Mod 250) = 0) And SubExists(mCallbackMod,mCallbackEventProgress) Then
+		CallSub2(mCallbackMod,mCallbackEventProgress,TotalDownloaded)
+	End If
+	#end if
+	
 End Sub
 
 

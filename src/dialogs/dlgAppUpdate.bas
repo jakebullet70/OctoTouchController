@@ -20,6 +20,8 @@ Sub Class_Globals
 	Private lblAction As AutoTextSizeLabel
 	Private btnContinue As B4XView
 	Private oFTP As ftp_support
+	
+	Private lblPB As Label
 End Sub
 
 
@@ -36,7 +38,12 @@ Public Sub Initialize(parentObj As B4XView)
 	lblAction.Text = "Checking for update..."
 	btnContinue.Visible = False
 	
+	lblPB.Visible = False
+	'pb.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_Transparent,8dip)
+	lblPB.TextColor = clrTheme.txtNormal
+	
 End Sub
+
 
 Public Sub Show() As ResumableSub
 	
@@ -49,57 +56,77 @@ Public Sub Show() As ResumableSub
 	'guiHelpers.AnimateDialog(mDialog,"top")
 	
 	'--- grab the txt file with version info
-	oFTP.Initialize(Me,"ftp_done","192.168.1.230",21,"","")
+	oFTP.Initialize(Me,"ftp_done","ftp_progress","192.168.1.230",21,"","")
 	oFTP.CleanUpApkDownload
-	Wait For (oFTP.Download(gblConst.APK_FILE_INFO,"",True)) Complete (r1 As Object)
+	oFTP.Download(gblConst.APK_FILE_INFO,"",True)
 	
 	Wait For (rs) Complete (Result As Int)
 	
-	oFTP.ftp.Close '--- close it if left open
+	oFTP.ftp.Close '--- make sure it is closed
 	Return Result
 	
 End Sub
 
+Public Sub ftp_progress(totalDloaded As Long)
+	If lblPB.Visible = False Then Return
+	lblPB.Text = fileHelpers.BytesToReadableString(totalDloaded)
+	Sleep(0)
+End Sub
 
-Public Sub ftp_done(success As Boolean,filenameDownloaded As String)
+Public Sub ftp_done(m As Map)
 	
-	If success = False Then
-		lblAction.Text = "Error conecting to update server."
+	Log(m.Get("ok"))
+	
+	If m.Get("ok") = False Then
+		lblAction.BaseLabel.Height = lblAction.BaseLabel.Height + 20dip
+		lblAction.Text = "Error talking to update server." & CRLF & m.Get("err")
 		Return
 	End If
 	
-	If filenameDownloaded = gblConst.APK_FILE_INFO Then
+	If m.Get("file") = gblConst.APK_FILE_INFO Then
 		ParseVerTextFile
 	Else
-		
+		'--- we have the APK, install it	
+		'--- check if exists
+		Starter.tmrTimerCallSub.CallSubDelayedPlus2(Main,"Start_ApkInstall",500,Array As String(oFTP.DownloadDir))
+		mDialog.Close(-1) '--- close me, exit dialog
 	End If
 	
 End Sub
 
 
 Private Sub btnCtrl_Click
+	
 	'--- continue, download the APP
+	btnContinue.Visible = False
+	lblPB.Visible = True
+	lblPB.Text = "..."
+	oFTP.Initialize(Me,"ftp_done","ftp_progress","192.168.1.230",21,"","")
+	oFTP.Download(gblConst.APK_NAME,"",False)
+	
 End Sub
+
 
 
 Private Sub ParseVerTextFile
 	
-	Dim txt As String = File.ReadString(Starter.Provider.SharedFolder,gblConst.APK_FILE_INFO)
+	Dim txt As String = File.ReadString(oFTP.DownloadDir,gblConst.APK_FILE_INFO)
 	txt = txt.Replace(Chr(13),"") '--- strip the chr(13) in case its a Windows file
 	
 	Try
 		
 		Dim parts() As String = Regex.Split(CRLF,txt)
-		Dim VerCode As String = Regex.Split("=",parts(0))(0)
+		Dim VerCode As String = Regex.Split("=",parts(0))(1)
 		
 		If VerCode.As(Int) <= Application.VersionCode Then
 			lblAction.Text = "No update found."
 			Return
 		End If
 		
-		lblAction.Text = $"Update found."$
+		lblAction.BaseLabel.Top = lblAction.BaseLabel.Top - 6dip
+		lblAction.Text = $"Update found: V${Regex.Split("=",parts(1))(1)}"$
 		btnContinue.Visible = True
-		btnContinue.Text = "Download?"
+		btnContinue.Text = "Download"
 		
 	Catch
 		Log(LastException)
@@ -107,7 +134,3 @@ Private Sub ParseVerTextFile
 	End Try
 	
 End Sub
-
-
-
-

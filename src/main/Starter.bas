@@ -45,7 +45,7 @@ Sub Service_Create '--- This is the program entry point.
 	logcat.LogCatStart(Array As String("-v","raw","*:F","B4A:v"), "logcat")
 	#end if
 	
-	Dim o As ftp_support : o.Initialize(Null,"","",0,"","")
+	Dim o As ftp_support : o.Initialize(Null,"","","",0,"","")
 	o.CleanUpApkDownload
 	
 End Sub

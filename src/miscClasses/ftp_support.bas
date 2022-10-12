@@ -64,12 +64,7 @@ Public Sub Download(file2dload As String,dLoadServerPath As String,isAscII As Bo
 		Wait For (sf) ftp_DownloadCompleted (ServerPath As String, Success As Boolean)
 		If LastException.Message.Contains("EACCES") And TryMeAgain = False Then
 			
-			DownloadDir = xui.DefaultFolder & "/shared"
-			Try
-				File.MakeDir(xui.DefaultFolder,"shared")
-			Catch
-				Log(LastException)
-			End Try
+			DownloadDir = xui.DefaultFolder
 			TryMeAgain = True
 			Continue 'Do
 			

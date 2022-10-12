@@ -12,7 +12,6 @@ Sub Process_Globals
 	
 	Public Const DEGREE_SYMBOL As String = "°" 
 	Public const APP_TITLE As String = "OctoTC ™"
-	Public const VERSION As String = "V1.1.2"
 	Public Const APK_NAME As String = "OctoTouchController.apk"
 	Public Const APK_FILE_INFO As String = "OctoTouchController.txt"
 	

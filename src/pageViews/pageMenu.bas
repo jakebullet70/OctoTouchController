@@ -44,7 +44,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 End Sub
 
 Sub showver
-	guiHelpers.Show_toast("Version: " & gblConst.VERSION,2200)
+	guiHelpers.Show_toast("Version: V" & Application.VersionName,2200)
 End Sub
 
 

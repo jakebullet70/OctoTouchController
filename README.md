@@ -1,3 +1,9 @@
+<p align="center">
+  <img src="https://img.shields.io/github/v/release/jakebullet70/OctoTouchController?logo=github&logoColor=white" alt="GitHub release"/>
+  <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/sadLogic.OctoTouchController"/>
+  
+</p>
+
 # OctoTouchController
 A dedicated touch screen controller for Octoprint supporting older Android phones / tablets (Android 4.X) 
 Device specs: Android 4.x or above, 4inch screen with a minimum resolution of 680x340. It is Free Software and released under the [GNU Affero General Public License V3](https://www.gnu.org/licenses/agpl-3.0.html).
@@ -27,6 +33,7 @@ Released V1.1.2: Oct/11/2022
 
 See the [GitHub Wiki](https://github.com/jakebullet70/OctoTouchController/wiki) for some helpful hints.
 
-Written in [B4X](https://www.b4x.com/)
+Written in [B4X](https://www.b4x.com/)  
+![GitHub all releases](https://img.shields.io/github/downloads/jakebullet70/OctoTouchController/total)
 
 ![](./github_pics/printing.jpg?raw=true "Printing")  

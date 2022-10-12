@@ -153,13 +153,11 @@ End Sub
 
 Private Sub BuildGUI
 	
-	pnlMaster.Color = clrTheme.Background
+	pnlMaster.Color  = clrTheme.Background
 	pnlHeader.Color	 = clrTheme.BackgroundHeader
 	
 	'--- hide all page views
 	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlMovement))
-	
-	'guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	
 	guiHelpers.SetTextColor(Array As B4XView(lblStatus,lblTemp,btnPower,btnPageAction))
 	

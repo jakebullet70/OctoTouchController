@@ -14,7 +14,7 @@ Sub Class_Globals
 	
 	Private Const mModule As String = "ftp_support" 'ignore
 	Private xui As XUI
-	Private mCtr As Int
+	Private mCntr As Int
 	
 	Private mCallbackMod As Object
 	Private mCallbackEvent As String
@@ -22,7 +22,6 @@ Sub Class_Globals
 	
 	Public FTP As FTP
 	Public DownloadDir As String
-	Public TotalBytes As Long
 	
 End Sub
 
@@ -34,6 +33,10 @@ Public Sub Initialize(callback_mod As Object,callback_event_ok As String, _
 	mCallbackMod   = callback_mod
 	mCallbackEventProgress = callback_event_progress
 	
+	FTP.UseSSL = False
+	FTP.PassiveMode = False
+	'FTP.UseSSLExplicit = False
+	FTP.TimeoutMs = 20000 '--- 20 seconds
 	FTP.Initialize("ftp",host,port,user,pw)
 		
 End Sub
@@ -57,15 +60,16 @@ Public Sub Download(file2dload As String,dLoadServerPath As String,isAscII As Bo
 	'FTP.UseSSLExplicit = False
 	FTP.TimeoutMs = 20000 '--- 20 seconds
 	
-	Dim TryMeAgain As Boolean = False
+	Dim TryMeAgain As Boolean = True
 	Do While True
 		
 		Dim sf As Object = FTP.DownloadFile(dLoadMe, isAscII, DownloadDir,file2dload)
 		Wait For (sf) ftp_DownloadCompleted (ServerPath As String, Success As Boolean)
-		If LastException.Message.Contains("EACCES") And TryMeAgain = False Then
+		Log(LastException.Message)
+		If LastException.Message.Contains("EACCES") And TryMeAgain = True Then
 			
 			DownloadDir = xui.DefaultFolder
-			TryMeAgain = True
+			TryMeAgain = False
 			Continue 'Do
 			
 		End If
@@ -74,13 +78,17 @@ Public Sub Download(file2dload As String,dLoadServerPath As String,isAscII As Bo
 	
 	Log("download dir: " & DownloadDir)
 	
-	If SubExists(mCallbackMod,mCallbackEvent) Then
-		Dim m As Map : m.Initialize
-		m.Put("ok",Success)
-		m.Put("file",file2dload)
-		m.Put("err",LastException.Message)
-		CallSubDelayed2(mCallbackMod,mCallbackEvent,m)
+	Dim m As Map : m.Initialize
+	Dim errMsg As String
+	m.Put("ok",Success)
+	m.Put("file",file2dload)
+	If LastException.Message.Contains("ETIMEDOUT") Then
+		errMsg = "Connection timed out"
+	Else
+		errMsg = LastException.Message
 	End If
+	m.Put("err",errMsg)
+	CallSubDelayed2(mCallbackMod,mCallbackEvent,m)
 	
 	Log("dload end: " & Success)
 	
@@ -92,8 +100,8 @@ End Sub
 Private Sub ftp_DownloadProgress(ServerPath As String, TotalDownloaded As Long, Total As Long)
 	
 	#if release
-	mCtr = mCtr + 1
-	If ((mCtr Mod 250) = 0) And SubExists(mCallbackMod,mCallbackEventProgress) Then
+	mCntr = mCntr + 1
+	If ((mCntr Mod 250) = 0) Then
 		CallSub2(mCallbackMod,mCallbackEventProgress,TotalDownloaded)
 	End If
 	#end if

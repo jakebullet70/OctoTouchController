@@ -16,14 +16,12 @@ Sub Class_Globals
 	Private xui As XUI
 	
 	Private BasePnl As B4XView, mDialog As B4XDialog
+	Private lblAction As AutoTextSizeLabel,lblPB As Label
 	
-	Private lblAction As AutoTextSizeLabel
 	Private btnContinue As B4XView
 	Private oFTP As ftp_support
 	
-	Private lblPB As Label
 End Sub
-
 
 
 Public Sub Initialize(parentObj As B4XView)
@@ -38,8 +36,7 @@ Public Sub Initialize(parentObj As B4XView)
 	lblAction.Text = "Checking for update..."
 	btnContinue.Visible = False
 	
-	lblPB.Visible = False
-	'pb.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_Transparent,8dip)
+	lblPB.Visible   = False
 	lblPB.TextColor = clrTheme.txtNormal
 	
 End Sub
@@ -47,19 +44,19 @@ End Sub
 
 Public Sub Show() As ResumableSub
 	
-	'--- init
+	'--- init dialog
 	mDialog.Initialize(mMainObj)
 	
 	guiHelpers.ThemeDialogForm(mDialog, "App Update")
 	Dim rs As ResumableSub = mDialog.ShowCustom(BasePnl,"","","CLOSE")
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
-	'guiHelpers.AnimateDialog(mDialog,"top")
 	
 	'--- grab the txt file with version info
 	oFTP.Initialize(Me,"ftp_done","ftp_progress","192.168.1.230",21,"","")
 	oFTP.CleanUpApkDownload
 	oFTP.Download(gblConst.APK_FILE_INFO,"",True)
-	
+
+	'--- wait for dialog	
 	Wait For (rs) Complete (Result As Int)
 	
 	oFTP.ftp.Close '--- make sure it is closed
@@ -67,15 +64,17 @@ Public Sub Show() As ResumableSub
 	
 End Sub
 
+
 Public Sub ftp_progress(totalDloaded As Long)
+	
 	If lblPB.Visible = False Then Return
 	lblPB.Text = fileHelpers.BytesToReadableString(totalDloaded)
-	Sleep(0)
+	'Sleep(0)
+	
 End Sub
 
+
 Public Sub ftp_done(m As Map)
-	
-	Log(m.Get("ok"))
 	
 	If m.Get("ok") = False Then
 		lblAction.BaseLabel.Height = lblAction.BaseLabel.Height + 20dip
@@ -85,10 +84,9 @@ Public Sub ftp_done(m As Map)
 	
 	If m.Get("file") = gblConst.APK_FILE_INFO Then
 		ParseVerTextFile
-	Else
-		'--- we have the APK, install it	
-		'--- check if exists
-		Starter.tmrTimerCallSub.CallSubDelayedPlus2(Main,"Start_ApkInstall",500,Array As String(oFTP.DownloadDir))
+	Else 
+		'--- we have the APK, install it
+		Starter.tmrTimerCallSub.CallSubDelayedPlus2(Main,"Start_ApkInstall",400,Array As String(oFTP.DownloadDir))
 		mDialog.Close(-1) '--- close me, exit dialog
 	End If
 	
@@ -97,15 +95,16 @@ End Sub
 
 Private Sub btnCtrl_Click
 	
-	'--- continue, download the APP
+	'--- continue, download the APK
+	Dim btn As B4XView = mDialog.GetButton(xui.DialogResponse_Cancel)
+	btn.Text = "CANCEL"
 	btnContinue.Visible = False
 	lblPB.Visible = True
-	lblPB.Text = "..."
+	lblPB.Text = "Connecting..."
 	oFTP.Initialize(Me,"ftp_done","ftp_progress","192.168.1.230",21,"","")
 	oFTP.Download(gblConst.APK_NAME,"",False)
 	
 End Sub
-
 
 
 Private Sub ParseVerTextFile
@@ -129,8 +128,12 @@ Private Sub ParseVerTextFile
 		btnContinue.Text = "Download"
 		
 	Catch
+		
 		Log(LastException)
 		lblAction.Text = "Error parsing update file."
+		
 	End Try
 	
 End Sub
+
+

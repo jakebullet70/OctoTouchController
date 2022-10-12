@@ -73,7 +73,9 @@ Public Sub Initialize
 	
 	powerHelpers.Init(config.AndroidTakeOverSleepFLAG)
 	CfgAndroidPowerOptions
-	mToastTxtSize = IIf(guiHelpers.gScreenSizeAprox > 5,24,22)
+	
+	'--- set toast text size
+	mToastTxtSize = IIf(guiHelpers.gScreenSizeAprox > 5,24,22) 
 	
 End Sub
 

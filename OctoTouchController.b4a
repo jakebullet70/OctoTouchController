@@ -551,7 +551,6 @@ End Sub
 
 Public Sub Start_ApkInstall(args() As String)
 	Wait For (CheckInstallationRequirements) Complete (Result As Boolean)
-	Log(args(0))
 	If Result Then
 		SendInstallIntent(args(0))
 	End If

@@ -46,17 +46,18 @@ Public Sub Show() As ResumableSub
 	
 	CleanUpApkDownload
 	BasePnl = xui.CreatePanel("")
-	BasePnl.SetLayoutAnimated(0, 0, 0, 360dip,240dip)
+	BasePnl.SetLayoutAnimated(0, 0, 0, 360dip ,260dip)
 	BasePnl.LoadLayout("viewAppUpdate")
 	
 	lblAction.TextColor = clrTheme.txtNormal
 	lblAction.Text = "Checking for update..."
 	btnContinue.Visible = False
-	
 	lblPB.Visible   = False
 	lblPB.TextColor = clrTheme.txtNormal
-	
-	
+
+	'---TODO, make a generic function
+	btnContinue.Font = xui.CreateDefaultFont(NumberFormat2(btnContinue.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
+		
 	'--- init dialog
 	mDialog.Initialize(mMainObj)
 	

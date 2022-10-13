@@ -109,7 +109,7 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	End If
 	
 	If PromptExitTwice = False Then
-		Show_toast(Chr(0xE879) & " Tap again to exit",2200)
+		Show_toast("Tap again to exit",2200)
 		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Prompt_Exit_Reset",2200)
 		PromptExitTwice = True
 		Return False

@@ -62,13 +62,7 @@ public Sub Set_focus()
 	End If
 	
 	btnPlugin1.Visible = config.ShowWS281CtrlFLAG Or config.ShowZLEDCtrlFLAG
-	If btnPlugin1.Visible = False Then
-		btnPlugin2.Top = btnPlugin1.Top
-	Else 
-	End If
-	btnPlugin2.Visible = True
-	
-	
+		
 End Sub
 
 
@@ -85,7 +79,7 @@ Private Sub BuildGUI
 	BuildMenuCard(mnuFiles,"menuFiles.png","Files",gblConst.PAGE_FILES)
 	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
 	
-	guiHelpers.SetVisible(Array As B4XView(btnPlugin3,btnPlugin2,btnPlugin1),False)
+	guiHelpers.SetVisible(Array As B4XView(btnPlugin3,btnPlugin1),False)
 	guiHelpers.SetTextColor(Array As B4XView(btnPlugin3,btnPlugin2,btnPlugin1,btnScrnOff,btnBrightness))
 		
 End Sub

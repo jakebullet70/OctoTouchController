@@ -148,7 +148,7 @@ Version=11.8
 #Region  Project Attributes 
 	#ApplicationLabel: OctoTC
 	#VersionCode: 12
-	#VersionName: 1.1.2
+	#VersionName: 1.1.3
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: unspecified
 	#CanInstallToExternalStorage: false
@@ -157,7 +157,7 @@ Version=11.8
 #Region  Activity Attributes 
 	#FullScreen: True
 	#IncludeTitle: False
-	#DebuggerForceFullDeployment: true
+	'#DebuggerForceFullDeployment: true
 	'#DebuggerForceStandardAssets: true
 	#BridgeLogger: True
 	

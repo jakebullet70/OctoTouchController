@@ -38,7 +38,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	mPnlMain.SetLayoutAnimated(0,0,masterPanel.top,masterPanel.Width,masterPanel.Height)
 	mPnlMain.LoadLayout("pageMenu")
 	
-	Build_GUI
+	BuildGUI
 	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"showver",2300)
 	
 End Sub
@@ -62,6 +62,11 @@ public Sub Set_focus()
 	End If
 	
 	btnPlugin1.Visible = config.ShowWS281CtrlFLAG Or config.ShowZLEDCtrlFLAG
+	If btnPlugin1.Visible = False Then
+		btnPlugin2.Top = btnPlugin1.Top
+	Else 
+	End If
+	btnPlugin2.Visible = True
 	
 	
 End Sub
@@ -73,7 +78,7 @@ public Sub Lost_focus()
 End Sub
 
 
-Private Sub Build_GUI
+Private Sub BuildGUI
 	
 	'--- build the main menu screen
 	BuildMenuCard(mnuMovement,"menuMovement.png","Movement",gblConst.PAGE_MOVEMENT)
@@ -82,7 +87,6 @@ Private Sub Build_GUI
 	
 	guiHelpers.SetVisible(Array As B4XView(btnPlugin3,btnPlugin2,btnPlugin1),False)
 	guiHelpers.SetTextColor(Array As B4XView(btnPlugin3,btnPlugin2,btnPlugin1,btnScrnOff,btnBrightness))
-	
 		
 End Sub
 
@@ -148,7 +152,10 @@ End Sub
 
 ' small action buttons on main menu
 Private Sub btnSubBtnAction_Click
+	
 	Dim o As B4XView : o = Sender
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	
 	Select Case o.Tag
 		Case "br" '--- brightness
 			DoBrightnessDlg
@@ -166,6 +173,13 @@ Private Sub btnSubBtnAction_Click
 			Dim o3 As dlgOnOffCtrl
 			o3.Initialize(mMainObj,IIf(config.ShowZLEDCtrlFLAG,"ZLED","WS281x") & " Control")
 			o3.Show
+			
+		Case "phe" '--- pre-heat
+			If oc.isConnected = False Then Return
+			Dim ht As dlgListbox 
+			ht.Initialize(mMainObj,"Pre-heat",B4XPages.MainPage,"TempChange_Presets")
+			Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,390dip)
+			ht.Show(220dip,w,mMainObj.oMasterController.mapAllHeatingOptions)
 				
 	End Select
 	

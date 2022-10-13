@@ -65,10 +65,10 @@ FileGroup8=Default Group
 FileGroup9=B4XPages
 Group=MAIN
 Library1=accessibility
-Library10=javaobject
-Library11=json
-Library12=keyvaluestore
-Library13=net
+Library10=fileprovider
+Library11=javaobject
+Library12=json
+Library13=keyvaluestore
 Library14=okhttp
 Library15=okhttputils2
 Library16=oslibrary
@@ -77,7 +77,6 @@ Library18=reflection
 Library19=runtimepermissions
 Library2=audio
 Library20=xui views
-Library21=fileprovider
 Library3=b4xcollections
 Library4=b4xpages
 Library5=b4xpreferencesdialog
@@ -85,7 +84,7 @@ Library6=bctoast
 Library7=byteconverter
 Library8=core
 Library9=dateutils
-ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'--- https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'--- Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~'--- Take over power functions~\n~AddPermission(android.permission.WAKE_LOCK)~\n~AddPermission(android.permission.WRITE_SETTINGS)~\n~~\n~AddPermission(android.permission.INTERNET)~\n~~\n~AddManifestText(<uses-permission~\n~	android:name="android.permission.WRITE_EXTERNAL_STORAGE"~\n~	android:maxSdkVersion="18" />~\n~)~\n~~\n~AddApplicationText(~\n~  <provider~\n~  android:name="android.support.v4.content.FileProvider"~\n~  android:authorities="$PACKAGE$.provider"~\n~  android:exported="false"~\n~  android:grantUriPermissions="true">~\n~  <meta-data~\n~  android:name="android.support.FILE_PROVIDER_PATHS"~\n~  android:resource="@xml/provider_paths"/>~\n~  </provider>~\n~)~\n~CreateResource(xml, provider_paths,~\n~   <files-path name="name" path="shared" />~\n~)~\n~AddPermission(android.permission.REQUEST_INSTALL_PACKAGES)~\n~~\n~~\n~'===============================================================================~\n~~\n~''''https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~''''Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~'''CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~'''~\n~'''AddManifestText(~\n~'''~\n~'''	<Activity android:launchMode="singleInstance" />~\n~'''	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="18"/>~\n~'''	~\n~'''	<supports-screens android:largeScreens="true" ~\n~'''	    android:xlargeScreens="true"~\n~'''    	android:normalScreens="false" ~\n~'''    	android:smallScreens="false" ~\n~'''		android:requiresSmallestWidthDp="800"~\n~'''    	android:anyDensity="true"/>~\n~'''~\n~'''		~\n~'''	<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>~\n~'''	<uses-permission android:name="android.permission.GET_ACCOUNTS" />~\n~'''	~\n~''')~\n~'''~\n~'''SetActivityAttribute(main, android:windowSoftInputMode, adjustPan|stateHidden)~\n~'''~\n~'''SetApplicationAttribute(android:hardwareAccelerated, "true")~\n~'''SetApplicationAttribute(android:theme, "@android:style/Theme.Holo.Light")~\n~'''SetApplicationAttribute(android:icon, "@drawable/icon")~\n~'''SetApplicationAttribute(android:label, "$LABEL$")~\n~'''~\n~'''AddPermission(android.permission.REBOOT)~\n~'''AddPermission(android.permission.WAKE_LOCK)~\n~'''AddPermission(android.permission.ACCESS_NETWORK_STATE)~\n~'''~\n~'''#if not (KE)~\n~'''AddPermission(android.permission.MEDIA_UNMOUNTED)~\n~'''AddPermission(android.permission.MEDIA_MOUNTED)~\n~'''~\n~'''AddReceiverText(svrMediaHelper,~\n~'''<intent-filter>~\n~'''    <action android:name="android.intent.action.MEDIA_MOUNTED" />~\n~'''	<data android:scheme="file"/>~\n~'''</intent-filter>)~\n~'''~\n~'''AddReceiverText(svrMediaHelper,~\n~'''<intent-filter>~\n~'''    <action android:name="android.intent.action.MEDIA_UNMOUNTED" />~\n~'''	<data android:scheme="file"/>~\n~'''</intent-filter>)~\n~'''#end if~\n~'''~\n~'''#if not (KE)~\n~'''AddReceiverText(eu.dgconsulting.appupdating.newinst2,~\n~'''  <intent-filter>~\n~'''  <action android:name="android.intent.action.PACKAGE_REPLACED" />~\n~'''    <data android:scheme="package" />~\n~'''  </intent-filter>)~\n~''' #end if~\n~~\n~
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~'--- https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~'--- Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~'--- Take over power functions~\n~AddPermission(android.permission.WAKE_LOCK)~\n~AddPermission(android.permission.WRITE_SETTINGS)~\n~~\n~AddPermission(android.permission.INTERNET)~\n~~\n~'--- app update crap~\n~AddManifestText(<uses-permission~\n~	android:name="android.permission.WRITE_EXTERNAL_STORAGE"~\n~	android:maxSdkVersion="18" />~\n~)~\n~~\n~AddApplicationText(~\n~  <provider~\n~  android:name="android.support.v4.content.FileProvider"~\n~  android:authorities="$PACKAGE$.provider"~\n~  android:exported="false"~\n~  android:grantUriPermissions="true">~\n~  <meta-data~\n~  android:name="android.support.FILE_PROVIDER_PATHS"~\n~  android:resource="@xml/provider_paths"/>~\n~  </provider>~\n~)~\n~CreateResource(xml, provider_paths,~\n~   <files-path name="name" path="shared" />~\n~)~\n~AddPermission(android.permission.REQUEST_INSTALL_PACKAGES)~\n~~\n~~\n~'===============================================================================~\n~~\n~''''https://www.b4x.com/android/forum/threads/android-jar-targetsdkversion-minsdkversion.87610/~\n~''''Non-ssl (non-https) communication is not permitted by default. It can be enabled in B4A v9+ by adding this line to the manifest editor:~\n~'''CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~'''~\n~'''AddManifestText(~\n~'''~\n~'''	<Activity android:launchMode="singleInstance" />~\n~'''	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="18"/>~\n~'''	~\n~'''	<supports-screens android:largeScreens="true" ~\n~'''	    android:xlargeScreens="true"~\n~'''    	android:normalScreens="false" ~\n~'''    	android:smallScreens="false" ~\n~'''		android:requiresSmallestWidthDp="800"~\n~'''    	android:anyDensity="true"/>~\n~'''~\n~'''		~\n~'''	<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>~\n~'''	<uses-permission android:name="android.permission.GET_ACCOUNTS" />~\n~'''	~\n~''')~\n~'''~\n~'''SetActivityAttribute(main, android:windowSoftInputMode, adjustPan|stateHidden)~\n~'''~\n~'''SetApplicationAttribute(android:hardwareAccelerated, "true")~\n~'''SetApplicationAttribute(android:theme, "@android:style/Theme.Holo.Light")~\n~'''SetApplicationAttribute(android:icon, "@drawable/icon")~\n~'''SetApplicationAttribute(android:label, "$LABEL$")~\n~'''~\n~'''AddPermission(android.permission.REBOOT)~\n~'''AddPermission(android.permission.WAKE_LOCK)~\n~'''AddPermission(android.permission.ACCESS_NETWORK_STATE)~\n~'''~\n~'''#if not (KE)~\n~'''AddPermission(android.permission.MEDIA_UNMOUNTED)~\n~'''AddPermission(android.permission.MEDIA_MOUNTED)~\n~'''~\n~'''AddReceiverText(svrMediaHelper,~\n~'''<intent-filter>~\n~'''    <action android:name="android.intent.action.MEDIA_MOUNTED" />~\n~'''	<data android:scheme="file"/>~\n~'''</intent-filter>)~\n~'''~\n~'''AddReceiverText(svrMediaHelper,~\n~'''<intent-filter>~\n~'''    <action android:name="android.intent.action.MEDIA_UNMOUNTED" />~\n~'''	<data android:scheme="file"/>~\n~'''</intent-filter>)~\n~'''#end if~\n~'''~\n~'''#if not (KE)~\n~'''AddReceiverText(eu.dgconsulting.appupdating.newinst2,~\n~'''  <intent-filter>~\n~'''  <action android:name="android.intent.action.PACKAGE_REPLACED" />~\n~'''    <data android:scheme="package" />~\n~'''  </intent-filter>)~\n~''' #end if~\n~~\n~
 Module1=|relative|src\miscClasses\AppUpdate
 Module10=|relative|src\generic\config
 Module11=|relative|src\dialogs\dlgAbout
@@ -142,7 +141,7 @@ Module7=|relative|src\custom_controls\CircularProgressBar
 Module8=|relative|src\generic\clrTheme
 Module9=|relative|src\miscClasses\clvSelectionsX
 NumberOfFiles=32
-NumberOfLibraries=21
+NumberOfLibraries=20
 NumberOfModules=55
 Version=11.8
 @EndOfDesignText@
@@ -536,8 +535,7 @@ Private Sub CheckNonMarketAppsEnabled As Boolean
 End Sub
 
 Private Sub SendInstallIntent(path As String) 'ignore
-	Dim i As Intent
-	Dim fullpath As String
+	Dim i As Intent, fullpath As String
 	If ph.SdkVersion >= 24 Then
 		fullpath = Starter.Provider.GetFileUri(fileHelpers.GetFilenameFromPath(gblConst.APK_NAME))
 		i.Initialize("android.intent.action.INSTALL_PACKAGE", fullpath)
@@ -547,6 +545,7 @@ Private Sub SendInstallIntent(path As String) 'ignore
 		i.Initialize(i.ACTION_VIEW, fullpath)
 		i.SetType("application/vnd.android.package-archive")
 	End If
+	logMe.LogIt("App update fullpath: " & fullpath, mModule)
 	StartActivity(i)
 End Sub
 

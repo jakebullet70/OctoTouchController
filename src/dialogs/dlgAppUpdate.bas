@@ -77,6 +77,9 @@ End Sub
 
 
 Private Sub GrabVerInfo
+
+	'--- save version check date
+	Starter.kvs.Put(gblConst.CHECK_VERSION_DATE,DateTime.Now)
 	
 	Dim sm As HttpDownloadStr : sm.Initialize
 	Wait For (sm.SendRequest(gblConst.APK_FILE_INFO)) Complete(txt As String)
@@ -139,17 +142,18 @@ Private Sub btnCtrl_Click
 	If j.Success Then
 		
 		lblAction.Text = "Writing file..."
-		Sleep(300)
+		Sleep(200)
 		
 		Dim out As OutputStream = File.OpenOutput(DownloadDir, _
 				fileHelpers.GetFilenameFromPath(gblConst.APK_NAME), False)
 				
 		File.Copy2(j.GetInputStream, out)
 		out.Close '<------ very important
-		
-		Starter.tmrTimerCallSub.CallSubDelayedPlus2(Main,"Start_ApkInstall",400,Array As String(DownloadDir))
-		
 		j.Release
+		Sleep(200)
+		
+		Starter.tmrTimerCallSub.CallSubDelayedPlus2(Main,"Start_ApkInstall",300,Array As String(DownloadDir))
+		
 		mDialog.Close(-1) '<--- close me, exit dialog
 		Return
 
@@ -169,22 +173,22 @@ End Sub
 
 Private Sub GetDownloadDir() As String
 	
-	'--- its an android 6.x thing...
-	
+	'--- its an android version thing...
+	Dim dl As String
 	Try
-		Dim ph As Phone
-		If ph.SdkVersion >= 24 Then
-			Dim dl As String = Starter.Provider.SharedFolder
-			File.WriteString(dl,"t.t","test")
-			File.Delete(dl,"t.t")
-			Return dl '--- all good
-		End If
+
+		dl = Starter.Provider.SharedFolder
+		File.WriteString(dl,"t.t","test")
+		File.Delete(dl,"t.t")
 		
 	Catch
-		'Log(LastException)
+		
+		dl = xui.DefaultFolder
+		
 	End Try 'ignore
 	
-	Return xui.DefaultFolder
+	logMe.LogIt("App update folder: " & dl, mModule)
+	Return dl '--- all good
 	
 End Sub
 

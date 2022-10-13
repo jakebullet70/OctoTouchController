@@ -31,6 +31,8 @@ Sub Process_Globals
 	Public Const PWR_SONOFF_PLUGIN As String = "pwr_sonoff_on"
 	'---------------------------------------------------------------------------------------------------------------------
 	
+	Public Const CHECK_VERSION_DATE As String = "chk_v_dt"
+	
 	'---------------------------------------------------------------------------------------------------------------------
 	'--- Plugins - ZLED and WS281
 	Public Const ZLED_CTRL_ON As String = "sTurnOn"

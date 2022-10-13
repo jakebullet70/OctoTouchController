@@ -172,10 +172,13 @@ Private Sub GetDownloadDir() As String
 	'--- its an android 6.x thing...
 	
 	Try
-		Dim dl As String = Starter.Provider.SharedFolder
-		File.WriteString(dl,"t.t","test")
-		File.Delete(dl,"t.t")
-		Return dl '--- all good
+		Dim ph As Phone
+		If ph.SdkVersion >= 24 Then
+			Dim dl As String = Starter.Provider.SharedFolder
+			File.WriteString(dl,"t.t","test")
+			File.Delete(dl,"t.t")
+			Return dl '--- all good
+		End If
 		
 	Catch
 		'Log(LastException)

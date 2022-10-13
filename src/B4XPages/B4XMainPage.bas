@@ -38,11 +38,7 @@ Sub Class_Globals
 	Private mConnectionErrDlgShowingFLAG As Boolean = False
 	
 	Public pPrinterCfgDlgShowingFLAG As Boolean = False
-	
 	Private PromptExitTwice As Boolean = False
-
-	'--- checking for app update - busy screen
-	'Private pnlUpdate,lblUpdate As B4XView, ivUpdate As ImageView
 	Private mToastTxtSize As Int	
 	
 End Sub

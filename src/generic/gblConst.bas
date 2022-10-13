@@ -12,8 +12,10 @@ Sub Process_Globals
 	
 	Public Const DEGREE_SYMBOL As String = "°" 
 	Public const APP_TITLE As String = "OctoTC ™"
-	Public Const APK_NAME As String = "OctoTouchController.apk"
-	Public Const APK_FILE_INFO As String = "OctoTouchController.txt"
+	
+	Private Const WEB_ADDR As String = "http://sadlogic.com/octotouchcontroller/"
+	Public Const APK_NAME As String = WEB_ADDR & "OctoTouchController.apk"
+	Public Const APK_FILE_INFO As String = WEB_ADDR & "OctoTouchController.txt"
 	
 	Public Const PRINTER_SETTING_BASE_FILE_NAME As String = "p_settings"
 	Public Const PRINTER_DESC As String = "desc"
@@ -30,6 +32,7 @@ Sub Process_Globals
 	'---------------------------------------------------------------------------------------------------------------------
 	
 	'---------------------------------------------------------------------------------------------------------------------
+	'--- Plugins - ZLED and WS281
 	Public Const ZLED_CTRL_ON As String = "sTurnOn"
 	Public Const ZLED_ENDPOINT As String = "sEP"
 	Public Const ZLED_CMD_ON As String = "sOn"
@@ -52,19 +55,21 @@ Sub Process_Globals
 	Public Const PAGE_MOVEMENT As String = "mve"
 	Public Const PAGE_MENU As String = "mnu"
 	
+	'--- misc
 	Public Const NO_FILE_LOADED As String = " No file loaded"
-	
 	Public Const WIN_CRLF As String = Chr(10) & Chr(13)
 	
 	'--- msgbox
 	Public Const MB_ICON_WARNING As String = "mb_stop.png"
 	Public Const MB_ICON_INFO As String = "mb_info.png"
 	Public Const MB_ICON_QUESTION As String = "mb_question.png"
-	
+
+	'--- android pre 4 action bar	
 	Public Const ACTIONBAR_OFF As Int = 1
 	Public Const ACTIONBAR_ON As Int = 0
 
 	'---------------------------------------------------------------------------------------------------------------------
+	'--- Filament wizard ---
 	Public filHomeBeforePark As String = "hbp",filRetractBeforePark As String = "rbp"
 	Public filPauseBeforePark As String = "pbp"
 	Public filUnloadLen As String = "ulen",filUnloadSpeed As String = "uspd"

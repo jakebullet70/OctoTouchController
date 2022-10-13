@@ -107,44 +107,43 @@ Module25=|relative|src\dialogs\dlgViewText
 Module26=|relative|src\dialogs\dlgZLEDSetup
 Module27=|relative|src\helperClasses\fileHelpers
 Module28=|relative|src\generic\fnc
-Module29=|relative|src\miscClasses\ftp_support
+Module29=|relative|src\generic\gblConst
 Module3=|relative|src\B4XPages\B4XMainPage
-Module30=|relative|src\generic\gblConst
-Module31=|relative|src\helperClasses\guiHelpers
-Module32=|relative|src\miscClasses\HttpDownloadStr
-Module33=|relative|src\octoPrint\HttpOctoRestAPI
-Module34=|relative|src\miscClasses\InMemDB
-Module35=|relative|src\octoPrint\JSONparsors\JsonParserFiles
-Module36=|relative|src\octoPrint\JSONparsors\JsonParserMasterPrinterSettings
-Module37=|relative|src\octoPrint\JSONparsors\JsonParsorConnectionStatus
-Module38=|relative|src\octoPrint\JSONparsors\JsonParsorMain
-Module39=|relative|src\octoPrint\JSONparsors\JsonParsorOctoVersion
+Module30=|relative|src\helperClasses\guiHelpers
+Module31=|relative|src\miscClasses\HttpDownloadStr
+Module32=|relative|src\octoPrint\HttpOctoRestAPI
+Module33=|relative|src\miscClasses\InMemDB
+Module34=|relative|src\octoPrint\JSONparsors\JsonParserFiles
+Module35=|relative|src\octoPrint\JSONparsors\JsonParserMasterPrinterSettings
+Module36=|relative|src\octoPrint\JSONparsors\JsonParsorConnectionStatus
+Module37=|relative|src\octoPrint\JSONparsors\JsonParsorMain
+Module38=|relative|src\octoPrint\JSONparsors\JsonParsorOctoVersion
+Module39=|relative|src\custom_controls\lmB4XImageViewX
 Module4=|relative|src\miscClasses\Beeper
-Module40=|relative|src\custom_controls\lmB4XImageViewX
-Module41=|relative|src\generic\logMe
-Module42=|relative|src\main\MasterController
-Module43=|relative|src\helperClasses\objHelpers
-Module44=|relative|src\octoPrint\oc
-Module45=|relative|src\pageViews\pageFiles
-Module46=|relative|src\pageViews\pageMenu
-Module47=|relative|src\pageViews\pageMovement
-Module48=|relative|src\pageViews\pagePrinting
-Module49=|relative|src\helperClasses\powerHelpers
+Module40=|relative|src\generic\logMe
+Module41=|relative|src\main\MasterController
+Module42=|relative|src\helperClasses\objHelpers
+Module43=|relative|src\octoPrint\oc
+Module44=|relative|src\pageViews\pageFiles
+Module45=|relative|src\pageViews\pageMenu
+Module46=|relative|src\pageViews\pageMovement
+Module47=|relative|src\pageViews\pagePrinting
+Module48=|relative|src\helperClasses\powerHelpers
+Module49=|relative|src\octoPrint\RequestApiKey
 Module5=|relative|src\miscClasses\CallSubUtils
-Module50=|relative|src\octoPrint\RequestApiKey
-Module51=|relative|src\custom_controls\sadPreferencesDialog
-Module52=|relative|src\custom_controls\sadRoundSlider
-Module53=|relative|src\main\Starter
-Module54=|relative|src\helperClasses\strHelpers
-Module55=|relative|src\miscClasses\SysInfo
-Module56=|relative|src\miscClasses\WildCardFilesList
+Module50=|relative|src\custom_controls\sadPreferencesDialog
+Module51=|relative|src\custom_controls\sadRoundSlider
+Module52=|relative|src\main\Starter
+Module53=|relative|src\helperClasses\strHelpers
+Module54=|relative|src\miscClasses\SysInfo
+Module55=|relative|src\miscClasses\WildCardFilesList
 Module6=|relative|src\octoPrint\CheckOctoConnection
 Module7=|relative|src\custom_controls\CircularProgressBar
 Module8=|relative|src\generic\clrTheme
 Module9=|relative|src\miscClasses\clvSelectionsX
 NumberOfFiles=32
 NumberOfLibraries=21
-NumberOfModules=56
+NumberOfModules=55
 Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
@@ -540,11 +539,11 @@ Private Sub SendInstallIntent(path As String) 'ignore
 	Dim i As Intent
 	Dim fullpath As String
 	If ph.SdkVersion >= 24 Then
-		fullpath = Starter.Provider.GetFileUri(gblConst.APK_NAME)
+		fullpath = Starter.Provider.GetFileUri(fileHelpers.GetFilenameFromPath(gblConst.APK_NAME))
 		i.Initialize("android.intent.action.INSTALL_PACKAGE", fullpath)
 		i.Flags = Bit.Or(i.Flags, 1) '--- FLAG_GRANT_READ_URI_PERMISSION
 	Else
-		fullpath = "file://" & File.Combine(path, gblConst.APK_NAME)
+		fullpath = "file://" & File.Combine(path, fileHelpers.GetFilenameFromPath(gblConst.APK_NAME))
 		i.Initialize(i.ACTION_VIEW, fullpath)
 		i.SetType("application/vnd.android.package-archive")
 	End If

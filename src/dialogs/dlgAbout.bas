@@ -41,7 +41,7 @@ Public Sub Show
 		h = 300dip
 	Else
 	 	w = IIf(guiHelpers.gScreenSizeAprox < 6,guiHelpers.gWidth - 40dip,520dip)
-		h = 280dip
+		h = 300dip
 	End If
 	
 	p.SetLayoutAnimated(0, 0, 0, w,h)

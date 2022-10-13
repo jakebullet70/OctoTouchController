@@ -19,15 +19,32 @@ Sub Class_Globals
 	Private lblAction As AutoTextSizeLabel,lblPB As Label
 	
 	Private btnContinue As B4XView
-	Private oFTP As ftp_support
+
+	'Private oFTP As ftp_support
 	
 End Sub
+
+Public Sub CleanUpApkDownload
+	
+	fileHelpers.SafeKill2(Starter.Provider.SharedFolder,gblConst.APK_NAME)
+	fileHelpers.SafeKill2(Starter.Provider.SharedFolder,gblConst.APK_FILE_INFO)
+	fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.APK_NAME)
+	fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.APK_FILE_INFO)
+		
+End Sub
+
 
 
 Public Sub Initialize(parentObj As B4XView)
 	
 	mMainObj = parentObj
 	
+End Sub
+
+
+Public Sub Show() As ResumableSub
+	
+	CleanUpApkDownload
 	BasePnl = xui.CreatePanel("")
 	BasePnl.SetLayoutAnimated(0, 0, 0, 360dip,240dip)
 	BasePnl.LoadLayout("viewAppUpdate")
@@ -39,10 +56,6 @@ Public Sub Initialize(parentObj As B4XView)
 	lblPB.Visible   = False
 	lblPB.TextColor = clrTheme.txtNormal
 	
-End Sub
-
-
-Public Sub Show() As ResumableSub
 	
 	'--- init dialog
 	mDialog.Initialize(mMainObj)
@@ -52,64 +65,29 @@ Public Sub Show() As ResumableSub
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 	
 	'--- grab the txt file with version info
-	oFTP.Initialize(Me,"ftp_done","ftp_progress","192.168.1.230",21,"","")
-	oFTP.CleanUpApkDownload
-	oFTP.Download(gblConst.APK_FILE_INFO,"",True)
+	Starter.tmrTimerCallSub.CallSubPlus(Me,"GrabVerInfo",250)
 
 	'--- wait for dialog	
 	Wait For (rs) Complete (Result As Int)
 	
-	oFTP.ftp.Close '--- make sure it is closed
+	'oFTP.ftp.Close '--- make sure it is closed
 	Return Result
 	
 End Sub
 
 
-Public Sub ftp_progress(totalDloaded As Long)
+Private Sub GrabVerInfo
 	
-	If lblPB.Visible = False Then Return
-	lblPB.Text = fileHelpers.BytesToReadableString(totalDloaded)
-	'Sleep(0)
+	Dim sm As HttpDownloadStr : sm.Initialize
+	Wait For (sm.SendRequest(gblConst.APK_FILE_INFO)) Complete(txt As String)
 	
-End Sub
-
-
-Public Sub ftp_done(m As Map)
-	
-	If m.Get("ok") = False Then
+	If txt.Contains("vcode=") = False Then
 		lblAction.BaseLabel.Height = lblAction.BaseLabel.Height + 20dip
-		lblAction.Text = "Error talking to update server." & CRLF & m.Get("err")
+		lblAction.Text = "Error talking to update server."
 		Return
 	End If
 	
-	If m.Get("file") = gblConst.APK_FILE_INFO Then
-		ParseVerTextFile
-	Else 
-		'--- we have the APK, install it
-		Starter.tmrTimerCallSub.CallSubDelayedPlus2(Main,"Start_ApkInstall",400,Array As String(oFTP.DownloadDir))
-		mDialog.Close(-1) '--- close me, exit dialog
-	End If
 	
-End Sub
-
-
-Private Sub btnCtrl_Click
-	
-	'--- continue, download the APK
-	Dim btn As B4XView = mDialog.GetButton(xui.DialogResponse_Cancel)
-	btn.Text = "CANCEL"
-	btnContinue.Visible = False
-	lblPB.Visible = True
-	lblPB.Text = "Connecting..."
-	oFTP.Initialize(Me,"ftp_done","ftp_progress","192.168.1.230",21,"","")
-	oFTP.Download(gblConst.APK_NAME,"",False)
-	
-End Sub
-
-
-Private Sub ParseVerTextFile
-	
-	Dim txt As String = File.ReadString(oFTP.DownloadDir,gblConst.APK_FILE_INFO)
 	txt = txt.Replace(Chr(13),"") '--- strip the chr(13) in case its a Windows file
 	
 	Try
@@ -134,6 +112,81 @@ Private Sub ParseVerTextFile
 		
 	End Try
 	
+	
 End Sub
+
+
+
+
+Private Sub btnCtrl_Click
+	
+	'--- continue, download the APK
+	Dim btn As B4XView = mDialog.GetButton(xui.DialogResponse_Cancel)
+	btn.Visible = False
+	btnContinue.Visible = False
+	'lblPB.Visible = True
+	lblAction.Text = "Downloading Update..."
+	
+		
+	Dim DownloadDir As String = GetDownloadDir 'ignore
+	
+	Dim j As HttpJob : j.Initialize("", Me)
+	
+	j.Download(gblConst.APK_NAME)
+	Wait For (j) JobDone(j As HttpJob)
+	Sleep(0)
+	
+	If j.Success Then
+		
+		lblAction.Text = "Writing file..."
+		Sleep(300)
+		
+		Dim out As OutputStream = File.OpenOutput(DownloadDir, _
+				fileHelpers.GetFilenameFromPath(gblConst.APK_NAME), False)
+				
+		File.Copy2(j.GetInputStream, out)
+		out.Close '<------ very important
+		
+		Starter.tmrTimerCallSub.CallSubDelayedPlus2(Main,"Start_ApkInstall",400,Array As String(DownloadDir))
+		
+		j.Release
+		mDialog.Close(-1) '<--- close me, exit dialog
+		Return
+
+	Else
+		
+		Dim err As String = ""
+		'--- if end point is bad it will have errored aot at downloading the ver text file
+		If j.ErrorMessage.Contains("File not") Then err = "File not found"
+		lblAction.Text = "Download failed" & CRLF & err
+		
+	End If
+	
+	j.Release
+	
+End Sub
+
+
+Private Sub GetDownloadDir() As String
+	
+	'--- its an android 6.x thing...
+	
+	Try
+		Dim dl As String = Starter.Provider.SharedFolder
+		File.WriteString(dl,"t.t","test")
+		File.Delete(dl,"t.t")
+		Return dl '--- all good
+		
+	Catch
+		'Log(LastException)
+	End Try 'ignore
+	
+	Return xui.DefaultFolder
+	
+End Sub
+
+
+
+
 
 

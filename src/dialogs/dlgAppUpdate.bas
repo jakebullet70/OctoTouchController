@@ -20,8 +20,6 @@ Sub Class_Globals
 	
 	Private btnContinue As B4XView
 
-	'Private oFTP As ftp_support
-	
 End Sub
 
 Public Sub CleanUpApkDownload

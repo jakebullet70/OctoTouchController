@@ -210,7 +210,7 @@ Public Sub connect_Complete (result As Object, success As Object)
 		Dim w As Float = IIf(guiHelpers.gIsLandScape,500dip,390dip)
 
 		Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",w, 220dip,False)
-		Wait For (mb.Show(guiHelpers.GetConnectFailedMsg,gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
+		Wait For (mb.Show(guiHelpers.GetConnectFailedMsg,gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
 	End If
 	
 End Sub

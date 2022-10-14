@@ -55,6 +55,10 @@ Public Sub Show
 	guiHelpers.ThemeDialogForm(mDialog, "Power Control")
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
+	
+	If oc.Tool1ActualReal > 50 Then
+		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Warning - tool temp is hot", 4000)
+	End If
 
 	Wait For (rs) Complete (Result As Int)
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)

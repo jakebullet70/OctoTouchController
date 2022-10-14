@@ -47,9 +47,16 @@ Public Sub CheckIfChanged(jsonTXT As String,oldMap As Map) As Boolean
 	
 	For Each colfiles As Map In files
 		Try
+			If colfiles.Get("type") = "folder" Then 
+				'--- not supporting dir at the moment
+				'--- this can fire if they add a dir
+				Continue
+			End If
+			
 			fileDate = colfiles.Get("date")
 			fileName =  colfiles.Get("display")
 			hash = colfiles.Get("hash")
+			
 		Catch
 			logMe.LogIt2("ParseComp00: ",mModule,InSub)
 		End Try

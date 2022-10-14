@@ -82,8 +82,8 @@ End Sub
 
 Private Sub BuildAboutLabel
 	lblAboutLoadUnload.Initialize("ShowInfoLoad")
-	lblAboutLoadUnload.Text = "Help"
-	lblAboutLoadUnload.TextColor = Colors.White
+	Dim cs As CSBuilder
+	lblAboutLoadUnload.Text = cs.Initialize.Underline.Color(clrTheme.txtNormal).Append("Help").PopAll
 	lblAboutLoadUnload.TextSize = 20
 	mPrefDlg.Dialog.Base.AddView(lblAboutLoadUnload,14dip,mPrefDlg.Dialog.Base.Height - 47dip,80dip,36dip)
 End Sub

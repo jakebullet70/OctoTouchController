@@ -34,9 +34,7 @@ Public Sub SendRequest(target As String)As ResumableSub
 	If j.Success Then
 		retStr = j.GetString		
 	Else
-		If config.logREST_API Then
-			logMe.logit2("ERROR: " & j.ErrorMessage,mModule,insub)
-		End If
+		logMe.logit2("ERROR: " & j.ErrorMessage,mModule,insub)
 	End If
 	
 	j.Release '--- free up resources

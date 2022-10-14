@@ -235,7 +235,7 @@ Private Sub btnPresetMaster_Click
 	If oc.isConnected = False Then Return
 	
 	Dim o1 As dlgListbox
-	o1.Initialize(mMainObj,"Heater Presets",Me,"TempChange_Presets")
+	o1.Initialize(mMainObj,"Heater Presets",B4XPages.MainPage,"TempChange_Presets")
 	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,390dip)
 	o1.Show(220dip,w,mMainObj.oMasterController.mapAllHeatingOptions)
 	
@@ -252,7 +252,7 @@ Private Sub btnPresetTemp_Click
 	If oc.isConnected = False Then Return
 		
 	Dim o1 As dlgListbox
-	o1.Initialize(mMainObj,IIf(btn.tag = "tool","Tool Presets","Bed Presets"),Me,"TempChange_Presets")
+	o1.Initialize(mMainObj,IIf(btn.tag = "tool","Tool Presets","Bed Presets"),B4XPages.MainPage,"TempChange_Presets")
 	o1.Tag = btn.tag
 	o1.Show(280dip,290dip,IIf(btn.Tag = "tool", _
 				mMainObj.oMasterController.mapToolHeatingOptions, _
@@ -260,71 +260,6 @@ Private Sub btnPresetTemp_Click
 	
 End Sub
 
-
-Private Sub TempChange_Presets(selectedMsg As String, tag As Object)
-	
-	'--- callback for btnPresetTemp_Click
-	
-	If selectedMsg.Length = 0 Then Return
-	
-	If selectedMsg = "alloff" Then
-		mMainObj.oMasterController.AllHeaters_Off
-		guiHelpers.Show_toast("Tool / Bed Off",1200)
-		Return
-	End If
-	
-	Dim tagme As String = tag.As(String)
-	Dim msg, getTemp As String
-	Dim startNDX, endNDX As Int
-	
-	Select Case True
-		
-		Case selectedMsg.EndsWith("off")
-			If tagme = "bed" Then
-				mMainObj.oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",0))
-				msg = "Bed Off"
-			Else
-				mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
-				msg = "Tool Off"
-			End If
-			
-		Case selectedMsg.Contains("Tool") And Not (selectedMsg.Contains("Bed"))
-			'--- Example, Set PLA (Tool: 60øC )
-			startNDX = selectedMsg.IndexOf(": ")
-			endNDX = selectedMsg.IndexOf(gblConst.DEGREE_SYMBOL)
-			getTemp = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
-			mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
-			msg = selectedMsg.Replace("Set","Setting")
-			
-		Case selectedMsg.Contains("Bed") And Not (selectedMsg.Contains("Tool"))
-			'--- Example, PLA (Bed: 60øC )
-			startNDX = selectedMsg.IndexOf(": ")
-			endNDX = selectedMsg.IndexOf(gblConst.DEGREE_SYMBOL)
-			getTemp = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
-			mMainObj.oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
-			msg = selectedMsg.Replace("Set","Setting")
-			
-		Case Else
-			'--- Example, Set ABS (Tool: 240øC  / Bed: 105øC )
-			Dim toolMSG As String = Regex.Split("/",selectedMsg)(0)
-			Dim bedMSG  As String = Regex.Split("/",selectedMsg)(1)
-				
-			startNDX = toolMSG.IndexOf(": ")
-			endNDX = toolMSG.IndexOf(gblConst.DEGREE_SYMBOL)
-			getTemp = toolMSG.SubString2(startNDX + 2,endNDX).Trim
-			mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
-				
-			startNDX = bedMSG.IndexOf(": ")
-			endNDX = bedMSG.IndexOf(gblConst.DEGREE_SYMBOL)
-			getTemp = bedMSG.SubString2(startNDX + 2,endNDX).Trim
-			mMainObj.oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
-			msg = selectedMsg.Replace("Set","Setting")
-			
-	End Select
-	
-	guiHelpers.Show_toast(msg,3000)
-	
-End Sub
 #end region
 
 #region "TEMP_CHANGE_EDIT"

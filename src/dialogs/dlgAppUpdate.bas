@@ -111,7 +111,7 @@ Private Sub GrabVerInfo
 		
 	Catch
 		
-		Log(LastException)
+		logMe.LogIt2(LastException.Message,mModule,"GrabVerInfo")
 		lblAction.Text = "Error parsing update file."
 		
 	End Try

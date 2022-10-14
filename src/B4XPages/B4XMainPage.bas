@@ -73,6 +73,8 @@ Public Sub Initialize
 	'--- set toast text size
 	mToastTxtSize = IIf(guiHelpers.gScreenSizeAprox > 5,24,22) 
 	
+	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Check4_Update",8000)
+	
 End Sub
 
 #Region "PAGE EVENTS"
@@ -636,4 +638,12 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	
 End Sub
 
-
+Public Sub Check4_Update
+	
+	Dim obj As dlgAppUpdate : obj.Initialize(Null)
+	Wait For (obj.CheckIfNewDownloadAvail()) Complete (yes As Boolean)
+	If yes Then
+		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "App update available", 3600)
+	End If
+		
+End Sub

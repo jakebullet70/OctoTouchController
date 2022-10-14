@@ -19,6 +19,8 @@ Sub Class_Globals
 	Private lblAction As AutoTextSizeLabel,lblPB As Label
 	
 	Private btnContinue As B4XView
+	
+	Private Const DAYS_BETWEEN_CHECKS As Int = 1
 
 End Sub
 
@@ -31,6 +33,60 @@ Public Sub CleanUpApkDownload
 		
 End Sub
 
+
+Public Sub CheckIfNewDownloadAvail()As ResumableSub
+	
+	Dim inSub As String = "CheckIfNewDownloadAvail"
+	
+	Dim oldDate As Long = Starter.kvs.GetDefault(gblConst.CHECK_VERSION_DATE,0)
+	If oldDate = 0 Then
+		Starter.kvs.Put(gblConst.CHECK_VERSION_DATE,DateTime.Now) '<-- never been run so save date
+		Return False
+	End If
+	
+'	Dim p As Period : p.Days = -16 ' TESTING
+'	Dim tdate As Long = DateUtils.AddPeriod(DateTime.Now, p)
+'	Starter.kvs.Put(gblConst.CHECK_VERSION_DATE,tdate)
+'	oldDate = Starter.kvs.GetDefault(gblConst.CHECK_VERSION_DATE,0)
+	
+	Try
+		
+		Log(DateUtils.PeriodBetweenInDays(oldDate,DateTime.Now).As(Period).Days)
+		If DateUtils.PeriodBetweenInDays(oldDate,DateTime.Now).As(Period).Days < DAYS_BETWEEN_CHECKS Then
+			Return False
+		End If
+		
+	Catch
+		
+		logMe.LogIt2(LastException.Message,mModule,inSub)
+		Return False
+		
+	End Try
+	
+	
+	Dim sm As HttpDownloadStr : sm.Initialize
+	Wait For (sm.SendRequest(gblConst.APK_FILE_INFO)) Complete(txt As String)
+	
+	If txt.Contains("vcode=") = False Then Return False
+	txt = txt.Replace(Chr(13),"") '<-- strip the chr(13) in case its a Windows file
+	
+	
+	Try
+		
+		Starter.kvs.Put(gblConst.CHECK_VERSION_DATE,DateTime.Now) '--- save version check date
+		Dim parts() As String = Regex.Split(CRLF,txt)
+		Dim VerCode As String = Regex.Split("=",parts(0))(1)
+		
+		Return (VerCode.As(Int) > Application.VersionCode)
+		
+	Catch
+		
+		logMe.LogIt2(LastException.Message,mModule,inSub)
+		Return False
+		
+	End Try
+	
+End Sub
 
 
 Public Sub Initialize(parentObj As B4XView)

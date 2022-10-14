@@ -59,7 +59,7 @@ Public Sub Show
 
 	guiHelpers.ThemePrefDialogForm(mPowerDlg)
 	mPowerDlg.PutAtTop = False
-	Dim RS As ResumableSub = mPowerDlg.ShowDialog(Data, "OK", "Cancel")
+	Dim RS As ResumableSub = mPowerDlg.ShowDialog(Data, "OK", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(mPowerDlg.Dialog)
 		
 	Wait For (RS) Complete (Result As Int)

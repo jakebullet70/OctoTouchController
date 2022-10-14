@@ -169,7 +169,7 @@ Private Sub btnCheckConnection_Click
 		Dim mb As dlgMsgBox
 		Dim w As Float = IIf(guiHelpers.gIsLandScape,460dip,390dip)
 		mb.Initialize(mMainObj.Root,"Problem",w, 220dip,False)
-		Wait For (mb.Show(msg,gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
+		Wait For (mb.Show(msg,gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
 		Return
 	End If
 	
@@ -234,7 +234,7 @@ Private Sub btnGetOctoKey_Click
 		Dim mb As dlgMsgBox 
 		mb.Initialize(mMainObj.Root,"Problem",w, 200dip,False)
 		Wait For (mb.Show("Please check if your IP and Port Are Set", _
-					gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
+					gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
 		Return
 	End If
 	
@@ -246,7 +246,7 @@ Private Sub btnGetOctoKey_Click
 
 	Dim mb As dlgMsgBox 
 	mb.Initialize(mMainObj.Root,"Request Octo Key", w, 220dip,False)
-	Wait For (mb.Show(msg.ToString,gblConst.MB_ICON_INFO,"OK","","")) Complete (res As Int)
+	Wait For (mb.Show(msg.ToString,gblConst.MB_ICON_INFO,"OK","","CANCEL")) Complete (res As Int)
 	'Dim o1 As Object = xui.Msgbox2Async(msg.ToString, "About", "OK", "", "CANCEL",Null)
 	'Wait For (o1) Msgbox_Result (res As Int)
 	If res <> xui.DialogResponse_Positive Then
@@ -283,7 +283,7 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 		Else
 			Dim w As Float = IIf(guiHelpers.gIsLandScape,500dip,390dip)
 			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",w, 220dip,False)
-			Wait For (mb.Show(result.As(String),gblConst.MB_ICON_WARNING,"OK","","")) Complete (res As Int)
+			Wait For (mb.Show(result.As(String),gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
 		End If
 		
 	Catch

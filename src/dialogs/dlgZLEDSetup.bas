@@ -59,7 +59,7 @@ Public Sub Show
 		mb.Initialize(mMainObj.root,"Information",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip),260dip,False)
 		mb.SetAsOptionalMsgBox("ledWarning")
 		Wait For (mb.Show(guiHelpers.GetOctoPluginWarningTxt, _
-					gblConst.MB_ICON_INFO,"OK","","")) Complete (Result As Int)
+					gblConst.MB_ICON_INFO,"","","OK")) Complete (Result As Int)
 	End If
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,mDataFile)

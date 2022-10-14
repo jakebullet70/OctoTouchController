@@ -55,7 +55,7 @@ Public Sub Show
 	BuildGUI
 	
 	guiHelpers.ThemeDialogForm(mDialog, "About")
-	Dim rs As ResumableSub = mDialog.ShowCustom(p, "OK", "", "")
+	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "OK")
 	BuildAboutLabel
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 

@@ -21,6 +21,8 @@ Sub Class_Globals
 	Private btnContinue As B4XView
 	
 	Private Const DAYS_BETWEEN_CHECKS As Int = 1
+	
+	
 
 End Sub
 
@@ -51,7 +53,6 @@ Public Sub CheckIfNewDownloadAvail()As ResumableSub
 	
 	Try
 		
-		'Log(DateUtils.PeriodBetweenInDays(oldDate,DateTime.Now).As(Period).Days)
 		Dim days As Int = DateUtils.PeriodBetweenInDays(oldDate,DateTime.Now).As(Period).Days
 		If days < DAYS_BETWEEN_CHECKS Then
 			Log("days: " & days)

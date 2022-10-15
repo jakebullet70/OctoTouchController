@@ -296,7 +296,7 @@ Private Sub PopupMainOptionMenu
 	
 	Dim popUpMemuItems As Map = _
 		CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc", _
-				  "Functions Menu":"fn","Plugins Menu":"plg","Read Err File":"rt","About":"ab")
+				  "Functions Menu":"fn","Plugins Menu":"plg","Read Err File":"rt","Check For Update":"cup","About":"ab")
 
 		
 	If oc.isPrinting Or oc.IsPaused2 Then
@@ -354,6 +354,10 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			Else
 				guiHelpers.Show_toast("no error file found",6000)
 			End If
+			
+		Case "cup" '--- check for update
+			Dim up As dlgAppUpdate : up.Initialize(B4XPages.MainPage.Root)
+			up.Show
 			
 	End Select
 	
@@ -643,7 +647,7 @@ Public Sub Check4_Update
 	Dim obj As dlgAppUpdate : obj.Initialize(Null)
 	Wait For (obj.CheckIfNewDownloadAvail()) Complete (yes As Boolean)
 	If yes Then
-		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "App update available", 3600)
+		CallSubDelayed3(Me,"Show_Toast", "App update available", 3600)
 	End If
 		
 End Sub

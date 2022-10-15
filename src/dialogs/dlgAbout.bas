@@ -82,7 +82,7 @@ Private Sub BuildAboutLabel
 	lblCheck4NewVer.TextSize = 20
 	mDialog.Base.AddView(lblCheck4NewVer,14dip,mDialog.Base.Height - 47dip,280dip,36dip)
 	Dim cs As CSBuilder
-	lblCheck4NewVer.Text = cs.Initialize.Underline.Color(clrTheme.txtNormal).Append("Check for new version").PopAll
+	lblCheck4NewVer.Text = cs.Initialize.Underline.Color(clrTheme.txtNormal).Append("Check for update").PopAll
 	
 End Sub
 

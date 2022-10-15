@@ -44,15 +44,17 @@ Public Sub CheckIfNewDownloadAvail()As ResumableSub
 		Return False
 	End If
 	
-'	Dim p As Period : p.Days = -16 ' TESTING
+'	Dim p As Period : p.Days = -16 '--- TESTING
 '	Dim tdate As Long = DateUtils.AddPeriod(DateTime.Now, p)
 '	Starter.kvs.Put(gblConst.CHECK_VERSION_DATE,tdate)
 '	oldDate = Starter.kvs.GetDefault(gblConst.CHECK_VERSION_DATE,0)
 	
 	Try
 		
-		Log(DateUtils.PeriodBetweenInDays(oldDate,DateTime.Now).As(Period).Days)
-		If DateUtils.PeriodBetweenInDays(oldDate,DateTime.Now).As(Period).Days < DAYS_BETWEEN_CHECKS Then
+		'Log(DateUtils.PeriodBetweenInDays(oldDate,DateTime.Now).As(Period).Days)
+		Dim days As Int = DateUtils.PeriodBetweenInDays(oldDate,DateTime.Now).As(Period).Days
+		If days < DAYS_BETWEEN_CHECKS Then
+			Log("days: " & days)
 			Return False
 		End If
 		
@@ -67,10 +69,12 @@ Public Sub CheckIfNewDownloadAvail()As ResumableSub
 	Dim sm As HttpDownloadStr : sm.Initialize
 	Wait For (sm.SendRequest(gblConst.APK_FILE_INFO)) Complete(txt As String)
 	
-	If txt.Contains("vcode=") = False Then Return False
+	If txt.Contains("vcode=") = False Then 
+		Return False '--- no connection? bad ver info?
+	End If
+	
 	txt = txt.Replace(Chr(13),"") '<-- strip the chr(13) in case its a Windows file
-	
-	
+		
 	Try
 		
 		Starter.kvs.Put(gblConst.CHECK_VERSION_DATE,DateTime.Now) '--- save version check date

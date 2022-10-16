@@ -209,9 +209,9 @@ Sub Activity_Create(FirstTime As Boolean)
 		tmrScreen.Initialize("tmrScreenPower",15000)	'--- init, will be reset later
 	
 	Dim fcheck As Long = 8000
-'	#if release
-'	fcheck = 4000
-'	#End If
+	#if release
+	fcheck = 5500
+	#End If
 	'--- TODO add 
 	If tmrFilesCheckChange.IsInitialized = False Then _
 		tmrFilesCheckChange.Initialize("tmrFilesCheckChange",fcheck) '--- octo files check change

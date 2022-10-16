@@ -7,20 +7,27 @@
 
 # OctoTouchController
 A dedicated touch screen controller for Octoprint supporting older Android phones / tablets (Android 4.X) 
-Device specs: Android 4.x or above, 4inch screen with a minimum resolution of 680x340. It is Free Software and released under the [GNU Affero General Public License V3](https://www.gnu.org/licenses/agpl-3.0.html).
+Device specs: Android **4.x or above**, 4inch screen with a minimum resolution of 680x340. It is Free Software and released under the [GNU Affero General Public License V3](https://www.gnu.org/licenses/agpl-3.0.html).
 
 ### Project Purpose
 Reclaim those old Phones / Tablets that are sitting around that *DO NOT* have access to the Google store anymore. 
 This in *not a replacement* for Octoprint but a way to add a touch screen to your printer using old hardware.
 
-Add a dedicated touch screen to your 3D printer!
+Add a dedicated touch screen to your 3D printer with a **low/no cost** Android device you probibly already have!
+
+### Features
+Supports Android 4.X to the latest version  
+Portrait or landscape modes  
+Built in filament loading - unloading wizard  
+Support for Sonoff power device without Octoprint plugin  
+  
 
 ### Supported Octoprint Plugins
 Cura Thumbnails		https://plugins.octoprint.org/plugins/UltimakerFormatPackage/
 
 Prusa Thumbnails	https://plugins.octoprint.org/plugins/prusaslicerthumbnails/
 
-WLED				      https://plugins.octoprint.org/plugins/wled/
+WLED				  https://plugins.octoprint.org/plugins/wled/
 
 PSUControl			  https://plugins.octoprint.org/plugins/psucontrol/
 

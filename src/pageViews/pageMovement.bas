@@ -230,7 +230,7 @@ End Sub
 
 Private Sub BuildFunctionMnu() As Map
 	Dim m As Map : m.Initialize
-	m.Put("Pre-Heat All Menu","prh")
+	m.Put("Pre-Heat Menu","prh")
 	m.Put("Auto Bed Leveling (G29)","bl")
 	If config.ShowFilamentChangeFLAG Then m.Put("Change Filament","cf")
 	Return m

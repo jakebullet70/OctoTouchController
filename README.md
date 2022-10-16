@@ -23,6 +23,7 @@ Supports Android 4.X to the latest version
 Portrait or landscape modes  
 Built in filament loading - unloading wizard  
 Support for Sonoff power device without Octoprint plugin  
+Colors themes to match your printer  
   
 
 ### Supported Octoprint Plugins
@@ -47,5 +48,6 @@ See the [GitHub Wiki](https://github.com/jakebullet70/OctoTouchController/wiki) 
 Written in [B4X](https://www.b4x.com/)  
 ![GitHub all releases](https://img.shields.io/github/downloads/jakebullet70/OctoTouchController/total)
 
-![](./github_pics/printing.jpg?raw=true "Printing")  
+![](./github_pics/printing2.jpg?raw=true "Printing2")  
+![](./github_pics/printing3.jpg?raw=true "Printing3")  
 

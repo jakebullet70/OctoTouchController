@@ -296,7 +296,7 @@ Private Sub PopupMainOptionMenu
 	
 	Dim popUpMemuItems As Map = _
 		CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc", _
-				  "Functions Menu":"fn","Plugins Menu":"plg","Read Err File":"rt","Check For Update":"cup","About":"ab")
+				  "Functions Menu":"fn","Plugins Menu":"plg","Read Log File":"rt","Check For Update":"cup","About":"ab")
 
 		
 	If oc.isPrinting Or oc.IsPaused2 Then

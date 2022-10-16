@@ -35,6 +35,8 @@ Sub Class_Globals
 	Private ivPreview As lmB4XImageViewX
 	Private mTmpTemps As String
 	
+	Private ivPreviewLG As lmB4XImageViewX
+	Private pnlBGbed,pnlBGTool As B4XView
 End Sub
 
 
@@ -80,6 +82,7 @@ Private Sub BuildGUI
 								btnCancel,btnPause,btnPrint,CircularProgressBar1.MainLabel, _
 								lblFileName.BaseLabel,lblHeaderBed,lblHeaderTool))
 	
+	ivPreviewLG.mBase.Visible = False
 	guiHelpers.SetEnableDisableColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel))
 	
 	CircularProgressBar1.ColorEmpty = clrTheme.txtNormal
@@ -149,7 +152,7 @@ public Sub Update_Printer_Btns
 		'--- we are printing or heating
 		guiHelpers.EnableDisableBtns(Array As B4XView(btnCancel,btnPause),True)
 		guiHelpers.EnableDisableBtns(Array As B4XView(btnPrint,btnPresetTool,btnPresetBed,btnPresetMaster),False)
-		
+		ShowThumbnailWhilePrinting(True)
 	
 	else if oc.isPrinting = False And oc.isPaused2 = True Then
 		
@@ -163,7 +166,20 @@ public Sub Update_Printer_Btns
 		btnPrint.Enabled = oc.isFileLoaded : guiHelpers.SetEnableDisableColor(Array As B4XView(btnPrint))
 		guiHelpers.EnableDisableBtns(Array As B4XView(btnCancel,btnPause),False)
 		guiHelpers.EnableDisableBtns(Array As B4XView(btnPresetTool,btnPresetBed,btnPresetMaster),True)
+		ShowThumbnailWhilePrinting(False)
 		
+	End If
+	
+End Sub
+
+Private Sub ShowThumbnailWhilePrinting(show As Boolean)
+	
+	btnPresetMaster.Visible = Not (show)
+	ivPreviewLG.mBase.Visible = show
+	pnlBGbed.Visible = Not (show)
+	pnlBGTool.Visible = Not (show)
+	If show = True Then 
+		LoadThumbNail
 	End If
 	
 End Sub
@@ -264,7 +280,8 @@ Private Sub lblTempChange(what As String)
 	
 	Dim o1 As dlgNumericInput
 	o1.Initialize(mMainObj, _
-		IIf(what = "bed","Bed Temperature","Tool Temperature"),"Enter Temperature",Me, _
+		IIf(what = "bed","Bed Temperature","Tool Temperature"), _
+		"Enter Temperature",Me, _
 		IIf(what = "bed","TempChange_Bed","TempChange_Tool1"))
 		
 	o1.Show
@@ -322,6 +339,7 @@ Private Sub btnAction_Click
 	
 	'--- what does the user want?
 	Select Case o.tag
+		
 		Case "print"
 			If oc.isFileLoaded = False Then
 				
@@ -391,7 +409,7 @@ Private Sub LoadThumbNail
 	currentFileInfo =  mMainObj.oMasterController.gMapOctoFilesList.Get(oc.JobFileName)
 	
 	If currentFileInfo.myThumbnail_filename_disk = "" Then
-		ivPreview.Load(File.DirAssets,"no_thumbnail.jpg")
+		SetNoThumbnail
 		Return
 	End If
 
@@ -409,12 +427,14 @@ Private Sub LoadThumbNail
 			Sleep(2200)
 		
 			If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
-				ivPreview.Load(File.DirAssets,"no_thumbnail.jpg")
+				SetNoThumbnail
 			Else
 				ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
+				ivPreviewLG.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
 			End If
 		Else
 			ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
+			ivPreviewLG.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
 		End If
 	Catch
 		
@@ -425,9 +445,10 @@ Private Sub LoadThumbNail
 	
 End Sub
 
-
-
-
+Private Sub SetNoThumbnail
+	ivPreview.Load(File.DirAssets,"no_thumbnail.jpg")
+	ivPreviewLG.Load(File.DirAssets,"no_thumbnail.jpg")
+End Sub
 
 
 

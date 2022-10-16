@@ -579,7 +579,7 @@ End Sub
 Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	
 	'--- callback for btnPresetTemp_Click
-	'--- called from pageMenu and pagePrinting
+	'--- called from pageMenu and pagePrinting via Sub ShowPreHeatMenu_All
 	
 	If selectedMsg.Length = 0 Then Return
 	

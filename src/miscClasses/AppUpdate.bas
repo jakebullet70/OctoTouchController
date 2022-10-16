@@ -35,9 +35,7 @@ Public Sub RunPrgUpdate
 	End If
 	
 	'--- update the version
-	#if release
 	Starter.kvs.Put("version_code",Application.VersionCode)
-	#end if
 	
 End Sub
 

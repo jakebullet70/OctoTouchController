@@ -649,5 +649,17 @@ Public Sub Check4_Update
 	If yes Then
 		CallSubDelayed3(Me,"Show_Toast", "App update available", 3600)
 	End If
-		
+	
 End Sub
+
+Public Sub ShowPreHeatMenu_All
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	If oc.isConnected = False Or oMasterController.mapAllHeatingOptions.IsInitialized = False Then
+		Return
+	End If
+	Dim ht As dlgListbox
+	ht.Initialize(Me,"Pre-heat",Me,"TempChange_Presets")
+	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,390dip)
+	ht.Show(220dip,w,oMasterController.mapAllHeatingOptions)
+End Sub
+

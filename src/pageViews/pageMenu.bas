@@ -169,12 +169,7 @@ Private Sub btnSubBtnAction_Click
 			o3.Show
 			
 		Case "phe" '--- pre-heat
-			If oc.isConnected = False Or _
-				mMainObj.oMasterController.mapAllHeatingOptions.IsInitialized = False Then Return
-			Dim ht As dlgListbox 
-			ht.Initialize(mMainObj,"Pre-heat",B4XPages.MainPage,"TempChange_Presets")
-			Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,390dip)
-			ht.Show(220dip,w,mMainObj.oMasterController.mapAllHeatingOptions)
+			CallSub(B4XPages.MainPage,"ShowPreHeatMenu_All")
 				
 	End Select
 	

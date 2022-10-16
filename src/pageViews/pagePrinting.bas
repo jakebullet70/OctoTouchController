@@ -229,15 +229,8 @@ End Sub
 
 #Region "HEATER_PRESETS"
 Private Sub btnPresetMaster_Click
-	
-	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
-	
-	If oc.isConnected = False Then Return
-	
-	Dim o1 As dlgListbox
-	o1.Initialize(mMainObj,"Heater Presets",B4XPages.MainPage,"TempChange_Presets")
-	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,390dip)
-	o1.Show(220dip,w,mMainObj.oMasterController.mapAllHeatingOptions)
+
+	CallSub(B4XPages.MainPage,"ShowPreHeatMenu_All")
 	
 End Sub
 

@@ -230,6 +230,7 @@ End Sub
 
 Private Sub BuildFunctionMnu() As Map
 	Dim m As Map : m.Initialize
+	m.Put("Pre-Heat All Menu","prh")
 	m.Put("Auto Bed Leveling (G29)","bl")
 	If config.ShowFilamentChangeFLAG Then m.Put("Change Filament","cf")
 	Return m
@@ -260,6 +261,9 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 			Dim o1 As dlgFilamentCtrl
 			o1.Initialize(mMainObj)
 			o1.Show
+			
+		Case "prh" '--- pre-heat menu
+			CallSub(B4XPages.MainPage,"ShowPreHeatMenu_All")
 			
 		Case Else
 			msg = " ...TODO... "

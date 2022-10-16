@@ -10,7 +10,8 @@ A dedicated touch screen controller for Octoprint supporting older Android phone
 Device specs: Android **4.x or above**, 4inch screen with a minimum resolution of 680x340. It is Free Software and released under the [GNU Affero General Public License V3](https://www.gnu.org/licenses/agpl-3.0.html).  
 
 
-Add a dedicated touch screen to your 3D printer with a **low/no cost** Android device you probibly already have!  
+Add a dedicated touch screen to your 3D printer with a *LOW/NO COST* Android device you probibly already have!  
+
 
 ### Project Purpose
 Reclaim those old Phones / Tablets that are sitting around that *DO NOT* have access to the Google store anymore. 

@@ -178,12 +178,18 @@ Private Sub Parse(jsonTXT As String)
 			End Try
 			
 			Try                                          'gcodeAnalysis
+				
+				If ff.Name.StartsWith("40mm") Then
+					
+					Log("fffff")
+				End If
+				
 				Dim gcodeAnalysis As Map = colfiles.Get("gcodeAnalysis")
 				'Dim estimatedPrintTime As Double = gcodeAnalysis.Get("estimatedPrintTime")
 				Dim filament As Map = gcodeAnalysis.Get("filament")
 				Dim tool0 As Map = filament.Get("tool0")
-				ff.Volume = tool0.Get("volume")
-				ff.Length = tool0.Get("length")
+				ff.Volume = GetVolume(tool0.Get("volume"))
+				ff.Length = GetLength(tool0.Get("length")) ' * .001
 		
 				Dim dimensions As Map = gcodeAnalysis.Get("dimensions")
 				ff.Depth = dimensions.Get("depth")
@@ -320,5 +326,27 @@ End Sub
 'Dim free As String = root.Get("free")
 
 
+Private Sub GetLength(v As String) As Double
+	Try
+		If (v <> Null And v <> "null" And v <> 0) Then
+			Return Round2(v.As(Double) * .001,2)
+		End If
+	Catch
+		Log("GetLength:" & LastException)
+	End Try 'ignore
+	
+	Return 0
+End Sub
 
+Private Sub GetVolume(v As String) As Double
+	Try
+		If (v <> Null And v <> "null" And v <> 0) Then
+			Return Round2(v.As(Double),2)		
+		End If
+	Catch
+		Log("GetVolume:" & LastException)
+	End Try 'ignore
+	
+	Return 0
+End Sub
 

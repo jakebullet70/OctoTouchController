@@ -303,7 +303,9 @@ Sub CreateListItem(oData As tOctoFileInfo, Width As Int, Height As Int) As B4XVi
 
 	lblpnlFileViewBottom.TextColor = clrTheme.txtNormal
 	lblpnlFileViewBottom.Font = lblpnlFileViewTop.Font
-	lblpnlFileViewBottom.Text = "Size: " &   fileHelpers.BytesToReadableString(oData.Size) '& " Uploaded: " & dt
+	lblpnlFileViewBottom.Text = "Size: " &  fileHelpers.BytesToReadableString(oData.Size) & _
+								$"  ${oData.length.As(String)}m / ${oData.Volume.As(String)}³"$
+			
 
 	Return p
 	

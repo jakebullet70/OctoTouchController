@@ -24,6 +24,7 @@ Portrait or landscape modes
 Built in filament loading - unloading wizard  
 Support for Sonoff power device without Octoprint plugin  
 Colors themes to match your printer  
+Select and print files right on the touch screen  
   
 
 ### Supported Octoprint Plugins
@@ -48,6 +49,11 @@ See the [GitHub Wiki](https://github.com/jakebullet70/OctoTouchController/wiki) 
 Written in [B4X](https://www.b4x.com/)  
 ![GitHub all releases](https://img.shields.io/github/downloads/jakebullet70/OctoTouchController/total)
 
-![](./github_pics/printing2.jpg?raw=true "Printing2")  
-![](./github_pics/printing3.jpg?raw=true "Printing3")  
+![](./github_pics/printing2.png?raw=true "Printing")  
+
+![](./github_pics/portrait-movement.png?raw=true "Movement")  
+
+![](./github_pics/files2.jpg?raw=true "Files")  
+
+
 

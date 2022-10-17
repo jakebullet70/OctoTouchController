@@ -306,15 +306,12 @@ Sub CreateListItem(oData As tOctoFileInfo, Width As Int, Height As Int) As B4XVi
 	
 End Sub
 
+
 Private Sub SetThumbnail2Nothing
 	ivPreview.Load(File.DirAssets,gblConst.NO_THUMBNAIL)
 End Sub
 
 
-
-'Private Sub clvFiles_ItemLongClick (Index As Int, Value As Object)
-'	mCurrentFileInfo =  mMainObj.oMasterController.gMapOctoFilesList.Get(Value)
-'End Sub
 Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off

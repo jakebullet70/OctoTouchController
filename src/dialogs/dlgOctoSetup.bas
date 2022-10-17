@@ -101,7 +101,7 @@ End Sub
 
 private Sub Build_GUI
 	
-	pnlMain.Color = clrTheme.BackgroundMenu
+	pnlMain.Color = clrTheme.Background
 	guiHelpers.SetTextColorB4XFloatTextField( _
 			Array As B4XFloatTextField(txtPrinterDesc,txtPrinterIP,txtPrinterPort))
 	

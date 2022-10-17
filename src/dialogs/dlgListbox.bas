@@ -17,7 +17,6 @@ Sub Class_Globals
 	Private mTitle As String
 	Private mCallback As Object
 	Private mEventName As String
-	Private mDataMap As Map
 	Private mTag As Object = Null 'ignore
 	
 	Private mDialog As B4XDialog
@@ -45,7 +44,6 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	'--- init
 	mDialog.Initialize(mMainObj.Root)
 	Dim ListTemplate As B4XListTemplate : ListTemplate.Initialize
-	mDataMap = data
 	
 	'--- make it pretty
 	ListTemplate.CustomListView1.DefaultTextBackgroundColor = clrTheme.Background
@@ -56,7 +54,7 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	ListTemplate.CustomListView1.AsView.Height = height
 	ListTemplate.CustomListView1.PressedColor = clrTheme.BackgroundHeader
 	ListTemplate.CustomListView1.DefaultTextColor = clrTheme.txtNormal
-	ListTemplate.options = objHelpers.Map2List(mDataMap,True)
+	ListTemplate.options = objHelpers.Map2List(data,True)
 	
 	
 	Dim l As B4XView = ListTemplate.CustomListView1.DesignerLabel
@@ -74,7 +72,7 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	'--- display dialog
 	Wait For(rs) complete(intResult As Int)
 	If intResult = xui.DialogResponse_Positive Then
-		CallSub3(mCallback,mEventName,mDataMap.Get(ListTemplate.SelectedItem),mTag)
+		CallSub3(mCallback,mEventName,data.Get(ListTemplate.SelectedItem),mTag)
 	Else
 		CallSub3(mCallback,mEventName,"","")
 	End If

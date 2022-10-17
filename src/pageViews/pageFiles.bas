@@ -205,7 +205,7 @@ Private Sub btnAction_Click
 		Case "load"
 			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_FILES_SELECT.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
 			guiHelpers.Show_toast("Loading file...",2000)
-			'Sleep(100)
+			Sleep(500) '<--- needed
 			CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
 			Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName2Scrn",400)
 			

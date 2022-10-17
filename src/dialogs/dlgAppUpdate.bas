@@ -54,8 +54,7 @@ Public Sub CheckIfNewDownloadAvail()As ResumableSub
 	Try
 		
 		Dim days As Int = DateUtils.PeriodBetweenInDays(oldDate,DateTime.Now).As(Period).Days
-		logMe.LogIt2("update check - days between: " & days,)
-		Log("update check - days between: " & days)
+		logMe.LogIt("update check - days between: " & days,"")
 		If days < DAYS_BETWEEN_CHECKS Then
 			Return False
 		End If

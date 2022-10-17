@@ -20,7 +20,7 @@ Sub Class_Globals
 	
 	Private btnContinue As B4XView
 	
-	Private Const DAYS_BETWEEN_CHECKS As Int = 1
+	Private Const DAYS_BETWEEN_CHECKS As Int = 15
 	
 	
 
@@ -46,7 +46,7 @@ Public Sub CheckIfNewDownloadAvail()As ResumableSub
 		Return False
 	End If
 	
-'	Dim p As Period : p.Days = -16 '--- TESTING
+'	Dim p As Period : p.Days = -12 '--- TESTING ---
 '	Dim tdate As Long = DateUtils.AddPeriod(DateTime.Now, p)
 '	Starter.kvs.Put(gblConst.CHECK_VERSION_DATE,tdate)
 '	oldDate = Starter.kvs.GetDefault(gblConst.CHECK_VERSION_DATE,0)
@@ -54,8 +54,8 @@ Public Sub CheckIfNewDownloadAvail()As ResumableSub
 	Try
 		
 		Dim days As Int = DateUtils.PeriodBetweenInDays(oldDate,DateTime.Now).As(Period).Days
+		Log("update check - days between: " & days)
 		If days < DAYS_BETWEEN_CHECKS Then
-			Log("days: " & days)
 			Return False
 		End If
 		

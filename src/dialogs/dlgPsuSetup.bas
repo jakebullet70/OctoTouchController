@@ -69,7 +69,7 @@ Public Sub Show
 	p.SetLayoutAnimated(0, 0, 0, w, h)
 	p.LoadLayout("viewPsuSetup")
 	
-	Build_GUI 
+	BuildGUI 
 
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "SAVE", "", "CLOSE")
@@ -95,9 +95,9 @@ Public Sub Show
 End Sub
 
 
-Private Sub Build_GUI
+Private Sub BuildGUI
 	
-	pnlMain.Color = clrTheme.BackgroundMenu
+	pnlMain.Color = clrTheme.Background
 	guiHelpers.SetTextColorB4XFloatTextField(Array As B4XFloatTextField(txtPrinterIP))
 	
 	txtPrinterIP.HintText = "Tasmota IP"

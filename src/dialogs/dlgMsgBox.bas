@@ -29,6 +29,7 @@ Sub Class_Globals
 	Private lmB4XImageViewX1 As lmB4XImageViewX
 	Private mKvStr As String
 	
+	Private pnlBG As B4XView
 End Sub
 
 
@@ -46,6 +47,7 @@ Public Sub Initialize(parentObj As B4XView, title As String, width As Float, hei
 	BasePnl.LoadLayout("viewMsgBox")
 	
 	lblTxt.TextColor = clrTheme.txtNormal
+	pnlBG.Color = clrTheme.Background
 	
 End Sub
 

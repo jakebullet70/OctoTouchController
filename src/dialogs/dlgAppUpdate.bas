@@ -51,20 +51,11 @@ Public Sub CheckIfNewDownloadAvail()As ResumableSub
 '	Starter.kvs.Put(gblConst.CHECK_VERSION_DATE,tdate)
 '	oldDate = Starter.kvs.GetDefault(gblConst.CHECK_VERSION_DATE,0)
 	
-	Try
-		
-		Dim days As Int = DateUtils.PeriodBetweenInDays(oldDate,DateTime.Now).As(Period).Days
-		logMe.LogIt("update check - days between: " & days,"")
-		If days < DAYS_BETWEEN_CHECKS Then
-			Return False
-		End If
-		
-	Catch
-		
-		logMe.LogIt2(LastException.Message,mModule,inSub)
+	Dim days As Int = DateUtils.PeriodBetweenInDays(oldDate,DateTime.Now).As(Period).Days
+	logMe.LogIt("update check - days between: " & days,"")
+	If days < DAYS_BETWEEN_CHECKS Then
 		Return False
-		
-	End Try
+	End If
 	
 	
 	Dim sm As HttpDownloadStr : sm.Initialize

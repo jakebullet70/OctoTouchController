@@ -121,7 +121,7 @@ Public Sub SendCmd(cmd As String)As ResumableSub'ignore
 				mMainObj.oMasterController.cn.PostRequest( _
 					oc.cPSU_CONTROL_K.Replace("!ONOFF!",IIf(cmd.ToLowerCase ="on","On","Off")))
 			Else
-				CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Octoprint not connected", 2000)
+				guiHelpers.Show_toast2("Octoprint not connected", 2000)
 			End If
 		
 		Case Else

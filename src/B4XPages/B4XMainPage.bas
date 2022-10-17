@@ -352,7 +352,7 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			If f <> "" Then 
 				vt.Show(f)
 			Else
-				guiHelpers.Show_toast("no error file found",6000)
+				Show_toast("no error file found",6000)
 			End If
 			
 		Case "cup" '--- check for update
@@ -379,7 +379,7 @@ End Sub
 Public Sub PrinterSetup_Closed
 
 	If oc.IsOctoConnectionVarsValid Then
-		guiHelpers.Show_toast("Trying to connect...",3000)		
+		Show_toast("Trying to connect...",3000)		
 		TryOctoConnection
 	End If
 	'Sleep(100)
@@ -585,7 +585,7 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	
 	If selectedMsg = "alloff" Then
 		oMasterController.AllHeaters_Off
-		guiHelpers.Show_toast("Tool / Bed Off",1200)
+		Show_toast("Tool / Bed Off",1200)
 		Return
 	End If
 	
@@ -638,7 +638,7 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 			
 	End Select
 	
-	guiHelpers.Show_toast(msg,3000)
+	Show_toast(msg,3000)
 	
 End Sub
 
@@ -647,7 +647,7 @@ Public Sub Check4_Update
 	Dim obj As dlgAppUpdate : obj.Initialize(Null)
 	Wait For (obj.CheckIfNewDownloadAvail()) Complete (yes As Boolean)
 	If yes Then
-		CallSubDelayed3(Me,"Show_Toast", "App update available", 3600)
+		guiHelpers.Show_toast2("App update available", 3600)
 	End If
 	
 End Sub

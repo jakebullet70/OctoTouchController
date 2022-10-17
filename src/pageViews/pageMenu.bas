@@ -169,6 +169,10 @@ Private Sub btnSubBtnAction_Click
 			o3.Show
 			
 		Case "phe" '--- pre-heat
+			If oc.isPrinting Then 
+				guiHelpers.Show_toast("Printer is busy",2000)
+				Return
+			End If
 			CallSub(B4XPages.MainPage,"ShowPreHeatMenu_All")
 				
 	End Select

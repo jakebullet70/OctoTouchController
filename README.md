@@ -23,8 +23,8 @@ Supports Android 4.X to the latest version
 Portrait or landscape modes  
 Built in filament loading - unloading wizard  
 Support for Sonoff power device without Octoprint plugin  
-Colors themes to match your printer  
-Select and print files right on the touch screen  
+Colors themes to match your printers look  
+View / select and print files right on the touch screen  
   
 
 ### Supported Octoprint Plugins
@@ -56,7 +56,7 @@ Written in [B4X](https://www.b4x.com/)
 
 ![](./github_pics/portrait-movement.png?raw=true "Movement")  
 
-![](./github_pics/files2.jpg?raw=true "Files")  
+![](./github_pics/files2.png?raw=true "Files")  
 
 
 

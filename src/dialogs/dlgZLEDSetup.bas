@@ -65,13 +65,18 @@ Public Sub Show
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,mDataFile)
 	
 	Dim h As Float
-	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
-		h = 52%y
-	Else If guiHelpers.gScreenSizeAprox >= 8 Then
-		h = 45%y
-	Else '--- 4 to 5.9 inch
-		h = 70%y
+	If guiHelpers.gIsLandScape Then
+		If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
+			h = 52%y
+		Else If guiHelpers.gScreenSizeAprox >= 8 Then
+			h = 45%y
+		Else '--- 4 to 5.9 inch
+			h = 70%y
+		End If
+	Else
+		h = 280dip
 	End If
+	
 	
 	mDlg.Initialize(mMainObj.root, mCaption, 360dip, h)
 	mDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgSimpleApiOnOff.json"))

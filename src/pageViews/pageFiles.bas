@@ -312,7 +312,7 @@ Sub CreateListItem(oData As tOctoFileInfo, Width As Int, Height As Int) As B4XVi
 End Sub
 
 Private Sub SetThumbnail2Nothing
-	ivPreview.Load(File.DirAssets,"no_thumbnail.jpg")
+	ivPreview.Load(File.DirAssets,gblConst.NO_THUMBNAIL)
 End Sub
 
 

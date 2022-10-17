@@ -32,10 +32,9 @@ Sub Class_Globals
 	
 	Private lblHeaderBed,lblHeaderTool As B4XView
 	
-	Private ivPreview As lmB4XImageViewX
+	Private ivPreviewLG,ivPreview As lmB4XImageViewX
 	Private mTmpTemps As String
 	
-	Private ivPreviewLG As lmB4XImageViewX
 	Private pnlBGbed,pnlBGTool As B4XView
 End Sub
 
@@ -83,6 +82,8 @@ Private Sub BuildGUI
 								lblFileName.BaseLabel,lblHeaderBed,lblHeaderTool))
 	
 	ivPreviewLG.mBase.Visible = False
+	SetNoThumbnail
+	
 	guiHelpers.SetEnableDisableColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel))
 	
 	CircularProgressBar1.ColorEmpty = clrTheme.txtNormal
@@ -446,8 +447,8 @@ Private Sub LoadThumbNail
 End Sub
 
 Private Sub SetNoThumbnail
-	ivPreview.Load(File.DirAssets,"no_thumbnail.jpg")
-	ivPreviewLG.Load(File.DirAssets,"no_thumbnail.jpg")
+	ivPreview.Load(File.DirAssets,gblConst.NO_THUMBNAIL)
+	ivPreviewLG.Load(File.DirAssets,gblConst.NO_THUMBNAIL)
 End Sub
 
 

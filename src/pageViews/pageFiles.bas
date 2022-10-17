@@ -295,17 +295,12 @@ Sub CreateListItem(oData As tOctoFileInfo, Width As Int, Height As Int) As B4XVi
 	lblpnlFileViewTop.font = xui.CreateDefaultFont( _
 		NumberFormat2(lblpnlFileViewTop.TextSize / guiHelpers.gFscale,1,0,0,False))
 		
-	Try
-		lblpnlFileViewTop.Text = fileHelpers.RemoveExtFromeFileName(oData.Name)
-	Catch
-		logMe.LogIt2("CreatListItem 2: (Lamensis)" & LastException,mModule,"CreateListItem")
-	End Try	
+	lblpnlFileViewTop.Text = fileHelpers.RemoveExtFromeFileName(oData.Name)
 
 	lblpnlFileViewBottom.TextColor = clrTheme.txtAccent
 	lblpnlFileViewBottom.Font = lblpnlFileViewTop.Font
 	lblpnlFileViewBottom.Text = "Size: " &  fileHelpers.BytesToReadableString(oData.Size) & _
 								$"  ${oData.length.As(String)}m / ${oData.Volume.As(String)}³"$
-			
 
 	Return p
 	

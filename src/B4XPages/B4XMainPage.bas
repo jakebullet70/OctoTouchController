@@ -160,6 +160,10 @@ Private Sub BuildGUI
 	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlMovement))
 	
 	guiHelpers.SetTextColor(Array As B4XView(lblStatus,lblTemp,btnPower,btnPageAction))
+	If guiHelpers.gIsLandScape = False And guiHelpers.gScreenSizeAprox > 6.5 Then
+		lblStatus.TextSize = lblStatus.TextSize + 4
+		lblTemp.TextSize   = lblTemp.TextSize + 4
+	End If
 	
 	btnPower.Visible = config.ShowPwrCtrlFLAG
 	

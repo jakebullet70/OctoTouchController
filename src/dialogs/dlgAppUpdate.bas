@@ -104,6 +104,7 @@ Public Sub Show() As ResumableSub
 	btnContinue.Visible = False
 	lblPB.Visible   = False
 	lblPB.TextColor = clrTheme.txtNormal
+	BasePnl.Color = clrTheme.Background
 
 	'---TODO, make a generic function
 	btnContinue.Font = xui.CreateDefaultFont(NumberFormat2(btnContinue.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))

@@ -20,6 +20,7 @@ Sub Class_Globals
 	
 	Private sadRoundSlider1 As sadRoundSlider
 	Private mDialog As B4XDialog
+	Private pnlMain As B4XView
 	
 End Sub
 
@@ -42,9 +43,10 @@ Public Sub Show(defaultValue As Int)
 	mDialog.Initialize(mMainObj.Root)
 	
 	Dim p As B4XView = xui.CreatePanel("")
-	p.SetLayoutAnimated(0, 0, 0, 300dip, 300dip)
+	p.SetLayoutAnimated(0, 0, 0, 280dip, 280dip)
 	p.LoadLayout("viewRoundSlider")
 	
+	pnlMain.Color = clrTheme.Background
 	sadRoundSlider1.Value = defaultValue
 	sadRoundSlider1.xlbl.TextColor = clrTheme.BackgroundHeader
 	sadRoundSlider1.xlbl.Font = xui.CreateDefaultFont(52)

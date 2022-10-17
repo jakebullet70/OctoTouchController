@@ -81,10 +81,11 @@ Public Sub Show
 	If guiHelpers.gScreenSizeAprox > 6.5 Then
 		mDlg.PutAtTop = False
 	End If
+	
 	Dim RS As ResumableSub = mDlg.ShowDialog(Data, "OK", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(mDlg.Dialog)
-	
 	Wait For (RS) Complete (Result As Int)
+	
 	If Result = xui.DialogResponse_Positive Then
 		guiHelpers.Show_toast("General Data Saved",1500)
 		File.WriteMap(xui.DefaultFolder,mDataFile,Data)

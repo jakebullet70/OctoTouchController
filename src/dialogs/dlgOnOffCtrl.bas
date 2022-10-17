@@ -49,10 +49,13 @@ Public Sub Show
 	p.SetLayoutAnimated(0, 0, 0, 260dip,h)
 	p.LoadLayout("viewPsuCtrl") '--- use this one
 	
-	Build_GUI 
+	pnlMain.Color = clrTheme.Background
+	guiHelpers.SetEnableDisableColor(Array As B4XView(btnOff,btnOn))
+	btnOff.Text= "Off"
+	btnOn.Text = "On"
 
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)
-	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CANCEL")
+	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CLOSE")
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 
 	Wait For (rs) Complete (Result As Int)
@@ -64,17 +67,6 @@ Public Sub Show
 	
 End Sub
 
-
-
-private Sub Build_GUI
-	
-	pnlMain.Color = clrTheme.BackgroundMenu
-	guiHelpers.SetEnableDisableColor(Array As B4XView(btnOff,btnOn))
-	
-	btnOff.Text= "Off"
-	btnOn.Text = "On"
-	
-End Sub
 
 
 Private Sub btnCtrl_Click

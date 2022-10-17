@@ -133,7 +133,7 @@ Public Sub Draw
 	dest.Initialize(cx - thumb.Width / 8, cy - ThumbSize / 2, cx + thumb.Width / 8, cy + ThumbSize / 2)
 	cvs.DrawBitmapRotated(thumb, dest, angle)
 	cvs.Invalidate
-	xlbl.Text = mValue
+	xlbl.Text = mValue & "%"
 End Sub
 
 Private Sub pnl_Touch (Action As Int, X As Float, Y As Float)

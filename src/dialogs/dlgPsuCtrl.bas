@@ -50,10 +50,10 @@ Public Sub Show
 	p.SetLayoutAnimated(0, 0, 0, 260dip,h)
 	p.LoadLayout("viewPsuCtrl")
 	
-	Build_GUI 
+	BuildGUI 
 
 	guiHelpers.ThemeDialogForm(mDialog, "Power Control")
-	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CANCEL")
+	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CLOSE")
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 	
 	If oc.Tool1ActualReal > 50 Then
@@ -71,9 +71,9 @@ End Sub
 
 
 
-private Sub Build_GUI
+Private Sub BuildGUI
 	
-	pnlMain.Color = clrTheme.BackgroundMenu
+	pnlMain.Color = clrTheme.Background
 	guiHelpers.SetEnableDisableColor(Array As B4XView(btnOff,btnOn))
 	
 	btnOff.Text= "Off"

@@ -352,7 +352,7 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			If f <> "" Then 
 				vt.Show(f)
 			Else
-				Show_toast("no error file found",6000)
+				Show_toast("no log file found",6000)
 			End If
 			
 		Case "cup" '--- check for update

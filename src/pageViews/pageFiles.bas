@@ -342,15 +342,15 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	If File.Exists(xui.DefaultFolder,mCurrentFileInfo.myThumbnail_filename_disk) = False Then
 	
 		SetThumbnail2Nothing
-		guiHelpers.Show_toast("Getting Thumbnail...",2000)
+		guiHelpers.Show_toast("Getting Thumbnail...",1000)
 		
 		If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & mCurrentFileInfo.myThumbnail_filename_disk,mModule)
 		
-		mMainObj.oMasterController.cn.Download_AndSaveFile( _
+		Wait For (mMainObj.oMasterController.cn.Download_AndSaveFile( _
 			$"http://${mMainObj.oMasterController.cn.gIP}:${mMainObj.oMasterController.cn.gPort}/"$ & mCurrentFileInfo.Thumbnail, _
-			mCurrentFileInfo.myThumbnail_filename_disk)
+			mCurrentFileInfo.myThumbnail_filename_disk)) Complete (i As Object)
 			 
-		Sleep(1800)
+		'Sleep(1800)
 		
 		If File.Exists(xui.DefaultFolder,mCurrentFileInfo.myThumbnail_filename_disk) = False Then
 			SetThumbnail2Nothing

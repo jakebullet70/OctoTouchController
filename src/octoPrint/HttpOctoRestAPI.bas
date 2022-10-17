@@ -191,13 +191,13 @@ Public Sub DownloadThumbnailAndShow(Link As String, iv As B4XImageView, fileName
 End Sub
 
 
-Public Sub Download_AndSaveFile(Link As String, fileName As String)
+Public Sub Download_AndSaveFile(Link As String, fileName As String) As ResumableSub
 
 	Dim InSub As String = "Download_AndSaveFile"
 	
 	If Link.Length = 0 Then
 		If config.logFILE_EVENTS Then logMe.LogIt("Thumbnail path is empty",mModule) 	'--- no thumbnail
-		Return
+		Return Null
 	End If
 	
 	If fileName.Length <> 0 Then fileHelpers.SafeKill(fileName)
@@ -232,6 +232,7 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String)
 	End Try
 	
 	j.Release
+	Return Null
 	
 End Sub
 

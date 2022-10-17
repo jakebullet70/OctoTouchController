@@ -417,14 +417,14 @@ Private Sub LoadThumbNail
 		'--- Same code as in pageFiles so...   TODO, make method and share code
 		If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
 	
-			guiHelpers.Show_toast("Getting Thumbnail",2200)
+			guiHelpers.Show_toast("Getting Thumbnail",1000)
 			If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
 		
-			mMainObj.oMasterController.cn.Download_AndSaveFile( _
+			Wait For (mMainObj.oMasterController.cn.Download_AndSaveFile( _
 					$"http://${mMainObj.oMasterController.cn.gIP}:${mMainObj.oMasterController.cn.gPort}/"$ & currentFileInfo.Thumbnail, _
-					currentFileInfo.myThumbnail_filename_disk)
+					currentFileInfo.myThumbnail_filename_disk)) Complete (i As Object)
 					
-			Sleep(2200)
+			'Sleep(2200)
 		
 			If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
 				SetNoThumbnail

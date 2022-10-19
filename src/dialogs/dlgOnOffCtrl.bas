@@ -51,7 +51,14 @@ Public Sub Show
 	
 	pnlMain.Color = clrTheme.Background
 	guiHelpers.SetEnableDisableColor(Array As B4XView(btnOff,btnOn))
-	btnOff.Text= "Off"
+	
+'	Dim cs As CSBuilder
+'	cs.Initialize
+'	btnOff.Text = cs.Append("Off     ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A4)).PopAll
+'	cs.Initialize
+'	btnOn.Text  = cs.Append("On      ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A5)).PopAll
+	
+	btnOff.Text = "Off"
 	btnOn.Text = "On"
 
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)

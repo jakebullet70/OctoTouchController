@@ -76,14 +76,20 @@ Private Sub BuildGUI
 	pnlMain.Color = clrTheme.Background
 	guiHelpers.SetEnableDisableColor(Array As B4XView(btnOff,btnOn))
 
-'	Dim cs As CSBuilder
-'	cs.Initialize
-'	btnOff.Text = cs.Append("Off     ").Typeface(Typeface.FONTAWESOME).VerticalAlign(3dip).Append(Chr(0xF204)).PopAll
-'	cs.Initialize
-'	btnOn.Text  = cs.Append("On      ").Typeface(Typeface.FONTAWESOME).VerticalAlign(3dip).Append(Chr(0xF205)).PopAll
-'	
-	btnOff.Text = "Off"
-	btnOn.Text = "On"
+	Dim cs As CSBuilder
+	cs.Initialize
+	btnOff.Text = cs.Append("Off     ").Typeface(Typeface.FONTAWESOME).VerticalAlign(3dip).Append(Chr(0xF204)).PopAll
+	cs.Initialize
+	btnOn.Text  = cs.Append("On      ").Typeface(Typeface.FONTAWESOME).VerticalAlign(3dip).Append(Chr(0xF205)).PopAll
+	'If guiHelpers.gScreenSizeAprox > 7.5 Then
+		Dim fn As B4XFont = _
+				xui.CreateDefaultFont(NumberFormat2(btnOff.TextSize / guiHelpers.gFscale,1,0,0,False) - _
+				IIf(guiHelpers.gFscale > 1,2,0))
+		btnOff.Font = fn
+		btnOn.Font = fn
+	'End If
+	'btnOff.Text = "Of
+	'btnOn.Text = "On"
 	
 End Sub
 

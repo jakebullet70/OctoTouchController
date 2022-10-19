@@ -52,14 +52,18 @@ Public Sub Show
 	pnlMain.Color = clrTheme.Background
 	guiHelpers.SetEnableDisableColor(Array As B4XView(btnOff,btnOn))
 	
-'	Dim cs As CSBuilder
-'	cs.Initialize
-'	btnOff.Text = cs.Append("Off     ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A4)).PopAll
-'	cs.Initialize
-'	btnOn.Text  = cs.Append("On      ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A5)).PopAll
-	
-	btnOff.Text = "Off"
-	btnOn.Text = "On"
+	Dim cs As CSBuilder
+	cs.Initialize
+	btnOff.Text = cs.Append("Off     ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A4)).PopAll
+	cs.Initialize
+	btnOn.Text  = cs.Append("On      ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A5)).PopAll
+	Dim fn As B4XFont = _
+				xui.CreateDefaultFont(NumberFormat2(btnOff.TextSize / guiHelpers.gFscale,1,0,0,False) - _
+				IIf(guiHelpers.gFscale > 1,2,0))
+	btnOff.Font = fn
+	btnOn.Font = fn
+'	btnOff.Text = "Off"
+'	btnOn.Text = "On"
 
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CLOSE")

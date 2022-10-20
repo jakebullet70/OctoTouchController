@@ -54,16 +54,17 @@ Public Sub Show
 	
 	Dim cs As CSBuilder
 	cs.Initialize
-	btnOff.Text = cs.Append("Off     ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A4)).PopAll
+	btnOff.Text = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A4)). _
+											 Typeface(Typeface.DEFAULT).Append("    Off").PopAll
 	cs.Initialize
-	btnOn.Text  = cs.Append("On      ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A5)).PopAll
+	btnOn.Text  = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A5)). _
+											 Typeface(Typeface.DEFAULT).Append("    On").PopAll
 	Dim fn As B4XFont = _
 				xui.CreateDefaultFont(NumberFormat2(btnOff.TextSize / guiHelpers.gFscale,1,0,0,False) - _
 				IIf(guiHelpers.gFscale > 1,2,0))
+				
 	btnOff.Font = fn
 	btnOn.Font = fn
-'	btnOff.Text = "Off"
-'	btnOn.Text = "On"
 
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CLOSE")
@@ -109,6 +110,7 @@ Public Sub SendCmd(cmd As String)As ResumableSub'ignore
 						
 	LogColor(template,xui.Color_Green)
 	mMainObj.oMasterController.cn.PostRequest(template)
+	guiHelpers.Show_toast2("Sending Command",1500)
 
 End Sub
 

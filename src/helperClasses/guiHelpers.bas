@@ -243,12 +243,12 @@ Public Sub ThemePrefDialogForm(prefdlg As sadPreferencesDialog)
 End Sub
 
 
-Public Sub ThemeDialogForm(dlg As B4XDialog,title As String)
+Public Sub ThemeDialogForm(dlg As B4XDialog,title As Object)
 	ThemeDialogForm2(dlg,title,22)
 End Sub
 
 
-Public Sub ThemeDialogForm2(dlg As B4XDialog,title As String,txtSize As Int)
+Public Sub ThemeDialogForm2(dlg As B4XDialog,title As Object,txtSize As Int)
 	
 	Try
 		dlg.Title = title
@@ -353,4 +353,45 @@ Public Sub SetCBDrawable(CB As CheckBox,BoxColor As Int,BoxWidth As Int, _
 	Dim JO As JavaObject = CB
 	JO.RunMethod("setButtonDrawable",Array As Object(SLD))
 End Sub
+
+
+
+Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
+	
+	Dim cs As CSBuilder 
+	Dim m As Map : 	m.Initialize
+	
+	cs.Initialize
+	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE30B)). _
+				 Typeface(Typeface.DEFAULT).Append("   General Settings").PopAll,"gn")
+	cs.Initialize
+	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE859)). _
+				 Typeface(Typeface.DEFAULT).Append("   Power Settings").PopAll,"pw")
+	
+	If NoOctoConnection = False Then
+		cs.Initialize
+		m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE308)). _
+				 	 Typeface(Typeface.DEFAULT).Append("   Octoprint Connection").PopAll,"oc")	
+	End If
+	
+	cs.Initialize
+	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
+				 Typeface(Typeface.DEFAULT).Append("   Functions Menu").PopAll,"fn")
+	cs.Initialize
+	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE06D)). _
+				 Typeface(Typeface.DEFAULT).Append("   Plugins Menu").PopAll,"plg")
+	cs.Initialize
+	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24D)). _
+				 Typeface(Typeface.DEFAULT).Append("   Read Log File").PopAll,"rt")
+	cs.Initialize
+	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE864)). _
+				 Typeface(Typeface.DEFAULT).Append("   Check For Update").PopAll,"cup")
+	cs.Initialize
+	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE85A)). _
+				 Typeface(Typeface.DEFAULT).Append("   About Me!").PopAll,"ab")
+	
+	Return m
+	
+End Sub
+
 

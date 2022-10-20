@@ -14,7 +14,7 @@ Sub Class_Globals
 	Private const mModule As String = "dlgListbox"' 'ignore
 	Private mMainObj As B4XMainPage
 	Private xui As XUI
-	Private mTitle As String
+	Private mTitle As Object
 	Private mCallback As Object
 	Private mEventName As String
 	Private mTag As Object = Null 'ignore
@@ -29,7 +29,7 @@ Public Sub setTag(v As Object)
 	mTag = v
 End Sub
 
-Public Sub Initialize(mobj As B4XMainPage, title As String, Callback As Object, EventName As String)
+Public Sub Initialize(mobj As B4XMainPage, title As Object, Callback As Object, EventName As String)
 	
 	mMainObj = mobj
 	mTitle = title
@@ -64,7 +64,6 @@ Public Sub Show(height As Float, width As Float, data As Map)
 		l.Font = xui.CreateDefaultFont(NumberFormat2(22 / guiHelpers.gFscale,1,0,0,False))
 	End If
 	
-	
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)
 	Dim rs As ResumableSub = mDialog.ShowTemplate(ListTemplate, "", "",IIf(IsMenu,"CLOSE","CANCEL"))
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
@@ -72,7 +71,7 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	'--- display dialog
 	Wait For(rs) complete(intResult As Int)
 	If intResult = xui.DialogResponse_Positive Then
-		CallSub3(mCallback,mEventName,data.Get(ListTemplate.SelectedItem),mTag)
+		CallSub3(mCallback,mEventName,GetTagFromMap(ListTemplate.SelectedItem,data),mTag)
 	Else
 		CallSub3(mCallback,mEventName,"","")
 	End If
@@ -80,7 +79,14 @@ Public Sub Show(height As Float, width As Float, data As Map)
 End Sub
 
 
-
+Private Sub GetTagFromMap(item As String,d As Map) As String
+	For xx = 0 To d.Size - 1
+		If d.GetKeyAt(xx).As(String).Contains(item) Then
+			Return d.GetValueAt(xx)
+		End If
+	Next
+	Return ""
+End Sub
 
 
 

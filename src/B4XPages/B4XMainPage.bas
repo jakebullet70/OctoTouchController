@@ -298,32 +298,30 @@ Private Sub PopupMainOptionMenu
 	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
-	Dim popUpMemuItems As Map = _
-		CreateMap("General Settings":"gn","Power Settings":"pw","Octoprint Connection":"oc", _
-				  "Functions Menu":"fn","Plugins Menu":"plg","Read Log File":"rt","Check For Update":"cup","About":"ab")
-
+	Dim popUpMemuItems As Map 
 		
 	If oc.isPrinting Or oc.IsPaused2 Then
 		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
-		popUpMemuItems.Remove("Octoprint Connection")
+		popUpMemuItems = guiHelpers.BuildOptionsMenu(True)
+	Else
+		popUpMemuItems = guiHelpers.BuildOptionsMenu(False)
 	End If
 	
 	Dim o1 As dlgListbox
 	o1.Initialize(Me,"Options Menu",Me,"OptionsMenu_Event")
 	o1.IsMenu = True
-	If guiHelpers.gIsLandScape Then
-		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,310dip,260dip),300dip,popUpMemuItems)
+	If guiHelpers.gIsLandScape Then '- TODO needs refactor for sizes
+		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,320dip,280dip),340dip,popUpMemuItems)
 	Else
-		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,380dip,260dip),300dip,popUpMemuItems)
+		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,380dip,280dip),300dip,popUpMemuItems)
 	End If
-	
 	
 End Sub
 
 Private Sub OptionsMenu_Event(value As String, tag As Object)
 	
 	'--- callback for options Menu
-	If value.Length = 0 Then Return
+	If value = Null Or value.Length = 0 Then Return
 	
 	Select Case value
 		
@@ -662,7 +660,10 @@ Public Sub ShowPreHeatMenu_All
 		Return
 	End If
 	Dim ht As dlgListbox
-	ht.Initialize(Me,"Pre-heat",Me,"TempChange_Presets")
+	Dim cs As CSBuilder : cs.Initialize
+	Dim title As Object = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF2CA)). _
+				 					   Typeface(Typeface.DEFAULT).Append("  Pre-Heat").PopAll
+	ht.Initialize(Me,title,Me,"TempChange_Presets")
 	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,390dip)
 	ht.Show(220dip,w,oMasterController.mapAllHeatingOptions)
 End Sub

@@ -71,12 +71,12 @@ Library12=json
 Library13=keyvaluestore
 Library14=okhttp
 Library15=okhttputils2
-Library16=oslibrary
-Library17=phone
-Library18=reflection
-Library19=runtimepermissions
+Library16=phone
+Library17=reflection
+Library18=runtimepermissions
+Library19=xui views
 Library2=audio
-Library20=xui views
+Library20=oslibrary
 Library3=b4xcollections
 Library4=b4xpages
 Library5=b4xpreferencesdialog
@@ -147,8 +147,8 @@ Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: OctoTC
-	#VersionCode: 14
-	#VersionName: 1.2.1
+	#VersionCode: 15
+	#VersionName: 1.2.2
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: unspecified
 	#CanInstallToExternalStorage: false
@@ -157,7 +157,7 @@ Version=11.8
 #Region  Activity Attributes 
 	#FullScreen: True
 	#IncludeTitle: False
-	#DebuggerForceFullDeployment: true
+	'#DebuggerForceFullDeployment: true
 	'#DebuggerForceStandardAssets: true
 	#BridgeLogger: True
 	

@@ -36,7 +36,7 @@ Public Sub Show(fname As String)
 	mDialog.Initialize(mMainObj.Root)
 	
 	Dim p As B4XView = xui.CreatePanel("")
-	p.SetLayoutAnimated(0, 0, 0, 90%x, 90%y)
+	p.SetLayoutAnimated(0, 0, 0, 90%x, 88%y)
 	p.LoadLayout("dlgViewText.bal")
 	
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)

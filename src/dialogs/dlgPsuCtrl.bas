@@ -78,9 +78,13 @@ Private Sub BuildGUI
 
 	Dim cs As CSBuilder
 	cs.Initialize
-	btnOff.Text = cs.Append("Off     ").Typeface(Typeface.FONTAWESOME).VerticalAlign(3dip).Append(Chr(0xF204)).PopAll
+	btnOff.Text = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(3dip).Append(Chr(0xF204)). _
+											 Typeface(Typeface.DEFAULT).Append("    Off").PopAll
 	cs.Initialize
-	btnOn.Text  = cs.Append("On      ").Typeface(Typeface.FONTAWESOME).VerticalAlign(3dip).Append(Chr(0xF205)).PopAll
+	btnOn.Text  = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(3dip).Append(Chr(0xF205)). _
+											 Typeface(Typeface.DEFAULT).Append("    On").PopAll
+	
+	
 	'If guiHelpers.gScreenSizeAprox > 7.5 Then
 		Dim fn As B4XFont = _
 				xui.CreateDefaultFont(NumberFormat2(btnOff.TextSize / guiHelpers.gFscale,1,0,0,False) - _
@@ -88,8 +92,6 @@ Private Sub BuildGUI
 		btnOff.Font = fn
 		btnOn.Font = fn
 	'End If
-	'btnOff.Text = "Of
-	'btnOn.Text = "On"
 	
 End Sub
 

@@ -378,7 +378,7 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
 				 Typeface(Typeface.DEFAULT).Append("   Functions Menu").PopAll,"fn")
 	cs.Initialize
-	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE06D)). _
+	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE8C1)). _
 				 Typeface(Typeface.DEFAULT).Append("   Plugins Menu").PopAll,"plg")
 	cs.Initialize
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24D)). _

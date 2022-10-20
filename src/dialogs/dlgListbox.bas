@@ -80,6 +80,8 @@ End Sub
 
 
 Private Sub GetTagFromMap(item As String,d As Map) As String
+	'---  item is a string built with csbuilder, needs to
+	'--- found this way
 	For xx = 0 To d.Size - 1
 		If d.GetKeyAt(xx).As(String).Contains(item) Then
 			Return d.GetValueAt(xx)

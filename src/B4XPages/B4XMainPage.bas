@@ -399,8 +399,12 @@ Private Sub PopupFunctionOptionsMnu
 	
 	Dim popUpMemuItems As Map = CreateMap("Filament Control":"fl")
 		
+	Dim cs As CSBuilder : cs.Initialize
+	Dim title As Object = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE24A)). _
+										Typeface(Typeface.DEFAULT).Append("  Functions Menu").PopAll
+	
 	Dim o1 As dlgListbox
-	o1.Initialize(Me,"Functions Menu",Me,"FncMenu_Event")
+	o1.Initialize(Me,title,Me,"FncMenu_Event")
 	o1.IsMenu = True
 	o1.Show(260dip,300dip,popUpMemuItems)
 	
@@ -432,9 +436,12 @@ End Sub
 Private Sub PopupPluginOptionMenu
 	
 	Dim popUpMemuItems As Map = CreateMap("PSU Control":"psu","ZLED Setup":"led","ws281x Setup":"ws2")
-		
+	
+	Dim cs As CSBuilder : cs.Initialize
+	Dim title As Object = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE8C1)). _
+	        	 					   Typeface(Typeface.DEFAULT).Append("  Plugins Menu").PopAll
 	Dim o1 As dlgListbox
-	o1.Initialize(Me,"Plugins Menu",Me,"PluginsMenu_Event")
+	o1.Initialize(Me,title,Me,"PluginsMenu_Event")
 	o1.IsMenu = True
 	o1.Show(260dip,300dip,popUpMemuItems)
 	

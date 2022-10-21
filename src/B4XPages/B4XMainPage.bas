@@ -662,6 +662,9 @@ Public Sub Check4_Update
 End Sub
 
 Public Sub ShowPreHeatMenu_All
+	ShowPreHeatMenu_All2("Pre-Heat")
+End Sub
+Public Sub ShowPreHeatMenu_All2(titleTxt As String)
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	If oc.isConnected = False Or oMasterController.mapAllHeatingOptions.IsInitialized = False Then
 		Return
@@ -669,7 +672,7 @@ Public Sub ShowPreHeatMenu_All
 	Dim ht As dlgListbox
 	Dim cs As CSBuilder : cs.Initialize
 	Dim title As Object = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF2CA)). _
-				 					   Typeface(Typeface.DEFAULT).Append("  Pre-Heat").PopAll
+	Typeface(Typeface.DEFAULT).Append("  " & titleTxt).PopAll
 	ht.Initialize(Me,title,Me,"TempChange_Presets")
 	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,390dip)
 	ht.Show(220dip,w,oMasterController.mapAllHeatingOptions)

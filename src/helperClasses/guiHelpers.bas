@@ -364,8 +364,9 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	cs.Initialize
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE30B)). _
 				 Typeface(Typeface.DEFAULT).Append("   General Settings").PopAll,"gn")
+				 
 	cs.Initialize
-	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE859)). _
+	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE859)). _
 				 Typeface(Typeface.DEFAULT).Append("   Power Settings").PopAll,"pw")
 	
 	If NoOctoConnection = False Then

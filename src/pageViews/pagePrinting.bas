@@ -246,8 +246,8 @@ End Sub
 
 #Region "HEATER_PRESETS"
 Private Sub btnPresetMaster_Click
-
-	CallSub(B4XPages.MainPage,"ShowPreHeatMenu_All")
+	
+	CallSub2(B4XPages.MainPage,"ShowPreHeatMenu_All2","System Presets")
 	
 End Sub
 

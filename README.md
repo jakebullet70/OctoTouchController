@@ -50,7 +50,7 @@ See https://github.com/jakebullet70/OctoTouchController/wiki/Installing
 See the [GitHub Wiki](https://github.com/jakebullet70/OctoTouchController/wiki) for some helpful hints.
 
 ### Help  
-I usually hang out at the Octoprint discord server. An invate can be found here: [discord.octoprint.org](https://discord.octoprint.org).  
+I usually hang out at the Octoprint discord server. An invite can be found here: [discord.octoprint.org](https://discord.octoprint.org).  
 Quesion can also be posted here in GitHub.  
 
 Written in [B4X](https://www.b4x.com/)  

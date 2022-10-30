@@ -24,7 +24,7 @@ Sub Class_Globals
 	Private CircularProgressBar1 As CircularProgressBar
 	
 	Private btnCancel, btnPause, btnPrint As B4XView
-	Private BtnTxtPrint,BtnTxtResume As Object
+	Private mText4PrintBtn,mText4ResumeBtn As Object
 	
 	Private lblToolTemp,lblBedTemp,lblPrintStats1 As AutoTextSizeLabel
 	Private lblPrintStats3,lblPrintStats2 As B4XView
@@ -117,20 +117,22 @@ Private Sub BuildGUI
 	lblPrintStats2.TextSize = lblPrintStatsTMP.BaseLabel.Font.Size
 	lblPrintStats3.TextSize = lblPrintStats2.TextSize
 	
-	Dim cs As CSBuilder : cs.Initialize
-	BtnTxtPrint     = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE039)).Append(CRLF). _
-												Typeface(Typeface.DEFAULT).Append("Print").PopAll
-												
+#region "BTNS TXT"	
+	Dim cs As CSBuilder 
+	 
 	cs.Initialize
-	BtnTxtResume = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE5D5)).Append(CRLF). _
+	mText4PrintBtn  = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF02F)).Append(CRLF). _
+												Typeface(Typeface.DEFAULT).Append("Print").PopAll
+	cs.Initialize
+	mText4ResumeBtn = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF04B)).Append(CRLF). _
 												Typeface(Typeface.DEFAULT).Append("Resume").PopAll
 	cs.Initialize
-	btnPause.Text = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE036)).Append(CRLF). _
+	btnPause.Text = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF04C)).Append(CRLF). _
 												Typeface(Typeface.DEFAULT).Append("Pause").PopAll
 	cs.Initialize
-	btnCancel.Text = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE047)).Append(CRLF). _
+	btnCancel.Text = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF04D)).Append(CRLF). _
 												Typeface(Typeface.DEFAULT).Append("Cancel").PopAll												
-												
+#end region											
 End Sub
 
 public Sub Update_Printer_Btns
@@ -139,10 +141,10 @@ public Sub Update_Printer_Btns
 	
 	'--- rename printing buttons as needed
 	If oc.isPaused2 = True Then
-		btnPrint.Text = BtnTxtResume
+		btnPrint.Text = mText4ResumeBtn
 		btnPrint.Tag = "resume"
 	Else
-		btnPrint.Text = BtnTxtPrint
+		btnPrint.Text = mText4PrintBtn
 		btnPrint.Tag = "print"
 	End If
 	
@@ -175,7 +177,9 @@ public Sub Update_Printer_Btns
 		'--- job is paused
 		guiHelpers.EnableDisableBtns(Array As B4XView(btnCancel,btnPrint),True)
 		guiHelpers.EnableDisableBtns(Array As B4XView(btnPause,btnPresetTool,btnPresetBed,btnPresetMaster),False)
-				
+		If ivPreviewLG.mBase.Visible = False Then
+			ShowThumbnailWhilePrinting(True)
+		End If
 	Else
 		
 		'--- not printing anything

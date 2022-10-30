@@ -263,6 +263,9 @@ Private Sub SetupFullScrn
 	guiHelpers.gHeight = lv.Height
 	Dim ac As Accessibility : guiHelpers.gFscale = ac.GetUserFontScale
 	
+	'--- lock orientation
+	If Activity.width < Activity.Height Then ph.SetScreenOrientation(7) Else ph.SetScreenOrientation(6)
+	
 End Sub
 
 

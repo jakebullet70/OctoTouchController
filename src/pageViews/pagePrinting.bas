@@ -24,9 +24,9 @@ Sub Class_Globals
 	Private CircularProgressBar1 As CircularProgressBar
 	
 	Private btnCancel, btnPause, btnPrint As B4XView
-	Private lblBedTemp As AutoTextSizeLabel
-	Private lblToolTemp As AutoTextSizeLabel
-	Private lblPrintStats1 As AutoTextSizeLabel
+	Private BtnTxtPrint,BtnTxtResume As Object
+	
+	Private lblToolTemp,lblBedTemp,lblPrintStats1 As AutoTextSizeLabel
 	Private lblPrintStats3,lblPrintStats2 As B4XView
 	Private lblPrintStatsTMP As AutoTextSizeLabel
 	
@@ -36,6 +36,7 @@ Sub Class_Globals
 	Private mTmpTemps As String
 	
 	Private pnlBGbed,pnlBGTool As B4XView
+	
 End Sub
 
 
@@ -116,6 +117,20 @@ Private Sub BuildGUI
 	lblPrintStats2.TextSize = lblPrintStatsTMP.BaseLabel.Font.Size
 	lblPrintStats3.TextSize = lblPrintStats2.TextSize
 	
+	Dim cs As CSBuilder : cs.Initialize
+	BtnTxtPrint     = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE039)).Append(CRLF). _
+												Typeface(Typeface.DEFAULT).Append("Print").PopAll
+												
+	cs.Initialize
+	BtnTxtResume = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE5D5)).Append(CRLF). _
+												Typeface(Typeface.DEFAULT).Append("Resume").PopAll
+	cs.Initialize
+	btnPause.Text = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE036)).Append(CRLF). _
+												Typeface(Typeface.DEFAULT).Append("Pause").PopAll
+	cs.Initialize
+	btnCancel.Text = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE047)).Append(CRLF). _
+												Typeface(Typeface.DEFAULT).Append("Cancel").PopAll												
+												
 End Sub
 
 public Sub Update_Printer_Btns
@@ -124,10 +139,10 @@ public Sub Update_Printer_Btns
 	
 	'--- rename printing buttons as needed
 	If oc.isPaused2 = True Then
-		btnPrint.Text = "Resume"
+		btnPrint.Text = BtnTxtResume
 		btnPrint.Tag = "resume"
 	Else
-		btnPrint.Text = "Print"
+		btnPrint.Text = BtnTxtPrint
 		btnPrint.Tag = "print"
 	End If
 	

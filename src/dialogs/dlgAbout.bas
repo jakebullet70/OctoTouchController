@@ -51,7 +51,7 @@ Public Sub Show
 	'--------------------------------------------
 	
 	p.SetLayoutAnimated(0, 0, 0, w,h)
-	p.LoadLayout("viewAbout")
+	p.LoadLayout("dlgAbout")
 	BuildGUI
 	
 	guiHelpers.ThemeDialogForm(mDialog, "About")

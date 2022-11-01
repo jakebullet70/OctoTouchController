@@ -9,20 +9,6 @@
             "required": false
         },
         {
-            "options": [
-                "Green",
-                "Blue",
-                "Dark",
-                "Red",
-                "Gray",
-                "Prusa"
-            ],
-            "title": "Theme",
-            "type": "Short Options",
-            "key": "themeclr",
-            "required": false
-        },
-        {
             "title": "Change Brightness",
             "type": "Boolean",
             "key": "chgBrightness",

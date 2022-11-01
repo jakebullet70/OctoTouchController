@@ -362,6 +362,10 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	Dim m As Map : 	m.Initialize
 	
 	cs.Initialize
+	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3B7)). _
+				 Typeface(Typeface.DEFAULT).Append("   Color Theme").PopAll,"thm1")
+	
+	cs.Initialize
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE30B)). _
 				 Typeface(Typeface.DEFAULT).Append("   General Settings").PopAll,"gn")
 				 

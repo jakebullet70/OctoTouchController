@@ -33,7 +33,6 @@ Sub Process_Globals
 	'--- general dlg
 	Public ChangeBrightnessSettingsFLAG As Boolean = True 
 	Public ShowScreenOffFLAG As Boolean = True 
-	Public ColorTheme As String 
 	Public logPOWER_EVENTS As Boolean = False 
 	Public logFILE_EVENTS As Boolean = False
 	Public logREQUEST_OCTO_KEY As Boolean = False
@@ -66,6 +65,12 @@ Public Sub Init
 End Sub
 
 Private Sub LoadCfgs()
+	
+	If Starter.kvs.ContainsKey(gblConst.CLR_THEME_KEY) = False Then
+		Starter.kvs.Put(gblConst.CLR_THEME_KEY,"Prusa")
+	End If
+	
+	'======================================================================
 	
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
@@ -150,7 +155,6 @@ Public Sub ReadGeneralCFG
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	
-	ColorTheme = Data.Get("themeclr").As(String).ToLowerCase
 	ChangeBrightnessSettingsFLAG = Data.Get("chgBrightness").As(Boolean)
 	ShowScreenOffFLAG = Data.Get("scrnoff").As(Boolean)
 	

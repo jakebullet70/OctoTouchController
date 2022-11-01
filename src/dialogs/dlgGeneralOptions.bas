@@ -26,21 +26,13 @@ End Sub
 
 public Sub CreateDefaultFile
 	
-
 	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
 		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE, _
-						CreateMap("themeclr": "Blue", _
-						 "chgBrightness": "true", _
-						 "scrnoff": "true", _
-						 "logall": "false", _
-						 "logpwr": "false", _
-						 "logfiles": "false", _
-						 "logoctokey": "false", _
-						 "logrest": "false"))
-						 
+						CreateMap( "chgBrightness": "true", "scrnoff": "true", "logall": "false", _
+						 	"logpwr": "false",  "logfiles": "false", "logoctokey": "false", "logrest": "false"))					 
 	End If
-
 End Sub
+
 
 Public Sub Show
 	

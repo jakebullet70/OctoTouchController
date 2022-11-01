@@ -30,9 +30,25 @@ Public Sub RunPrgUpdate
 	''''#if release
 	Dim PrevVer As Int = Starter.kvs.Get("version_code").As(Int)
 	
-	If PrevVer <= 3 Then  '--- V1.0.0 Beta 2
-		fileHelpers.SafeKill("sonoff_options.map") '--- not used anymore, moved code to use kvs
+	'=============================================================================================
+	
+	If PrevVer <= 15 Then '--- V1.2.2
+		
+		If Not (Starter.kvs.ContainsKey(gblConst.CLR_THEME_KEY)) Then
+			
+			'--- moved theme from general options  into KVS
+			Dim m As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+			Dim k As String = m.Get(gblConst.CLR_THEME_KEY)
+			Starter.kvs.Put(gblConst.CLR_THEME_KEY,k)
+			
+			'--- write back out the general options file without the clr theme
+			m.Remove(gblConst.CLR_THEME_KEY)
+			File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,m)
+			
+		End If
 	End If
+	
+	'=============================================================================================
 	
 	'--- update the version
 	Starter.kvs.Put("version_code",Application.VersionCode)

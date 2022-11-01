@@ -55,7 +55,7 @@ Public Sub Initialize
 	
 	config.Init
 	logMe.Init(xui.DefaultFolder,"_OCTOTC_","log")
-	clrTheme.Init(config.ColorTheme)
+	clrTheme.Init(Starter.kvs.Get(gblConst.CLR_THEME_KEY).As(String).ToLowerCase)
 	
 	Starter.InitLogCleanup
 	
@@ -324,7 +324,10 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 	If value = Null Or value.Length = 0 Then Return
 	
 	Select Case value
-		
+		Case "thm1"
+			Dim oo9 As dlgThemeSelect : oo9.Initialize
+			oo9.Show(Me)
+			
 		Case "ab" '--- about
 			Dim o2 As dlgAbout : o2.Initialize(Me)
 			o2.Show

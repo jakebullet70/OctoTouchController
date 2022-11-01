@@ -22,16 +22,11 @@ Sub Process_Globals
 	
 	Public ItemsBackgroundColor As Int
 	
-	Public ConnectionNo,ConnectionYes As Int
-	
 End Sub
 
 
 Public Sub Init(theme As String)
 	
-	ConnectionYes = 0xFF81F266
-	ConnectionNo = 0xFFE14349
-
 	txtNormal = xui.Color_white
 	txtAccent = xui.Color_LightGray
 	btnDisableText = xui.Color_ARGB(50,192,192,192)

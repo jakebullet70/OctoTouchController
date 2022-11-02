@@ -69,7 +69,7 @@ Private Sub BuildGUI
 	pnlBG.Color = clrTheme.Background
 
 	Dim DefaultColor As String = Starter.kvs.Get(gblConst.CLR_THEME_KEY)
-	Spinner1.AddAll(Array As String("Green","Blue","Dark","Red","Gray","Prusa"))
+	Spinner1.AddAll(Array As String("Green","Blue","Dark","Dark-Blue","Dark-Green","Red","Gray","Prusa"))
 	Spinner1.Prompt = "Theme"
 	Spinner1.SelectedIndex = Spinner1.IndexOf(DefaultColor)
 	Spinner1.DropdownBackgroundColor = clrTheme.BackgroundMenu

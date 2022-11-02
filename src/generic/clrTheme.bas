@@ -62,6 +62,22 @@ Public Sub InitTheme(theme As String)
 			BackgroundHeader = xui.Color_ARGB(255,11, 11, 11)
 			BackgroundMenu = xui.Color_ARGB(255,43, 43, 43)
 			
+		Case "dark-blue"
+			Background = xui.Color_ARGB(255,18, 18, 18)
+			BackgroundHeader = xui.Color_ARGB(255,11, 11, 11)
+			BackgroundMenu = xui.Color_ARGB(255,43, 43, 43)
+			
+			txtNormal = 0xFF00EEFF
+			txtAccent = 	0xFF4FB0B7
+			
+		Case "dark-green"
+			Background = xui.Color_ARGB(255,18, 18, 18)
+			BackgroundHeader = xui.Color_ARGB(255,11, 11, 11)
+			BackgroundMenu = xui.Color_ARGB(255,43, 43, 43)
+			
+			txtNormal = 0xFF75C850
+			txtAccent = 0xFFB1E89A
+			
 		Case "prusa"
 			Background = xui.Color_ARGB(255,18, 18, 18)
 			BackgroundHeader = xui.Color_ARGB(255,11, 11, 11)

@@ -7,6 +7,8 @@ Version=8.5
 ' lmB4XImageView
 
 #Region VERSIONS 
+'	2.1.4		11/03/2022   - sadLogic, Kherson Ukraine
+'				Changed setBitmap to Public
 '	2.1.3		08/05/2022   - sadLogic, Kherson Ukraine
 '				Changed Click_Animation to CreateHaloEffect
 '   2.1.2		08/02/2022   - sadLogic, Kherson Ukraine

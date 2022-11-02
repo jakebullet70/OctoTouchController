@@ -95,6 +95,7 @@ Private Sub BuildMenuCard(mnuPanel As Panel,imgFile As String, Text As String, m
 			If v.Tag Is lmB4XImageViewX Then
 				Dim o1 As lmB4XImageViewX = v.Tag
 				o1.Load(File.DirAssets,imgFile)
+				o1.SetBitmap(guiHelpers.ChangeColorBasedOnAlphaLevel(o1.Bitmap,clrTheme.txtNormal))
 				o1.Tag2 = mnuAction '--- set menu action
 				
 			else if v.Tag Is AutoTextSizeLabel Then
@@ -181,28 +182,5 @@ End Sub
 
 
 
-
-'---  change color of bitmap
-'--- https://www.b4x.com/android/forum/threads/b4x-bitmapcreator-change-color-of-bitmap.95518/#post-603416
-
-'Sub ChangeColorBasedOnAlphaLevel(bmp As B4XBitmap, NewColor As Int) As B4XBitmap
-'	Dim bc As BitmapCreator
-'	bc.Initialize(bmp.Width, bmp.Height)
-'	bc.CopyPixelsFromBitmap(bmp)
-'	Dim a1, a2 As ARGBColor
-'	bc.ColorToARGB(NewColor, a1)
-'	For y = 0 To bc.mHeight - 1
-'		For x = 0 To bc.mWidth - 1
-'			bc.GetARGB(x, y, a2)
-'			If a2.a > 0 Then
-'				a2.r = a1.r
-'				a2.g = a1.g
-'				a2.b = a1.b
-'				bc.SetARGB(x, y, a2)
-'			End If
-'		Next
-'	Next
-'	Return bc.Bitmap
-'End Sub
 
 

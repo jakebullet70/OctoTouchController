@@ -54,7 +54,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	mPnlMain.SetLayoutAnimated(0,0,masterPanel.top,masterPanel.Width,masterPanel.Height)
 	mPnlMain.LoadLayout("pageFiles")
 		
-	Build_GUI
+	BuildGUI
 	
 End Sub
 
@@ -131,7 +131,7 @@ Public Sub tmrFilesCheckChange_Tick
 	
 End Sub
 
-Private Sub Build_GUI
+Private Sub BuildGUI
 	
 	guiHelpers.ReSkinB4XComboBox(Array As B4XComboBox(cboSort))
 	cboSort.setitems(Array As String("File Name","Date Added"))
@@ -153,7 +153,8 @@ Private Sub Build_GUI
 		clvFiles_ItemClick(0,Null)
 	End If
 	
-	lblSort.Text = Chr(0xF160)
+	lblSort.Text = Chr(0xF160) : Sleep(0)
+	lblSort.BaseLabel.TextSize = lblSort.BaseLabel.TextSize - 8
 	
 	If guiHelpers.gIsLandScape = False And guiHelpers.gScreenSizeAprox < 5.2 Then
 		btnLoadAndPrint.Text = "Print"

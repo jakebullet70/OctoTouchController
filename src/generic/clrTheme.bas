@@ -27,18 +27,18 @@ End Sub
 
 Public Sub Init(theme As String)
 	
-	txtNormal = xui.Color_white
-	txtAccent = xui.Color_LightGray
-	btnDisableText = xui.Color_ARGB(50,192,192,192)
-	DividerColor = xui.Color_LightGray
-	
 	InitTheme(theme)
-			
+	
 End Sub
 
 
 
 Public Sub InitTheme(theme As String)
+	
+	txtNormal = xui.Color_white
+	txtAccent = xui.Color_LightGray
+	btnDisableText = xui.Color_ARGB(50,192,192,192)
+	DividerColor = xui.Color_LightGray
 	
 	Select Case theme.ToLowerCase
 		
@@ -98,16 +98,16 @@ Public Sub InitTheme(theme As String)
 End Sub
 
 
-public Sub ColorToHex4BBLabel(clr As Int) As String 'ignore
+Public Sub ColorToHex4BBLabel(clr As Int) As String 'ignore
 	Return "0x" & ColorToHex(clr)
 End Sub
 
-public Sub ColorToHex(clr As Int) As String
+Public Sub ColorToHex(clr As Int) As String
 	Dim bc As ByteConverter
 	Return bc.HexFromBytes(bc.IntsToBytes(Array As Int(clr))) 'ignore
 End Sub
 
-public Sub HexToColor(Hex As String) As Int 'ignore
+Public Sub HexToColor(Hex As String) As Int 'ignore
 	Dim bc As ByteConverter
 	If Hex.StartsWith("#") Then
 		Hex = Hex.SubString(1)

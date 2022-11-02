@@ -38,7 +38,7 @@ Public Sub Show
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	
-	Dim h As Float
+	Dim h As Float '--- TODO - needs refactor
 	If guiHelpers.gIsLandScape Then
 		If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
 			h = 62%y

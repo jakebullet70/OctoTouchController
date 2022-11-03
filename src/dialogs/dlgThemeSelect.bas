@@ -15,11 +15,17 @@ Sub Class_Globals
 	Private pnlBG As B4XView
 	Private xui As XUI
 	Private Dialog As B4XDialog
+	Private mMain As B4XMainPage
 	
+	'--- color select stuff -----------------
 	Private lblText2,lblText1,lblText As B4XView
 	Private lblTextAcc As B4XView
 	Private pnlThemeMenu,pnlThemeHeader,pnlThemeBG As B4XView
 	Private Spinner1 As Spinner
+	Private ColorTemplate As B4XColorTemplate
+	Private dgClr As B4XDialog
+	'-----------------------------------------
+	
 	
 End Sub
 
@@ -31,8 +37,9 @@ End Sub
 Public Sub Show(mobj As B4XMainPage)
 	
 	'--- init
+	mMain = mobj
 	Dialog.Initialize(mobj.Root)
-	
+		
 	Dim p As B4XView = xui.CreatePanel("")
 	Dim w, h As Float
 	
@@ -50,7 +57,7 @@ Public Sub Show(mobj As B4XMainPage)
 
 	guiHelpers.ThemeDialogForm(Dialog, "Themes")
 	Dim rs As ResumableSub = Dialog.ShowCustom(p, "SAVE", "", "CLOSE")
-	'Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
+	Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
 	guiHelpers.ThemeInputDialogBtnsResize(Dialog)
 	'guiHelpers.EnableDisableBtns(Array As B4XView(btnCheckConnection,btnGetOctoKey),True)
 
@@ -79,7 +86,6 @@ Private Sub BuildGUI
 	ThemeMe(DefaultColor)
 	
 End Sub
-
 
 Private Sub Spinner1_ItemClick (Position As Int, Value As Object)
 	ThemeMe(Value.As(String))
@@ -115,7 +121,51 @@ Private Sub ThemeMe(clr As String)
 	
 End Sub
 
+'=================================================================
+
+Private Sub lblText_Click
+	Dim lbl As B4XView : lbl = Sender
+	Wait For (ShowColorPicker(lbl.TextColor)) Complete (i As Int)
+	If i <> 0 Then 
+		lblText1.TextColor = i
+		lblText2.TextColor = i
+		lblText.TextColor = i
+	End If
+End Sub
+
+Private Sub lblTextAcc_Click
+	Dim lbl As B4XView : lbl = Sender
+	Wait For (ShowColorPicker(lbl.TextColor)) Complete (i As Int)
+	If i <> 0 Then 
+		lblTextAcc.TextColor = i
+	End If
+End Sub
 
 
+Private Sub pnlBGrounds_Click
+	Dim pnl As B4XView : pnl = Sender
+	Wait For (ShowColorPicker(pnl.Color)) Complete (i As Int)
+	If i <> 0 Then
+		pnl.Color = i
+	End If
+End Sub
 
+Private Sub ShowColorPicker(callerClr As Int) As ResumableSub
+	dgClr.Initialize(mMain.Root)
+	ColorTemplate.Initialize
+	
+	ColorTemplate.SelectedColor = callerClr
+	
+	guiHelpers.ThemeDialogForm(dgClr, "Select Color")
+	Dim obj As ResumableSub = dgClr.ShowTemplate(ColorTemplate, "SAVE", "", "CLOSE")
+	guiHelpers.ThemeInputDialogBtnsResize(dgClr)
+	Wait For (obj) Complete (Result As Int)
+	
+	If Result = xui.DialogResponse_Positive Then
+		Log(ColorTemplate.SelectedColor)
+		Return  ColorTemplate.SelectedColor
+	End If
+	Return 0
+	
+End Sub
 

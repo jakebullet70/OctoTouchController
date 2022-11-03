@@ -67,7 +67,7 @@ Public Sub InitTheme(theme As String)
 			BackgroundHeader = xui.Color_ARGB(255,30, 30, 30)
 			BackgroundMenu = xui.Color_ARGB(255,43, 43, 43)
 			'--- overide base white color
-			txtNormal = 0xFF00EEFF
+			txtNormal = -16739073
 			txtAccent = 	0xFF4FB0B7
 			
 		Case "dark-green"
@@ -75,7 +75,7 @@ Public Sub InitTheme(theme As String)
 			BackgroundHeader = xui.Color_ARGB(255,30, 30, 30)
 			BackgroundMenu = xui.Color_ARGB(255,43, 43, 43)
 			'--- overide base white color
-			txtNormal = 0xFF75C850
+			txtNormal = -11276022
 			txtAccent = 0xFFB1E89A
 			
 		Case "prusa"

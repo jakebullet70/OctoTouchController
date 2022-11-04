@@ -16,7 +16,7 @@ Sub Process_Globals
 	Type tThemeColors (bg, bgHeader, bgMenu, txtNormal, txtAcc,Disabled,Divider As Int)
 	Public CustomColors As tThemeColors
 	
-	Public Background,BackgroundHeader,BackgroundMenu As Int
+	Public Background,BackgroundHeader,Background2 As Int
 	
 	Public txtAccent,txtNormal As Int
 	Public btnDisableText As Int
@@ -47,7 +47,7 @@ Public Sub InitTheme(theme As String)
 		Case "custom"
 			Background = CustomColors.bg
 			BackgroundHeader = CustomColors.bgHeader
-			BackgroundMenu = CustomColors.bgMenu
+			Background2 = CustomColors.bgMenu
 			txtNormal = CustomColors.txtNormal
 			txtAccent = CustomColors.txtAcc
 			btnDisableText = CustomColors.Disabled
@@ -56,27 +56,27 @@ Public Sub InitTheme(theme As String)
 		Case "red"
 			Background = xui.Color_ARGB(255,131, 21, 25)
 			BackgroundHeader = -5239520
-			BackgroundMenu = xui.Color_ARGB(255,162, 30, 25)
+			Background2 = xui.Color_ARGB(255,162, 30, 25)
 			
 		Case "green"
 			Background = xui.Color_ARGB(255,19, 62, 11)
 			BackgroundHeader = -16310780
-			BackgroundMenu = xui.Color_ARGB(255,10, 53, 2)
+			Background2 = xui.Color_ARGB(255,10, 53, 2)
 	
 		Case "gray"
 			Background = xui.Color_ARGB(255,90, 90, 90)
 			BackgroundHeader =-13487823
-			BackgroundMenu = xui.Color_ARGB(255,60, 60, 60)
+			Background2 = xui.Color_ARGB(255,60, 60, 60)
 			
 		Case "dark"
 			Background = xui.Color_ARGB(255,2, 2, 2)
 			BackgroundHeader = xui.Color_ARGB(255,30, 30, 30)
-			BackgroundMenu = xui.Color_ARGB(255,43, 43, 43)
+			Background2 = xui.Color_ARGB(255,43, 43, 43)
 			
 		Case "dark-blue"
 			Background = xui.Color_ARGB(255,2,2,2)
 			BackgroundHeader = xui.Color_ARGB(255,30, 30, 30)
-			BackgroundMenu = xui.Color_ARGB(255,43, 43, 43)
+			Background2 = xui.Color_ARGB(255,43, 43, 43)
 			'--- overide base white color
 			txtNormal = -16739073
 			txtAccent = 	0xFF4FB0B7
@@ -84,7 +84,7 @@ Public Sub InitTheme(theme As String)
 		Case "dark-green"
 			Background = xui.Color_ARGB(255,2,2,2)
 			BackgroundHeader = xui.Color_ARGB(255,30, 30, 30)
-			BackgroundMenu = xui.Color_ARGB(255,43, 43, 43)
+			Background2 = xui.Color_ARGB(255,43, 43, 43)
 			'--- overide base white color
 			txtNormal = -11276022
 			txtAccent = 0xFFB1E89A
@@ -92,7 +92,7 @@ Public Sub InitTheme(theme As String)
 		Case "prusa"
 			Background = -14672868
 			BackgroundHeader = xui.Color_ARGB(255,11, 11, 11)
-			BackgroundMenu = xui.Color_ARGB(255,43, 43, 43)
+			Background2 = xui.Color_ARGB(255,43, 43, 43)
 			
 			'--- overide base white color
 			txtNormal = -1095921
@@ -103,7 +103,7 @@ Public Sub InitTheme(theme As String)
 		Case Else ' --- "blue"
 			Background = xui.Color_ARGB(255,53, 69, 85)
 			BackgroundHeader = -14932432
-			BackgroundMenu = xui.Color_ARGB(255,45, 62, 78)
+			Background2 = xui.Color_ARGB(255,45, 62, 78)
 				
 	End Select
 End Sub

@@ -332,7 +332,7 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 	If value = Null Or value.Length = 0 Then Return
 	
 	Select Case value
-		Case "thm1"
+		Case "thm1" '--- themes
 			Dim oo9 As dlgThemeSelect : oo9.Initialize
 			oo9.Show(Me)
 			

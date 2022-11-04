@@ -83,7 +83,7 @@ Private Sub BuildGUI
 	Spinner1.AddAll(Array As String("Green","Blue","Dark","Dark-Blue","Dark-Green","Red","Gray","Prusa","Custom"))
 	Spinner1.Prompt = "Theme"
 	Spinner1.SelectedIndex = Spinner1.IndexOf(DefaultColor)
-	Spinner1.DropdownBackgroundColor = clrTheme.BackgroundMenu
+	Spinner1.DropdownBackgroundColor = clrTheme.Background2
 	Spinner1.DropdownTextColor = clrTheme.txtNormal
 	Spinner1.TextColor = clrTheme.txtNormal
 	
@@ -105,13 +105,13 @@ Private Sub ThemeMe(clr As String)
 	Dim DividerColorTmp As Int = clrTheme.DividerColor
 	Dim BackgroundTmp As Int = clrTheme.Background
 	Dim BackgroundHeaderTmp As Int = clrTheme.BackgroundHeader
-	Dim BackgroundMenuTmp As Int = clrTheme.BackgroundMenu
+	Dim Background2Tmp As Int = clrTheme.Background2
 	
 	clrTheme.InitTheme(clr) '--- one place for setting colors, so set them and restore later
 
 	guiHelpers.SetTextColor(Array As B4XView(lblText,lblText1,lblText2,lblCustom))
 	lblTextAcc.TextColor = clrTheme.txtAccent
-	pnlThemeMenu.Color = clrTheme.BackgroundMenu
+	pnlThemeMenu.Color = clrTheme.Background2
 	pnlThemeHeader.Color = clrTheme.BackgroundHeader
 	pnlThemeBG.Color = clrTheme.Background
 		
@@ -122,7 +122,7 @@ Private Sub ThemeMe(clr As String)
 	clrTheme.DividerColor = DividerColorTmp
 	clrTheme.Background = BackgroundTmp
 	clrTheme.BackgroundHeader = BackgroundHeaderTmp
-	clrTheme.BackgroundMenu = BackgroundMenuTmp
+	clrTheme.Background2 = Background2Tmp
 	
 End Sub
 
@@ -188,7 +188,7 @@ Private Sub ShowColorPicker(callerClr As Int) As ResumableSub
 	ColorTemplate.SelectedColor = callerClr
 	
 	guiHelpers.ThemeDialogForm(dgClr, "Select Color")
-	Dim obj As ResumableSub = dgClr.ShowTemplate(ColorTemplate, "SAVE", "", "CLOSE")
+	Dim obj As ResumableSub = dgClr.ShowTemplate(ColorTemplate, "OK", "", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(dgClr)
 	Wait For (obj) Complete (Result As Int)
 	

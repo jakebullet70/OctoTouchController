@@ -50,7 +50,7 @@ Public Sub Show(defaultValue As Int)
 	sadRoundSlider1.Value = defaultValue
 	sadRoundSlider1.xlbl.TextColor = clrTheme.BackgroundHeader
 	sadRoundSlider1.xlbl.Font = xui.CreateDefaultFont(52)
-	sadRoundSlider1.ValueColor = clrTheme.BackgroundMenu
+	sadRoundSlider1.ValueColor = clrTheme.Background2
 	sadRoundSlider1.SetCircleColor(clrTheme.BackgroundHeader,clrTheme.txtNormal)
 	sadRoundSlider1.SetThumbColor(clrTheme.BackgroundHeader,clrTheme.txtNormal)
 	sadRoundSlider1.Draw

@@ -246,16 +246,16 @@ Public Sub ThemePrefDialogForm(prefdlg As sadPreferencesDialog)
 		prefdlg.SeparatorTextColor = clrTheme.txtAccent
 		prefdlg.TextColor = clrTheme.txtNormal
 		
-		'prefdlg.Dialog.BackgroundColor = clrTheme.BackgroundMenu
-		'prefdlg.mBase.Color = clrTheme.BackgroundMenu
+		'prefdlg.Dialog.BackgroundColor = clrTheme.Background2
+		'prefdlg.mBase.Color = clrTheme.Background2
 		
-		'prefdlg.Dialog.Base.Color = clrTheme.BackgroundMenu
+		'prefdlg.Dialog.Base.Color = clrTheme.Background2
 		'prefdlg.CustomListView1.sv.SetColorAndBorder(xui.Color_Transparent,1dip,xui.Color_blue,0dip)
 		'prefdlg.mBase.SetColorAndBorder(xui.Color_Blue,2dip,xui.Color_White,5dip)
 		
-		'prefdlg.CustomListView1.AsView.Color = clrTheme.BackgroundMenu
-		'prefdlg.CustomListView1.GetBase.Color = clrTheme.BackgroundMenu
-		'prefdlg.CustomListView1. = clrTheme.BackgroundMenu
+		'prefdlg.CustomListView1.AsView.Color = clrTheme.Background2
+		'prefdlg.CustomListView1.GetBase.Color = clrTheme.Background2
+		'prefdlg.CustomListView1. = clrTheme.Background2
 		
 		ThemeDialogForm(prefdlg.Dialog,prefdlg.Title.As(String))
 		
@@ -287,7 +287,7 @@ Public Sub ThemeDialogForm2(dlg As B4XDialog,title As Object,txtSize As Int)
 	dlg.TitleBarTextColor = clrTheme.txtNormal
 	dlg.ButtonsTextColor = clrTheme.txtNormal
 	dlg.BorderColor = clrTheme.txtNormal
-	dlg.BackgroundColor = clrTheme.BackgroundMenu
+	dlg.BackgroundColor = clrTheme.Background2
 	dlg.ButtonsFont = xui.CreateDefaultFont(txtSize)
 	dlg.ButtonsHeight = 60dip
 	

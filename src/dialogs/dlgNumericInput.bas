@@ -51,7 +51,7 @@ Public Sub Show
 	
 	
 	'--- make it pretty
-	inputTemplate.mBase.Color = clrTheme.BackgroundMenu
+	inputTemplate.mBase.Color = clrTheme.Background2
 	inputTemplate.lblTitle.Text = mPrompt
 	inputTemplate.lblTitle.TextColor = clrTheme.txtNormal
 	

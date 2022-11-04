@@ -516,7 +516,7 @@ Public Sub setTheme (t As Int)
 				
 		End Select
 		
-		ItemsBackgroundColor = clrTheme.BackgroundMenu '--- sadLogic
+		ItemsBackgroundColor = clrTheme.Background2 '--- sadLogic
 		
 		SearchTemplate.SearchField.TextField.TextColor = TextColor
 		SearchTemplate.SearchField.NonFocusedHintColor = TextColor

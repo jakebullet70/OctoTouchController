@@ -88,7 +88,7 @@ Private Sub BuildGUI
 	guiHelpers.SetEnableDisableColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel))
 	
 	CircularProgressBar1.ColorEmpty = clrTheme.txtNormal
-	CircularProgressBar1.ColorFull = clrTheme.BackgroundMenu
+	CircularProgressBar1.ColorFull = clrTheme.Background2
 	CircularProgressBar1.Value = 0
 	CircularProgressBar1.ValueUnit = "%"
 	

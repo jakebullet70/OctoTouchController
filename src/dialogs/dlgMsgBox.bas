@@ -65,6 +65,7 @@ Public Sub Show(txt  As String, icon_file As String, _
 	
 	lblTxt.Text = txt
 	lmB4XImageViewX1.Load(File.DirAssets, icon_file)
+	lmB4XImageViewX1.SetBitmap(guiHelpers.ChangeColorBasedOnAlphaLevel(lmB4XImageViewX1.Bitmap,clrTheme.txtNormal))
 
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)
 	Dim rs As ResumableSub = mDialog.ShowCustom(BasePnl,btn1,btn2,btn3)

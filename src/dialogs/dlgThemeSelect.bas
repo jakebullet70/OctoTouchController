@@ -144,7 +144,9 @@ End Sub
 '=================================================================
 
 #region "CUSTOM GUI"
+
 Private Sub lblText_Click
+	If (Spinner1.SelectedItem <> "Custom") Then Return
 	Dim lbl As B4XView : lbl = Sender
 	Wait For (ShowColorPicker(lbl.TextColor)) Complete (i As Int)
 	If i <> 0 Then 
@@ -155,6 +157,7 @@ Private Sub lblText_Click
 End Sub
 
 Private Sub lblTextAcc_Click
+	If (Spinner1.SelectedItem <> "Custom") Then Return
 	Dim lbl As B4XView : lbl = Sender
 	Wait For (ShowColorPicker(lbl.TextColor)) Complete (i As Int)
 	If i <> 0 Then 
@@ -164,6 +167,7 @@ End Sub
 
 
 Private Sub pnlBGrounds_Click
+	If (Spinner1.SelectedItem <> "Custom") Then Return
 	Dim pnl As B4XView : pnl = Sender
 	Wait For (ShowColorPicker(pnl.Color)) Complete (i As Int)
 	If i <> 0 Then

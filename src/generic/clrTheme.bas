@@ -13,25 +13,27 @@ Sub Process_Globals
 	Private xui As XUI
 	Private Const mModule As String = "clrTheme" 'ignore
 	
+	Type tThemeColors (bg, bgHeader, bgMenu, txtNormal, txtAcc,Disabled,Divider As Int)
+	Public CustomColors As tThemeColors
+	
 	Public Background,BackgroundHeader,BackgroundMenu As Int
 	
-	Public txtNormal As Int
-	Public txtAccent As Int
+	Public txtAccent,txtNormal As Int
 	Public btnDisableText As Int
 	Public DividerColor As Int
 	
-	Public ItemsBackgroundColor As Int
+	Public ItemsBackgroundColor As Int '--- used in sadPrefDialogs
 	
 End Sub
 
 
 Public Sub Init(theme As String)
 	
+	If Starter.kvs.ContainsKey(gblConst.CUSTOM_CLR_THEME) = False Then SeedCustomClrs
+	CustomColors = Starter.kvs.Get(gblConst.CUSTOM_CLR_THEME)
 	InitTheme(theme)
 	
 End Sub
-
-
 
 Public Sub InitTheme(theme As String)
 	
@@ -42,6 +44,15 @@ Public Sub InitTheme(theme As String)
 	
 	Select Case theme.ToLowerCase
 		
+		Case "custom"
+			Background = CustomColors.bg
+			BackgroundHeader = CustomColors.bgHeader
+			BackgroundMenu = CustomColors.bgMenu
+			txtNormal = CustomColors.txtNormal
+			txtAccent = CustomColors.txtAcc
+			btnDisableText = CustomColors.Disabled
+			DividerColor = CustomColors.Divider
+			
 		Case "red"
 			Background = xui.Color_ARGB(255,131, 21, 25)
 			BackgroundHeader = xui.Color_ARGB(255,124, 14, 18)
@@ -97,6 +108,24 @@ Public Sub InitTheme(theme As String)
 	End Select
 End Sub
 
+
+Private Sub SeedCustomClrs
+	
+	Log("Seed clrs")
+	CustomColors.Initialize
+	'--- seed a basic black / white
+	CustomColors.bg = xui.Color_ARGB(255,2, 2, 2)
+	CustomColors.bgHeader = xui.Color_ARGB(255,30, 30, 30)
+	CustomColors.bgMenu = xui.Color_ARGB(255,43, 43, 43)
+	CustomColors.txtNormal = xui.Color_white
+	CustomColors.txtAcc = xui.Color_LightGray
+	CustomColors.Disabled = xui.Color_ARGB(50,192,192,192)
+	CustomColors.Divider = xui.Color_LightGray
+	Starter.kvs.Put(gblConst.CUSTOM_CLR_THEME,CustomColors)
+	
+End Sub
+
+'=====================================================================
 
 Public Sub ColorToHex4BBLabel(clr As Int) As String 'ignore
 	Return "0x" & ColorToHex(clr)

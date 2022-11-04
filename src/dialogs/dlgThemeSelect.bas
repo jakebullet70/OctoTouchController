@@ -20,6 +20,7 @@ Sub Class_Globals
 	'--- color select stuff -----------------
 	Private lblText2,lblText1,lblText As B4XView
 	Private lblTextAcc As B4XView
+	Private lblCustom As B4XView
 	Private pnlThemeMenu,pnlThemeHeader,pnlThemeBG As B4XView
 	Private Spinner1 As Spinner
 	Private ColorTemplate As B4XColorTemplate
@@ -65,6 +66,9 @@ Public Sub Show(mobj As B4XMainPage)
 	Wait For (rs) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
 		Starter.kvs.Put(gblConst.CLR_THEME_KEY,Spinner1.SelectedItem)
+		If Spinner1.SelectedItem = "Custom" Then 
+			SaveCustomClrs
+		End If
 		guiHelpers.Show_toast2("Restart App To Change Theme",2200)
 	End If
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
@@ -74,9 +78,10 @@ End Sub
 Private Sub BuildGUI
 
 	pnlBG.Color = clrTheme.Background
+	lblCustom.Visible = False
 
 	Dim DefaultColor As String = Starter.kvs.Get(gblConst.CLR_THEME_KEY)
-	Spinner1.AddAll(Array As String("Green","Blue","Dark","Dark-Blue","Dark-Green","Red","Gray","Prusa"))
+	Spinner1.AddAll(Array As String("Green","Blue","Dark","Dark-Blue","Dark-Green","Red","Gray","Prusa","Custom"))
 	Spinner1.Prompt = "Theme"
 	Spinner1.SelectedIndex = Spinner1.IndexOf(DefaultColor)
 	Spinner1.DropdownBackgroundColor = clrTheme.BackgroundMenu
@@ -89,6 +94,7 @@ End Sub
 
 Private Sub Spinner1_ItemClick (Position As Int, Value As Object)
 	ThemeMe(Value.As(String))
+	lblCustom.Visible = (Value = "Custom").As(Boolean)
 End Sub
 
 Private Sub ThemeMe(clr As String)
@@ -104,7 +110,7 @@ Private Sub ThemeMe(clr As String)
 	
 	clrTheme.InitTheme(clr) '--- one place for setting colors, so set them and restore later
 
-	guiHelpers.SetTextColor(Array As B4XView(lblText,lblText1,lblText2))
+	guiHelpers.SetTextColor(Array As B4XView(lblText,lblText1,lblText2,lblCustom))
 	lblTextAcc.TextColor = clrTheme.txtAccent
 	pnlThemeMenu.Color = clrTheme.BackgroundMenu
 	pnlThemeHeader.Color = clrTheme.BackgroundHeader
@@ -118,6 +124,21 @@ Private Sub ThemeMe(clr As String)
 	clrTheme.Background = BackgroundTmp
 	clrTheme.BackgroundHeader = BackgroundHeaderTmp
 	clrTheme.BackgroundMenu = BackgroundMenuTmp
+	
+End Sub
+
+Private Sub SaveCustomClrs
+	
+	clrTheme.CustomColors.Initialize
+	clrTheme.CustomColors.bg = pnlThemeBG.Color
+	clrTheme.CustomColors.bgHeader = pnlThemeHeader.Color
+	clrTheme.CustomColors.bgMenu = pnlThemeMenu.Color
+	clrTheme.CustomColors.txtNormal = lblText1.TextColor
+	clrTheme.CustomColors.txtAcc = lblTextAcc.TextColor
+	clrTheme.CustomColors.Disabled = clrTheme.btnDisableText '--- not set yet
+	clrTheme.CustomColors.Divider = clrTheme.DividerColor '--- not set yet
+	
+	Starter.kvs.Put(gblConst.CUSTOM_CLR_THEME,clrTheme.CustomColors)
 	
 End Sub
 

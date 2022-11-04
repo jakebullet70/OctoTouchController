@@ -147,4 +147,11 @@ Public Sub HexToColor(Hex As String) As Int 'ignore
 	Return ints(0)
 End Sub
 
-
+Public Sub Int2ARGB(Color As Int) As Int()
+	Dim res(4) As Int
+	res(0) = Bit.UnsignedShiftRight(Bit.And(Color, 0xff000000), 24)
+	res(1) = Bit.UnsignedShiftRight(Bit.And(Color, 0xff0000), 16)
+	res(2) = Bit.UnsignedShiftRight(Bit.And(Color, 0xff00), 8)
+	res(3) = Bit.And(Color, 0xff)
+	Return res
+End Sub

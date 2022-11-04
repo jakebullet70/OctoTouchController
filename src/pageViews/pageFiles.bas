@@ -264,7 +264,7 @@ Public Sub Build_ListViewFileList()
 	
 	
 	Try ' DEBUG try-catch
-		clvFiles.PressedColor = 0x721F1C1C  '--- alpha set to 128
+		clvFiles.PressedColor = DimColor(clrTheme.txtNormal) 
 		CSelections.SelectionColor = clvFiles.PressedColor
 		clvFiles.DefaultTextColor  = clrTheme.txtNormal
 		clvFiles.DefaultTextBackgroundColor = xui.Color_Transparent
@@ -285,7 +285,12 @@ Public Sub Build_ListViewFileList()
 	
 End Sub
 
-Sub CreateListItem(oData As tOctoFileInfo, Width As Int, Height As Int) As B4XView
+Private Sub DimColor(clr As Int) As Int
+	Dim argb() As Int = clrTheme.Int2ARGB(clr)
+	Return xui.Color_ARGB(18,argb(1),argb(2),argb(3))
+End Sub
+
+Private Sub CreateListItem(oData As tOctoFileInfo, Width As Int, Height As Int) As B4XView
 	
 	Dim p As B4XView = xui.CreatePanel("")
 	'--- add 20dip to height for larger screens

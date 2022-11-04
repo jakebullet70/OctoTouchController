@@ -34,15 +34,15 @@ Public Sub RunPrgUpdate
 	
 	If PrevVer <= 15 Then '--- V1.2.2
 		
-		If Not (Starter.kvs.ContainsKey(gblConst.CLR_THEME_KEY)) Then
+		If Not (Starter.kvs.ContainsKey(gblConst.SELECTED_CLR_THEME)) Then
 			
 			'--- moved theme from general options  into KVS
 			Dim m As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
-			Dim k As String = m.Get(gblConst.CLR_THEME_KEY)
-			Starter.kvs.Put(gblConst.CLR_THEME_KEY,k)
+			Dim k As String = m.Get(gblConst.SELECTED_CLR_THEME)
+			Starter.kvs.Put(gblConst.SELECTED_CLR_THEME,k)
 			
 			'--- write back out the general options file without the clr theme
-			m.Remove(gblConst.CLR_THEME_KEY)
+			m.Remove(gblConst.SELECTED_CLR_THEME)
 			File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,m)
 			
 		End If

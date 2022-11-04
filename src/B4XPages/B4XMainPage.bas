@@ -55,7 +55,7 @@ Public Sub Initialize
 	
 	config.Init
 	logMe.Init(xui.DefaultFolder,"_OCTOTC_","log")
-	clrTheme.Init(Starter.kvs.Get(gblConst.CLR_THEME_KEY).As(String).ToLowerCase)
+	clrTheme.Init(Starter.kvs.Get(gblConst.SELECTED_CLR_THEME).As(String).ToLowerCase)
 	
 	Starter.InitLogCleanup
 	

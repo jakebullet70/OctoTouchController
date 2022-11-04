@@ -18,8 +18,8 @@ Sub Process_Globals
 	Public Const APK_FILE_INFO As String = WEB_ADDR & "OctoTouchController.txt"
 	
 	Public Const NO_THUMBNAIL As String = "no_thumbnail.jpg"
-	Public Const CLR_THEME_KEY As String = "themeclr" '--- selected theme color
-	Public Const CUSTOM_CLR_THEME As String = "customClrs" '--- users custom colors
+	Public Const SELECTED_CLR_THEME As String = "themeclr" '--- selected theme color
+	Public Const CUSTOM_THEME_COLORS As String = "customClrs" '--- users custom colors
 	
 	Public Const PRINTER_SETTING_BASE_FILE_NAME As String = "p_settings"
 	Public Const PRINTER_DESC As String = "desc"

@@ -66,8 +66,8 @@ End Sub
 
 Private Sub LoadCfgs()
 	
-	If Starter.kvs.ContainsKey(gblConst.CLR_THEME_KEY) = False Then
-		Starter.kvs.Put(gblConst.CLR_THEME_KEY,"Prusa")
+	If Starter.kvs.ContainsKey(gblConst.SELECTED_CLR_THEME) = False Then
+		Starter.kvs.Put(gblConst.SELECTED_CLR_THEME,"Prusa")
 	End If
 	
 	'======================================================================

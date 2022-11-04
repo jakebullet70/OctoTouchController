@@ -27,7 +27,6 @@ Sub Class_Globals
 	Private dgClr As B4XDialog
 	'-----------------------------------------
 	
-	
 End Sub
 
 
@@ -65,7 +64,7 @@ Public Sub Show(mobj As B4XMainPage)
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
 	Wait For (rs) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
-		Starter.kvs.Put(gblConst.CLR_THEME_KEY,Spinner1.SelectedItem)
+		Starter.kvs.Put(gblConst.SELECTED_CLR_THEME,Spinner1.SelectedItem)
 		If Spinner1.SelectedItem = "Custom" Then 
 			SaveCustomClrs
 		End If
@@ -80,7 +79,7 @@ Private Sub BuildGUI
 	pnlBG.Color = clrTheme.Background
 	lblCustom.Visible = False
 
-	Dim DefaultColor As String = Starter.kvs.Get(gblConst.CLR_THEME_KEY)
+	Dim DefaultColor As String = Starter.kvs.Get(gblConst.SELECTED_CLR_THEME)
 	Spinner1.AddAll(Array As String("Green","Blue","Dark","Dark-Blue","Dark-Green","Red","Gray","Prusa","Custom"))
 	Spinner1.Prompt = "Theme"
 	Spinner1.SelectedIndex = Spinner1.IndexOf(DefaultColor)
@@ -135,15 +134,16 @@ Private Sub SaveCustomClrs
 	clrTheme.CustomColors.bgMenu = pnlThemeMenu.Color
 	clrTheme.CustomColors.txtNormal = lblText1.TextColor
 	clrTheme.CustomColors.txtAcc = lblTextAcc.TextColor
-	clrTheme.CustomColors.Disabled = clrTheme.btnDisableText '--- not set yet
-	clrTheme.CustomColors.Divider = clrTheme.DividerColor '--- not set yet
+	clrTheme.CustomColors.Disabled = clrTheme.btnDisableText '--- no GUI yet
+	clrTheme.CustomColors.Divider = clrTheme.DividerColor '--- no GUI yet
 	
-	Starter.kvs.Put(gblConst.CUSTOM_CLR_THEME,clrTheme.CustomColors)
+	Starter.kvs.Put(gblConst.CUSTOM_THEME_COLORS,clrTheme.CustomColors)
 	
 End Sub
 
 '=================================================================
 
+#region "CUSTOM GUI"
 Private Sub lblText_Click
 	Dim lbl As B4XView : lbl = Sender
 	Wait For (ShowColorPicker(lbl.TextColor)) Complete (i As Int)
@@ -189,4 +189,4 @@ Private Sub ShowColorPicker(callerClr As Int) As ResumableSub
 	Return 0
 	
 End Sub
-
+#end region

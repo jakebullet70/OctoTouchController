@@ -146,7 +146,9 @@ End Sub
 #region "CUSTOM GUI"
 
 Private Sub lblText_Click
+	#if release
 	If (Spinner1.SelectedItem <> "Custom") Then Return
+	#end if
 	Dim lbl As B4XView : lbl = Sender
 	Wait For (ShowColorPicker(lbl.TextColor)) Complete (i As Int)
 	If i <> 0 Then 
@@ -157,7 +159,9 @@ Private Sub lblText_Click
 End Sub
 
 Private Sub lblTextAcc_Click
+	#if release
 	If (Spinner1.SelectedItem <> "Custom") Then Return
+	#end if
 	Dim lbl As B4XView : lbl = Sender
 	Wait For (ShowColorPicker(lbl.TextColor)) Complete (i As Int)
 	If i <> 0 Then 
@@ -167,7 +171,9 @@ End Sub
 
 
 Private Sub pnlBGrounds_Click
+	#if release
 	If (Spinner1.SelectedItem <> "Custom") Then Return
+	#end if
 	Dim pnl As B4XView : pnl = Sender
 	Wait For (ShowColorPicker(pnl.Color)) Complete (i As Int)
 	If i <> 0 Then
@@ -187,7 +193,7 @@ Private Sub ShowColorPicker(callerClr As Int) As ResumableSub
 	Wait For (obj) Complete (Result As Int)
 	
 	If Result = xui.DialogResponse_Positive Then
-		Log(ColorTemplate.SelectedColor)
+		logMe.LogDebug2(ColorTemplate.SelectedColor,mModule)
 		Return  ColorTemplate.SelectedColor
 	End If
 	Return 0

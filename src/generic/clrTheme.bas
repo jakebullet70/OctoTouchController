@@ -55,17 +55,17 @@ Public Sub InitTheme(theme As String)
 			
 		Case "red"
 			Background = xui.Color_ARGB(255,131, 21, 25)
-			BackgroundHeader = xui.Color_ARGB(255,124, 14, 18)
+			BackgroundHeader = -5239520
 			BackgroundMenu = xui.Color_ARGB(255,162, 30, 25)
 			
 		Case "green"
 			Background = xui.Color_ARGB(255,19, 62, 11)
-			BackgroundHeader = xui.Color_ARGB(255,10, 51, 6)
+			BackgroundHeader = -16310780
 			BackgroundMenu = xui.Color_ARGB(255,10, 53, 2)
 	
 		Case "gray"
 			Background = xui.Color_ARGB(255,90, 90, 90)
-			BackgroundHeader = xui.Color_ARGB(255,73, 73, 73)
+			BackgroundHeader =-13487823
 			BackgroundMenu = xui.Color_ARGB(255,60, 60, 60)
 			
 		Case "dark"
@@ -90,19 +90,19 @@ Public Sub InitTheme(theme As String)
 			txtAccent = 0xFFB1E89A
 			
 		Case "prusa"
-			Background = xui.Color_ARGB(255,18, 18, 18)
+			Background = -14672868
 			BackgroundHeader = xui.Color_ARGB(255,11, 11, 11)
 			BackgroundMenu = xui.Color_ARGB(255,43, 43, 43)
 			
 			'--- overide base white color
-			txtNormal = xui.Color_ARGB(255,216, 91, 48)
+			txtNormal = -1095921
 			txtAccent = 0xFFD77762' xui.Color_LightGray
 			btnDisableText = xui.Color_ARGB(50,192,192,192)
 			DividerColor = xui.Color_Black
 		
 		Case Else ' --- "blue"
 			Background = xui.Color_ARGB(255,53, 69, 85)
-			BackgroundHeader = xui.Color_ARGB(255,41, 57, 73)
+			BackgroundHeader = -14932432
 			BackgroundMenu = xui.Color_ARGB(255,45, 62, 78)
 				
 	End Select

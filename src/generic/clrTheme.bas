@@ -42,7 +42,10 @@ Public Sub InitTheme(theme As String)
 	btnDisableText = xui.Color_ARGB(50,192,192,192)
 	DividerColor = xui.Color_LightGray
 	
-	Select Case theme.ToLowerCase
+	theme = theme.ToLowerCase
+	Log("Init Theme: " & theme)
+	
+	Select Case theme
 		
 		Case "rose"
 			Background = -7177863
@@ -112,6 +115,7 @@ Public Sub InitTheme(theme As String)
 			DividerColor = xui.Color_Black
 		
 		Case Else ' --- "blue"
+			Log("Theme Else: " & theme)
 			Background = xui.Color_ARGB(255,53, 69, 85)
 			BackgroundHeader = -14932432
 			Background2 = xui.Color_ARGB(255,45, 62, 78)

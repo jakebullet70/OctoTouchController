@@ -49,9 +49,8 @@ Public Sub Show
 	inputTemplate.ConfigureForNumbers(False, False) 'AllowDecimals, AllowNegative
 	'et.TextSize = 18 : 
 	
-	
 	'--- make it pretty
-	inputTemplate.mBase.Color = clrTheme.Background2
+	inputTemplate.mBase.Color = clrTheme.Background
 	inputTemplate.lblTitle.Text = mPrompt
 	inputTemplate.lblTitle.TextColor = clrTheme.txtNormal
 	
@@ -64,11 +63,7 @@ Public Sub Show
 	
 	'--- display dialog
 	Wait For(rs)complete(intResult As Int)
-	If intResult = xui.DialogResponse_Positive Then
-		CallSub2(mCallback,mEventName,inputTemplate.Text)
-	Else
-		CallSub2(mCallback,mEventName,"")
-	End If
+	CallSub2(mCallback,mEventName,IIf( intResult = xui.DialogResponse_Positive,inputTemplate.Text,""))
 	
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 
@@ -79,11 +74,11 @@ End Sub
 Private Sub SizeInputDialog(dlg As B4XDialog, input As B4XInputTemplate)
 	Dim ET As EditText = input.TextField1
 	Dim p As Panel = input.GetPanel(dlg)
-	
-	Dim p As Panel = input.GetPanel(dlg)
 	Dim LB As B4XView = p.GetView(0)
+	
 	LB.Height = Round((input.mBase.Height / 2.6)).As(Float)
 	LB.Font = xui.CreateDefaultFont(NumberFormat2(22 / guiHelpers.gFscale,1,0,0,False))
+	input.mBase.Height = input.mBase.Height + 18dip '--- sets bottom size where btns are
 	
 	ET.Gravity = Gravity.CENTER
 	ET.Height = Round(input.mBase.Height / 2).As(Float)

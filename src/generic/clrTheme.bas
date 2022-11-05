@@ -44,6 +44,15 @@ Public Sub InitTheme(theme As String)
 	
 	Select Case theme.ToLowerCase
 		
+		Case "rose"
+			Background = -7177863
+			BackgroundHeader = -3054235
+			Background2 = -7576990
+			txtNormal = -15461870
+			txtAccent = CustomColors.txtAcc
+			btnDisableText = 851493056
+			DividerColor = -3355444
+		
 		Case "custom"
 			Background = CustomColors.bg
 			BackgroundHeader = CustomColors.bgHeader
@@ -106,6 +115,15 @@ Public Sub InitTheme(theme As String)
 			Background2 = xui.Color_ARGB(255,45, 62, 78)
 				
 	End Select
+	
+'	Log("Background = " & Background)
+'	Log("BackgroundHeader = " & BackgroundHeader)
+'	Log("Background2 = " & Background2)
+'	Log("txtNormal = " & txtNormal)
+'	Log("txtAccent = " & txtAccent)
+'	Log("btnDisableText = " & btnDisableText)
+'	Log("DividerColor = " &  DividerColor)
+	
 End Sub
 
 

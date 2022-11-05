@@ -80,12 +80,12 @@ Private Sub BuildGUI
 	lblCustom.Visible = False
 
 	Dim DefaultColor As String = Starter.kvs.Get(gblConst.SELECTED_CLR_THEME)
-	Spinner1.AddAll(Array As String("Green","Blue","Dark","Dark-Blue","Dark-Green","Red","Gray","Prusa","Custom"))
+	Spinner1.AddAll(Array As String("Green","Blue","Dark","Dark-Blue","Dark-Green","Red","Gray","Prusa","Rose","Custom"))
 	Spinner1.Prompt = "Theme"
 	Spinner1.SelectedIndex = Spinner1.IndexOf(DefaultColor)
-	Spinner1.DropdownBackgroundColor = clrTheme.Background2
 	Spinner1.DropdownTextColor = clrTheme.txtNormal
 	Spinner1.TextColor = clrTheme.txtNormal
+	Spinner1.DropdownBackgroundColor = clrTheme.Background2
 	
 	ThemeMe(DefaultColor)
 	

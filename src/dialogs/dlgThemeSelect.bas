@@ -23,7 +23,7 @@ Sub Class_Globals
 	Private lblCustom As B4XView
 	Private pnlThemeMenu,pnlThemeHeader,pnlThemeBG As B4XView
 	Private Spinner1 As Spinner
-	Private ColorTemplate As B4XColorTemplate
+	Private ColorTemplate As sadB4XColorTemplate
 	Private dgClr As B4XDialog
 	Private Const CUSTOM_SELECTION As String = "Custom"
 	'-----------------------------------------
@@ -58,7 +58,6 @@ Public Sub Show(mobj As B4XMainPage)
 	Dim rs As ResumableSub = Dialog.ShowCustom(p, "SAVE", "", "CLOSE")
 	Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
 	guiHelpers.ThemeInputDialogBtnsResize(Dialog)
-	'guiHelpers.EnableDisableBtns(Array As B4XView(btnCheckConnection,btnGetOctoKey),True)
 
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
 	Wait For (rs) Complete (Result As Int)
@@ -137,6 +136,7 @@ Private Sub SaveCustomClrs
 	clrTheme.CustomColors.Divider = clrTheme.DividerColor '--- no GUI yet
 	
 	Starter.kvs.Put(gblConst.CUSTOM_THEME_COLORS,clrTheme.CustomColors)
+	Log("Saved custom colors")
 	
 End Sub
 
@@ -189,6 +189,8 @@ Private Sub ShowColorPicker(callerClr As Int) As ResumableSub
 	guiHelpers.ThemeDialogForm(dgClr, "Select Color")
 	Dim obj As ResumableSub = dgClr.ShowTemplate(ColorTemplate, "OK", "", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(dgClr)
+	CreateCboColorSelector
+	'Spinner1.SelectedIndex = Spinner1.IndexOf(callerClr)
 	Wait For (obj) Complete (Result As Int)
 	
 	If Result = xui.DialogResponse_Positive Then
@@ -198,4 +200,27 @@ Private Sub ShowColorPicker(callerClr As Int) As ResumableSub
 	Return 0
 	
 End Sub
+
+Private Sub CreateCboColorSelector
+	Dim SpinnerSelected As Spinner : SpinnerSelected.Initialize("clrSelected")
+	SpinnerSelected.AddAll(Array As String("Background","Background2","BGround Header","Text Main","Text 2"))
+	SpinnerSelected.Prompt = "Load Color"
+	SpinnerSelected.DropdownTextColor = clrTheme.txtNormal
+	SpinnerSelected.TextColor = clrTheme.txtNormal
+	SpinnerSelected.DropdownBackgroundColor = clrTheme.Background2
+	dgClr.Base.AddView(SpinnerSelected,4dip,dgClr.Base.Height - 50dip, 190dip, 36dip)
+End Sub
+
+Private Sub clrSelected_ItemClick (Position As Int, Value As Object)
+	Select Case Value
+		Case "Background" 		:	 	ColorTemplate.SelectedColor = pnlThemeBG.Color
+		Case "Background2" 		: 		ColorTemplate.SelectedColor = pnlThemeMenu.Color
+		Case "BGround Header" 	: 		ColorTemplate.SelectedColor = pnlThemeHeader.color
+		Case "Text Main"		 	: 		ColorTemplate.SelectedColor = lblText1.TextColor
+		Case "Text 2"			 	: 		ColorTemplate.SelectedColor = lblTextAcc.TextColor
+	End Select
+End Sub
+
 #end region
+
+

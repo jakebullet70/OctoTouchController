@@ -88,7 +88,7 @@ Private Sub BuildGUI
 	guiHelpers.SetEnableDisableColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel))
 	
 	CircularProgressBar1.ColorEmpty = clrTheme.txtNormal
-	CircularProgressBar1.ColorFull = clrTheme.Background2
+	CircularProgressBar1.ColorFull     = clrTheme.Background2
 	CircularProgressBar1.Value = 0
 	CircularProgressBar1.ValueUnit = "%"
 	
@@ -107,10 +107,10 @@ Private Sub BuildGUI
 	btnPrint.Font  = fn
 	
 	'---thumbnail preview is same size as progressbar
-	ivPreview.Width  = CircularProgressBar1.mBase.Width
+	ivPreview.Width  = CircularProgressBar1.mBase.Width + 28dip
 	ivPreview.Height = CircularProgressBar1.mBase.Height
 	ivPreview.top    = CircularProgressBar1.mBase.Top
-	ivPreview.Left   = CircularProgressBar1.mBase.Left
+	ivPreview.Left   = CircularProgressBar1.mBase.Left - 14dip
 	
 	'--- figure out best font size
 	lblPrintStatsTMP.Text   = $"Total Time:0:00:00:00"$ 

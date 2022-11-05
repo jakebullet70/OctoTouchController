@@ -30,10 +30,8 @@ Sub Class_Globals
 	
 End Sub
 
-
 Public Sub Initialize
 End Sub
-
 
 Public Sub Show(mobj As B4XMainPage)
 	
@@ -81,7 +79,7 @@ Private Sub BuildGUI
 	lblCustom.Visible = False
 
 	Dim DefaultColor As String = Starter.kvs.Get(gblConst.SELECTED_CLR_THEME)
-	Spinner1.AddAll(Array As String("Green","Blue","Dark","Dark-Blue","Dark-Green","Red","Gray","Prusa","Rose",CUSTOM_SELECTION))
+	Spinner1.AddAll(Array As String("Green","Blue","Red","Dark","Dark-Blue","Dark-Green","Gray","Prusa","Rose",CUSTOM_SELECTION))
 	Spinner1.Prompt = "Theme"
 	Spinner1.SelectedIndex = Spinner1.IndexOf(DefaultColor)
 	Spinner1.DropdownTextColor = clrTheme.txtNormal
@@ -96,21 +94,6 @@ Private Sub Spinner1_ItemClick (Position As Int, Value As Object)
 	ThemeMe(Value.As(String))
 	lblCustom.Visible = (Value = "Custom").As(Boolean)
 End Sub
-
-
-'Private Sub Copy2Custom
-'	
-'	clrTheme.CustomColors.Initialize
-'	clrTheme.CustomColors.bg = clrTheme.Background
-'	clrTheme.CustomColors.bgHeader = xui.Color_ARGB(255,30, 30, 30)
-'	clrTheme.CustomColors.bgMenu = xui.Color_ARGB(255,43, 43, 43)
-'	clrTheme.CustomColors.txtNormal = xui.Color_white
-'	clrTheme.CustomColors.txtAcc = xui.Color_LightGray
-'	clrTheme.CustomColors.Disabled = xui.Color_ARGB(50,192,192,192)
-'	clrTheme.CustomColors.Divider = xui.Color_LightGray
-'	
-'	Starter.kvs.Put(gblConst.CUSTOM_THEME_COLORS,clrTheme.CustomColors)
-'End Sub
 
 Private Sub ThemeMe(clr As String)
 	
@@ -162,7 +145,7 @@ End Sub
 #region "CUSTOM GUI"
 
 Private Sub lblText_Click
-	#if release
+	#if release 
 	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
 	#end if
 	Dim lbl As B4XView : lbl = Sender
@@ -175,7 +158,7 @@ Private Sub lblText_Click
 End Sub
 
 Private Sub lblTextAcc_Click
-	#if release
+	#if release 
 	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
 	#end if
 	Dim lbl As B4XView : lbl = Sender
@@ -187,7 +170,7 @@ End Sub
 
 
 Private Sub pnlBGrounds_Click
-	#if release
+	#if release 
 	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
 	#end if
 	Dim pnl As B4XView : pnl = Sender

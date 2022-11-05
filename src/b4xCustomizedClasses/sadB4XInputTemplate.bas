@@ -1,5 +1,5 @@
 ﻿B4J=true
-Group=CUSTOM_CONTROLS
+Group=B4X_CUSTOM_CLASSES
 ModulesStructureVersion=1
 Type=Class
 Version=6.98

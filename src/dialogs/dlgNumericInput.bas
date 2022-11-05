@@ -83,7 +83,7 @@ Private Sub SizeInputDialog(dlg As B4XDialog, input As sadB4XInputTemplate)
 	ET.Height = Round(input.mBase.Height / 2).As(Float)
 	ET.top = LB.Top + LB.Height + 8dip  '(input.mBase.Height / 3)
 	ET.Width = input.mBase.Width - (ET.Left * 2)
-	ET.TextSize = NumberFormat2(20 / guiHelpers.gFscale,1,0,0,False)
+	ET.TextSize = NumberFormat2(28 / guiHelpers.gFscale,1,0,0,False)
 	ET.TextColor = clrTheme.txtNormal 
 	
 	Dim Cncl As B4XView = dlg.GetButton(xui.DialogResponse_Cancel)

@@ -18,7 +18,8 @@ Sub Class_Globals
 	Private mTitle As String
 	Private mCallback As Object
 	Private mEventName As String
-	Private mDialog As B4XDialog
+	
+	Private mDialog As B4XDialog 
 	
 End Sub
 
@@ -38,16 +39,15 @@ End Sub
 Public Sub Show
 	
 	'--- init
-	'mMainObj.Dialog.Initialize(mMainObj.Root)
 	mDialog.Initialize(mMainObj.Root)
-	Dim inputTemplate As B4XInputTemplate
+	
+	Dim inputTemplate As sadB4XInputTemplate
 	inputTemplate.Initialize
 	
 	'--- setup edittext control
 	Dim et As EditText = inputTemplate.TextField1
 	et.InputType = et.INPUT_TYPE_NUMBERS
 	inputTemplate.ConfigureForNumbers(False, False) 'AllowDecimals, AllowNegative
-	'et.TextSize = 18 : 
 	
 	'--- make it pretty
 	inputTemplate.mBase.Color = clrTheme.Background
@@ -59,8 +59,6 @@ Public Sub Show
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 	SizeInputDialog(mDialog,inputTemplate)
 	
-	'guiHelpers.EnableDisableBtns(Array As B4XView(mDialog.GetButton(xui.DialogResponse_Positive)),False)
-	
 	'--- display dialog
 	Wait For(rs)complete(intResult As Int)
 	CallSub2(mCallback,mEventName,IIf( intResult = xui.DialogResponse_Positive,inputTemplate.Text,""))
@@ -71,9 +69,10 @@ End Sub
 
 
 
-Private Sub SizeInputDialog(dlg As B4XDialog, input As B4XInputTemplate)
+Private Sub SizeInputDialog(dlg As B4XDialog, input As sadB4XInputTemplate)
+	
 	Dim ET As EditText = input.TextField1
-	Dim p As Panel = input.GetPanel(dlg)
+	Dim p As Panel = input.GetPanel(dlg) 
 	Dim LB As B4XView = p.GetView(0)
 	
 	LB.Height = Round((input.mBase.Height / 2.6)).As(Float)
@@ -95,14 +94,9 @@ Private Sub SizeInputDialog(dlg As B4XDialog, input As B4XInputTemplate)
 	dlg.Base.Height = ET.Height + LB.Height + ok.Height + 62dip
 End Sub
 
-
-
-
 '   RESIZE DIALOG CODE
 '   RESIZE DIALOG CODE
 '   RESIZE DIALOG CODE
-
-
 
 'Sub YourSub
 '
@@ -118,8 +112,6 @@ End Sub
 '	If Result = xui.DialogResponse_Positive Then
 '	
 'End Sub
-
-
 
 
 'Sub FormatDialog(input As B4XInputTemplate, NumOnly As Boolean, PW As Boolean)

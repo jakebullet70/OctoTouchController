@@ -133,19 +133,20 @@ Module48=|relative|src\pageViews\pagePrinting
 Module49=|relative|src\helperClasses\powerHelpers
 Module5=|relative|src\miscClasses\CallSubUtils
 Module50=|relative|src\octoPrint\RequestApiKey
-Module51=|relative|src\custom_controls\sadPreferencesDialog
-Module52=|relative|src\custom_controls\sadRoundSlider
-Module53=|relative|src\main\Starter
-Module54=|relative|src\helperClasses\strHelpers
-Module55=|relative|src\miscClasses\SysInfo
-Module56=|relative|src\miscClasses\WildCardFilesList
+Module51=|relative|src\custom_controls\sadB4XInputTemplate
+Module52=|relative|src\custom_controls\sadPreferencesDialog
+Module53=|relative|src\custom_controls\sadRoundSlider
+Module54=|relative|src\main\Starter
+Module55=|relative|src\helperClasses\strHelpers
+Module56=|relative|src\miscClasses\SysInfo
+Module57=|relative|src\miscClasses\WildCardFilesList
 Module6=|relative|src\octoPrint\CheckOctoConnection
 Module7=|relative|src\custom_controls\CircularProgressBar
 Module8=|relative|src\generic\clrTheme
 Module9=|relative|src\miscClasses\clvSelectionsX
 NumberOfFiles=33
 NumberOfLibraries=20
-NumberOfModules=56
+NumberOfModules=57
 Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 

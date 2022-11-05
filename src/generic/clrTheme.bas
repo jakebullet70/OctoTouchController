@@ -67,6 +67,8 @@ Public Sub InitTheme(theme As String)
 			BackgroundHeader = -5239520
 			Background2 = xui.Color_ARGB(255,162, 30, 25)
 			
+			txtAccent = -5215895
+			
 		Case "green"
 			Background = xui.Color_ARGB(255,19, 62, 11)
 			BackgroundHeader = -16310780
@@ -88,7 +90,7 @@ Public Sub InitTheme(theme As String)
 			Background2 = xui.Color_ARGB(255,43, 43, 43)
 			'--- overide base white color
 			txtNormal = -16739073
-			txtAccent = 	0xFF4FB0B7
+			txtAccent = -8472605
 			
 		Case "dark-green"
 			Background = xui.Color_ARGB(255,2,2,2)

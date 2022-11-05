@@ -49,7 +49,7 @@ Public Sub InitTheme(theme As String)
 			BackgroundHeader = -3054235
 			Background2 = -7576990
 			txtNormal = -15461870
-			txtAccent = CustomColors.txtAcc
+			txtAccent = -395787
 			btnDisableText = 851493056
 			DividerColor = -3355444
 		

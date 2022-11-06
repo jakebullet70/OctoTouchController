@@ -181,7 +181,9 @@ Private Sub CreateCboColorSelector(selected As String)
 	spnPicker.TextColor = clrTheme.txtNormal
 	spnPicker.DropdownBackgroundColor = clrTheme.Background2
 	spnPicker.SelectedIndex = spnPicker.IndexOf(selected)
-	dgClr.Base.AddView(spnPicker,4dip,dgClr.Base.Height - 50dip, 190dip, 36dip)
+	'Dim bw As Button	 = dgClr.GetButton(-1).Width
+	dgClr.Base.AddView(spnPicker,4dip,dgClr.Base.Height - 50dip, _
+								dgClr.Base.Width - (dgClr.GetButton(xui.DialogResponse_Positive).Width * 2) - 24dip, 36dip)
 End Sub
 
 Private Sub clrSelected_ItemClick (Position As Int, Value As Object)

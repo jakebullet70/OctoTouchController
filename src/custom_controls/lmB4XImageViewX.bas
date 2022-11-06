@@ -7,6 +7,8 @@ Version=8.5
 ' lmB4XImageView
 
 #Region VERSIONS 
+'	2.1.5		11/06/2022   - sadLogic, Kherson Ukraine
+'				Added click animation color
 '	2.1.4		11/03/2022   - sadLogic, Kherson Ukraine
 '				Changed setBitmap to Public
 '	2.1.3		08/05/2022   - sadLogic, Kherson Ukraine
@@ -36,6 +38,7 @@ Version=8.5
 #DesignerProperty: Key: CornersRadius, DisplayName: Corners Radius, FieldType: Int, DefaultValue: 0
 #DesignerProperty: Key: BackgroundColor, DisplayName: Background Color, FieldType: Color, DefaultValue: 0xFFAAAAAA
 #DesignerProperty: Key: ClickAnimation, DisplayName: Click Animation, FieldType: Boolean, DefaultValue: False
+#DesignerProperty: Key: ClickAnimationColor, DisplayName: Click Animation Color, FieldType: Color, DefaultValue: 0xFFFFFFFF
 #DesignerProperty: Key: Tag2, DisplayName: Tag2, FieldType: String, DefaultValue: 
 
 #End Region
@@ -72,9 +75,11 @@ Sub Class_Globals
 	Private mRound As Boolean
 	Private mBitmap As B4XBitmap
 	Public mBackgroundColor As Int
+	Public mClickAnimationColor As Int
 	Private mCornersRadius As Int
 	Private mClickAnimation As Boolean
 	Private mTag2 As String = ""
+	
 End Sub
 
 Public Sub Initialize (Callback As Object, EventName As String)
@@ -94,6 +99,7 @@ Public Sub DesignerCreateView (Base As Object, Lbl As Label, Props As Map)
 	mRound =Props.Get("Round")
 	mResizeMode = Props.Get("ResizeMode")
 	mBackgroundColor = xui.PaintOrColorToColor(Props.Get("BackgroundColor"))
+	mClickAnimationColor = xui.PaintOrColorToColor(Props.Get("ClickAnimationColor"))
 	mCornersRadius = DipToCurrent(Props.GetDefault("CornersRadius", 0))
 	mBase.AddView(iv, 0, 0, mBase.Width, mBase.Height)
 	xpnlOver = xui.CreatePanel("pnlOver")
@@ -335,14 +341,8 @@ End Sub
 
 #End If
 
-
 private Sub Click_Animation
-	'--- just dim the view, need to be replaced with something better
-'	pnlOver.Color = xui.Color_ARGB(127,196,165,165)
-'	Sleep(400)
-'	pnlOver.Color = xui.Color_Transparent
-	'--- try this
-	CreateHaloEffect(pnlOver,xui.Color_ARGB(152,255,255,255))
+	CreateHaloEffect(pnlOver,mClickAnimationColor)
 End Sub
 
 Private Sub CreateHaloEffect (Parent As B4XView,clr As Int)
@@ -359,8 +359,8 @@ Private Sub CreateHaloEffect (Parent As B4XView,clr As Int)
 End Sub
 
 Private Sub CreateHaloEffectHelper (Parent As B4XView,bmp As B4XBitmap, radius As Int)
-	Dim x As Float = Parent.Width/2
-	Dim y As Float = Parent.Height/2
+	Dim x As Float = Parent.Width / 2
+	Dim y As Float = Parent.Height / 2
 	Dim iv1 As ImageView
 	iv1.Initialize("")
 	Dim p As B4XView = iv1

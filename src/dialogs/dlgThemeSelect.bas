@@ -152,19 +152,19 @@ End Sub
 
 #region "CUSTOM GUI"
 
-Private Sub ShowColorPicker(callerClr As Int,name As String) As ResumableSub
+Private Sub ShowColorPicker(callerClr As Int,clrName As String) As ResumableSub
 	dgClr.Initialize(mMain.Root)
-	ColorTemplate.Initialize
 	
+	ColorTemplate.Initialize
 	ColorTemplate.SelectedColor = callerClr
 	
 	guiHelpers.ThemeDialogForm(dgClr, "Select Color")
 	Dim obj As ResumableSub = dgClr.ShowTemplate(ColorTemplate, "OK", "", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(dgClr)
-	CreateCboColorSelector
-	spnPicker.SelectedIndex = spnPicker.IndexOf(name)
-	Wait For (obj) Complete (Result As Int)
 	
+	CreateCboColorSelector(clrName)
+	
+	Wait For (obj) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
 		logMe.LogDebug2(ColorTemplate.SelectedColor,mModule)
 		Return  ColorTemplate.SelectedColor
@@ -173,13 +173,14 @@ Private Sub ShowColorPicker(callerClr As Int,name As String) As ResumableSub
 	
 End Sub
 
-Private Sub CreateCboColorSelector
+Private Sub CreateCboColorSelector(selected As String)
 	spnPicker.Initialize("clrSelected")
 	spnPicker.AddAll(Array As String(pnlThemeBG.Tag,pnlThemeMenu.Tag,pnlThemeHeader.Tag,lblText.Tag,lblTextAcc.Tag))
 	spnPicker.Prompt = "Load Color"
 	spnPicker.DropdownTextColor = clrTheme.txtNormal
 	spnPicker.TextColor = clrTheme.txtNormal
 	spnPicker.DropdownBackgroundColor = clrTheme.Background2
+	spnPicker.SelectedIndex = spnPicker.IndexOf(selected)
 	dgClr.Base.AddView(spnPicker,4dip,dgClr.Base.Height - 50dip, 190dip, 36dip)
 End Sub
 

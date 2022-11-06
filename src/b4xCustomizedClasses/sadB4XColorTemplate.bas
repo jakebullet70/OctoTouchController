@@ -7,8 +7,8 @@ Version=6.01
 ' Author:  B4X, sadLogic
 #Region VERSIONS 
 ' V. 1.0	Nov/05/2022	Copied from original, changed the base size to fit
-'									fit the spinner control that is added in the calling
-'									dlgThemeSelect class
+'									the spinner control that is added in the calling
+'									parent dlgThemeSelect class, See 'tweaked'
 ' V1.0 	No Idea, from b4x 11.8
 #End Region
 Sub Class_Globals

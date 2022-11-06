@@ -26,6 +26,7 @@ Sub Class_Globals
 	Private ColorTemplate As sadB4XColorTemplate
 	Private dgClr As B4XDialog
 	Private Const CUSTOM_SELECTION As String = "Custom"
+	Private spnPicker As Spinner
 	'-----------------------------------------
 	
 End Sub
@@ -63,7 +64,7 @@ Public Sub Show(mobj As B4XMainPage)
 	Wait For (rs) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
 		Starter.kvs.Put(gblConst.SELECTED_CLR_THEME,Spinner1.SelectedItem)
-		If Spinner1.SelectedItem = "Custom" Then 
+		If Spinner1.SelectedItem = CUSTOM_SELECTION Then
 			SaveCustomClrs
 		End If
 		guiHelpers.Show_toast2("Restart App To Change Theme",2200)
@@ -77,6 +78,7 @@ Private Sub BuildGUI
 	pnlBG.Color = clrTheme.Background
 	lblCustom.Visible = False
 
+	'--- theme
 	Dim DefaultColor As String = Starter.kvs.Get(gblConst.SELECTED_CLR_THEME)
 	Spinner1.AddAll(Array As String("Green","Blue","Red","Dark","Dark-Blue","Dark-Green","Gray","Prusa","Rose",CUSTOM_SELECTION))
 	Spinner1.Prompt = "Theme"
@@ -84,6 +86,12 @@ Private Sub BuildGUI
 	Spinner1.DropdownTextColor = clrTheme.txtNormal
 	Spinner1.TextColor = clrTheme.txtNormal
 	Spinner1.DropdownBackgroundColor = clrTheme.Background2
+	
+	'--- theme builder
+	pnlThemeMenu.Tag = "BGround 2" : pnlThemeBG.Tag = "BGround"
+	pnlThemeHeader.Tag = "BGround Header"
+	lblText1.Tag = "Text Main" : lblText.Tag = lblText1.Tag : 	lblText2.Tag = lblText1.Tag
+	lblTextAcc.Tag = "Text 2"
 	
 	ThemeMe(DefaultColor)
 	
@@ -144,43 +152,7 @@ End Sub
 
 #region "CUSTOM GUI"
 
-Private Sub lblText_Click
-	#if release 
-	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
-	#end if
-	Dim lbl As B4XView : lbl = Sender
-	Wait For (ShowColorPicker(lbl.TextColor)) Complete (i As Int)
-	If i <> 0 Then 
-		lblText1.TextColor = i
-		lblText2.TextColor = i
-		lblText.TextColor = i
-	End If
-End Sub
-
-Private Sub lblTextAcc_Click
-	#if release 
-	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
-	#end if
-	Dim lbl As B4XView : lbl = Sender
-	Wait For (ShowColorPicker(lbl.TextColor)) Complete (i As Int)
-	If i <> 0 Then 
-		lblTextAcc.TextColor = i
-	End If
-End Sub
-
-
-Private Sub pnlBGrounds_Click
-	#if release 
-	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
-	#end if
-	Dim pnl As B4XView : pnl = Sender
-	Wait For (ShowColorPicker(pnl.Color)) Complete (i As Int)
-	If i <> 0 Then
-		pnl.Color = i
-	End If
-End Sub
-
-Private Sub ShowColorPicker(callerClr As Int) As ResumableSub
+Private Sub ShowColorPicker(callerClr As Int,name As String) As ResumableSub
 	dgClr.Initialize(mMain.Root)
 	ColorTemplate.Initialize
 	
@@ -190,7 +162,7 @@ Private Sub ShowColorPicker(callerClr As Int) As ResumableSub
 	Dim obj As ResumableSub = dgClr.ShowTemplate(ColorTemplate, "OK", "", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(dgClr)
 	CreateCboColorSelector
-	'Spinner1.SelectedIndex = Spinner1.IndexOf(callerClr)
+	spnPicker.SelectedIndex = spnPicker.IndexOf(name)
 	Wait For (obj) Complete (Result As Int)
 	
 	If Result = xui.DialogResponse_Positive Then
@@ -202,13 +174,13 @@ Private Sub ShowColorPicker(callerClr As Int) As ResumableSub
 End Sub
 
 Private Sub CreateCboColorSelector
-	Dim SpinnerSelected As Spinner : SpinnerSelected.Initialize("clrSelected")
-	SpinnerSelected.AddAll(Array As String("Background","Background2","BGround Header","Text Main","Text 2"))
-	SpinnerSelected.Prompt = "Load Color"
-	SpinnerSelected.DropdownTextColor = clrTheme.txtNormal
-	SpinnerSelected.TextColor = clrTheme.txtNormal
-	SpinnerSelected.DropdownBackgroundColor = clrTheme.Background2
-	dgClr.Base.AddView(SpinnerSelected,4dip,dgClr.Base.Height - 50dip, 190dip, 36dip)
+	spnPicker.Initialize("clrSelected")
+	spnPicker.AddAll(Array As String(pnlThemeBG.Tag,pnlThemeMenu.Tag,pnlThemeHeader.Tag,lblText.Tag,lblTextAcc.Tag))
+	spnPicker.Prompt = "Load Color"
+	spnPicker.DropdownTextColor = clrTheme.txtNormal
+	spnPicker.TextColor = clrTheme.txtNormal
+	spnPicker.DropdownBackgroundColor = clrTheme.Background2
+	dgClr.Base.AddView(spnPicker,4dip,dgClr.Base.Height - 50dip, 190dip, 36dip)
 End Sub
 
 Private Sub clrSelected_ItemClick (Position As Int, Value As Object)
@@ -219,6 +191,41 @@ Private Sub clrSelected_ItemClick (Position As Int, Value As Object)
 		Case "Text Main"		 	: 		ColorTemplate.SelectedColor = lblText1.TextColor
 		Case "Text 2"			 	: 		ColorTemplate.SelectedColor = lblTextAcc.TextColor
 	End Select
+End Sub
+
+Private Sub lblText_Click
+	#if release 
+	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
+	#end if
+	Dim lbl As B4XView : lbl = Sender
+	Wait For (ShowColorPicker(lbl.TextColor,lbl.Tag)) Complete (i As Int)
+	If i <> 0 Then
+		lblText1.TextColor = i
+		lblText2.TextColor = i
+		lblText.TextColor = i
+	End If
+End Sub
+
+Private Sub lblTextAcc_Click
+	#if release 
+	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
+	#end if
+	Dim lbl As B4XView : lbl = Sender
+	Wait For (ShowColorPicker(lbl.TextColor,lbl.tag)) Complete (i As Int)
+	If i <> 0 Then
+		lblTextAcc.TextColor = i
+	End If
+End Sub
+
+Private Sub pnlBGrounds_Click
+	#if release 
+	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
+	#end if
+	Dim pnl As B4XView : pnl = Sender
+	Wait For (ShowColorPicker(pnl.Color,pnl.tag)) Complete (i As Int)
+	If i <> 0 Then
+		pnl.Color = i
+	End If
 End Sub
 
 #end region

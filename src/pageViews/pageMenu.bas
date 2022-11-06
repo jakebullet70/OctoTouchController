@@ -23,8 +23,8 @@ Sub Class_Globals
 	
 	Public Dialog As B4XDialog
 	
-	Private btnScrnOff,btnBrightness As B4XView
-	Private btnPlugin1,btnPlugin2,btnPlugin3 As B4XView
+	Private btnScrnOff,btnBrightness As Button
+	Private btnPlugin1,btnPlugin2,btnPlugin3 As Button
 	
 End Sub
 
@@ -80,10 +80,7 @@ Private Sub BuildGUI
 	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
 	
 	guiHelpers.SetVisible(Array As B4XView(btnPlugin3,btnPlugin1),False)
-	
-	'--- TODO, change color of button frame, its is set in GUI builder state as white, needs to be txtNormal
-	guiHelpers.SetTextColor(Array As B4XView(btnPlugin3,btnPlugin2,btnPlugin1,btnScrnOff,btnBrightness))
-	
+	guiHelpers.InitPluginBtns(Array As Button(btnPlugin3,btnPlugin2,btnPlugin1,btnScrnOff,btnBrightness))
 
 End Sub
 

@@ -301,6 +301,20 @@ public Sub SetTextColor(obj() As B4XView)
 	Next
 End Sub
 
+public Sub InitPluginBtns(obj() As Button)
+	For Each b As Button In obj
+		
+		b.TextColor = clrTheme.txtNormal
+		Dim DefaultDrawable, PressedDrawable As ColorDrawable
+		DefaultDrawable.Initialize(xui.Color_Transparent,8dip)
+		PressedDrawable.Initialize2(xui.Color_Transparent,8dip,2dip,clrTheme.txtNormal)
+		Dim sld1 As StateListDrawable :sld1.Initialize
+		sld1.AddState(sld1.State_Pressed, PressedDrawable)
+		sld1.AddCatchAllState(DefaultDrawable)
+		b.Background = sld1
+	Next
+End Sub
+
 
 
 Public Sub AnimateDialog (dlg As B4XDialog, FromEdge As String)

@@ -80,10 +80,12 @@ Private Sub BuildGUI
 	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
 	
 	guiHelpers.SetVisible(Array As B4XView(btnPlugin3,btnPlugin1),False)
+	
+	'--- TODO, change color of button frame, its is set in GUI builder state as white, needs to be txtNormal
 	guiHelpers.SetTextColor(Array As B4XView(btnPlugin3,btnPlugin2,btnPlugin1,btnScrnOff,btnBrightness))
-		
-End Sub
+	
 
+End Sub
 
 Private Sub BuildMenuCard(mnuPanel As Panel,imgFile As String, Text As String, mnuAction As String)
 	
@@ -94,6 +96,7 @@ Private Sub BuildMenuCard(mnuPanel As Panel,imgFile As String, Text As String, m
 		If v.Tag <> Null Then
 			If v.Tag Is lmB4XImageViewX Then
 				Dim o1 As lmB4XImageViewX = v.Tag
+				o1.mClickAnimationColor = clrTheme.txtAccent
 				o1.Load(File.DirAssets,imgFile)
 				o1.SetBitmap(guiHelpers.ChangeColorBasedOnAlphaLevel(o1.Bitmap,clrTheme.txtNormal))
 				o1.Tag2 = mnuAction '--- set menu action
@@ -172,9 +175,9 @@ Private Sub btnSubBtnAction_Click
 		Case "phe" '--- pre-heat
 			If oc.isPrinting Then 
 				guiHelpers.Show_toast("Printer is busy",2000)
-				Return
+			Else
+				CallSub(B4XPages.MainPage,"ShowPreHeatMenu_All")
 			End If
-			CallSub(B4XPages.MainPage,"ShowPreHeatMenu_All")
 				
 	End Select
 	

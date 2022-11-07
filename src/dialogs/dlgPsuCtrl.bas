@@ -85,9 +85,8 @@ Private Sub BuildGUI
 	btnOn.Text  = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(3dip).Append(Chr(0xF205)). _
 											 Typeface(Typeface.DEFAULT).Append("    On").PopAll
 	
-	Dim size As Float = NumberFormat2(btnOff.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0)
-	btnOff.TextSize = size
-	btnOn.TextSize = size
+	guiHelpers.SetTextSize(Array As Button(btnOff,btnOn), _
+					NumberFormat2(btnOff.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
 	
 End Sub
 

@@ -98,8 +98,8 @@ Private Sub BuildGUI
 	End If
 
 	'--- scale font
-	Dim size As Float = NumberFormat2(btnCancel.TextSize / guiHelpers.gFscale,1,0,0,False)
-	guiHelpers.SetTextSize(Array As Button(btnCancel,btnPause,btnPrint),size)
+	guiHelpers.SetTextSize(Array As Button(btnCancel,btnPause,btnPrint), _ 
+										NumberFormat2(btnCancel.TextSize / guiHelpers.gFscale,1,0,0,False))
 	
 	'---thumbnail preview is same size as progressbar
 	ivPreview.Width  = CircularProgressBar1.mBase.Width + 28dip

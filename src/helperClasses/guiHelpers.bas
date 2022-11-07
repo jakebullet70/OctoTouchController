@@ -354,7 +354,7 @@ Public Sub SetEnableDisableColor(btnArr() As B4XView)
 	Next
 End Sub
 
-Public Sub EnableDisableBtns(btnArr() As B4XView,EnableDisable As Boolean)
+Public Sub EnableDisableViews(btnArr() As B4XView,EnableDisable As Boolean)
 	For Each btn As B4XView In btnArr
 		btn.enabled = EnableDisable
 	Next

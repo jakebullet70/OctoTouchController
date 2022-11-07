@@ -143,7 +143,7 @@ End Sub
 
 Private Sub SetSaveButtonState
 	Try
-		guiHelpers.EnableDisableBtns( _
+		guiHelpers.EnableDisableViews( _
 			Array As B4XView(Dialog.GetButton(xui.DialogResponse_Positive)),ValidConnection)	
 	Catch
 		'Log(LastException)
@@ -152,9 +152,9 @@ End Sub
 
 Private Sub EnableDisableBtns(en As Boolean)
 	
-	guiHelpers.EnableDisableBtns(Array As B4XView( _
-		Dialog.GetButton(xui.DialogResponse_Positive),Dialog.GetButton(xui.DialogResponse_Cancel), _
-		btnCheckConnection,btnGetOctoKey),en)
+	guiHelpers.EnableDisableViews(Array As B4XView( _
+									Dialog.GetButton(xui.DialogResponse_Positive),Dialog.GetButton(xui.DialogResponse_Cancel), _
+								 	btnCheckConnection,btnGetOctoKey),en)
 			
 End Sub
 

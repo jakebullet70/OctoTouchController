@@ -83,7 +83,7 @@ Private Sub Validate (New As String)
 	End If
 	xDialog.SetButtonState(xui.DialogResponse_Positive, enabled)
 	'--- TWEAKS V1.0
-	guiHelpers.EnableDisableBtns(Array As B4XView(xDialog.GetButton(xui.DialogResponse_Positive)),enabled)
+	guiHelpers.EnableDisableViews(Array As B4XView(xDialog.GetButton(xui.DialogResponse_Positive)),enabled)
 	'---
 	SetBorder(bc)
 End Sub

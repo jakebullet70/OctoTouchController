@@ -59,9 +59,8 @@ Public Sub Show
 	cs.Initialize
 	btnOn.Text  = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A5)). _
 											 Typeface(Typeface.DEFAULT).Append("    On").PopAll
-	Dim size As Float = NumberFormat2(btnOff.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0)
-	btnOff.TextSize = size
-	btnOn.TextSize = size
+	guiHelpers.SetTextSize(Array As Button(btnOff,btnOn), _
+							NumberFormat2(btnOff.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
 
 
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)

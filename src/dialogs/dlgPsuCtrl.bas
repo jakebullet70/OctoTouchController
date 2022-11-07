@@ -20,7 +20,7 @@ Sub Class_Globals
 	
 	Private mPSU_Type As String = ""
 	
-	Private btnOff,btnOn As B4XView
+	Private btnOff,btnOn As Button
 	Public mIPaddr As String
 	
 End Sub
@@ -74,7 +74,8 @@ End Sub
 Private Sub BuildGUI
 	
 	pnlMain.Color = clrTheme.Background
-	guiHelpers.SetEnableDisableColor(Array As B4XView(btnOff,btnOn))
+	'guiHelpers.SetEnableDisableColor(Array As B4XView(btnOff,btnOn))
+	guiHelpers.SkinButtonsPressedClr(Array As Button(btnOff,btnOn))
 
 	Dim cs As CSBuilder
 	cs.Initialize
@@ -84,14 +85,9 @@ Private Sub BuildGUI
 	btnOn.Text  = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(3dip).Append(Chr(0xF205)). _
 											 Typeface(Typeface.DEFAULT).Append("    On").PopAll
 	
-	
-	'If guiHelpers.gScreenSizeAprox > 7.5 Then
-		Dim fn As B4XFont = _
-				xui.CreateDefaultFont(NumberFormat2(btnOff.TextSize / guiHelpers.gFscale,1,0,0,False) - _
-				IIf(guiHelpers.gFscale > 1,2,0))
-		btnOff.Font = fn
-		btnOn.Font = fn
-	'End If
+	Dim size As Float = NumberFormat2(btnOff.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0)
+	btnOff.TextSize = size
+	btnOn.TextSize = size
 	
 End Sub
 

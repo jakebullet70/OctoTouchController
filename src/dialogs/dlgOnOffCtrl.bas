@@ -50,7 +50,7 @@ Public Sub Show
 	p.LoadLayout("viewPsuCtrl") '--- use this one
 	
 	pnlMain.Color = clrTheme.Background
-	guiHelpers.SetEnableDisableColor(Array As B4XView(btnOff,btnOn))
+	guiHelpers.SkinButtonsPressedClr(Array As Button(btnOff,btnOn))
 	
 	Dim cs As CSBuilder
 	cs.Initialize
@@ -59,12 +59,10 @@ Public Sub Show
 	cs.Initialize
 	btnOn.Text  = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A5)). _
 											 Typeface(Typeface.DEFAULT).Append("    On").PopAll
-	Dim fn As B4XFont = _
-				xui.CreateDefaultFont(NumberFormat2(btnOff.TextSize / guiHelpers.gFscale,1,0,0,False) - _
-				IIf(guiHelpers.gFscale > 1,2,0))
-				
-	btnOff.Font = fn
-	btnOn.Font = fn
+	Dim size As Float = NumberFormat2(btnOff.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0)
+	btnOff.TextSize = size
+	btnOn.TextSize = size
+
 
 	guiHelpers.ThemeDialogForm(mDialog, mTitle)
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CLOSE")
@@ -84,7 +82,10 @@ End Sub
 Private Sub btnCtrl_Click
 	
 	Dim o As B4XView : o = Sender
+	'o.SetColorAnimated(300,xui.Color_Transparent,clrTheme.txtNormal)
 	Wait For (SendCmd(o.Tag)) Complete(s As String)
+	'Sleep(300)
+	'o.SetColorAnimated(300,clrTheme.txtNormal,xui.Color_Transparent)
 	mDialog.Close(-1) '--- close it, exit dialog
 	
 End Sub

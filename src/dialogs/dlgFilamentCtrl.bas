@@ -45,7 +45,7 @@ Private Sub BuildGUI
 	btnLoad.TextSize = size : btnHeat.TextSize = size
 	
 	'btnBack.SetColorAndBorder(xui.Color_Transparent,0,clrTheme.txtNormal,0)
-	guiHelpers.SkinPluginsButtonsPressedClr(Array As Button(btnBack))
+	guiHelpers.SkinButtonsPressedClr_Plugins(Array As Button(btnBack))
 	btnBack.BringToFront
 	
 	guiHelpers.SetTextColor(Array As B4XView(lblTemp,lblStatus.BaseLabel))

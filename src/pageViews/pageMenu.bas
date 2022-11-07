@@ -80,7 +80,7 @@ Private Sub BuildGUI
 	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
 	
 	guiHelpers.SetVisible(Array As B4XView(btnPlugin3,btnPlugin1),False)
-	guiHelpers.InitPluginBtns(Array As Button(btnPlugin3,btnPlugin2,btnPlugin1,btnScrnOff,btnBrightness))
+	guiHelpers.SkinButtonsPressedClr_Plugins(Array As Button(btnPlugin3,btnPlugin2,btnPlugin1,btnScrnOff,btnBrightness))
 
 End Sub
 

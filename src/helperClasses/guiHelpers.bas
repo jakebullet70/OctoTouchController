@@ -301,34 +301,41 @@ public Sub SetTextColor(obj() As B4XView)
 	Next
 End Sub
 
-Public Sub SkinPluginsButtonsPressedClr(obj() As Button)
+'========================================================================
+Public Sub SkinButtonsPressedClr_Plugins(obj() As Button)
 	For Each b As Button In obj
 		b.TextColor = clrTheme.txtNormal
 		Dim DefaultDrawable, PressedDrawable As ColorDrawable
 		DefaultDrawable.Initialize(xui.Color_Transparent,8dip)
-		PressedDrawable.Initialize2(xui.Color_Transparent,8dip,2dip,clrTheme.txtNormal)
+		PressedDrawable.Initialize2(ChangeColorVisible(clrTheme.txtNormal),8dip,2dip,clrTheme.txtNormal)
 		Dim sld1 As StateListDrawable :sld1.Initialize
 		sld1.AddState(sld1.State_Pressed, PressedDrawable)
 		sld1.AddCatchAllState(DefaultDrawable)
 		b.Background = sld1
 	Next
 End Sub
-
 Public Sub SkinButtonsPressedClr(obj() As Button)
 	Dim clrNormal ,clrPressed As Int
 	clrNormal = clrTheme.txtNormal
-	clrPressed = clrTheme.txtAccent
+	clrPressed = ChangeColorVisible(clrTheme.txtNormal)
 	For Each b As Button In obj
 		b.TextColor = clrTheme.txtNormal
-		Dim DefaultDrawable, PressedDrawable As ColorDrawable
+		Dim DefaultDrawable, PressedDrawable,DisabledDrawable As ColorDrawable
 		DefaultDrawable.Initialize2(xui.Color_Transparent, 8dip,2dip,clrNormal)
-		PressedDrawable.Initialize2(clrNormal,8dip,2dip,clrPressed)
+		PressedDrawable.Initialize2(clrPressed,8dip,2dip,clrNormal)
+		DisabledDrawable.Initialize2(xui.Color_Transparent,8dip,2dip,clrTheme.btnDisableText)
 		Dim sld1 As StateListDrawable : sld1.Initialize
 		sld1.AddState(sld1.State_Pressed, PressedDrawable)
+		sld1.AddState(sld1.State_Disabled, DisabledDrawable)
 		sld1.AddCatchAllState(DefaultDrawable)
 		b.Background = sld1
 	Next
 End Sub
+Private Sub ChangeColorVisible(clr As Int) As Int
+	Dim argb() As Int = clrTheme.Int2ARGB(clr)
+	Return xui.Color_ARGB(90,argb(1),argb(2),argb(3))
+End Sub
+'========================================================================
 
 Public Sub AnimateDialog (dlg As B4XDialog, FromEdge As String)
 	Dim base As B4XView = dlg.Base

@@ -16,7 +16,7 @@ Sub Class_Globals
 	Private mMainObj As B4XMainPage'ignore
 	Private DisplayedFileName As String '--- curently displayed file name
 	
-	Private CSelections As clvSelectionsX
+	Private CSelections As sadClvSelections
 	Private Const NO_SELECTION As Int = -1
 	Private clvLastIndexClicked As Int = NO_SELECTION
 	

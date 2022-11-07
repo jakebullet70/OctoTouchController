@@ -81,7 +81,6 @@ public Sub Set_focus()
 	DisplayedFileName = oc.JobFileName
 	Update_Printer_Btns
 	
-	
 End Sub
 
 public Sub Lost_focus()
@@ -99,7 +98,12 @@ public Sub Update_Printer_Btns
 	'--- sets enable, disable
 	mPnlMain.Enabled = oc.isConnected
 	Dim enableDisable As Boolean  = Not (oc.isPrinting Or oc.IsPaused2 Or (clvLastIndexClicked = NO_SELECTION))
+	Log("isPrinting: " & oc.isPrinting)
+	Log("IsPaused2: " & oc.IsPaused2)
+	Log("clvLastIndexClicked = NO_SELECTION; " & (clvLastIndexClicked = NO_SELECTION))
+	Log("enableDisable: " & enableDisable)
 	guiHelpers.EnableDisableBtns2(Array As Button(btnLoad,btnLoadAndPrint,btnDelete),enableDisable)
+	Sleep(0)
 
 End Sub
 
@@ -159,8 +163,8 @@ Private Sub BuildGUI
 	
 	guiHelpers.SetTextColor(Array As B4XView(lblFileName.BaseLabel,lblHeaderFileName,lblSort.BaseLabel))
 	guiHelpers.SkinButton(Array As Button(btnLoadAndPrint,btnLoad,btnDelete))
-	Dim size As Float = NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0)
-	guiHelpers.SetTextSize(Array As Button(btnLoadAndPrint,btnLoad,btnDelete),size)
+	guiHelpers.SetTextSize(Array As Button(btnLoadAndPrint,btnLoad,btnDelete), _
+										NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
 	
 End Sub
 
@@ -198,8 +202,10 @@ Private Sub btnAction_Click
 			
 		Case "loadandprint"
 			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_FILES_PRINT.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
-			guiHelpers.EnableDisableBtns(Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete),False)
+			guiHelpers.EnableDisableBtns2(Array As Button(btnLoad,btnLoadAndPrint,btnDelete),False)
 			CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_PRINTING)
+			Sleep(10)
+			guiHelpers.Show_toast2("Starting Print",2000)
 			
 	End Select
 		

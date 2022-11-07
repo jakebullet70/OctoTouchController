@@ -282,7 +282,7 @@ Public Sub SetTextColor(obj() As B4XView)
 End Sub
 
 Public Sub SetTextSize(obj() As Button,size As Float)
-	For Each o As button In obj
+	For Each o As Button In obj
 		o.TextSize = size
 	Next
 End Sub

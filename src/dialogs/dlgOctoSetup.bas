@@ -18,7 +18,7 @@ Sub Class_Globals
 	Private mEventName As String
 	
 	Private B4XLoadingIndicator1 As B4XLoadingIndicator
-	Private btnCheckConnection,btnGetOctoKey As B4XView
+	Private btnCheckConnection,btnGetOctoKey As Button
 	
 	Private txtOctoKey As B4XFloatTextField
 	Private txtPrinterDesc As B4XFloatTextField
@@ -71,8 +71,7 @@ Public Sub Show(firstRun As Boolean)
 	Dim rs As ResumableSub = Dialog.ShowCustom(p, "SAVE", "", "CLOSE")
 	Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
 	guiHelpers.ThemeInputDialogBtnsResize(Dialog)
-	guiHelpers.EnableDisableBtns(Array As B4XView(btnCheckConnection,btnGetOctoKey),True)
-
+	
 	If firstRun = False Then ReadSettingsFile
 	InvalidateConnection
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
@@ -118,9 +117,10 @@ private Sub Build_GUI
 
 	btnCheckConnection.Text= "Validate Connection"
 	btnGetOctoKey.Text = "Request Octoprint Key"
+	guiHelpers.SkinButton(Array As Button(btnCheckConnection,btnGetOctoKey))
 	
-	btnCheckConnection.Font = xui.CreateDefaultFont(NumberFormat2(btnCheckConnection.Font.Size / guiHelpers.gFscale,1,0,0,False))
-	btnGetOctoKey.Font = xui.CreateDefaultFont(NumberFormat2(btnGetOctoKey.Font.Size / guiHelpers.gFscale,1,0,0,False))
+	btnCheckConnection.TextSize = NumberFormat2(btnCheckConnection.TextSize / guiHelpers.gFscale,1,0,0,False)
+	btnGetOctoKey.TextSize = NumberFormat2(btnGetOctoKey.TextSize / guiHelpers.gFscale,1,0,0,False)
 End Sub
 
 

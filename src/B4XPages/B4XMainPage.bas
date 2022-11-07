@@ -26,7 +26,7 @@ Sub Class_Globals
 	
 	'--- header
 	Private pnlHeader As B4XView, lblStatus As Label,  lblTemp As Label
-	Private btnPower, btnPageAction As B4XView
+	Private btnPower, btnPageAction As Button
 	
 	'--- page-panel classes
 	Public oPageCurrent As Object = Null
@@ -172,8 +172,8 @@ Private Sub BuildGUI
 		End Select
 	End If
 	
-	
-	btnPower.Visible = config.ShowPwrCtrlFLAG
+	guiHelpers.SkinButton_Pugin(Array As Button(btnPower, btnPageAction))
+	ShowNoShow_PowerBtn
 	
 	Switch_Pages(gblConst.PAGE_MENU)
 	Starter.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)

@@ -75,7 +75,7 @@ Private Sub BuildGUI
 	
 	pnlMain.Color = clrTheme.Background
 	'guiHelpers.SetEnableDisableColor(Array As B4XView(btnOff,btnOn))
-	guiHelpers.SkinButtonsPressedClr(Array As Button(btnOff,btnOn))
+	guiHelpers.SkinButton(Array As Button(btnOff,btnOn))
 
 	Dim cs As CSBuilder
 	cs.Initialize

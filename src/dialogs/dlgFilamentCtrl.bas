@@ -39,13 +39,13 @@ Private Sub BuildGUI
 	pnlMain.Color = clrTheme.Background : pnlWorking.Color = clrTheme.Background
 	
 	guiHelpers.SetEnableDisableColor(Array As B4XView(btnBack, btnStuff,btnHeat,btnLoad,btnPark,btnUnload))
-	guiHelpers.SkinButtonsPressedClr(Array As Button(btnUnload,btnLoad,btnPark,btnHeat,btnStuff))
+	guiHelpers.SkinButton(Array As Button(btnUnload,btnLoad,btnPark,btnHeat,btnStuff))
 	Dim size As Float = NumberFormat2(btnStuff.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0)
 	btnStuff.TextSize = size : btnUnload.TextSize = size : btnPark.TextSize = size
 	btnLoad.TextSize = size : btnHeat.TextSize = size
 	
 	'btnBack.SetColorAndBorder(xui.Color_Transparent,0,clrTheme.txtNormal,0)
-	guiHelpers.SkinButtonsPressedClr_Plugins(Array As Button(btnBack))
+	guiHelpers.SkinButton_Pugin(Array As Button(btnBack))
 	btnBack.BringToFront
 	
 	guiHelpers.SetTextColor(Array As B4XView(lblTemp,lblStatus.BaseLabel))

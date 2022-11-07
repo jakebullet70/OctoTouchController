@@ -22,7 +22,7 @@ Sub Class_Globals
 	
 	Private clvFiles As CustomListView
 	Private ivPreview As lmB4XImageViewX
-	Private btnDelete, btnLoad, btnLoadAndPrint As B4XView
+	Private btnDelete, btnLoad, btnLoadAndPrint As Button
 	Private mCurrentFileInfo As tOctoFileInfo
 	Private pnlPortraitDivide As B4XView
 	
@@ -95,19 +95,11 @@ End Sub
 
 
 public Sub Update_Printer_Btns
-	'--- sets enable, disable
-	
-	mPnlMain.Enabled = oc.isConnected
-	Dim enableDisable As Boolean
 
-	If oc.isPrinting Or oc.IsPaused2 Or (clvLastIndexClicked = NO_SELECTION) Then
-		enableDisable = False
-	Else
-		enableDisable = True
-	End If
-	
-	guiHelpers.EnableDisableBtns( _
-		Array As B4XView(btnLoad,btnLoadAndPrint,btnDelete),enableDisable)
+	'--- sets enable, disable
+	mPnlMain.Enabled = oc.isConnected
+	Dim enableDisable As Boolean  = Not (oc.isPrinting Or oc.IsPaused2 Or (clvLastIndexClicked = NO_SELECTION))
+	guiHelpers.EnableDisableBtns2(Array As Button(btnLoad,btnLoadAndPrint,btnDelete),enableDisable)
 
 End Sub
 
@@ -165,16 +157,10 @@ Private Sub BuildGUI
 	btnLoad.Text = "Load"
 	btnDelete.Text = "Delete"
 	
-	guiHelpers.SetTextColor(Array As B4XView( _
-			btnLoadAndPrint,btnLoad,btnDelete,lblFileName.BaseLabel, _
-			lblHeaderFileName,lblSort.BaseLabel))
-	
-	Dim fn As B4XFont = _
-				xui.CreateDefaultFont(NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - _
-				IIf(guiHelpers.gFscale > 1,2,0))
-	btnDelete.Font = fn
-	btnLoad.Font  = fn
-	btnLoadAndPrint.Font  = fn
+	guiHelpers.SetTextColor(Array As B4XView(lblFileName.BaseLabel,lblHeaderFileName,lblSort.BaseLabel))
+	guiHelpers.SkinButton(Array As Button(btnLoadAndPrint,btnLoad,btnDelete))
+	Dim size As Float = NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0)
+	guiHelpers.SetTextSize(Array As Button(btnLoadAndPrint,btnLoad,btnDelete),size)
 	
 End Sub
 
@@ -561,7 +547,7 @@ Public Sub Update_LoadedFileName2Scrn
 	End If
 End Sub
 
-Private Sub	Show1stFile
+Private Sub Show1stFile
 	If Starter.db.GetTotalRecs = 0 Then Return
 	rsFiles.Position = 0 : clvFiles_ItemClick(0,rsFiles.GetString("file_name"))
 	clvFiles.JumpToItem(0)

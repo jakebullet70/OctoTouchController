@@ -18,14 +18,13 @@ Sub Class_Globals
 	
 	Private DisplayedFileName As String '--- curently displayed file name
 	
-	Private btnPresetTool, btnPresetBed, btnPresetMaster As B4XView
+	Private btnPresetTool, btnPresetBed, btnPresetMaster As Button
+	Private btnCancel, btnPause, btnPrint As Button
 	
 	Private lblFileName As AutoTextSizeLabel
 	Private CircularProgressBar1 As CircularProgressBar
-	
-	Private btnCancel, btnPause, btnPrint As B4XView
+
 	Private mText4PrintBtn,mText4ResumeBtn As Object
-	
 	Private lblToolTemp,lblBedTemp,lblPrintStats1 As AutoTextSizeLabel
 	Private lblPrintStats3,lblPrintStats2 As B4XView
 	Private lblPrintStatsTMP As AutoTextSizeLabel
@@ -79,12 +78,12 @@ Private Sub BuildGUI
 	
 	guiHelpers.SetTextColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel, _
 								lblPrintStats1.BaseLabel,lblPrintStats2,lblPrintStats3, _
-								btnCancel,btnPause,btnPrint,CircularProgressBar1.MainLabel, _
-								lblFileName.BaseLabel,lblHeaderBed,lblHeaderTool))
-	
+								CircularProgressBar1.MainLabel,lblFileName.BaseLabel,lblHeaderBed,lblHeaderTool))
+								
 	ivPreviewLG.mBase.Visible = False
 	SetNoThumbnail
 	
+	guiHelpers.SkinButton(Array As Button( btnCancel,btnPause,btnPrint,btnPresetTool,btnPresetMaster,btnPresetBed))
 	guiHelpers.SetEnableDisableColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel))
 	
 	CircularProgressBar1.ColorEmpty = clrTheme.txtNormal
@@ -99,25 +98,21 @@ Private Sub BuildGUI
 	End If
 
 	'--- scale font
-	Dim fn As B4XFont = _
-			xui.CreateDefaultFont(NumberFormat2(btnCancel.TextSize / guiHelpers.gFscale,1,0,0,False))
-	
-	btnCancel.Font = fn
-	btnPause.Font  = fn
-	btnPrint.Font  = fn
+	Dim size As Float = NumberFormat2(btnCancel.TextSize / guiHelpers.gFscale,1,0,0,False)
+	guiHelpers.SetTextSize(Array As Button(btnCancel,btnPause,btnPrint),size)
 	
 	'---thumbnail preview is same size as progressbar
 	ivPreview.Width  = CircularProgressBar1.mBase.Width + 28dip
 	ivPreview.Height = CircularProgressBar1.mBase.Height
-	ivPreview.top    = CircularProgressBar1.mBase.Top
-	ivPreview.Left   = CircularProgressBar1.mBase.Left - 14dip
+	ivPreview.Top     = CircularProgressBar1.mBase.Top
+	ivPreview.Left    = CircularProgressBar1.mBase.Left - 14dip
 	
 	'--- figure out best font size
 	lblPrintStatsTMP.Text   = $"Total Time:0:00:00:00"$ 
 	lblPrintStats2.TextSize = lblPrintStatsTMP.BaseLabel.Font.Size
 	lblPrintStats3.TextSize = lblPrintStats2.TextSize
 	
-#region "BTNS TXT"	
+#region "PRINTER BTNS TXT"	
 	Dim cs As CSBuilder 
 	 
 	cs.Initialize
@@ -152,8 +147,8 @@ public Sub Update_Printer_Btns
 	'--- is a file loaded and ready?
 	If oc.isFileLoaded = False Then
 		
-		guiHelpers.EnableDisableBtns(Array As B4XView(btnPrint,btnPause,btnCancel),False)
-		guiHelpers.EnableDisableBtns(Array As B4XView(btnPresetTool,btnPresetBed,btnPresetMaster),True)
+		guiHelpers.EnableDisableBtns2(Array As Button(btnPrint,btnPause,btnCancel),False)
+		guiHelpers.EnableDisableBtns2(Array As Button(btnPresetTool,btnPresetBed,btnPresetMaster),True)
 		Return
 		
 	Else
@@ -168,24 +163,25 @@ public Sub Update_Printer_Btns
 	If oc.isPrinting = True Then
 		
 		'--- we are printing or heating
-		guiHelpers.EnableDisableBtns(Array As B4XView(btnCancel,btnPause),True)
-		guiHelpers.EnableDisableBtns(Array As B4XView(btnPrint,btnPresetTool,btnPresetBed,btnPresetMaster),False)
+		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel,btnPause),True)
+		guiHelpers.EnableDisableBtns2(Array As Button(btnPrint,btnPresetTool,btnPresetBed,btnPresetMaster),False)
 		ShowThumbnailWhilePrinting(True)
 	
 	else if oc.isPrinting = False And oc.isPaused2 = True Then
 		
 		'--- job is paused
-		guiHelpers.EnableDisableBtns(Array As B4XView(btnCancel,btnPrint),True)
-		guiHelpers.EnableDisableBtns(Array As B4XView(btnPause,btnPresetTool,btnPresetBed,btnPresetMaster),False)
+		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel,btnPrint),True)
+		guiHelpers.EnableDisableBtns2(Array As Button(btnPause,btnPresetTool,btnPresetBed,btnPresetMaster),False)
 		If ivPreviewLG.mBase.Visible = False Then
 			ShowThumbnailWhilePrinting(True)
 		End If
 	Else
 		
 		'--- not printing anything
-		btnPrint.Enabled = oc.isFileLoaded : guiHelpers.SetEnableDisableColor(Array As B4XView(btnPrint))
-		guiHelpers.EnableDisableBtns(Array As B4XView(btnCancel,btnPause),False)
-		guiHelpers.EnableDisableBtns(Array As B4XView(btnPresetTool,btnPresetBed,btnPresetMaster),True)
+		btnPrint.Enabled = oc.isFileLoaded 
+		guiHelpers.EnableDisableBtns2(Array As Button(btnPrint),oc.isFileLoaded)
+		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel,btnPause),False)
+		guiHelpers.EnableDisableBtns2(Array As Button(btnPresetTool,btnPresetBed,btnPresetMaster),True)
 		ShowThumbnailWhilePrinting(False)
 		
 	End If
@@ -402,8 +398,6 @@ Private Sub btnAction_Click
 	
 End Sub
 
-
-
 Private Sub CircularProgressBar1_Click
 	If oc.JobFileName = "" Then
 		Return '--- no file loaded
@@ -416,7 +410,6 @@ Private Sub ivPreview_Click
 	CircularProgressBar1.Visible = True
 	ivPreview.mBase.Visible = False
 End Sub
-
 
 Private Sub LoadThumbNail
 	

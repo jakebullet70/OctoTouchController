@@ -50,7 +50,7 @@ Public Sub Show
 	p.LoadLayout("viewPsuCtrl") '--- use this one
 	
 	pnlMain.Color = clrTheme.Background
-	guiHelpers.SkinButtonsPressedClr(Array As Button(btnOff,btnOn))
+	guiHelpers.SkinButton(Array As Button(btnOff,btnOn))
 	
 	Dim cs As CSBuilder
 	cs.Initialize

@@ -107,7 +107,7 @@ Public Sub Show() As ResumableSub
 	BasePnl.Color = clrTheme.Background
 
 	'---TODO, make a generic function
-	guiHelpers.SkinButtonsPressedClr(Array As Button(btnContinue))
+	guiHelpers.SkinButton(Array As Button(btnContinue))
 	btnContinue.TextSize = NumberFormat2(btnContinue.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0)
 		
 	'--- init dialog

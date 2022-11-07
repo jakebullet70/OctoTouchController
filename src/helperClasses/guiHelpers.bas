@@ -80,26 +80,6 @@ Public Sub SetVisible(btnArr() As B4XView,Visible As Boolean)
 	Next
 End Sub
 
-Public Sub SetEnableDisableColor(btnArr() As B4XView)
-	For Each btn As B4XView In btnArr
-		If btn.enabled Then
-			btn.TextColor = clrTheme.txtNormal
-			btn.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
-		Else
-			btn.TextColor = clrTheme.btnDisableText
-			btn.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.btnDisableText,8dip)
-		End If
-	Next
-End Sub
-
-Public Sub EnableDisableBtns(btnArr() As B4XView,EnableDisable As Boolean)
-	For Each btn As B4XView In btnArr
-		btn.enabled = EnableDisable
-	Next
-	SetEnableDisableColor(btnArr)
-End Sub
-
-
 Public Sub GetConnectionText(connectedButError As Boolean) As String
 	
 	Dim Msg As StringBuilder : Msg.Initialize
@@ -207,7 +187,7 @@ Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
 		btnCancel.Width = btnCancel.Width + 20dip
 		btnCancel.Left = btnCancel.Left - 28dip
 		btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
-		'SkinButtonsPressedClr(Array As Button(btnCancel))
+		'SkinButton(Array As Button(btnCancel))
 	Catch
 		'Log(LastException)
 	End Try 'ignore
@@ -218,7 +198,7 @@ Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
 		btnOk.Width = btnOk.Width + 20dip
 		btnOk.Left = btnOk.Left - 48dip
 		btnOk.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
-		'SkinButtonsPressedClr(Array As Button(btnOk))
+		'SkinButton(Array As Button(btnOk))
 	Catch
 		'Log(LastException)
 	End Try 'ignore
@@ -295,14 +275,20 @@ Public Sub ThemeDialogForm2(dlg As B4XDialog,title As Object,txtSize As Int)
 End Sub
 
 
-public Sub SetTextColor(obj() As B4XView)
+Public Sub SetTextColor(obj() As B4XView)
 	For Each o As B4XView In obj
 		o.TextColor = clrTheme.txtNormal
 	Next
 End Sub
 
+Public Sub SetTextSize(obj() As Button,size As Float)
+	For Each o As button In obj
+		o.TextSize = size
+	Next
+End Sub
+
 '========================================================================
-Public Sub SkinButtonsPressedClr_Plugins(obj() As Button)
+Public Sub SkinButton_Pugin(obj() As Button)
 	For Each b As Button In obj
 		b.TextColor = clrTheme.txtNormal
 		Dim DefaultDrawable, PressedDrawable As ColorDrawable
@@ -314,28 +300,73 @@ Public Sub SkinButtonsPressedClr_Plugins(obj() As Button)
 		b.Background = sld1
 	Next
 End Sub
-Public Sub SkinButtonsPressedClr(obj() As Button)
+Public Sub SkinButton(obj() As Button)
+	'--- sets the bg and frame color
 	Dim clrNormal ,clrPressed As Int
 	clrNormal = clrTheme.txtNormal
 	clrPressed = ChangeColorVisible(clrTheme.txtNormal)
-	For Each b As Button In obj
-		b.TextColor = clrTheme.txtNormal
+	For Each btn As Button In obj
+		SetColorTextStateList(btn,clrPressed,clrNormal,clrTheme.btnDisableText)
+		
 		Dim DefaultDrawable, PressedDrawable,DisabledDrawable As ColorDrawable
 		DefaultDrawable.Initialize2(xui.Color_Transparent, 8dip,2dip,clrNormal)
 		PressedDrawable.Initialize2(clrPressed,8dip,2dip,clrNormal)
 		DisabledDrawable.Initialize2(xui.Color_Transparent,8dip,2dip,clrTheme.btnDisableText)
+		
 		Dim sld1 As StateListDrawable : sld1.Initialize
 		sld1.AddState(sld1.State_Pressed, PressedDrawable)
 		sld1.AddState(sld1.State_Disabled, DisabledDrawable)
 		sld1.AddCatchAllState(DefaultDrawable)
-		b.Background = sld1
+		btn.Background = sld1
 	Next
+End Sub
+Private Sub SetColorTextStateList(Btn As Button,Pressed As Int,Enabled As Int,Disabled As Int)
+	'--- sets the text color
+	Dim States(3,1) As Int
+	States(0,0) = 16842919    'Pressed
+	States(1,0) = 16842910    'Enabled
+	States(2,0) = -16842910 'Disabled
+
+	Dim Color(3) As Int = Array As Int(Pressed,Enabled,Disabled)
+
+	Dim CSL As JavaObject
+	CSL.InitializeNewInstance("android.content.res.ColorStateList",Array As Object(States,Color))
+	Dim B1 As JavaObject = Btn
+	B1.RunMethod("setTextColor",Array As Object(CSL))
+
 End Sub
 Private Sub ChangeColorVisible(clr As Int) As Int
 	Dim argb() As Int = clrTheme.Int2ARGB(clr)
 	Return xui.Color_ARGB(90,argb(1),argb(2),argb(3))
 End Sub
 '========================================================================
+
+
+Public Sub SetEnableDisableColor(btnArr() As B4XView)
+	For Each btn As B4XView In btnArr
+		If btn.enabled Then
+			btn.TextColor = clrTheme.txtNormal
+			btn.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
+		Else
+			btn.TextColor = clrTheme.btnDisableText
+			btn.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.btnDisableText,8dip)
+		End If
+	Next
+End Sub
+
+Public Sub EnableDisableBtns(btnArr() As B4XView,EnableDisable As Boolean)
+	For Each btn As B4XView In btnArr
+		btn.enabled = EnableDisable
+	Next
+	SetEnableDisableColor(btnArr)
+End Sub
+
+Public Sub EnableDisableBtns2(btnArr() As Button,EnableDisable As Boolean)
+	For Each btn As Button In btnArr
+		btn.enabled = EnableDisable
+	Next
+End Sub
+
 
 Public Sub AnimateDialog (dlg As B4XDialog, FromEdge As String)
 	Dim base As B4XView = dlg.Base

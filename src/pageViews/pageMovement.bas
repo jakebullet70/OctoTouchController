@@ -25,9 +25,9 @@ Sub Class_Globals
 	Private pnlJogMovement As B4XView
 	Private pnlGeneral As B4XView
 	
-	Private btnRetract,btnMOff,btnHeat,btnFN,btnExtrude,btnLength As B4XView
-	Private btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback As B4XView
-	Private btnZup,btnZhome,btnZdown As B4XView
+	Private btnRetract,btnMOff,btnHeat,btnFN,btnExtrude,btnLength As Button
+	Private btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback As Button
+	Private btnZup,btnZhome,btnZdown As Button
 	
 	Private lblGeneral,lblHeaderZ,lblHeaderXY As B4XView
 	
@@ -60,6 +60,12 @@ End Sub
 
 Private Sub Build_GUI
 	
+	guiHelpers.SkinButton(Array As Button(btnRetract,btnMOff,btnHeat,btnFN,btnExtrude,btnLength, _
+																btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback, _
+																btnZup,btnZhome,btnZdown))
+	'Dim size As Float = NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0)
+	'guiHelpers.SetTextSize(Array As Button(btnLoadAndPrint,btnLoad,btnDelete),size)
+	
 	'--- movement / jog sizes
 	cboMovementSize.setitems(Array As String("0.1mm","1.0mm","10mm","100mm"))
 	cboMovementSize.SelectedIndex = 1
@@ -75,7 +81,7 @@ End Sub
 public Sub Update_Printer_Btns
 	
 	'--- sets enable, disable
-	guiHelpers.EnableDisableBtns(Array As B4XView( _
+	guiHelpers.EnableDisableBtns2(Array As Button( _
 		btnRetract,btnMOff,btnHeat,btnFN,btnExtrude,btnLength, _
 		btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback, _
 		btnZup,btnZhome,btnZdown), _

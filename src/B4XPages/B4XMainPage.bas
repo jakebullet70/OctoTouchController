@@ -321,7 +321,7 @@ Private Sub PopupMainOptionMenu
 	If guiHelpers.gIsLandScape Then '- TODO needs refactor for sizes
 		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,320dip,280dip),340dip,popUpMemuItems)
 	Else
-		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,380dip,280dip),300dip,popUpMemuItems)
+		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,390dip,340dip),300dip,popUpMemuItems)
 	End If
 	
 End Sub

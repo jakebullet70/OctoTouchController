@@ -419,11 +419,11 @@ End Sub
 Public Sub ResetTempVars
 	
 	BedTarget    = "Off"
-	BedActual     = "0.0" & Chr(248) & "C"
+	BedActual     = "0.0" & gblConst.DEGREE_SYMBOL & "C"
 	Tool1Target  = "Off"
-	Tool1Actual   = "0.0" & Chr(248) & "C"
-	Tool2Target  =  "0.0" & Chr(248) & "C"
-	Tool2Actual   = "0.0" & Chr(248) & "C"
+	Tool1Actual   = "0.0" & gblConst.DEGREE_SYMBOL & "C"
+	Tool2Target  =  "0.0" & gblConst.DEGREE_SYMBOL & "C"
+	Tool2Actual   = "0.0" & gblConst.DEGREE_SYMBOL & "C"
 	Tool1ActualReal = 0.0
 	Tool2ActualReal = 0.0
 	Tool1TargetReal = 0.0

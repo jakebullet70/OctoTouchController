@@ -19,13 +19,13 @@ Sub Class_Globals
 	
 	Private mDialog As B4XDialog
 	Private pnlMain As B4XView, lblStatus As AutoTextSizeLabel
-	Private btnStuff As B4XView, lblTemp As Label
+	Private btnStuff As Button, lblTemp As Label
 	
 	Private mTmrOff As Boolean = False, mLoadUnload As String
 	Private mData As Map, tmp As String
 	
 	Private pnlWorking As B4XView
-	Private btnUnload,btnLoad,btnPark,btnHeat As B4XView
+	Private btnUnload,btnLoad,btnPark,btnHeat As Button
 	Private chkHeatOff As CheckBox
 	Private btnBack As B4XView
 End Sub
@@ -38,14 +38,16 @@ End Sub
 Private Sub BuildGUI
 	pnlMain.Color = clrTheme.Background : pnlWorking.Color = clrTheme.Background
 	
-	'SetStatusLabel("Waiting for temperature...")
-	Dim fn As B4XFont = xui.CreateDefaultFont(NumberFormat2(btnStuff.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
-	btnStuff.Font = fn : btnUnload.Font = fn : btnPark.Font = fn
-	btnLoad.Font = fn : btnHeat.Font = fn
-	
 	guiHelpers.SetEnableDisableColor(Array As B4XView(btnBack, btnStuff,btnHeat,btnLoad,btnPark,btnUnload))
+	guiHelpers.SkinButtonsPressedClr(Array As Button(btnUnload,btnLoad,btnPark,btnHeat,btnStuff))
+	Dim size As Float = NumberFormat2(btnStuff.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0)
+	btnStuff.TextSize = size : btnUnload.TextSize = size : btnPark.TextSize = size
+	btnLoad.TextSize = size : btnHeat.TextSize = size
+	
+	'btnBack.SetColorAndBorder(xui.Color_Transparent,0,clrTheme.txtNormal,0)
+	guiHelpers.SkinPluginsButtonsPressedClr(Array As Button(btnBack))
 	btnBack.BringToFront
-	btnBack.SetColorAndBorder(xui.Color_Transparent,0,clrTheme.txtNormal,0)
+	
 	guiHelpers.SetTextColor(Array As B4XView(lblTemp,lblStatus.BaseLabel))
 	ShowMainPnl
 End Sub
@@ -61,6 +63,7 @@ Private Sub BuildChkbox
 End Sub
 
 Private Sub TurnOffHeat_CheckedChange(Checked As Boolean)
+	' save?
 	'Starter.kvs.Put(FIL_WIZ_TURN_OFF_ON_HEAT,Checked)
 End Sub
 
@@ -69,8 +72,16 @@ Public Sub Show
 	mDialog.Initialize(mMainObj.Root)
 	
 	Dim p As B4XView = xui.CreatePanel("")
-	p.SetLayoutAnimated(0, 0, 0, _
-		IIf(guiHelpers.gScreenSizeAprox < 6,460dip,560dip),IIf(guiHelpers.gScreenSizeAprox < 6,224dip,280dip))
+	
+	'--- TODO - needs cleanup
+	If guiHelpers.gIsLandScape Then
+		p.SetLayoutAnimated(0, 0, 0, _
+					IIf(guiHelpers.gScreenSizeAprox < 6,460dip,560dip),IIf(guiHelpers.gScreenSizeAprox < 6,224dip,280dip))
+	Else
+		p.SetLayoutAnimated(0, 0, 0, _
+					IIf(guiHelpers.gScreenSizeAprox < 5,guiHelpers.gWidth-20dip,560dip),IIf(guiHelpers.gScreenSizeAprox < 5,280dip,320dip))
+	End If
+	'---
 		
 	p.LoadLayout("viewFilamentCtrl")
 	BuildGUI

@@ -199,8 +199,6 @@ Public Sub pref_BeforeDialogDisplayed(mDlg As sadPreferencesDialog, Template As 
 	
 End Sub
 
-
-
 Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
 	
 	Try '--- reskin button, if it does not exist then skip the error
@@ -209,6 +207,7 @@ Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
 		btnCancel.Width = btnCancel.Width + 20dip
 		btnCancel.Left = btnCancel.Left - 28dip
 		btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
+		'SkinButtonsPressedClr(Array As Button(btnCancel))
 	Catch
 		'Log(LastException)
 	End Try 'ignore
@@ -219,6 +218,7 @@ Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
 		btnOk.Width = btnOk.Width + 20dip
 		btnOk.Left = btnOk.Left - 48dip
 		btnOk.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
+		'SkinButtonsPressedClr(Array As Button(btnOk))
 	Catch
 		'Log(LastException)
 	End Try 'ignore
@@ -301,9 +301,8 @@ public Sub SetTextColor(obj() As B4XView)
 	Next
 End Sub
 
-public Sub InitPluginBtns(obj() As Button)
+Public Sub SkinPluginsButtonsPressedClr(obj() As Button)
 	For Each b As Button In obj
-		
 		b.TextColor = clrTheme.txtNormal
 		Dim DefaultDrawable, PressedDrawable As ColorDrawable
 		DefaultDrawable.Initialize(xui.Color_Transparent,8dip)
@@ -315,7 +314,21 @@ public Sub InitPluginBtns(obj() As Button)
 	Next
 End Sub
 
-
+Public Sub SkinButtonsPressedClr(obj() As Button)
+	Dim clrNormal ,clrPressed As Int
+	clrNormal = clrTheme.txtNormal
+	clrPressed = clrTheme.txtAccent
+	For Each b As Button In obj
+		b.TextColor = clrTheme.txtNormal
+		Dim DefaultDrawable, PressedDrawable As ColorDrawable
+		DefaultDrawable.Initialize2(xui.Color_Transparent, 8dip,2dip,clrNormal)
+		PressedDrawable.Initialize2(clrNormal,8dip,2dip,clrPressed)
+		Dim sld1 As StateListDrawable : sld1.Initialize
+		sld1.AddState(sld1.State_Pressed, PressedDrawable)
+		sld1.AddCatchAllState(DefaultDrawable)
+		b.Background = sld1
+	Next
+End Sub
 
 Public Sub AnimateDialog (dlg As B4XDialog, FromEdge As String)
 	Dim base As B4XView = dlg.Base

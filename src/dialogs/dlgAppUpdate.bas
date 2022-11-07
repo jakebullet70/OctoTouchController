@@ -18,7 +18,7 @@ Sub Class_Globals
 	Private BasePnl As B4XView, mDialog As B4XDialog
 	Private lblAction As AutoTextSizeLabel,lblPB As Label
 	
-	Private btnContinue As B4XView
+	Private btnContinue As Button
 	
 	Private Const DAYS_BETWEEN_CHECKS As Int = 15
 	
@@ -107,7 +107,8 @@ Public Sub Show() As ResumableSub
 	BasePnl.Color = clrTheme.Background
 
 	'---TODO, make a generic function
-	btnContinue.Font = xui.CreateDefaultFont(NumberFormat2(btnContinue.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
+	guiHelpers.SkinButtonsPressedClr(Array As Button(btnContinue))
+	btnContinue.TextSize = NumberFormat2(btnContinue.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0)
 		
 	'--- init dialog
 	mDialog.Initialize(mMainObj)

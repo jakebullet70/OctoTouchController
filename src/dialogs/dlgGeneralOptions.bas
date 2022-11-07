@@ -48,7 +48,7 @@ Public Sub Show
 			h = 80%y
 		End If
 	Else
-		h = 490dip
+		h = 440dip
 	End If
 	
 	mGeneralDlg.Initialize(mainObj.root, "General Settings", 360dip, h)

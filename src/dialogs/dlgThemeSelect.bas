@@ -29,6 +29,7 @@ Sub Class_Globals
 	Private spnPicker As Spinner
 	'-----------------------------------------
 	
+	Private lblDisabled As B4XView
 End Sub
 
 Public Sub Initialize
@@ -92,6 +93,7 @@ Private Sub BuildGUI
 	pnlThemeHeader.Tag = "BGround Header"
 	lblText1.Tag = "Text Main" : lblText.Tag = lblText1.Tag : 	lblText2.Tag = lblText1.Tag
 	lblTextAcc.Tag = "Text 2"
+	lblDisabled.Tag = "Disabled"
 	
 	ThemeMe(DefaultColor)
 	
@@ -120,6 +122,7 @@ Private Sub ThemeMe(clr As String)
 	pnlThemeMenu.Color = clrTheme.Background2
 	pnlThemeHeader.Color = clrTheme.BackgroundHeader
 	pnlThemeBG.Color = clrTheme.Background
+	lblDisabled.TextColor = clrTheme.btnDisableText
 		
 	'--- restore
 	clrTheme.txtNormal = txtNormalTmp
@@ -140,7 +143,7 @@ Private Sub SaveCustomClrs
 	clrTheme.CustomColors.bgMenu = pnlThemeMenu.Color
 	clrTheme.CustomColors.txtNormal = lblText1.TextColor
 	clrTheme.CustomColors.txtAcc = lblTextAcc.TextColor
-	clrTheme.CustomColors.Disabled = clrTheme.btnDisableText '--- no GUI yet
+	clrTheme.CustomColors.Disabled = lblDisabled.TextColor 
 	clrTheme.CustomColors.Divider = clrTheme.DividerColor '--- no GUI yet
 	
 	Starter.kvs.Put(gblConst.CUSTOM_THEME_COLORS,clrTheme.CustomColors)
@@ -158,7 +161,7 @@ Private Sub ShowColorPicker(callerClr As Int,clrName As String) As ResumableSub
 	ColorTemplate.Initialize
 	ColorTemplate.SelectedColor = callerClr
 	
-	guiHelpers.ThemeDialogForm(dgClr, "Select Color")
+	guiHelpers.ThemeDialogForm(dgClr, "Select Color: " & clrName)
 	Dim obj As ResumableSub = dgClr.ShowTemplate(ColorTemplate, "OK", "", "CANCEL")
 	guiHelpers.ThemeInputDialogBtnsResize(dgClr)
 	
@@ -175,7 +178,8 @@ End Sub
 
 Private Sub CreateCboColorSelector(selected As String)
 	spnPicker.Initialize("clrSelected")
-	spnPicker.AddAll(Array As String(pnlThemeBG.Tag,pnlThemeMenu.Tag,pnlThemeHeader.Tag,lblText.Tag,lblTextAcc.Tag))
+	spnPicker.AddAll(Array As String( _
+					pnlThemeBG.Tag,pnlThemeMenu.Tag,pnlThemeHeader.Tag,lblText.Tag,lblTextAcc.Tag,lblDisabled.Tag))
 	spnPicker.Prompt = "Load Color"
 	spnPicker.DropdownTextColor = clrTheme.txtNormal
 	spnPicker.TextColor = clrTheme.txtNormal
@@ -188,11 +192,12 @@ End Sub
 
 Private Sub clrSelected_ItemClick (Position As Int, Value As Object)
 	Select Case Value
-		Case "Background" 		:	 	ColorTemplate.SelectedColor = pnlThemeBG.Color
-		Case "Background2" 		: 		ColorTemplate.SelectedColor = pnlThemeMenu.Color
-		Case "BGround Header" 	: 		ColorTemplate.SelectedColor = pnlThemeHeader.color
-		Case "Text Main"		 	: 		ColorTemplate.SelectedColor = lblText1.TextColor
-		Case "Text 2"			 	: 		ColorTemplate.SelectedColor = lblTextAcc.TextColor
+		Case pnlThemeBG.Tag 		:	ColorTemplate.SelectedColor = pnlThemeBG.Color
+		Case pnlThemeMenu.Tag 	: 	ColorTemplate.SelectedColor = pnlThemeMenu.Color
+		Case pnlThemeHeader.Tag 	: 	ColorTemplate.SelectedColor = pnlThemeHeader.color
+		Case lblText.Tag		 		: 	ColorTemplate.SelectedColor = lblText1.TextColor
+		Case lblTextAcc.Tag			: 	ColorTemplate.SelectedColor = lblTextAcc.TextColor
+		Case lblDisabled.Tag 			: 	ColorTemplate.SelectedColor = lblDisabled.TextColor
 	End Select
 End Sub
 
@@ -215,9 +220,17 @@ Private Sub lblTextAcc_Click
 	#end if
 	Dim lbl As B4XView : lbl = Sender
 	Wait For (ShowColorPicker(lbl.TextColor,lbl.tag)) Complete (i As Int)
-	If i <> 0 Then
-		lblTextAcc.TextColor = i
-	End If
+	If i <> 0 Then lblTextAcc.TextColor = i
+End Sub
+
+
+Private Sub lblDisabled_Click
+	#if release 
+	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
+	#end if
+	Dim lbl As B4XView : lbl = Sender
+	Wait For (ShowColorPicker(lbl.TextColor,lbl.tag)) Complete (i As Int)
+	If i <> 0 Then lblDisabled.TextColor = i
 End Sub
 
 Private Sub pnlBGrounds_Click
@@ -226,11 +239,11 @@ Private Sub pnlBGrounds_Click
 	#end if
 	Dim pnl As B4XView : pnl = Sender
 	Wait For (ShowColorPicker(pnl.Color,pnl.tag)) Complete (i As Int)
-	If i <> 0 Then
-		pnl.Color = i
-	End If
+	If i <> 0 Then pnl.Color = i
 End Sub
 
 #end region
+
+
 
 

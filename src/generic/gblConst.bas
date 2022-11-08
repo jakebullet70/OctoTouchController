@@ -63,6 +63,7 @@ Sub Process_Globals
 	
 	'--- misc
 	Public Const NO_FILE_LOADED As String = " No file loaded"
+	Public Const NOT_CONNECTED As String = "No Connection"
 	Public Const WIN_CRLF As String = Chr(10) & Chr(13)
 	
 	'--- msgbox

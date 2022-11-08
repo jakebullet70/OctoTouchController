@@ -114,7 +114,7 @@ End Sub
 Private Sub mnuCardImg_Click
 	
 	If oc.isConnected = False Then 
-		guiHelpers.Show_toast("No connection",1000)
+		guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
 		Return
 	End If
 	
@@ -160,16 +160,28 @@ Private Sub btnSubBtnAction_Click
 			fnc.BlankScreen
 			
 		Case "snof" '--- Sonoff / power crap
+			If oc.isConnected = False And Starter.kvs.GetDefault(gblConst.PWR_SONOFF_PLUGIN,False).As(Boolean) = False Then
+				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
+				Return
+			End If
 			Dim o1 As dlgPsuCtrl
 			o1.Initialize(mMainObj)
 			o1.Show
 			
 		Case "lt" '--- WLED - ws281x
+			If oc.isConnected = False Then
+				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
+				Return
+			End If
 			Dim o3 As dlgOnOffCtrl
 			o3.Initialize(mMainObj,IIf(config.ShowZLEDCtrlFLAG,"ZLED","WS281x") & " Control")
 			o3.Show
 			
 		Case "phe" '--- pre-heat
+			If oc.isConnected = False Then
+				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
+				Return
+			End If
 			If oc.isPrinting Then 
 				guiHelpers.Show_toast("Printer is busy",2000)
 			Else

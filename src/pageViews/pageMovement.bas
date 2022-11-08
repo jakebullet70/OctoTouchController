@@ -288,7 +288,7 @@ End Sub
 Private Sub ExtrudeRetract(Extrude As Boolean)
 	
 	If oc.Tool1ActualReal < 150 Then
-		guiHelpers.Show_toast("Tool is not hot enough",1600)
+		guiHelpers.Show_toast("Tool is not hot enough",1800)
 		Return
 	End If
 	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_TOOL_EXTRUDE_RETRACT.Replace("!LEN!", IIf(Extrude,"","-") & ExtruderLengthSize))

@@ -57,7 +57,7 @@ Public Sub Show
 	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
 	
 	If oc.Tool1ActualReal > 50 Then
-		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", " Warning! Tool Temperature Is Hot ", 4000)
+		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Warning! Tool Temperature Is Hot", 4300)
 	End If
 
 	Wait For (rs) Complete (Result As Int)

@@ -225,7 +225,7 @@ Public Sub Update_Printer_Status
 	If oc.isConnected Then
 		lblStatus.Text = oc.FormatedStatus
 	Else
-		lblStatus.Text = "No Connection"
+		lblStatus.Text = gblConst.NOT_CONNECTED
 	End If
 	
 	'--- see if the current page has the proper event
@@ -679,6 +679,7 @@ End Sub
 Public Sub ShowPreHeatMenu_All2(titleTxt As String)
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	If oc.isConnected = False Or oMasterController.mapAllHeatingOptions.IsInitialized = False Then
+		guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
 		Return
 	End If
 	Dim ht As dlgListbox

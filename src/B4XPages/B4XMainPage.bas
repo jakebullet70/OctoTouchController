@@ -506,9 +506,10 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"ScreenOff_2Front",600)
 	End If
 	
-	'--- if printer / sonoff power is configed, show power btn	
+	'--- if sonoff power is configed, show power btn	- remember, no connection to octoprint
+	'--- so cannot use any octoprint installed plugin
 	Dim PowerCtrlAvail As String = ""
-	If Starter.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean) = True Then
+	If Starter.kvs.GetDefault(gblConst.PWR_SONOFF_PLUGIN,False).As(Boolean) = True Then
 		PowerCtrlAvail = "POWER ON"
 	End If
 

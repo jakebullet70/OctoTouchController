@@ -30,6 +30,7 @@ Sub Class_Globals
 	Private btnZup,btnZhome,btnZdown As Button
 	
 	Private lblGeneral,lblHeaderZ,lblHeaderXY As B4XView
+	Private mPageEnableDisable As Boolean
 	
 End Sub
 
@@ -81,12 +82,12 @@ End Sub
 public Sub Update_Printer_Btns
 	
 	'--- sets enable, disable
+	mPageEnableDisable = IIf(oc.isPrinting,False,True)
 	guiHelpers.EnableDisableBtns2(Array As Button( _
 		btnRetract,btnMOff,btnHeat,btnFN,btnExtrude,btnLength, _
 		btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback, _
-		btnZup,btnZhome,btnZdown), _
-		IIf(oc.isPrinting,False,True))
-	
+		btnZup,btnZhome,btnZdown), mPageEnableDisable)
+	cboMovementSize.cmbBox.Enabled = mPageEnableDisable
 	mPnlMain.Enabled = oc.isConnected
 	
 End Sub

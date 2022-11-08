@@ -64,8 +64,6 @@ Private Sub Build_GUI
 	guiHelpers.SkinButton(Array As Button(btnRetract,btnMOff,btnHeat,btnFN,btnExtrude,btnLength, _
 																btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback, _
 																btnZup,btnZhome,btnZdown))
-	'Dim size As Float = NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0)
-	'guiHelpers.SetTextSize(Array As Button(btnLoadAndPrint,btnLoad,btnDelete),size)
 	
 	'--- movement / jog sizes
 	cboMovementSize.setitems(Array As String("0.1mm","1.0mm","10mm","100mm"))
@@ -84,9 +82,10 @@ public Sub Update_Printer_Btns
 	'--- sets enable, disable
 	mPageEnableDisable = IIf(oc.isPrinting,False,True)
 	guiHelpers.EnableDisableBtns2(Array As Button( _
-		btnRetract,btnMOff,btnHeat,btnFN,btnExtrude,btnLength, _
-		btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback, _
-		btnZup,btnZhome,btnZdown), mPageEnableDisable)
+				btnRetract,btnMOff,btnHeat,btnFN,btnExtrude,btnLength, _
+				btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback, _
+				btnZup,btnZhome,btnZdown), mPageEnableDisable)
+				
 	cboMovementSize.cmbBox.Enabled = mPageEnableDisable
 	mPnlMain.Enabled = oc.isConnected
 	
@@ -108,10 +107,10 @@ Private Sub btnGeneral_Click
 	End If
 	
 	Select Case o.Tag
-		Case "heat" 	: HeatChangeRequest
+		Case "heat" 		: HeatChangeRequest
 		Case "elength" 	: SetExtruderLength
-		Case "ext"		: ExtrudeRetract(True)
-		Case "ret"		: ExtrudeRetract(False)
+		Case "ext"			: ExtrudeRetract(True)
+		Case "ret"			: ExtrudeRetract(False)
 		Case "fmnu"		: FunctionMenu
 		Case "moff"		: MotorsOff
 	End Select
@@ -159,6 +158,7 @@ End Sub
 
 Private Sub cboMovementSize_SelectedIndexChanged (Index As Int)
 	MoveJogSize = cboMovementSize.SelectedItem.Replace("mm","")
+	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 End Sub
 
 #region "HEAT_CHANGE_EDIT"
@@ -276,8 +276,6 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 			msg = " ...TODO... "
 			
 	End Select
-
-	
 	
 End Sub
 
@@ -292,6 +290,7 @@ Private Sub ExtrudeRetract(Extrude As Boolean)
 		guiHelpers.Show_toast("Tool is not hot enough",1800)
 		Return
 	End If
+	
 	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_TOOL_EXTRUDE_RETRACT.Replace("!LEN!", IIf(Extrude,"","-") & ExtruderLengthSize))
 	guiHelpers.Show_toast(IIf(Extrude,"Extrusion","Retraction") & ": " & ExtruderLengthSize & "mm",1200)
 	

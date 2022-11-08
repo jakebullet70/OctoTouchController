@@ -21,6 +21,7 @@ Sub Class_Globals
 	Private lblText2,lblText1,lblText As B4XView
 	Private lblTextAcc As B4XView
 	Private lblCustom As B4XView
+	Private lblDisabled As B4XView
 	Private pnlThemeMenu,pnlThemeHeader,pnlThemeBG As B4XView
 	Private Spinner1 As Spinner
 	Private ColorTemplate As sadB4XColorTemplate
@@ -29,7 +30,7 @@ Sub Class_Globals
 	Private spnPicker As Spinner
 	'-----------------------------------------
 	
-	Private lblDisabled As B4XView
+	
 End Sub
 
 Public Sub Initialize
@@ -77,7 +78,6 @@ End Sub
 Private Sub BuildGUI
 
 	pnlBG.Color = clrTheme.Background
-	lblCustom.Visible = False
 
 	'--- theme
 	Dim DefaultColor As String = Starter.kvs.Get(gblConst.SELECTED_CLR_THEME)
@@ -87,6 +87,8 @@ Private Sub BuildGUI
 	Spinner1.DropdownTextColor = clrTheme.txtNormal
 	Spinner1.TextColor = clrTheme.txtNormal
 	Spinner1.DropdownBackgroundColor = clrTheme.Background2
+	
+	lblCustom.Visible = (Spinner1.SelectedItem = CUSTOM_SELECTION)
 	
 	'--- theme builder
 	pnlThemeMenu.Tag = "BGround 2" : pnlThemeBG.Tag = "BGround"

@@ -98,12 +98,7 @@ public Sub Update_Printer_Btns
 	'--- sets enable, disable
 	mPnlMain.Enabled = oc.isConnected
 	Dim enableDisable As Boolean  = Not (oc.isPrinting Or oc.IsPaused2 Or (clvLastIndexClicked = NO_SELECTION))
-	Log("isPrinting: " & oc.isPrinting)
-	Log("IsPaused2: " & oc.IsPaused2)
-	Log("clvLastIndexClicked = NO_SELECTION; " & (clvLastIndexClicked = NO_SELECTION))
-	Log("enableDisable: " & enableDisable)
 	guiHelpers.EnableDisableBtns2(Array As Button(btnLoad,btnLoadAndPrint,btnDelete),enableDisable)
-	Sleep(0)
 
 End Sub
 

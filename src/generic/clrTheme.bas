@@ -53,7 +53,7 @@ Public Sub InitTheme(theme As String)
 			Background2 = -7576990
 			txtNormal = -15461870
 			txtAccent = -395787
-			btnDisableText = 851493056
+			btnDisableText = 1715811894
 			DividerColor = -3355444
 		
 		Case "custom"
@@ -69,13 +69,14 @@ Public Sub InitTheme(theme As String)
 			Background = xui.Color_ARGB(255,131, 21, 25)
 			BackgroundHeader = -5239520
 			Background2 = xui.Color_ARGB(255,162, 30, 25)
-			
-			txtAccent = -5215895
+			btnDisableText = 1006303994
+			txtAccent = -1803140
 			
 		Case "green"
 			Background = xui.Color_ARGB(255,19, 62, 11)
 			BackgroundHeader = -16310780
 			Background2 = xui.Color_ARGB(255,10, 53, 2)
+			btnDisableText = 720959736
 	
 		Case "gray"
 			Background = xui.Color_ARGB(255,90, 90, 90)
@@ -86,31 +87,30 @@ Public Sub InitTheme(theme As String)
 			Background = xui.Color_ARGB(255,2, 2, 2)
 			BackgroundHeader = xui.Color_ARGB(255,30, 30, 30)
 			Background2 = xui.Color_ARGB(255,43, 43, 43)
+			btnDisableText = 1404812219
 			
 		Case "dark-blue"
 			Background = xui.Color_ARGB(255,2,2,2)
 			BackgroundHeader = xui.Color_ARGB(255,30, 30, 30)
 			Background2 = xui.Color_ARGB(255,43, 43, 43)
-			'--- overide base white color
 			txtNormal = -16739073
 			txtAccent = -8472605
+			btnDisableText = -12104360
 			
 		Case "dark-green"
 			Background = xui.Color_ARGB(255,2,2,2)
 			BackgroundHeader = xui.Color_ARGB(255,30, 30, 30)
 			Background2 = xui.Color_ARGB(255,43, 43, 43)
-			'--- overide base white color
 			txtNormal = -11276022
 			txtAccent = 0xFFB1E89A
+			btnDisableText = -12366785
 			
 		Case "prusa"
 			Background = -14672868
 			BackgroundHeader = xui.Color_ARGB(255,11, 11, 11)
 			Background2 = xui.Color_ARGB(255,43, 43, 43)
-			
-			'--- overide base white color
-			txtNormal = -1095921
-			txtAccent = 0xFFD77762' xui.Color_LightGray
+			txtNormal = -1551583
+			txtAccent = 0xFFD77762
 			btnDisableText = xui.Color_ARGB(50,192,192,192)
 			DividerColor = xui.Color_Black
 		

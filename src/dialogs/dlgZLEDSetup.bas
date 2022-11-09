@@ -82,13 +82,13 @@ Public Sub Show
 	mDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgSimpleApiOnOff.json"))
 	mDlg.SetEventsListener(Me,"dlgSimple")
 	
-	guiHelpers.ThemePrefDialogForm(mDlg)
-	If guiHelpers.gScreenSizeAprox > 6.5 Then
-		mDlg.PutAtTop = False
-	End If
+	Dim prefHelper As sadPreferencesDialogHelper
+	prefHelper.Initialize(mDlg)
 	
+	prefHelper.ThemePrefDialogForm
+	If guiHelpers.gScreenSizeAprox > 6.5 Then mDlg.PutAtTop = False
 	Dim RS As ResumableSub = mDlg.ShowDialog(Data, "OK", "CANCEL")
-	guiHelpers.ThemeInputDialogBtnsResize(mDlg.Dialog)
+	prefHelper.dlgHelper.ThemeInputDialogBtnsResize
 	Wait For (RS) Complete (Result As Int)
 	
 	If Result = xui.DialogResponse_Positive Then

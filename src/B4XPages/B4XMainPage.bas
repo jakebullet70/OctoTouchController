@@ -411,7 +411,7 @@ Private Sub PopupFunctionOptionsMnu
 	Dim popUpMemuItems As Map = CreateMap("Filament Control":"fl")
 		
 	Dim cs As CSBuilder : cs.Initialize
-	Dim title As Object = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE24A)). _
+	Dim title As Object = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(10dip).Append(Chr(0xE24A)). _
 										Typeface(Typeface.DEFAULT).Append("  Functions Menu").PopAll
 	
 	Dim o1 As dlgListbox

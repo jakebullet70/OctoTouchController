@@ -53,14 +53,15 @@ Public Sub Show
 	End If
 	
 	mPowerDlg.Initialize(mainObj.root, "Android Power Settings", 360dip, h)
+	Dim prefHelper As sadPreferencesDialogHelper : prefHelper.Initialize(mPowerDlg)
 	mPowerDlg.Clear
 	mPowerDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgPower.json"))
 	mPowerDlg.SetEventsListener(Me,"dlgPower")
 
-	guiHelpers.ThemePrefDialogForm(mPowerDlg)
+	prefHelper.ThemePrefDialogForm
 	mPowerDlg.PutAtTop = False
 	Dim RS As ResumableSub = mPowerDlg.ShowDialog(Data, "OK", "CANCEL")
-	guiHelpers.ThemeInputDialogBtnsResize(mPowerDlg.Dialog)
+	prefHelper.dlgHelper.ThemeInputDialogBtnsResize
 		
 	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then

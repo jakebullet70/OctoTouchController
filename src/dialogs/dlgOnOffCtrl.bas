@@ -38,6 +38,8 @@ Public Sub Show
 	
 	'--- init
 	mDialog.Initialize(mMainObj.Root)
+	Dim dlgHelper As sadB4XDialogHelper
+	dlgHelper.Initialize(mDialog)
 	
 	Dim p As B4XView = xui.CreatePanel("")
 	Dim h As Float
@@ -63,9 +65,9 @@ Public Sub Show
 							NumberFormat2(btnOff.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
 
 
-	guiHelpers.ThemeDialogForm(mDialog, mTitle)
+	dlgHelper.ThemeDialogForm(mTitle)
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CLOSE")
-	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
+	dlgHelper.ThemeInputDialogBtnsResize
 
 	Wait For (rs) Complete (Result As Int)
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)

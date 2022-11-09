@@ -67,6 +67,8 @@ End Sub
 Public Sub Show
 	
 	mDialog.Initialize(mMainObj.Root)
+	Dim dlgHelper As sadB4XDialogHelper
+	dlgHelper.Initialize(mDialog)
 	
 	Dim p As B4XView = xui.CreatePanel("")
 	
@@ -83,11 +85,11 @@ Public Sub Show
 	p.LoadLayout("viewFilamentCtrl")
 	BuildGUI
 	
-	guiHelpers.ThemeDialogForm(mDialog, "Filament Change")
+	dlgHelper.ThemeDialogForm("Filament Change")
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CLOSE")
 	mDialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
 	BuildChkbox
-	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
+	dlgHelper.ThemeInputDialogBtnsResize
 
 	Wait For (rs) Complete (Result As Int)
 	

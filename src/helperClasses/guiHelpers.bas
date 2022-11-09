@@ -16,7 +16,7 @@ Sub Process_Globals
 	Public gScreenSizeAprox As Double = 7 '--- asume a small tablet
 	Public gScreenSizeDPI As Int = 0
 	Public gIsLandScape As Boolean 
-	Public gFscale As Double
+	Public gFscale As Float
 	Public gWidth As Float
 	Public gHeight As Float
 	
@@ -179,100 +179,6 @@ Public Sub pref_BeforeDialogDisplayed(mDlg As sadPreferencesDialog, Template As 
 	
 End Sub
 
-Public Sub ThemeInputDialogBtnsResize(dlg As B4XDialog)
-	
-	Try '--- reskin button, if it does not exist then skip the error
-		Dim btnCancel As B4XView = dlg.GetButton(xui.DialogResponse_Cancel)
-		btnCancel.Font = xui.CreateDefaultFont(NumberFormat2(btnCancel.Font.Size / gFscale,1,0,0,False))
-		btnCancel.Width = btnCancel.Width + 20dip
-		btnCancel.Left = btnCancel.Left - 28dip
-		btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
-		'SkinButton(Array As Button(btnCancel))
-	Catch
-		'Log(LastException)
-	End Try 'ignore
-	
-	Try '--- reskin button, if it does not exist then skip the error
-		Dim btnOk As B4XView = dlg.GetButton(xui.DialogResponse_Positive)
-		btnOk.Font = xui.CreateDefaultFont(NumberFormat2(btnOk.Font.Size / gFscale,1,0,0,False))
-		btnOk.Width = btnOk.Width + 20dip
-		btnOk.Left = btnOk.Left - 48dip
-		btnOk.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
-		'SkinButton(Array As Button(btnOk))
-	Catch
-		'Log(LastException)
-	End Try 'ignore
-	
-'	Try '--- reskin button, if it does not exist then skip the error
-'		Dim btnNo As B4XView = dlg.GetButton(xui.DialogResponse_Negative)
-'		btnNo.Font = xui.CreateDefaultFont(NumberFormat2(btnNo.Font.Size / gFscale,1,0,0,False))
-'		btnNo.Width = btnOk.Width + 20dip
-'		btnNo.Left = btnOk.Left - 48dip
-'		btnNo.SetColorAndBorder(xui.Color_Transparent,2dip,xui.Color_White,8dip)
-'	Catch
-'		'Log(LastException)
-'	End Try 'ignore
-		
-End Sub
-
-
-
-Public Sub ThemePrefDialogForm(prefdlg As sadPreferencesDialog)
-	
-	Try
-		
-		prefdlg.ItemsBackgroundColor = clrTheme.Background
-		prefdlg.SeparatorBackgroundColor = clrTheme.BackgroundHeader
-		prefdlg.SeparatorTextColor = clrTheme.txtAccent
-		prefdlg.TextColor = clrTheme.txtNormal
-		
-		'prefdlg.Dialog.BackgroundColor = clrTheme.Background2
-		'prefdlg.mBase.Color = clrTheme.Background2
-		
-		'prefdlg.Dialog.Base.Color = clrTheme.Background2
-		'prefdlg.CustomListView1.sv.SetColorAndBorder(xui.Color_Transparent,1dip,xui.Color_blue,0dip)
-		'prefdlg.mBase.SetColorAndBorder(xui.Color_Blue,2dip,xui.Color_White,5dip)
-		
-		'prefdlg.CustomListView1.AsView.Color = clrTheme.Background2
-		'prefdlg.CustomListView1.GetBase.Color = clrTheme.Background2
-		'prefdlg.CustomListView1. = clrTheme.Background2
-		
-		ThemeDialogForm(prefdlg.Dialog,prefdlg.Title.As(String))
-		
-	Catch
-		logMe.LogIt2(LastException,mModule,"ThemePrefDialogForm")
-	End Try
-	
-
-End Sub
-
-
-Public Sub ThemeDialogForm(dlg As B4XDialog,title As Object)
-	ThemeDialogForm2(dlg,title,22)
-End Sub
-
-
-Public Sub ThemeDialogForm2(dlg As B4XDialog,title As Object,txtSize As Int)
-	
-	Try
-		dlg.Title = title
-	Catch
-		'--- errors sometimes, I think... something to do with the title not showing on smaller screens
-		'--- b4xdialog.PutAtTop = False  <----   this!
-		'Log("ThemeDialogForm-set title: " & LastException)
-	End Try 'ignore
-	
-	dlg.TitleBarFont = xui.CreateDefaultFont(NumberFormat2(txtSize / gFscale,1,0,0,False))
-	dlg.TitleBarColor = clrTheme.BackgroundHeader
-	dlg.TitleBarTextColor = clrTheme.txtNormal
-	dlg.ButtonsTextColor = clrTheme.txtNormal
-	dlg.BorderColor = clrTheme.txtNormal
-	dlg.BackgroundColor = clrTheme.Background2
-	dlg.ButtonsFont = xui.CreateDefaultFont(txtSize)
-	dlg.ButtonsHeight = 60dip
-	
-	
-End Sub
 
 
 Public Sub SetTextColor(obj() As B4XView)
@@ -289,11 +195,15 @@ End Sub
 
 '========================================================================
 Public Sub SkinButton_Pugin(obj() As Button)
+	Dim clrNormal ,clrPressed As Int
+	clrNormal = clrTheme.txtNormal
+	clrPressed = ChangeColorVisible(clrTheme.txtNormal)
 	For Each b As Button In obj
-		b.TextColor = clrTheme.txtNormal
+		SetColorTextStateList(b,clrPressed,clrNormal,clrTheme.btnDisableText)
+		
 		Dim DefaultDrawable, PressedDrawable As ColorDrawable
 		DefaultDrawable.Initialize(xui.Color_Transparent,8dip)
-		PressedDrawable.Initialize2(ChangeColorVisible(clrTheme.txtNormal),8dip,2dip,clrTheme.txtNormal)
+		PressedDrawable.Initialize2(clrPressed,8dip,2dip,clrNormal)
 		Dim sld1 As StateListDrawable :sld1.Initialize
 		sld1.AddState(sld1.State_Pressed, PressedDrawable)
 		sld1.AddCatchAllState(DefaultDrawable)

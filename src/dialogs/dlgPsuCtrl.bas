@@ -50,11 +50,13 @@ Public Sub Show
 	p.SetLayoutAnimated(0, 0, 0, 260dip,h)
 	p.LoadLayout("viewPsuCtrl")
 	
-	BuildGUI 
+	BuildGUI
 
-	guiHelpers.ThemeDialogForm(mDialog, "Power Control")
+	Dim dlgHelper As sadB4XDialogHelper
+	dlgHelper.Initialize(mDialog)
+	dlgHelper.ThemeDialogForm("Power Control")
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CLOSE")
-	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
+	dlgHelper.ThemeInputDialogBtnsResize
 	
 	If oc.Tool1ActualReal > 50 Then
 		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Warning! Tool Temperature Is Hot", 4300)

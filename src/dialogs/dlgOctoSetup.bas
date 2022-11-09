@@ -51,6 +51,8 @@ Public Sub Show(firstRun As Boolean)
 	
 	'--- init
 	Dialog.Initialize(mMainObj.Root)
+	Dim dlgHelper As sadB4XDialogHelper
+	dlgHelper.Initialize(Dialog)
 	
 	Dim p As B4XView = xui.CreatePanel("")
 	Dim w, h As Float
@@ -67,10 +69,10 @@ Public Sub Show(firstRun As Boolean)
 	
 	Build_GUI 
 
-	guiHelpers.ThemeDialogForm(Dialog, mTitle)
+	dlgHelper.ThemeDialogForm(mTitle)
 	Dim rs As ResumableSub = Dialog.ShowCustom(p, "SAVE", "", "CLOSE")
 	Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
-	guiHelpers.ThemeInputDialogBtnsResize(Dialog)
+	dlgHelper.ThemeInputDialogBtnsResize
 	
 	If firstRun = False Then ReadSettingsFile
 	InvalidateConnection

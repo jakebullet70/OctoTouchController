@@ -41,6 +41,8 @@ Public Sub Show(mobj As B4XMainPage)
 	'--- init
 	mMain = mobj
 	Dialog.Initialize(mobj.Root)
+	Dim  dlgHelper As sadB4XDialogHelper
+	dlgHelper.Initialize(Dialog)
 		
 	Dim p As B4XView = xui.CreatePanel("")
 	Dim w, h As Float
@@ -57,10 +59,10 @@ Public Sub Show(mobj As B4XMainPage)
 	
 	BuildGUI 
 
-	guiHelpers.ThemeDialogForm(Dialog, "Themes")
+	dlgHelper.ThemeDialogForm( "Themes")
 	Dim rs As ResumableSub = Dialog.ShowCustom(p, "SAVE", "", "CLOSE")
 	Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
-	guiHelpers.ThemeInputDialogBtnsResize(Dialog)
+	dlgHelper.ThemeInputDialogBtnsResize
 
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
 	Wait For (rs) Complete (Result As Int)
@@ -159,19 +161,21 @@ End Sub
 
 Private Sub ShowColorPicker(callerClr As Int,clrName As String) As ResumableSub
 	dgClr.Initialize(mMain.Root)
+	Dim dlgHelper As sadB4XDialogHelper
+	dlgHelper.Initialize(dgClr)
 	
 	ColorTemplate.Initialize
 	ColorTemplate.SelectedColor = callerClr
 	
-	guiHelpers.ThemeDialogForm(dgClr, "Select Color: " & clrName)
+	dlgHelper.ThemeDialogForm("Select Color: " & clrName)
 	Dim obj As ResumableSub = dgClr.ShowTemplate(ColorTemplate, "OK", "", "CANCEL")
-	guiHelpers.ThemeInputDialogBtnsResize(dgClr)
+	dlgHelper.ThemeInputDialogBtnsResize
 	
 	CreateCboColorSelector(clrName)
 	
 	Wait For (obj) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
-		logMe.LogDebug2(ColorTemplate.SelectedColor,mModule)
+		Log(ColorTemplate.SelectedColor)
 		Return  ColorTemplate.SelectedColor
 	End If
 	Return 0
@@ -204,9 +208,9 @@ Private Sub clrSelected_ItemClick (Position As Int, Value As Object)
 End Sub
 
 Private Sub lblText_Click
-	#if release 
-	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
-	#end if
+'	#if release 
+'	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
+'	#end if
 	Dim lbl As B4XView : lbl = Sender
 	Wait For (ShowColorPicker(lbl.TextColor,lbl.Tag)) Complete (i As Int)
 	If i <> 0 Then
@@ -217,9 +221,9 @@ Private Sub lblText_Click
 End Sub
 
 Private Sub lblTextAcc_Click
-	#if release 
-	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
-	#end if
+'	#if release 
+'	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
+'	#end if
 	Dim lbl As B4XView : lbl = Sender
 	Wait For (ShowColorPicker(lbl.TextColor,lbl.tag)) Complete (i As Int)
 	If i <> 0 Then lblTextAcc.TextColor = i
@@ -227,18 +231,18 @@ End Sub
 
 
 Private Sub lblDisabled_Click
-	#if release 
-	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
-	#end if
+'	#if release 
+'	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
+'	#end if
 	Dim lbl As B4XView : lbl = Sender
 	Wait For (ShowColorPicker(lbl.TextColor,lbl.tag)) Complete (i As Int)
 	If i <> 0 Then lblDisabled.TextColor = i
 End Sub
 
 Private Sub pnlBGrounds_Click
-	#if release 
-	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
-	#end if
+'	#if release 
+'	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
+'	#end if
 	Dim pnl As B4XView : pnl = Sender
 	Wait For (ShowColorPicker(pnl.Color,pnl.tag)) Complete (i As Int)
 	If i <> 0 Then pnl.Color = i

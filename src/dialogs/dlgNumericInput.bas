@@ -40,6 +40,8 @@ Public Sub Show
 	
 	'--- init
 	mDialog.Initialize(mMainObj.Root)
+	Dim dlgHelper As sadB4XDialogHelper
+	dlgHelper.Initialize(mDialog)
 	
 	Dim inputTemplate As sadB4XInputTemplate
 	inputTemplate.Initialize
@@ -54,9 +56,9 @@ Public Sub Show
 	inputTemplate.lblTitle.Text = mPrompt
 	inputTemplate.lblTitle.TextColor = clrTheme.txtNormal
 	
-	guiHelpers.ThemeDialogForm(mDialog, mTitle)
+	dlgHelper.ThemeDialogForm( mTitle)
 	Dim rs As ResumableSub = mDialog.ShowTemplate(inputTemplate, "SET", "", "CANCEL")
-	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
+	dlgHelper.ThemeInputDialogBtnsResize
 	SizeInputDialog(mDialog,inputTemplate)
 	
 	'--- display dialog

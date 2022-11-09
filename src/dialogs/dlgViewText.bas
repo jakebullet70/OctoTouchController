@@ -34,14 +34,16 @@ Public Sub Show(fname As String)
 	
 	'--- init
 	mDialog.Initialize(mMainObj.Root)
+	Dim dlgHelper As sadB4XDialogHelper
+	dlgHelper.Initialize(mDialog)
 	
 	Dim p As B4XView = xui.CreatePanel("")
 	p.SetLayoutAnimated(0, 0, 0, 90%x, 88%y)
 	p.LoadLayout("dlgViewText.bal")
 	
-	guiHelpers.ThemeDialogForm(mDialog, mTitle)
+	dlgHelper.ThemeDialogForm(mTitle)
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CLOSE")
-	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
+	dlgHelper.ThemeInputDialogBtnsResize
 
 	EditText1.TextColor = clrTheme.txtNormal	
 	EditText1.Text = File.ReadString(xui.DefaultFolder,fname)

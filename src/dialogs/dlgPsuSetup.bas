@@ -52,6 +52,8 @@ Public Sub Show
 	
 	'--- init
 	mDialog.Initialize(mMainObj.Root)
+	Dim dlgHelper As sadB4XDialogHelper
+	dlgHelper.Initialize(mDialog)
 	
 	Dim w,h As Float
 	If guiHelpers.gScreenSizeAprox > 6.5 Then
@@ -71,9 +73,9 @@ Public Sub Show
 	
 	BuildGUI 
 
-	guiHelpers.ThemeDialogForm(mDialog, mTitle)
+	dlgHelper.ThemeDialogForm( mTitle)
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "SAVE", "", "CLOSE")
-	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
+	dlgHelper.ThemeInputDialogBtnsResize
 	guiHelpers.SetTextColor(Array As B4XView(lblSonoffInfo,lblSwitch,lblPSUinfo))
 
 	ReadSettingsFile

@@ -112,10 +112,12 @@ Public Sub Show() As ResumableSub
 		
 	'--- init dialog
 	mDialog.Initialize(mMainObj)
+	Dim dlgHelper As sadB4XDialogHelper
+	dlgHelper.Initialize(mDialog)
 	
-	guiHelpers.ThemeDialogForm(mDialog, "App Update")
+	dlgHelper.ThemeDialogForm("App Update")
 	Dim rs As ResumableSub = mDialog.ShowCustom(BasePnl,"","","CLOSE")
-	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
+	dlgHelper.ThemeInputDialogBtnsResize
 	
 	'--- grab the txt file with version info
 	Starter.tmrTimerCallSub.CallSubPlus(Me,"GrabVerInfo",250)

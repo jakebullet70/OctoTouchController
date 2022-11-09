@@ -62,11 +62,14 @@ Public Sub Show
 	mPrefDlg.LoadFromJson(File.ReadString(File.DirAssets,"dlgFilamentCtrl.json"))
 	mPrefDlg.SetEventsListener(Me,"dlgEvent")
 	
-	guiHelpers.ThemePrefDialogForm(mPrefDlg)
+	Dim prefHelper As sadPreferencesDialogHelper 
+	prefHelper.Initialize(mPrefDlg)
+	
+	prefHelper.ThemePrefDialogForm
 	mPrefDlg.PutAtTop = False
 	Dim RS As ResumableSub = mPrefDlg.ShowDialog(Data, "OK", "CANCEL")
 	mPrefDlg.Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
-	guiHelpers.ThemeInputDialogBtnsResize(mPrefDlg.Dialog)
+	prefHelper.dlgHelper.ThemeInputDialogBtnsResize
 	BuildAboutLabel
 	
 	Wait For (RS) Complete (Result As Int)

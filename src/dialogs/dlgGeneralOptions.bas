@@ -55,10 +55,12 @@ Public Sub Show
 	mGeneralDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgGeneral.json"))
 	mGeneralDlg.SetEventsListener(Me,"dlgGeneral")
 	
-	guiHelpers.ThemePrefDialogForm(mGeneralDlg)
+	Dim prefHelper As sadPreferencesDialogHelper
+	prefHelper.Initialize(mGeneralDlg)
+	prefHelper.ThemePrefDialogForm
 	mGeneralDlg.PutAtTop = False
 	Dim RS As ResumableSub = mGeneralDlg.ShowDialog(Data, "OK", "CANCEL")
-	guiHelpers.ThemeInputDialogBtnsResize(mGeneralDlg.Dialog)
+	prefHelper.dlgHelper.ThemeInputDialogBtnsResize
 	
 	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then

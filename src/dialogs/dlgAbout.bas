@@ -33,6 +33,8 @@ End Sub
 Public Sub Show
 	
 	mDialog.Initialize(mMainObj.Root)
+	Dim dlgHelper As sadB4XDialogHelper
+	dlgHelper.Initialize(mDialog)
 	
 	Dim p As B4XView = xui.CreatePanel("")
 	
@@ -54,10 +56,10 @@ Public Sub Show
 	p.LoadLayout("dlgAbout")
 	BuildGUI
 	
-	guiHelpers.ThemeDialogForm(mDialog, "About")
+	dlgHelper.ThemeDialogForm("About")
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "OK")
 	BuildAboutLabel
-	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
+	dlgHelper.ThemeInputDialogBtnsResize
 
 	Wait For (rs) Complete (Result As Int)
 	

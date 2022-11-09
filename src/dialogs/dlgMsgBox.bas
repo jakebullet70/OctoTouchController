@@ -62,12 +62,14 @@ Public Sub Show(txt  As String, icon_file As String, _
 	
 	'--- init
 	mDialog.Initialize(mMainObj)
+	Dim dlgHelper As sadB4XDialogHelper
+	dlgHelper.Initialize(mDialog)
 	
 	lblTxt.Text = txt
 	lmB4XImageViewX1.Load(File.DirAssets, icon_file)
 	lmB4XImageViewX1.SetBitmap(guiHelpers.ChangeColorBasedOnAlphaLevel(lmB4XImageViewX1.Bitmap,clrTheme.txtNormal))
 
-	guiHelpers.ThemeDialogForm(mDialog, mTitle)
+	dlgHelper.ThemeDialogForm(mTitle)
 	Dim rs As ResumableSub = mDialog.ShowCustom(BasePnl,btn1,btn2,btn3)
 	ThemeInputDialogBtnsResize2(mDialog,mWidth)
 	guiHelpers.AnimateDialog(mDialog,"top")

@@ -44,6 +44,8 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	'--- init
 	mDialog.Initialize(mMainObj.Root)
 	Dim ListTemplate As B4XListTemplate : ListTemplate.Initialize
+	Dim dlgHelper As sadB4XDialogHelper
+	dlgHelper.Initialize(mDialog)
 	
 	'--- make it pretty
 	ListTemplate.CustomListView1.DefaultTextBackgroundColor = clrTheme.Background
@@ -64,9 +66,9 @@ Public Sub Show(height As Float, width As Float, data As Map)
 		l.Font = xui.CreateDefaultFont(NumberFormat2(22 / guiHelpers.gFscale,1,0,0,False))
 	End If
 	
-	guiHelpers.ThemeDialogForm(mDialog, mTitle)
+	dlgHelper.ThemeDialogForm( mTitle)
 	Dim rs As ResumableSub = mDialog.ShowTemplate(ListTemplate, "", "",IIf(IsMenu,"CLOSE","CANCEL"))
-	guiHelpers.ThemeInputDialogBtnsResize(mDialog)
+	dlgHelper.ThemeInputDialogBtnsResize
 	
 	'--- display dialog
 	Wait For(rs) complete(intResult As Int)

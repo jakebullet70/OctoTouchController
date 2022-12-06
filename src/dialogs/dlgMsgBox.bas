@@ -72,7 +72,7 @@ Public Sub Show(txt  As String, icon_file As String, _
 	dlgHelper.ThemeDialogForm(mTitle)
 	Dim rs As ResumableSub = mDialog.ShowCustom(BasePnl,btn1,btn2,btn3)
 	ThemeInputDialogBtnsResize2(mDialog,mWidth)
-	guiHelpers.AnimateDialog(mDialog,"top")
+	dlgHelper.AnimateDialog("top")
 	
 	If mKvStr <> "" Then CreateDoNotShowCheckbox
 	

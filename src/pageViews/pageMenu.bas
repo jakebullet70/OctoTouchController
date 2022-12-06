@@ -39,16 +39,16 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	mPnlMain.LoadLayout("pageMenu")
 	
 	BuildGUI
-	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"showver",2300)
+	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"ShowVer",2300)
 	
 End Sub
 
-Sub showver
+Public Sub ShowVer
 	guiHelpers.Show_toast("Version: V" & Application.VersionName,2200)
 End Sub
 
 
-public Sub Set_focus()
+Public Sub Set_focus()
 	
 	mPnlMain.SetVisibleAnimated(500,True)
 	
@@ -66,7 +66,7 @@ public Sub Set_focus()
 End Sub
 
 
-public Sub Lost_focus()
+Public Sub Lost_focus()
 	mPnlMain.SetVisibleAnimated(500,False)
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 End Sub
@@ -191,8 +191,5 @@ Private Sub btnSubBtnAction_Click
 	End Select
 	
 End Sub
-
-
-
 
 

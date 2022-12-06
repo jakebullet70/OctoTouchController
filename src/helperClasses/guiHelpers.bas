@@ -277,26 +277,6 @@ Public Sub EnableDisableBtns2(btnArr() As Button,EnableDisable As Boolean)
 	Next
 End Sub
 
-
-Public Sub AnimateDialog (dlg As B4XDialog, FromEdge As String)
-	Dim base As B4XView = dlg.Base
-	Dim top As Int = base.Top
-	Dim left As Int = base.Left
-	Select FromEdge.ToLowerCase
-		Case "bottom"
-			base.Top = base.Parent.Height
-		Case "top"
-			base.Top = -base.Height
-		Case "left"
-			base.Left = -base.Width
-		Case "right"
-			base.Left = base.Parent.Width
-	End Select
-	base.SetLayoutAnimated(220, left, top, base.Width, base.Height)
-End Sub
-
-
-
 'Change the size and color of a Checkbox graphic. Set the tick character and color, as well as the box size and color
 'and padding (distance from the box to the edge of the graphic) and a disabled fill color
 'Pass "Fill" as the TickChar to fill the box with TickColor when selected.
@@ -397,5 +377,4 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	Return m
 	
 End Sub
-
 

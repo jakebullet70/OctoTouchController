@@ -39,14 +39,20 @@ Sub Class_Globals
 	
 	Public pPrinterCfgDlgShowingFLAG As Boolean = False
 	Private PromptExitTwice As Boolean = False
-	Private mToastTxtSize As Int	
+	Private mToastTxtSize As Int
+	
+	'--- gesture crap --------------------------------------
+	Private GD As GestureDetector
+	Private FilterMoveEvents As Boolean 'ignore
+	Private DiscardOtherGestures As Boolean = True 'ignore
+	'-------------------------------------------------------
+
 	
 End Sub
 
 '======================================================================================
 '
 ' --- main page (displays panels, has public utility classes)
-' --- just shows panel-classes
 '
 '======================================================================================
 
@@ -98,6 +104,10 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	End If
 
 	BuildGUI
+	
+	'--- gesture crap
+	GD.SetOnGestureListener(pnlMenu, "Gesture")
+	
 	TryOctoConnection
 	
 End Sub
@@ -595,8 +605,6 @@ Private Sub btnPower_Click
 	o1.Show
 End Sub
 
-
-
 Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	
 	'--- callback for btnPresetTemp_Click
@@ -691,3 +699,69 @@ Public Sub ShowPreHeatMenu_All2(titleTxt As String)
 	ht.Show(220dip,w,oMasterController.mapAllHeatingOptions)
 End Sub
 
+
+
+#Region "GESTURES"
+'======================================================================================================
+
+'Private Sub Gesture_onTouch(Action As Int, X As Float, Y As Float, MotionEvent As Object) As Boolean
+'	Log("onTouch action=" & Action & ", x=" & X & ", y=" & Y & ", ev=" & MotionEvent)
+'
+'	If FilterMoveEvents Then
+'		If Action = GD.ACTION_MOVE Then
+'			Log("[Filtered]")
+'			Return True
+'		Else
+'			FilterMoveEvents = False
+'		End If
+'	End If
+'
+'	Return DiscardOtherGestures
+'End Sub
+'
+'Private Sub Gesture_onDrag(deltaX As Float, deltaY As Float, MotionEvent As Object)
+'	Log("   onDrag deltaX=" & deltaX & ", deltaY=" & deltaY)
+'
+'	'If the gesture is more horizontal than vertical and covered more than the minimal distance (10%x)...
+'	If Abs(deltaX) > Abs(deltaY) And Abs(deltaX) > 10%x And Not(FilterMoveEvents) Then
+'		FilterMoveEvents = True 'We handle all the touch events with Action = Move so no vertical scrolling is possible
+'		If deltaX > 0 Then
+'			'CallSubDelayed3(Me, "DisplayMsg", "Swipe to the right", deltaX)
+'		Else
+'			'CallSubDelayed3(Me, "DisplayMsg", "Swipe to the left", -deltaX)
+'		End If
+'	End If
+'End Sub'
+'
+'Private Sub Gesture_onScroll(distanceX As Float, distanceY As Float, MotionEvent1 As Object, MotionEvent2 As Object)
+'	Log("   onScroll distanceX = " & distanceX & ", distanceY = " & distanceY & ", ev1 = " & MotionEvent1 & ", ev2=" & MotionEvent2)
+'End Sub
+
+Private Sub Gesture_onFling(velocityX As Float, velocityY As Float, MotionEvent1 As Object, MotionEvent2 As Object)
+	Dim left2right As Boolean = False
+	Dim right2left As Boolean = False
+	Dim up2down As Boolean = False
+	Dim down2up As Boolean = False
+	Select Case True
+		Case velocityX < 0 And velocityY < 0
+			right2left = True
+		Case velocityX > 0 And velocityY > 0
+			left2right = True
+		Case velocityX > 0 And velocityY > 0
+	End Select
+	
+	Log("   onFling velocityX = " & velocityX & ", velocityY = " & velocityY & ", ev1 = " & MotionEvent1 & ", ev2 = " & MotionEvent2)
+	'onFling velocityX = 0.009265188127756119, velocityY = 596.5069580078125,
+	
+	'Log("      X1, Y1 = " & GD.getX(MotionEvent1, 0) & ", " & GD.getY(MotionEvent1, 0))
+	'Log("      X2, Y2 = " & GD.getX(MotionEvent2, 0) & ", " & GD.getY(MotionEvent2, 0))
+	Log(GD.getAction(MotionEvent1))
+	'ev1 = MotionEvent { action=ACTION_DOWN, id[0]=0, x[0]=724.98047, y[0]=824.96924,
+	'toolType[0]=TOOL_TYPE_FINGER, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0,
+	'pointerCount=1, historySize=0, eventTime=11159052, downTime=11159052, deviceId=3, source=0x1002 },
+	
+	'ev2 = MotionEvent { action=ACTION_UP, id[0]=0, x[0]=744.02344, y[0]=118.96948,
+	'toolType[0]=TOOL_TYPE_FINGER, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0,
+	'pointerCount=1, historySize=0, eventTime=11159447, downTime=11159052, deviceId=3, source=0x1002 }
+End Sub
+#END REGION

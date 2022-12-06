@@ -16,11 +16,12 @@ Sub Class_Globals
 	Private Scale As Float
 End Sub
 
-Public Sub Initialize(oDlg As B4XDialog)  As sadB4XDialogHelper
+Public Sub Initialize(oDlg As B4XDialog) 
 	dlg = oDlg
+	'dlg.VisibleAnimationDuration = 300
+	'dlg.BlurBackground = False
 	Dim ac As Accessibility
 	Scale = ac.GetUserFontScale
-	Return Me
 End Sub
 
 
@@ -57,7 +58,7 @@ Public Sub ThemeInputDialogBtnsResize()
 '	Catch
 '		'Log(LastException)
 '	End Try 'ignore
-		
+	
 End Sub
 
 
@@ -72,14 +73,16 @@ Public Sub ThemeDialogForm2(title As Object,txtSize As Int)
 	
 	Try
 		dlg.Title = title
-		'dlg.TitleBarHeight=6%y
+		If guiHelpers.gScreenSizeAprox > 5.5 Then
+			dlg.TitleBarHeight=6%y
+		End If
 	Catch
 		'--- errors sometimes, I think... something to do with the title not showing on smaller screens
 		'--- b4xdialog.PutAtTop = False  <----   this!
 		'Log("ThemeDialogForm-set title: " & LastException)
 	End Try 'ignore
 	
-	dlg.TitleBarFont = xui.CreateDefaultFont(NumberFormat2(txtSize / guiHelpers.gFscale,1,0,0,False))
+	dlg.TitleBarFont = xui.CreateDefaultFont(NumberFormat2(txtSize / Scale,1,0,0,False))
 	dlg.TitleBarColor = clrTheme.BackgroundHeader
 	dlg.TitleBarTextColor = clrTheme.txtNormal
 	dlg.ButtonsTextColor = clrTheme.txtNormal
@@ -92,3 +95,24 @@ Public Sub ThemeDialogForm2(title As Object,txtSize As Int)
 	
 	
 End Sub
+
+
+Public Sub AnimateDialog (FromEdge As String)
+	Dim base As B4XView = dlg.Base
+	Dim top As Int = base.Top
+	Dim left As Int = base.Left
+	Select FromEdge.ToLowerCase
+		Case "bottom"
+			base.Top = base.Parent.Height
+		Case "top"
+			base.Top = -base.Height
+		Case "left"
+			base.Left = -base.Width
+		Case "right"
+			base.Left = base.Parent.Width
+	End Select
+	base.SetLayoutAnimated(220, left, top, base.Width, base.Height)
+End Sub
+
+
+

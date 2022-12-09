@@ -60,10 +60,11 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	
 	
 	Dim l As B4XView = ListTemplate.CustomListView1.DesignerLabel
-	If guiHelpers.gIsLandScape Then
-		l.Font = xui.CreateDefaultFont(NumberFormat2(26 / guiHelpers.gFscale,1,0,0,False))
-	Else
-		l.Font = xui.CreateDefaultFont(NumberFormat2(22 / guiHelpers.gFscale,1,0,0,False))
+	l.Font = xui.CreateDefaultFont(NumberFormat2(22 / guiHelpers.gFscale,1,0,0,False))
+	If guiHelpers.gIsLandScape = False Then
+		If guiHelpers.gHeight > 6 Then
+			l.Font = xui.CreateDefaultFont(NumberFormat2(26 / guiHelpers.gFscale,1,0,0,False))
+		End If
 	End If
 	
 	dlgHelper.ThemeDialogForm( mTitle)

@@ -529,7 +529,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	If guiHelpers.gIsLandScape Then
 		h = 180dip : w = 560dip
 	Else
-		h = 310dip : w = 360dip
+		h = 310dip : w = 88%x
 	End If
 	ErrorDlg.Initialize(Root,"Connetion Problem",w, h,JUSTIFY_BUTTON_2_LEFT)
 	Wait For (ErrorDlg.Show(guiHelpers.GetConnectionText(connectedButError),gblConst.MB_ICON_WARNING, _

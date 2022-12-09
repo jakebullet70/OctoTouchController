@@ -66,7 +66,8 @@ Public Sub RequestAvailable()
 		End If
 	Else
 		'--- we did not even get a connection
-		resultStr = guiHelpers.GetConnectFailedMsg
+		Dim oo As guiMsgs : oo.Initialize
+		resultStr = oo.GetConnectFailedMsg
 	End If
 	
 	j.Release '--- free up resources

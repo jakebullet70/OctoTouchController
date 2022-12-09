@@ -317,12 +317,13 @@ Private Sub PopupMainOptionMenu
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 	Dim popUpMemuItems As Map 
-		
+
+	Dim gui As guiMsgs : gui.Initialize		
 	If oc.isPrinting Or oc.IsPaused2 Then
 		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
-		popUpMemuItems = guiHelpers.BuildOptionsMenu(True)
+		popUpMemuItems = gui.BuildOptionsMenu(True)
 	Else
-		popUpMemuItems = guiHelpers.BuildOptionsMenu(False)
+		popUpMemuItems = gui.BuildOptionsMenu(False)
 	End If
 	
 	Dim o1 As dlgListbox
@@ -516,7 +517,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"ScreenOff_2Front",600)
 	End If
 	
-	'--- if sonoff power is configed, show power btn	- remember, no connection to octoprint
+	'--- if sonoff power is configed, show power btn - remember, if no connection to octoprint
 	'--- so cannot use any octoprint installed plugin
 	Dim PowerCtrlAvail As String = ""
 	If Starter.kvs.GetDefault(gblConst.PWR_SONOFF_PLUGIN,False).As(Boolean) = True Then
@@ -532,7 +533,8 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 		h = 310dip : w = 88%x
 	End If
 	ErrorDlg.Initialize(Root,"Connetion Problem",w, h,JUSTIFY_BUTTON_2_LEFT)
-	Wait For (ErrorDlg.Show(guiHelpers.GetConnectionText(connectedButError),gblConst.MB_ICON_WARNING, _
+	Dim gui As guiMsgs : gui.Initialize
+	Wait For (ErrorDlg.Show(gui.GetConnectionText(connectedButError),gblConst.MB_ICON_WARNING, _
 					"RETRY",PowerCtrlAvail,"SETUP")) Complete (res As Int)
 	
 	Select Case res

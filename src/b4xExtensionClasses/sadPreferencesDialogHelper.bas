@@ -55,3 +55,81 @@ End Sub
 
 
 
+'Private Sub SetTextColorB4XFloatTextField(views() As B4XFloatTextField)
+'	
+'	For Each o As B4XFloatTextField In views
+'		o.TextField.TextColor = clrTheme.txtNormal
+'		o.NonFocusedHintColor = clrTheme.txtAccent
+'		o.HintColor = clrTheme.txtAccent
+'		o.Update
+'	Next
+'	
+'End Sub
+
+
+
+Public Sub SkinDialog(Template As Object)
+	
+	Dim fnt0 As B4XFont = xui.CreateDefaultFont(20)
+	'Dim mDlg As sadPreferencesDialog = prefdlg
+	Try
+		
+		For i = 0 To prefdlg.PrefItems.Size - 1
+			Dim pit As B4XPrefItem = prefdlg.PrefItems.Get(i)
+			
+			Select Case pit.ItemType
+				Case prefdlg.TYPE_TEXT, prefdlg.TYPE_PASSWORD, prefdlg.TYPE_NUMBER, prefdlg.TYPE_DECIMALNUMBER, prefdlg.TYPE_MULTILINETEXT
+					Dim ft As B4XFloatTextField = prefdlg.CustomListView1.GetPanel(i).GetView(0).Tag
+					ft.TextField.Font = fnt0
+					guiHelpers.SetTextColorB4XFloatTextField(Array As B4XFloatTextField(ft))
+	
+				Case prefdlg.TYPE_BOOLEAN
+					Dim p As B4XView = prefdlg.CustomListView1.GetPanel(i).GetView(0)
+					p.Font = fnt0
+					
+				Case prefdlg.TYPE_NUMERICRANGE
+					Dim plmi As B4XPlusMinus = prefdlg.CustomListView1.GetPanel(i).GetView(0).tag
+					plmi.MainLabel.Font = xui.CreateDefaultFont(22) '--- numeric spin label
+					Dim p1 As B4XView = prefdlg.CustomListView1.GetPanel(i).GetView(1) '--- description lbl
+					p1.Font = fnt0
+					'plmi.ArrowsSize = 42  ''  NOT WORKING
+					'plmi.Base_Resize(plmi.mBase.Width,plmi.mBase.Height)
+					'plmi.lblMinus.Font =xui.CreateDefaultFont(40)
+					
+					
+			End Select
+	
+		Next
+		
+	Catch
+		Log(LastException)
+	End Try
+	
+End Sub
+
+
+
+
+'TODO
+'https://www.b4x.com/android/forum/threads/preferencesdialog-shortoptions-width.143952/
+Private Sub SetWidthItemSO (Pref As PreferencesDialog, Key As String, wwidth As Double)
+	For i = 0 To Pref.PrefItems.Size - 1
+		Dim pi As B4XPrefItem = Pref.PrefItems.Get(i)
+		If pi.key = Key Then
+			If pi.ItemType = Pref.TYPE_SHORTOPTIONS Then
+				Dim Parent As B4XView = Pref.CustomListView1.GetPanel(i).GetView(1)
+				Parent.Left = (Parent.Left + Parent.Width) - wwidth
+				Parent.Width = wwidth
+				Dim view As B4XView = Parent.GetView( 0)
+				view.Width = Parent.Width
+			Else
+				Dim oldx As Double=Pref.CustomListView1.GetPanel(i).GetView(1).Left
+				Dim oldw As Double=Pref.CustomListView1.GetPanel(i).GetView(1).Width
+				Pref.CustomListView1.GetPanel(i).GetView(1).Left=(oldx+oldw)-wwidth
+				Pref.CustomListView1.GetPanel(i).GetView(1).Width= wwidth
+			End If
+		End If
+	Next
+End Sub
+
+

@@ -15,6 +15,7 @@ Sub Class_Globals
 	Private mainObj As B4XMainPage
 	Private xui As XUI
 	Private mGeneralDlg As sadPreferencesDialog
+	Private prefHelper As sadPreferencesDialogHelper
 	
 End Sub
 
@@ -55,7 +56,7 @@ Public Sub Show
 	mGeneralDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgGeneral.json"))
 	mGeneralDlg.SetEventsListener(Me,"dlgGeneral")
 	
-	Dim prefHelper As sadPreferencesDialogHelper
+	
 	prefHelper.Initialize(mGeneralDlg)
 	prefHelper.ThemePrefDialogForm
 	mGeneralDlg.PutAtTop = False
@@ -97,7 +98,7 @@ End Sub
 
 
 Private Sub dlgGeneral_BeforeDialogDisplayed (Template As Object)
-	guiHelpers.pref_BeforeDialogDisplayed(mGeneralDlg,Template)
+	prefHelper.SkinDialog(Template)
 End Sub
 
 

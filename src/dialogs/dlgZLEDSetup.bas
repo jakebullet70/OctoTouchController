@@ -11,12 +11,13 @@ Version=11.5
 
 Sub Class_Globals
 	
-	Private const mModule As String = "dlgZLEDSetup"' 'ignore
+	Private const mModule As String = "dlgZLEDSetup" 'ignore
 	Private mMainObj As B4XMainPage
 	Private xui As XUI
 	Private mDlg As sadPreferencesDialog
 	Private mDataFile As String
 	Private mCaption As String
+	Private prefHelper As sadPreferencesDialogHelper
 	
 End Sub
 
@@ -82,7 +83,7 @@ Public Sub Show
 	mDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgSimpleApiOnOff.json"))
 	mDlg.SetEventsListener(Me,"dlgSimple")
 	
-	Dim prefHelper As sadPreferencesDialogHelper
+	
 	prefHelper.Initialize(mDlg)
 	
 	prefHelper.ThemePrefDialogForm
@@ -128,7 +129,7 @@ End Sub
 
 
 Private Sub dlgSimple_BeforeDialogDisplayed (Template As Object)
-	guiHelpers.pref_BeforeDialogDisplayed(mDlg,Template)
+	prefHelper.SkinDialog(Template)
 End Sub
 
 

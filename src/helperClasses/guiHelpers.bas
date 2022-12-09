@@ -150,36 +150,6 @@ Public Sub SetTextColorB4XFloatTextField(views() As B4XFloatTextField)
 	
 End Sub
 
-Public Sub pref_BeforeDialogDisplayed(mDlg As sadPreferencesDialog, Template As Object)
-	
-	Dim fnt0 As B4XFont = xui.CreateDefaultFont(20)
-	
-	Try
-		
-		For i = 0 To mDlg.PrefItems.Size - 1
-			Dim pit As B4XPrefItem = mDlg.PrefItems.Get(i)
-			
-			Select Case pit.ItemType
-				Case mDlg.TYPE_TEXT, mDlg.TYPE_PASSWORD, mDlg.TYPE_NUMBER, mDlg.TYPE_DECIMALNUMBER, mDlg.TYPE_MULTILINETEXT
-					Dim ft As B4XFloatTextField = mDlg.CustomListView1.GetPanel(i).GetView(0).Tag
-					ft.TextField.Font = fnt0
-					SetTextColorB4XFloatTextField(Array As B4XFloatTextField(ft))
-	
-				Case mDlg.TYPE_BOOLEAN
-					Dim p As B4XView = mDlg.CustomListView1.GetPanel(i).GetView(0)
-					p.Font = xui.CreateDefaultFont(20)
-				
-			End Select
-	
-		Next
-		
-	Catch
-		Log(LastException)
-	End Try
-	
-End Sub
-
-
 
 Public Sub SetTextColor(obj() As B4XView)
 	For Each o As B4XView In obj

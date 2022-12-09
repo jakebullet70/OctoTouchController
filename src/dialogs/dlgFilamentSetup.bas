@@ -15,7 +15,7 @@ Sub Class_Globals
 	Private mainObj As B4XMainPage
 	Private xui As XUI
 	Private mPrefDlg As sadPreferencesDialog
-	
+	Private prefHelper As sadPreferencesDialogHelper
 	Private lblAboutLoadUnload As  Label
 	
 End Sub
@@ -62,7 +62,7 @@ Public Sub Show
 	mPrefDlg.LoadFromJson(File.ReadString(File.DirAssets,"dlgFilamentCtrl.json"))
 	mPrefDlg.SetEventsListener(Me,"dlgEvent")
 	
-	Dim prefHelper As sadPreferencesDialogHelper 
+	
 	prefHelper.Initialize(mPrefDlg)
 	
 	prefHelper.ThemePrefDialogForm
@@ -144,7 +144,7 @@ End Sub
 
 
 Private Sub dlgEvent_BeforeDialogDisplayed (Template As Object)
-	guiHelpers.pref_BeforeDialogDisplayed(mPrefDlg,Template)
+	prefHelper.SkinDialog(Template)
 End Sub
 
 

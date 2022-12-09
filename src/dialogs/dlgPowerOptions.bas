@@ -15,6 +15,7 @@ Sub Class_Globals
 	Private mainObj As B4XMainPage
 	Private xui As XUI
 	Private mPowerDlg As sadPreferencesDialog
+	Private prefHelper As sadPreferencesDialogHelper
 	
 End Sub
 
@@ -53,7 +54,7 @@ Public Sub Show
 	End If
 	
 	mPowerDlg.Initialize(mainObj.root, "Android Power Settings", 360dip, h)
-	Dim prefHelper As sadPreferencesDialogHelper : prefHelper.Initialize(mPowerDlg)
+	prefHelper.Initialize(mPowerDlg)
 	mPowerDlg.Clear
 	mPowerDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgPower.json"))
 	mPowerDlg.SetEventsListener(Me,"dlgPower")
@@ -99,7 +100,7 @@ End Sub
 
 
 Private Sub dlgPower_BeforeDialogDisplayed (Template As Object)
-	guiHelpers.pref_BeforeDialogDisplayed(mPowerDlg,Template)
+	prefHelper.SkinDialog(Template)
 End Sub
 
 

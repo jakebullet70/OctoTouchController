@@ -6,7 +6,6 @@
 </p>
 
 # OctoTouchController
-Written under occupation in Kherson Ukraine. Continued after liberation under shelling...   
 A dedicated touch screen controller for Octoprint supporting older Android phones / tablets (Android 4.X) 
 Device specs: Android **4.x or above**, 4inch screen with a minimum resolution of 680x340. It is Free Software and released under the [GNU Affero General Public License V3](https://www.gnu.org/licenses/agpl-3.0.html).  
 
@@ -54,6 +53,7 @@ See the [GitHub Wiki](https://github.com/jakebullet70/OctoTouchController/wiki) 
 I usually hang out at the Octoprint discord server. An invite can be found here: [discord.octoprint.org](https://discord.octoprint.org).  
 Quesion can also be posted here in GitHub.  
 
+Written under occupation in Kherson Ukraine. Continued after liberation under shelling...   
 Written in [B4X](https://www.b4x.com/)  
 ![GitHub all releases](https://img.shields.io/github/downloads/jakebullet70/OctoTouchController/total)
 

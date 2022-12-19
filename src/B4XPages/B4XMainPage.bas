@@ -697,7 +697,7 @@ Public Sub ShowPreHeatMenu_All2(titleTxt As String)
 	Dim title As Object = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF2CA)). _
 	Typeface(Typeface.DEFAULT).Append("  " & titleTxt).PopAll
 	ht.Initialize(Me,title,Me,"TempChange_Presets")
-	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,390dip)
+	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,440dip)
 	ht.Show(220dip,w,oMasterController.mapAllHeatingOptions)
 End Sub
 

@@ -168,7 +168,10 @@ Version=11.8
 	#IncludeTitle: False
 	'#DebuggerForceFullDeployment: true
 	'#DebuggerForceStandardAssets: true
-	#BridgeLogger: True
+	
+	'---  ALWAYS SET FALSE IN DEBUG MODE
+	#BridgeLogger: False 
+	'-----------------------------------
 	
 #End Region
 

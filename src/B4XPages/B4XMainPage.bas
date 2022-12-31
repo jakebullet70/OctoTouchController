@@ -695,7 +695,8 @@ Public Sub ShowPreHeatMenu_All2(titleTxt As String)
 	Dim ht As dlgListbox
 	Dim cs As CSBuilder : cs.Initialize
 	Dim title As Object = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF2CA)). _
-	Typeface(Typeface.DEFAULT).Append("  " & titleTxt).PopAll
+		Typeface(Typeface.DEFAULT).Append("  " & titleTxt).PopAll
+		
 	ht.Initialize(Me,title,Me,"TempChange_Presets")
 	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,440dip)
 	ht.Show(220dip,w,oMasterController.mapAllHeatingOptions)
@@ -739,31 +740,31 @@ End Sub
 '	Log("   onScroll distanceX = " & distanceX & ", distanceY = " & distanceY & ", ev1 = " & MotionEvent1 & ", ev2=" & MotionEvent2)
 'End Sub
 
-Private Sub Gesture_onFling(velocityX As Float, velocityY As Float, MotionEvent1 As Object, MotionEvent2 As Object)
-	Dim left2right As Boolean = False
-	Dim right2left As Boolean = False
-	Dim up2down As Boolean = False
-	Dim down2up As Boolean = False
-	Select Case True
-		Case velocityX < 0 And velocityY < 0
-			right2left = True
-		Case velocityX > 0 And velocityY > 0
-			left2right = True
-		Case velocityX > 0 And velocityY > 0
-	End Select
-	
-	Log("   onFling velocityX = " & velocityX & ", velocityY = " & velocityY & ", ev1 = " & MotionEvent1 & ", ev2 = " & MotionEvent2)
-	'onFling velocityX = 0.009265188127756119, velocityY = 596.5069580078125,
-	
-	'Log("      X1, Y1 = " & GD.getX(MotionEvent1, 0) & ", " & GD.getY(MotionEvent1, 0))
-	'Log("      X2, Y2 = " & GD.getX(MotionEvent2, 0) & ", " & GD.getY(MotionEvent2, 0))
-	Log(GD.getAction(MotionEvent1))
-	'ev1 = MotionEvent { action=ACTION_DOWN, id[0]=0, x[0]=724.98047, y[0]=824.96924,
-	'toolType[0]=TOOL_TYPE_FINGER, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0,
-	'pointerCount=1, historySize=0, eventTime=11159052, downTime=11159052, deviceId=3, source=0x1002 },
-	
-	'ev2 = MotionEvent { action=ACTION_UP, id[0]=0, x[0]=744.02344, y[0]=118.96948,
-	'toolType[0]=TOOL_TYPE_FINGER, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0,
-	'pointerCount=1, historySize=0, eventTime=11159447, downTime=11159052, deviceId=3, source=0x1002 }
-End Sub
+'Private Sub Gesture_onFling(velocityX As Float, velocityY As Float, MotionEvent1 As Object, MotionEvent2 As Object)
+'	Dim left2right As Boolean = False
+'	Dim right2left As Boolean = False
+'	Dim up2down As Boolean = False
+'	Dim down2up As Boolean = False
+'	Select Case True
+'		Case velocityX < 0 And velocityY < 0
+'			right2left = True
+'		Case velocityX > 0 And velocityY > 0
+'			left2right = True
+'		Case velocityX > 0 And velocityY > 0
+'	End Select
+'	
+'	Log("   onFling velocityX = " & velocityX & ", velocityY = " & velocityY & ", ev1 = " & MotionEvent1 & ", ev2 = " & MotionEvent2)
+'	'onFling velocityX = 0.009265188127756119, velocityY = 596.5069580078125,
+'	
+'	'Log("      X1, Y1 = " & GD.getX(MotionEvent1, 0) & ", " & GD.getY(MotionEvent1, 0))
+'	'Log("      X2, Y2 = " & GD.getX(MotionEvent2, 0) & ", " & GD.getY(MotionEvent2, 0))
+'	Log(GD.getAction(MotionEvent1))
+'	'ev1 = MotionEvent { action=ACTION_DOWN, id[0]=0, x[0]=724.98047, y[0]=824.96924,
+'	'toolType[0]=TOOL_TYPE_FINGER, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0,
+'	'pointerCount=1, historySize=0, eventTime=11159052, downTime=11159052, deviceId=3, source=0x1002 },
+'	
+'	'ev2 = MotionEvent { action=ACTION_UP, id[0]=0, x[0]=744.02344, y[0]=118.96948,
+'	'toolType[0]=TOOL_TYPE_FINGER, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0,
+'	'pointerCount=1, historySize=0, eventTime=11159447, downTime=11159052, deviceId=3, source=0x1002 }
+'End Sub
 #END REGION

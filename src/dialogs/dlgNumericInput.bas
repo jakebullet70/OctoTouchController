@@ -77,9 +77,9 @@ Private Sub SizeInputDialog(dlg As B4XDialog, input As sadB4XInputTemplate)
 	Dim p As Panel = input.GetPanel(dlg) 
 	Dim LB As B4XView = p.GetView(0)
 	
-	LB.Height = Round((input.mBase.Height / 2.6)).As(Float)
 	LB.Font = xui.CreateDefaultFont(NumberFormat2(22 / guiHelpers.gFscale,1,0,0,False))
-	input.mBase.Height = input.mBase.Height + 18dip '--- sets bottom size where btns are
+	input.mBase.Height = input.mBase.Height + 22dip '--- sets bottom size where btns are
+	LB.Height = Round((input.mBase.Height / 2.7)).As(Float)
 	
 	ET.Gravity = Gravity.CENTER
 	ET.Height = Round(input.mBase.Height / 2).As(Float)
@@ -89,11 +89,14 @@ Private Sub SizeInputDialog(dlg As B4XDialog, input As sadB4XInputTemplate)
 	ET.TextColor = clrTheme.txtNormal 
 	
 	Dim Cncl As B4XView = dlg.GetButton(xui.DialogResponse_Cancel)
-	Cncl.Top = ET.Top + ET.Height + 46dip
-	Dim ok As B4XView = dlg.GetButton(xui.DialogResponse_Positive)
-	ok.Top = Cncl.Top 'ET.Top + ET.Height + 46dip
+	Dim ok   As B4XView = dlg.GetButton(xui.DialogResponse_Positive)
+
+	Cncl.Top = ET.Top + ET.Height + dlg.TitleBarHeight + 8dip
+	ok.Top = Cncl.Top
 	
-	dlg.Base.Height = ET.Height + LB.Height + ok.Height + 62dip
+	dlg.Base.Height = ok.Height + ok.Top + 8dip'LB.Height' spacer2 
+	'Log("titlebar height:" & header)
+	
 End Sub
 
 '   RESIZE DIALOG CODE

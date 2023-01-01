@@ -15,7 +15,7 @@ Add a dedicated touch screen to your 3D printer with a *LOW/NO COST* Android dev
 
 ### Project Purpose
 Reclaim those old Phones / Tablets that are sitting around that *DO NOT* have access to the Google store anymore. 
-This in *not a replacement* for Octoprint but a way to add a touch screen to your printer using old hardware.
+This in *not a replacement* for Octoprint but a way to add a touch screen to your printer using old - unused Android hardware.
 
 
 ### Features
@@ -25,6 +25,7 @@ Built in filament loading - unloading wizard
 Support for Sonoff power device without Octoprint plugin  
 Colors themes to match your printers look  
 View / select and print files right on the touch screen  
+Theme builder  
   
 
 ### Supported Octoprint Plugins
@@ -42,7 +43,7 @@ ws281z LED			  https://plugins.octoprint.org/plugins/ws281x_led_status/
 
 ### Project Status
 Initialze release Aug/26/2022  
-Latest release V1.2.2: Oct/30/2022  
+Latest release V1.2.4: Jan/01/2023  
 
 ### Installing  
 See https://github.com/jakebullet70/OctoTouchController/wiki/Installing  
@@ -50,10 +51,11 @@ See https://github.com/jakebullet70/OctoTouchController/wiki/Installing
 See the [GitHub Wiki](https://github.com/jakebullet70/OctoTouchController/wiki) for some helpful hints.
 
 ### Help  
-I usually hang out at the Octoprint discord server. An invite can be found here: [discord.octoprint.org](https://discord.octoprint.org).  
+I usually hang out at the Octoprint discord server.  
+An invite can be found here: [discord.octoprint.org](https://discord.octoprint.org).  
 Quesion can also be posted here in GitHub.  
 
-Written under occupation in Kherson Ukraine. Continued after liberation under shelling...   
+Written under occupation in Kherson Ukraine. Continued after liberation and under shelling... Slava Ukraini!   
 Written in [B4X](https://www.b4x.com/)  
 ![GitHub all releases](https://img.shields.io/github/downloads/jakebullet70/OctoTouchController/total)
 

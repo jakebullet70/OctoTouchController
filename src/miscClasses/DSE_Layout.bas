@@ -26,12 +26,13 @@ End Sub
 Public Sub SpreadHorizontally (DesignerArgs As DesignerArgs )
 	Dim pnl As B4XView = DesignerArgs.GetViewFromArgs(0)
 	Dim Maxsize As Int = DesignerArgs.Arguments.Get(1)
-	Dim MinGap As Int = DesignerArgs.Arguments.Get(2)
-	Dim align As String = DesignerArgs.Arguments.Get(3)
-	
+	Dim MinGap  As Int = DesignerArgs.Arguments.Get(2)
+	Dim align  As String  = DesignerArgs.Arguments.Get(3)
 	Dim Change As Boolean = Maxsize >= 0
+	
 	If pnl.IsInitialized = False Then Return
 	If Maxsize = 0 Then Maxsize = 0x7fffffff
+	
 	Dim AllWidth As Int = pnl.Width
 	Dim AllItemsWidth As Int
 	If Change Then
@@ -45,6 +46,7 @@ Public Sub SpreadHorizontally (DesignerArgs As DesignerArgs )
 		Next
 		Dim gap As Int = (AllWidth - AllItemsWidth) / (pnl.NumberOfViews + 1)
 	End If
+	
 	Dim lastright As Int = gap
 	Dim alignposition As Int = -1
 	For i = 0 To pnl.NumberOfViews - 1
@@ -92,13 +94,15 @@ End Sub
 Public Sub SpreadVertically  (DesignerArgs As DesignerArgs )
 	Dim pnl As B4XView = DesignerArgs.GetViewFromArgs(0)
 	Dim Maxsize As Int = DesignerArgs.Arguments.Get(1)
-	Dim MinGap As Int = DesignerArgs.Arguments.Get(2)
-	Dim align As String = DesignerArgs.Arguments.Get(3)
+	Dim MinGap  As Int = DesignerArgs.Arguments.Get(2)
+	Dim align  As String  = DesignerArgs.Arguments.Get(3)
 	Dim Change As Boolean = Maxsize >= 0
+	
 	If pnl.IsInitialized = False Then Return
 	If Maxsize = 0 Then Maxsize = 0x7fffffff
 	Dim AllHeight As Int = pnl.Height
 	Dim AllItemsHeight As Int
+	
 	If Change Then
 		Dim itemHeight As Int = Min(AllHeight / pnl.NumberOfViews - MinGap, Maxsize)
 		Dim gap As Int = (AllHeight - pnl.NumberOfViews * itemHeight) / pnl.NumberOfViews
@@ -110,6 +114,7 @@ Public Sub SpreadVertically  (DesignerArgs As DesignerArgs )
 		Next
 		Dim gap As Int = (AllHeight - AllItemsHeight) / (pnl.NumberOfViews +1)
 	End If
+	
 	Dim lasttop As Int = gap
 	Dim alignposition As Int = -1
 	For i = 0 To pnl.NumberOfViews - 1
@@ -123,8 +128,10 @@ Public Sub SpreadVertically  (DesignerArgs As DesignerArgs )
 				Case "right"
 					If alignposition = -1 Then alignposition = v.Left+v.Width
 					v.Left = alignposition
-				Case "center","centre"
-					If alignposition = -1 Then alignposition = v.Left+(v.Width/2)
+				Case "center"
+					If alignposition = -1 Then 
+						alignposition = v.Left+(v.Width/2)
+					End If
 					v.Left = alignposition - (v.Width/2)
 				Case Else
 			End Select
@@ -138,11 +145,14 @@ Public Sub SpreadVertically  (DesignerArgs As DesignerArgs )
 				Case "right"
 					If alignposition = -1 Then alignposition = v.Left+v.Width
 					v.Left = alignposition
-				Case "center","centre"
-					If alignposition = -1 Then alignposition = v.Left+(v.Width/2)
+				Case "center"
+					If alignposition = -1 Then 
+						alignposition = v.Left+(v.Width/2)
+					End If
 					v.Left = alignposition - (v.Width/2)
 				Case Else
 			End Select
 		End If
 	Next
 End Sub
+

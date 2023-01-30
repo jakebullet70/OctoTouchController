@@ -96,7 +96,7 @@ Public Sub Show() As ResumableSub
 	
 	CleanUpApkDownload
 	BasePnl = xui.CreatePanel("")
-	BasePnl.SetLayoutAnimated(0, 0, 0, 360dip ,260dip)
+	BasePnl.SetLayoutAnimated(0, 0, 0, IIf(guiHelpers.gIsLandScape, 360dip,96%x) ,260dip)
 	BasePnl.LoadLayout("viewAppUpdate")
 	
 	lblAction.TextColor = clrTheme.txtNormal

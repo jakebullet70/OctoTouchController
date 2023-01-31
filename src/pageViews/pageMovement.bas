@@ -248,7 +248,8 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 	'--- callback for Function Menu
 	If value.Length = 0 Then Return
 	Dim msg As String = "Command sent: "
-	Dim mb As dlgMsgBox : mb.Initialize(mMainObj.root,"Continue",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip), 200dip,False)
+	Dim mb As dlgMsgBox 
+	mb.Initialize(mMainObj.root,"Continue",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip), 200dip,False)
 	Dim Ask As String = "Touch OK to continue"
 	
 	Select Case value

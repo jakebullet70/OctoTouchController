@@ -169,7 +169,7 @@ Private Sub btnCheckConnection_Click
 	If msg.Length <> 0 Then
 		B4XLoadingIndicator1.Hide
 		Dim mb As dlgMsgBox
-		Dim w As Float = IIf(guiHelpers.gIsLandScape,460dip,390dip)
+		Dim w As Float = IIf(guiHelpers.gIsLandScape,460dip,94%x)
 		mb.Initialize(mMainObj.Root,"Problem",w, 220dip,False)
 		Wait For (mb.Show(msg,gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
 		Return
@@ -229,7 +229,7 @@ Private Sub btnGetOctoKey_Click
 	If guiHelpers.gIsLandScape Then
 		w = 500dip
 	Else
-		w = 390dip
+		w = 94%x
 	End If
 	
 	If txtPrinterIP.Text.Length = 0 Then
@@ -284,7 +284,7 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 			ValidConnection = True
 			guiHelpers.Show_toast("Requested API key OK!",1800)
 		Else
-			Dim w As Float = IIf(guiHelpers.gIsLandScape,500dip,390dip)
+			Dim w As Float = IIf(guiHelpers.gIsLandScape,500dip,94%x)
 			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",w, 220dip,False)
 			Wait For (mb.Show(result.As(String),gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
 		End If

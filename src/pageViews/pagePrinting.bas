@@ -36,6 +36,7 @@ Sub Class_Globals
 	
 	Private pnlBGbed,pnlBGTool As B4XView
 	
+	Private pnlBtns As B4XView
 End Sub
 
 
@@ -376,7 +377,7 @@ Private Sub btnAction_Click
 			End If
 			
 		Case "cancel"
-			Dim w As Float = IIf(guiHelpers.gIsLandScape,500dip,380dip)
+			Dim w As Float = IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth - 10dip)
 			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Question",w, 170dip,False)
 			Wait For (mb.Show("Do you want to cancel this print?",gblConst.MB_ICON_QUESTION, _
 							"Yes - Cancel It","","No")) Complete (res As Int)
@@ -398,18 +399,21 @@ Private Sub btnAction_Click
 	
 End Sub
 
+'-----------------------------------------
 Private Sub CircularProgressBar1_Click
-	If oc.JobFileName = "" Then
-		Return '--- no file loaded
-	End If
-	LoadThumbNail
-	CircularProgressBar1.Visible = False
-	ivPreview.mBase.Visible = True
+	Return '--- not used anymore - V1.2.5
+'	If oc.JobFileName = "" Then
+'		Return '--- no file loaded
+'	End If
+'	LoadThumbNail
+'	CircularProgressBar1.Visible = False
+'	ivPreview.mBase.Visible = True
 End Sub
-Private Sub ivPreview_Click
-	CircularProgressBar1.Visible = True
-	ivPreview.mBase.Visible = False
-End Sub
+'Private Sub ivPreview_Click
+'	CircularProgressBar1.Visible = True
+'	ivPreview.mBase.Visible = False
+'End Sub
+'-----------------------------------------
 
 Private Sub LoadThumbNail
 	

@@ -194,10 +194,7 @@ End Sub
 
 Sub Globals
 	Private mModule As String = "Main"
-	Private Const API_ANDROID_4_0 As Int = 14
-	Private Const API_ANDROID_4_4 As Int = 19
 	Private ph As Phone	
-	
 End Sub
 
 
@@ -397,7 +394,7 @@ End Sub
 
 Sub Activity_WindowFocusChanged(HasFocus As Boolean)
 	
-	If ph.SdkVersion < API_ANDROID_4_4 Then Return 
+	If ph.SdkVersion < gblConst.API_ANDROID_4_4 Then Return 
 	
 	'--- restore imersive mode
 	If HasFocus Then
@@ -468,7 +465,7 @@ Public Sub Dim_ActionBar(On_off As Int)
 	'--- Android 4.4 has Imersive mode so we skip it
 	Try
 			
-		If ph.SdkVersion >= API_ANDROID_4_0 And ph.SdkVersion < API_ANDROID_4_4 Then
+		If ph.SdkVersion >= gblConst.API_ANDROID_4_0 And ph.SdkVersion < gblConst.API_ANDROID_4_4 Then
 			Dim r As Reflector
 			r.Target = Activity
 			r.RunMethod2("setSystemUiVisibility", On_off, "java.lang.int") '1 = SYSTEM_UI_FLAG_LOW_PROFILE

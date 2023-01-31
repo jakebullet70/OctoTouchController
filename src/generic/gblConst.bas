@@ -10,6 +10,9 @@ Version=11.5
 #End Region
 Sub Process_Globals
 	
+	Public Const API_ANDROID_4_0 As Int = 14
+	Public Const API_ANDROID_4_4 As Int = 19
+	
 	Public Const DEGREE_SYMBOL As String = "°" 
 	Public const APP_TITLE As String = "OctoTC ™"
 	

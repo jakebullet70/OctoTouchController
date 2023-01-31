@@ -20,6 +20,7 @@ This in *not a replacement* for Octoprint but a way to add a dedicated touch scr
 
 ### Features
 Supports Android 4.X to the latest version  
+Native Android app, not a re-packaged web app  
 Portrait or landscape modes  
 Built in filament loading - unloading wizard  
 Support for Sonoff power device without Octoprint plugin  
@@ -33,11 +34,11 @@ Cura Thumbnails		https://plugins.octoprint.org/plugins/UltimakerFormatPackage/
 
 Prusa Thumbnails	https://plugins.octoprint.org/plugins/prusaslicerthumbnails/
 
-WLED				  https://plugins.octoprint.org/plugins/wled/
+WLED				https://plugins.octoprint.org/plugins/wled/
 
-PSUControl			  https://plugins.octoprint.org/plugins/psucontrol/
+PSUControl			https://plugins.octoprint.org/plugins/psucontrol/
 
-ws281z LED			  https://plugins.octoprint.org/plugins/ws281x_led_status/
+ws281z LED			https://plugins.octoprint.org/plugins/ws281x_led_status/
 
 ** Arc Welder Aware **
 
@@ -55,7 +56,7 @@ I usually hang out at the Octoprint discord server.
 An invite can be found here: [discord.octoprint.org](https://discord.octoprint.org).  
 Quesion can also be posted here in GitHub.  
 
-Written under occupation in Kherson Ukraine. Continued after liberation and under shelling... Slava Ukraini!   
+Written in the middle of a war under occupation in Kherson Ukraine. Continued after liberation and under shelling... Slava Ukraini!   
 Written in [B4X](https://www.b4x.com/)  
 ![GitHub all releases](https://img.shields.io/github/downloads/jakebullet70/OctoTouchController/total)
 

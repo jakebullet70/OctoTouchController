@@ -41,6 +41,7 @@ Public Sub SpreadHorizontally (DesignerArgs As DesignerArgs )
 	Else
 		For i = 0 To pnl.NumberOfViews -1
 			Dim v As B4XView = pnl.GetView(i)
+			If v.Visible = False Then Continue '--- added,sadLogic
 			AllItemsWidth = AllItemsWidth + v.Width
 			If AllItemsWidth > AllWidth Then Return ' If total width of all controls is greater than panel width then do nothing
 		Next
@@ -51,6 +52,7 @@ Public Sub SpreadHorizontally (DesignerArgs As DesignerArgs )
 	Dim alignposition As Int = -1
 	For i = 0 To pnl.NumberOfViews - 1
 		Dim v As B4XView = pnl.GetView(i)
+		If v.Visible = False Then Continue '--- added,sadLogic
 		If Change Then
 			v.SetLayoutAnimated(0, (i + 0.5) * gap + i * itemwidth, v.Top, itemwidth, v.Height)
 			Select align.Trim.ToLowerCase
@@ -109,6 +111,7 @@ Public Sub SpreadVertically  (DesignerArgs As DesignerArgs )
 	Else
 		For i = 0 To pnl.NumberOfViews -1
 			Dim v As B4XView = pnl.GetView(i)
+			If v.Visible = False Then Continue '--- added,sadLogic
 			AllItemsHeight = AllItemsHeight + v.Height
 			If AllItemsHeight > AllHeight Then Return ' If total Height of all controls is greater than panel Height then do nothing
 		Next
@@ -119,6 +122,7 @@ Public Sub SpreadVertically  (DesignerArgs As DesignerArgs )
 	Dim alignposition As Int = -1
 	For i = 0 To pnl.NumberOfViews - 1
 		Dim v As B4XView = pnl.GetView(i)
+		If v.Visible = False Then Continue '--- added, sadLogic
 		If Change Then
 			v.SetLayoutAnimated(0, v.Left, (i + 0.5) * gap + i * itemHeight, v.Width, itemHeight)
 			Select align.Trim.ToLowerCase

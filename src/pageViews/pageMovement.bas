@@ -107,10 +107,10 @@ Private Sub btnGeneral_Click
 	End If
 	
 	Select Case o.Tag
-		Case "heat" 		: HeatChangeRequest
+		Case "heat" 	: ToolHeatChangeRequest
 		Case "elength" 	: SetExtruderLength
-		Case "ext"			: ExtrudeRetract(True)
-		Case "ret"			: ExtrudeRetract(False)
+		Case "ext"		: ExtrudeRetract(True)
+		Case "ret"		: ExtrudeRetract(False)
 		Case "fmnu"		: FunctionMenu
 		Case "moff"		: MotorsOff
 	End Select
@@ -157,55 +157,18 @@ Private Sub btnXYZ_Click
 End Sub
 
 Private Sub cboMovementSize_SelectedIndexChanged (Index As Int)
+	
 	MoveJogSize = cboMovementSize.SelectedItem.Replace("mm","")
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
+	
 End Sub
 
-#region "HEAT_CHANGE_EDIT"
-Private Sub TypeInHeatChangeRequest
-		
-	Dim o1 As dlgNumericInput
-	o1.Initialize(mMainObj,"Tool Temperature","Enter Temperature",Me,"HeatTempChange_ToolEdit")
-	o1.Show
+Private Sub ToolHeatChangeRequest
+	
+	Dim oo As HeaterRoutines : oo.Initialize
+	oo.PopupToolHeaterMenu
 	
 End Sub
-Private Sub HeatTempChange_ToolEdit(value As String)
-	'--- callback for TypeInHeatChangeRequest
-	HeatTempChange_Tool(value,"")
-End Sub
-
-	
-Private Sub HeatChangeRequest
-	
-	Dim o1 As dlgListbox
-	o1.Initialize(mMainObj,"Tool Presets",Me,"HeatTempChange_Tool")
-	o1.Show(250dip,220dip,mMainObj.oMasterController.mapToolHeatValuesOnly)
-	
-End Sub
-Private Sub HeatTempChange_Tool(value As String, tag As String)
-	
-	'--- callback for HeatChangeRequest
-	If value.Length = 0 Then Return
-	
-	If value = "ev" Then
-		'--- type in a value
-		TypeInHeatChangeRequest
-		Return
-	End If
-	
-	If value.EndsWith("off") Then value = 0 '--- tool off
-	
-	If fnc.CheckTempRange("tool", value) = False Then
-		guiHelpers.Show_toast("Invalid Temperature",1800)
-		Return
-	End If
-		
-	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))
-		
-	guiHelpers.Show_toast("Tool Temperature Change",1400)
-	
-End Sub
-#end region
 
 #region "EXTRUDER_LENGTH_EDIT"
 Private Sub SetExtruderLength

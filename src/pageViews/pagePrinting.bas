@@ -37,6 +37,7 @@ Sub Class_Globals
 	Private pnlBGbed,pnlBGTool As B4XView
 	
 	Private pnlBtns As B4XView
+	Private pnlHeating As B4XView
 End Sub
 
 
@@ -65,9 +66,9 @@ public Sub Set_focus()
 	UpdateFileName
 	DisplayedFileName = oc.JobFileName
 	
-	If ivPreview.mBase.Visible = True Then
-		LoadThumbNail
-	End If
+	'If ivPreview.mBase.Visible = True Then '--- V1.2.5
+	'LoadThumbNail
+	'End If
 	
 End Sub
 
@@ -76,6 +77,11 @@ public Sub Lost_focus()
 End Sub
 
 Private Sub BuildGUI
+	Dim ph As Phone
+	If ph.SdkVersion < gblConst.API_ANDROID_4_4 Then 
+		pnlHeating.Height = pnlHeating.Height - 26dip
+	End If
+	
 	
 	guiHelpers.SetTextColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel, _
 								lblPrintStats1.BaseLabel,lblPrintStats2,lblPrintStats3, _
@@ -88,9 +94,9 @@ Private Sub BuildGUI
 	guiHelpers.SetEnableDisableColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel))
 	
 	CircularProgressBar1.ColorEmpty = clrTheme.txtNormal
-	CircularProgressBar1.ColorFull     = clrTheme.Background2
-	CircularProgressBar1.Value = 0
-	CircularProgressBar1.ValueUnit = "%"
+	CircularProgressBar1.ColorFull  = clrTheme.Background2
+	CircularProgressBar1.Value      = 0
+	CircularProgressBar1.ValueUnit  = "%"
 	
 	If guiHelpers.gScreenSizeAprox > 6 Then
 		CircularProgressBar1.MainLabel.Font = xui.CreateDefaultFont(62)
@@ -105,13 +111,15 @@ Private Sub BuildGUI
 	'---thumbnail preview is same size as progressbar
 	ivPreview.Width  = CircularProgressBar1.mBase.Width + 28dip
 	ivPreview.Height = CircularProgressBar1.mBase.Height
-	ivPreview.Top     = CircularProgressBar1.mBase.Top
-	ivPreview.Left    = CircularProgressBar1.mBase.Left - 14dip
+	ivPreview.Top    = CircularProgressBar1.mBase.Top
+	ivPreview.Left   = CircularProgressBar1.mBase.Left - 14dip
 	
 	'--- figure out best font size
-	lblPrintStatsTMP.Text   = $"Total Time:0:00:00:00"$ 
+	lblPrintStatsTMP.Text   = $"Total Time:0:00:00:00"$ '--- autosize font label control
 	lblPrintStats2.TextSize = lblPrintStatsTMP.BaseLabel.Font.Size
 	lblPrintStats3.TextSize = lblPrintStats2.TextSize
+	
+	ShowThumbnailWhilePrinting(True) '--- we always do this now, V1.2.5
 	
 #region "PRINTER BTNS TXT"	
 	Dim cs As CSBuilder 
@@ -166,16 +174,16 @@ public Sub Update_Printer_Btns
 		'--- we are printing or heating
 		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel,btnPause),True)
 		guiHelpers.EnableDisableBtns2(Array As Button(btnPrint,btnPresetTool,btnPresetBed,btnPresetMaster),False)
-		ShowThumbnailWhilePrinting(True)
+		'ShowThumbnailWhilePrinting(True)
 	
 	else if oc.isPrinting = False And oc.isPaused2 = True Then
 		
 		'--- job is paused
 		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel,btnPrint),True)
 		guiHelpers.EnableDisableBtns2(Array As Button(btnPause,btnPresetTool,btnPresetBed,btnPresetMaster),False)
-		If ivPreviewLG.mBase.Visible = False Then
-			ShowThumbnailWhilePrinting(True)
-		End If
+'		If ivPreviewLG.mBase.Visible = False Then
+'			ShowThumbnailWhilePrinting(True)
+'		End If
 	Else
 		
 		'--- not printing anything
@@ -183,19 +191,23 @@ public Sub Update_Printer_Btns
 		guiHelpers.EnableDisableBtns2(Array As Button(btnPrint),oc.isFileLoaded)
 		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel,btnPause),False)
 		guiHelpers.EnableDisableBtns2(Array As Button(btnPresetTool,btnPresetBed,btnPresetMaster),True)
-		ShowThumbnailWhilePrinting(False)
+		'ShowThumbnailWhilePrinting(False)
 		
 	End If
 	
 End Sub
 
-Private Sub ShowThumbnailWhilePrinting(show As Boolean)
-	
+Private Sub ShowThumbnailWhilePrinting(show As Boolean) 'ignore
+	'--- changed... not used anymore - V1.2.5
+	'--- we always show the thumbnail, lets see how the users feel about it...
+	'--- will be removed later
+	show = True
+	'------------------------------------
 	btnPresetMaster.Visible = Not (show)
 	ivPreviewLG.mBase.Visible = show
 	pnlBGbed.Visible = Not (show)
 	pnlBGTool.Visible = Not (show)
-	If show = True Then 
+	If show = True Then
 		LoadThumbNail
 	End If
 	
@@ -239,6 +251,7 @@ private Sub UpdateFileName
 	Else
 		lblFileName.Text = gblConst.NO_FILE_LOADED
 	End If
+	LoadThumbNail
 End Sub
 
 Public Sub Update_Printer_Temps
@@ -401,7 +414,7 @@ End Sub
 
 '-----------------------------------------
 Private Sub CircularProgressBar1_Click
-	Return '--- not used anymore - V1.2.5
+	Return '--- not used anymore - V1.2.5 --- will be removed later
 '	If oc.JobFileName = "" Then
 '		Return '--- no file loaded
 '	End If
@@ -415,7 +428,7 @@ End Sub
 'End Sub
 '-----------------------------------------
 
-Private Sub LoadThumbNail
+Public Sub LoadThumbNail
 	
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized = False Then
 		guiHelpers.Show_toast("Retriving info, try again later",1500)
@@ -446,11 +459,11 @@ Private Sub LoadThumbNail
 			If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
 				SetNoThumbnail
 			Else
-				ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
+				'ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
 				ivPreviewLG.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
 			End If
 		Else
-			ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
+			'ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
 			ivPreviewLG.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
 		End If
 	Catch

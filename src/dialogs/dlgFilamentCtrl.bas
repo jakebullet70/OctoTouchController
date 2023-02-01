@@ -327,7 +327,9 @@ Private Sub ProcessHeatTempChange(value As String, tag As Object) 'ignore
 	End If
 
 	If value = "ev" Then
-		TypeInHeatChangeRequest '--- type in a value
+		'--- type in a value
+		Dim oo As HeaterRoutines : oo.Initialize
+		oo.ChangeTempTool
 		Return
 	End If
 	
@@ -345,15 +347,6 @@ Private Sub ProcessHeatTempChange(value As String, tag As Object) 'ignore
 	
 End Sub
 
-Private Sub TypeInHeatChangeRequest
-	Dim o1 As dlgNumericInput
-	o1.Initialize(mMainObj,"Tool Temperature","Enter Temperature",Me,"HeatTempChange_ToolEdit")
-	o1.Show
-End Sub
 
-Private Sub HeatTempChange_ToolEdit(value As String)
-	'--- callback for TypeInHeatChangeRequest
-	ProcessHeatTempChange(value,"")
-End Sub
 #END REGION
 

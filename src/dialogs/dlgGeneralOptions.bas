@@ -39,7 +39,7 @@ Public Sub Show
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	
-	Dim h As Float '--- TODO - needs refactor
+	Dim h,w As Float '--- TODO - needs refactor
 	If guiHelpers.gIsLandScape Then
 		If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
 			h = 62%y
@@ -48,11 +48,13 @@ Public Sub Show
 		Else '--- 4 to 5.9 inch
 			h = 80%y
 		End If
+		w = 360dip
 	Else
 		h = 440dip
+		w = guiHelpers.gWidth * .92
 	End If
 	
-	mGeneralDlg.Initialize(mainObj.root, "General Settings", 360dip, h)
+	mGeneralDlg.Initialize(mainObj.root, "General Settings", w, h)
 	mGeneralDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgGeneral.json"))
 	mGeneralDlg.SetEventsListener(Me,"dlgGeneral")
 	

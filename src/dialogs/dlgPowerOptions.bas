@@ -40,7 +40,7 @@ Public Sub Show
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.ANDROID_POWER_OPTIONS_FILE)
 
-	Dim h As Float
+	Dim h,w As Float
 	If guiHelpers.gIsLandScape Then
 		If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
 			h = 55%y
@@ -48,12 +48,14 @@ Public Sub Show
 			h = 42%y
 		Else '--- 4 to 5.9 inch
 			h = 80%y
-		End If		
+		End If	
+		w = 360dip
 	Else
 		h = 330dip	
+		w = guiHelpers.gWidth * .92
 	End If
 	
-	mPowerDlg.Initialize(mainObj.root, "Android Power Settings", 360dip, h)
+	mPowerDlg.Initialize(mainObj.root, "Android Power Settings", w, h)
 	prefHelper.Initialize(mPowerDlg)
 	mPowerDlg.Clear
 	mPowerDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgPower.json"))

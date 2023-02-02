@@ -96,5 +96,22 @@ Private Sub TempChange_Tool1(value As String)
 End Sub
 
 
+Private Sub TempChange_Bed(value As String)
+	
+	'--- callback for lblTempChange
+	'--- callback for lblTempChange
+	If value = "" Then Return
+	If fnc.CheckTempRange("bed", value) = False Then
+		guiHelpers.Show_toast("Invalid Temperature",1800)
+		Return
+	End If
+		
+	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",value))
+	guiHelpers.Show_toast("Bed Temperature Change",1400)
+	
+End Sub
+
+
+
 
 

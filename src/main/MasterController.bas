@@ -313,10 +313,10 @@ Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
 	Dim allOff As String = "** All Off **"
 
 	mapBedHeatingOptions.Put(allOff,"alloff")
-	mapBedHeatingOptions.Put("Bed Off","bedoff")
+	mapBedHeatingOptions.Put("** Bed Off **","bedoff")
 	
 	mapToolHeatingOptions.Put(allOff,"alloff")
-	mapToolHeatingOptions.Put("Tool Off","tooloff")
+	mapToolHeatingOptions.Put("** Tool Off **","tooloff")
 	mapToolHeatValuesOnly.Put("Tool Off","tooloff")
 		
 	mapAllHeatingOptions.Put(allOff,"alloff")

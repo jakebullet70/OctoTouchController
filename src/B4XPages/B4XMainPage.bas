@@ -47,6 +47,7 @@ Sub Class_Globals
 	Private DiscardOtherGestures As Boolean = True 'ignore
 	'-------------------------------------------------------
 
+	Private mapMasterPreHeaterMenu As Map
 	
 End Sub
 
@@ -620,20 +621,27 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 		Return
 	End If
 	
-	Dim tagme As String = tag.As(String)
+	'Dim tagme As String = tag.As(String)
 	Dim msg, getTemp As String
 	Dim startNDX, endNDX As Int
 	
 	Select Case True
 		
-		Case selectedMsg.EndsWith("off")
-			If tagme = "bed" Then
-				oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",0))
-				msg = "Bed Off"
-			Else
-				oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
-				msg = "Tool Off"
-			End If
+		Case selectedMsg = "bedoff"
+			oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",0))
+			msg = "Bed Off"
+
+		Case selectedMsg = "tooloff"
+			oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
+			msg = "Tool Off"
+		
+		Case selectedMsg = "evb"
+			Dim oo1 As HeaterRoutines : oo1.Initialize
+			oo1.ChangeTempBed
+			
+		Case selectedMsg = "evt"
+			Dim oo2 As HeaterRoutines : oo2.Initialize
+			oo2.ChangeTempTool
 			
 		Case selectedMsg.Contains("Tool") And Not (selectedMsg.Contains("Bed"))
 			'--- Example, Set PLA (Tool: 60øC )
@@ -669,7 +677,7 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 			
 	End Select
 	
-	Show_toast(msg,3000)
+	If msg.Length <> 0 Then Show_toast(msg,3000)
 	
 End Sub
 
@@ -699,7 +707,27 @@ Public Sub ShowPreHeatMenu_All2(titleTxt As String)
 		
 	ht.Initialize(Me,title,Me,"TempChange_Presets")
 	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,guiHelpers.gWidth - 10dip)
-	ht.Show(220dip,w,oMasterController.mapAllHeatingOptions)
+	Dim h As Float = IIf(guiHelpers.gIsLandScape,guiHelpers.gHeight * .8,guiHelpers.gHeight * .7)
+	
+	
+	BuildPreHeatMenu
+	ht.Show(h,w,mapMasterPreHeaterMenu)
+End Sub
+
+
+Private Sub BuildPreHeatMenu
+	
+	If mapMasterPreHeaterMenu.IsInitialized Then Return
+	
+	'--- put together all heating options
+	Dim mTmp As Map = objHelpers.ConcatMaps(Array As Map( _
+				oMasterController.mapAllHeatingOptions, _
+				oMasterController.mapToolHeatingOptions))
+				
+	Dim m1 As Map : m1.Initialize : m1.Put("Enter Tool Value","evt")
+	mapMasterPreHeaterMenu = objHelpers.ConcatMaps(Array As Map(mTmp,m1,oMasterController.mapBedHeatingOptions))
+	mapMasterPreHeaterMenu.Put("Enter Bed Value","evb")
+				
 End Sub
 
 

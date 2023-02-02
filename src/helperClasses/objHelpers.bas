@@ -47,12 +47,23 @@ public Sub Map2List(myMap As Map, KeyList As Boolean) As List
 End Sub
 
 
-Sub CopyMap(original As Map) As Map 'ignore
+Public Sub CopyMap(original As Map) As Map 'ignore
 	Dim m As Map : m.Initialize
 	For Each k As Object In original.Keys
 		m.Put(k, original.Get(k))
 	Next
 	Return m
+End Sub
+
+
+Public Sub ConcatMaps(maps() As Map) As Map 'ignore
+	Dim retMap As Map : retMap.Initialize
+	For Each m As Map In maps
+		For Each k As Object In m.Keys
+			retMap.Put(k, m.Get(k))
+		Next
+	Next
+	Return retMap
 End Sub
 
 

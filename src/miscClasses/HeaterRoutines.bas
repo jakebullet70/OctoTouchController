@@ -98,8 +98,8 @@ End Sub
 
 Private Sub TempChange_Bed(value As String)
 	
-	'--- callback for lblTempChange
-	'--- callback for lblTempChange
+	'--- callback for TempChangePrompt
+	'--- callback for TempChangePrompt
 	If value = "" Then Return
 	If fnc.CheckTempRange("bed", value) = False Then
 		guiHelpers.Show_toast("Invalid Temperature",1800)

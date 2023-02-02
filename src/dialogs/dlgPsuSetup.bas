@@ -63,7 +63,7 @@ Public Sub Show
 		If guiHelpers.gIsLandScape Then
 			w = 420dip
 		Else
-			w = 360dip
+			w = guiHelpers.gWidth *.95
 		End If
 		h = 280dip
 	End If

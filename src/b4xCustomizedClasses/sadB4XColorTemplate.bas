@@ -34,7 +34,13 @@ Public Sub Initialize
 	DeviceScale = 100dip / 100
 	mBase = xui.CreatePanel("")
 	'--- Tweaked - larger size
-	mBase.SetLayoutAnimated(0, 0, 0, 390dip,300dip)
+	Dim w As Float
+	If guiHelpers.gIsLandScape Then
+		w = 390dip
+	Else
+		w = guiHelpers.gWidth * .96
+	End If
+	mBase.SetLayoutAnimated(0, 0, 0, w,300dip)
 	'mBase.SetLayoutAnimated(0, 0, 0, 300dip, 250dip)
 	'---
 	BordersColor = xui.Color_Black

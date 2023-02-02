@@ -51,11 +51,12 @@ End Sub
 
 Private Sub BuildChkbox
 	chkHeatOff.Initialize("TurnOffHeat")
-	chkHeatOff.Text = " Turn off heater on close"
+	chkHeatOff.Text = " Heater off on close"
 	chkHeatOff.TextColor = clrTheme.txtNormal
 	chkHeatOff.TextSize = 18
 	guiHelpers.SetCBDrawable(chkHeatOff, clrTheme.txtNormal, 1,clrTheme.txtNormal, Chr(8730), Colors.LightGray, 32dip, 2dip)
-	mDialog.Base.AddView(chkHeatOff,10dip,mDialog.Base.Height - 50dip,280dip,36dip)
+	mDialog.Base.AddView(chkHeatOff,10dip,mDialog.Base.Height - 50dip, _
+		(mDialog.Base.Width - mDialog.GetButton(xui.DialogResponse_Cancel).Width - 16dip),36dip)
 	'chkHeatOff.Checked = Starter.kvs.GetDefault(FIL_WIZ_TURN_OFF_ON_HEAT,False)
 End Sub
 

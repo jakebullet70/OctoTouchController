@@ -33,7 +33,8 @@ Public Sub ThemeInputDialogBtnsResize()
 		btnCancel.Width = btnCancel.Width + 20dip
 		btnCancel.Left = btnCancel.Left - 28dip
 		btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
-		'SkinButton(Array As Button(btnCancel))
+		btnCancel.Height = btnCancel.Height - 4dip '--- resize height just a hair
+		btnCancel.Top = btnCancel.Top + 4dip
 	Catch
 		'Log(LastException)
 	End Try 'ignore
@@ -44,7 +45,8 @@ Public Sub ThemeInputDialogBtnsResize()
 		btnOk.Width = btnOk.Width + 20dip
 		btnOk.Left = btnOk.Left - 48dip
 		btnOk.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
-		'SkinButton(Array As Button(btnOk))
+		btnOk.Height = btnOk.Height - 4dip '--- resize height just a hair
+		btnOk.Top = btnOk.Top + 4dip
 	Catch
 		'Log(LastException)
 	End Try 'ignore

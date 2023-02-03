@@ -18,26 +18,25 @@ Sub Class_Globals
 	
 	Private DisplayedFileName As String '--- curently displayed file name
 	
-	Private btnPresetTool, btnPresetBed, btnPresetMaster As Button
 	Private btnCancel, btnPause, btnPrint As Button
 	
 	Private lblFileName As AutoTextSizeLabel
 	Private CircularProgressBar1 As CircularProgressBar
 
 	Private mText4PrintBtn,mText4ResumeBtn As Object
-	Private lblToolTemp,lblBedTemp,lblPrintStats1 As AutoTextSizeLabel
+	Private lblPrintStats1 As AutoTextSizeLabel
 	Private lblPrintStats3,lblPrintStats2 As B4XView
 	Private lblPrintStatsTMP As AutoTextSizeLabel
 	
-	Private lblHeaderBed,lblHeaderTool As B4XView
-	
-	Private ivPreviewLG,ivPreview As lmB4XImageViewX
+	Private ivPreviewLG As lmB4XImageViewX
 	Private mTmpTemps As String
 	
-	Private pnlBGbed,pnlBGTool As B4XView
+	Private pnlHeating,pnlBtns,pnlBGbed,pnlBGTool As B4XView
 	
-	Private pnlBtns As B4XView
-	Private pnlHeating As B4XView
+	Private ivBed,ivTool As lmB4XImageViewX
+	
+	Private lblBedTemp1 As B4XView
+	Private lblToolTemp1 As B4XView
 End Sub
 
 
@@ -76,22 +75,30 @@ public Sub Lost_focus()
 	mPnlMain.SetVisibleAnimated(500,False)
 End Sub
 
+
 Private Sub BuildGUI
+	
 	Dim ph As Phone
 	If ph.SdkVersion < gblConst.API_ANDROID_4_4 Then 
 		pnlHeating.Height = pnlHeating.Height - 26dip
 	End If
 	
 	
-	guiHelpers.SetTextColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel, _
+	guiHelpers.SetTextColor(Array As B4XView(lblBedTemp1,lblToolTemp1, _
 								lblPrintStats1.BaseLabel,lblPrintStats2,lblPrintStats3, _
-								CircularProgressBar1.MainLabel,lblFileName.BaseLabel,lblHeaderBed,lblHeaderTool))
+								CircularProgressBar1.MainLabel,lblFileName.BaseLabel))
 								
-	ivPreviewLG.mBase.Visible = False
-	SetNoThumbnail
+	ivPreviewLG.Load(File.DirAssets,gblConst.NO_THUMBNAIL)
 	
-	guiHelpers.SkinButton(Array As Button( btnCancel,btnPause,btnPrint,btnPresetTool,btnPresetMaster,btnPresetBed))
-	guiHelpers.SetEnableDisableColor(Array As B4XView(lblBedTemp.BaseLabel,lblToolTemp.BaseLabel))
+	ivBed.Bitmap  = guiHelpers.ChangeColorBasedOnAlphaLevel( _
+		LoadBitmapSample(File.DirAssets, "bed.png", ivBed.mBase.Width, ivBed.mBase.Height),clrTheme.txtNormal)
+	ivTool.Bitmap = guiHelpers.ChangeColorBasedOnAlphaLevel( _ 
+		LoadBitmapSample(File.DirAssets, "hotend.png", ivBed.mBase.Width, ivBed.mBase.Height),clrTheme.txtNormal)
+	
+	guiHelpers.SkinButton(Array As Button( btnCancel,btnPause,btnPrint))
+	
+	guiHelpers.ResizeText("200  C",lblBedTemp1) '--- sets font size
+	guiHelpers.ResizeText("200  C",lblToolTemp1)'--- sets font size
 	
 	CircularProgressBar1.ColorEmpty = clrTheme.txtNormal
 	CircularProgressBar1.ColorFull  = clrTheme.Background2
@@ -107,12 +114,6 @@ Private Sub BuildGUI
 	'--- scale font
 	guiHelpers.SetTextSize(Array As Button(btnCancel,btnPause,btnPrint), _ 
 										NumberFormat2(btnCancel.TextSize / guiHelpers.gFscale,1,0,0,False))
-	
-	'---thumbnail preview is same size as progressbar
-	ivPreview.Width  = CircularProgressBar1.mBase.Width + 28dip
-	ivPreview.Height = CircularProgressBar1.mBase.Height
-	ivPreview.Top    = CircularProgressBar1.mBase.Top
-	ivPreview.Left   = CircularProgressBar1.mBase.Left - 14dip
 	
 	'--- figure out best font size
 	lblPrintStatsTMP.Text   = $"Total Time:0:00:00:00"$ '--- autosize font label control
@@ -139,7 +140,7 @@ Private Sub BuildGUI
 #end region											
 End Sub
 
-public Sub Update_Printer_Btns
+Public Sub Update_Printer_Btns
 	'--- sets enable, disable
 	mPnlMain.Enabled = oc.isConnected
 	
@@ -157,7 +158,6 @@ public Sub Update_Printer_Btns
 	If oc.isFileLoaded = False Then
 		
 		guiHelpers.EnableDisableBtns2(Array As Button(btnPrint,btnPause,btnCancel),False)
-		guiHelpers.EnableDisableBtns2(Array As Button(btnPresetTool,btnPresetBed,btnPresetMaster),True)
 		Return
 		
 	Else
@@ -173,14 +173,12 @@ public Sub Update_Printer_Btns
 		
 		'--- we are printing or heating
 		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel,btnPause),True)
-		guiHelpers.EnableDisableBtns2(Array As Button(btnPrint,btnPresetTool,btnPresetBed,btnPresetMaster),False)
 		'ShowThumbnailWhilePrinting(True)
 	
 	else if oc.isPrinting = False And oc.isPaused2 = True Then
 		
 		'--- job is paused
 		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel,btnPrint),True)
-		guiHelpers.EnableDisableBtns2(Array As Button(btnPause,btnPresetTool,btnPresetBed,btnPresetMaster),False)
 '		If ivPreviewLG.mBase.Visible = False Then
 '			ShowThumbnailWhilePrinting(True)
 '		End If
@@ -190,7 +188,6 @@ public Sub Update_Printer_Btns
 		btnPrint.Enabled = oc.isFileLoaded 
 		guiHelpers.EnableDisableBtns2(Array As Button(btnPrint),oc.isFileLoaded)
 		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel,btnPause),False)
-		guiHelpers.EnableDisableBtns2(Array As Button(btnPresetTool,btnPresetBed,btnPresetMaster),True)
 		'ShowThumbnailWhilePrinting(False)
 		
 	End If
@@ -203,7 +200,6 @@ Private Sub ShowThumbnailWhilePrinting(show As Boolean) 'ignore
 	'--- will be removed later
 	show = True
 	'------------------------------------
-	btnPresetMaster.Visible = Not (show)
 	ivPreviewLG.mBase.Visible = show
 	pnlBGbed.Visible = Not (show)
 	pnlBGTool.Visible = Not (show)
@@ -245,7 +241,7 @@ Public Sub Update_Printer_Stats
 	
 End Sub
 
-private Sub UpdateFileName
+Private Sub UpdateFileName
 	If oc.isFileLoaded Then
 		lblFileName.Text = " File: " & fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
 	Else
@@ -259,16 +255,16 @@ Public Sub Update_Printer_Temps
 	'--- temps, only update the label if it has changed,
 	'--- the Autosize label ctrl flickers in some cases
 	
-	mTmpTemps = IIf(oc.tool1Target = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.tool1Target)
-	If lblToolTemp.Text <> mTmpTemps Then
-		lblToolTemp.Text = mTmpTemps
-		lblToolTemp.BaseLabel.Font = xui.CreateDefaultFont(NumberFormat2(lblToolTemp.BaseLabel.TextSize / guiHelpers.gFscale,1,0,0,False) - 3)
+	If lblBedTemp1.Visible = False Then Return
+	
+	mTmpTemps = IIf(oc.Tool1Actual = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.Tool1Actual)
+	If lblToolTemp1.Text <> mTmpTemps Then
+		lblToolTemp1.Text = mTmpTemps
 	End If
 	
-	mTmpTemps = IIf(oc.BedTarget = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.BedTarget)
-	If lblBedTemp.Text <> mTmpTemps Then
-		lblBedTemp.Text = mTmpTemps
-		lblBedTemp.BaseLabel.Font = xui.CreateDefaultFont(NumberFormat2(lblBedTemp.BaseLabel.TextSize / guiHelpers.gFscale,1,0,0,False) - 3)
+	mTmpTemps = IIf(oc.BedActual = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.BedActual)
+	If lblBedTemp1.Text <> mTmpTemps Then
+		lblBedTemp1.Text = mTmpTemps
 	End If
 	
 End Sub
@@ -303,6 +299,9 @@ Private Sub btnAction_Click
 				
 				guiHelpers.Show_toast("Starting Print...",2000)
 				mMainObj.oMasterController.cn.PostRequest(oc.cCMD_PRINT)
+				If ivPreviewLG.mBase.Visible = True Then
+					ivPreviewLG_Click '--- show temp panel
+				End If
 
 			End If
 			
@@ -329,21 +328,6 @@ Private Sub btnAction_Click
 	
 End Sub
 
-'-----------------------------------------
-Private Sub CircularProgressBar1_Click
-	Return '--- not used anymore - V1.2.5 --- will be removed later
-'	If oc.JobFileName = "" Then
-'		Return '--- no file loaded
-'	End If
-'	LoadThumbNail
-'	CircularProgressBar1.Visible = False
-'	ivPreview.mBase.Visible = True
-End Sub
-'Private Sub ivPreview_Click
-'	CircularProgressBar1.Visible = True
-'	ivPreview.mBase.Visible = False
-'End Sub
-'-----------------------------------------
 
 Public Sub LoadThumbNail
 	
@@ -356,7 +340,7 @@ Public Sub LoadThumbNail
 	currentFileInfo =  mMainObj.oMasterController.gMapOctoFilesList.Get(oc.JobFileName)
 	
 	If currentFileInfo = Null Or currentFileInfo.myThumbnail_filename_disk = "" Then
-		SetNoThumbnail
+		ivPreviewLG.Load(File.DirAssets,gblConst.NO_THUMBNAIL)
 		Return
 	End If
 
@@ -374,7 +358,7 @@ Public Sub LoadThumbNail
 			'Sleep(2200)
 		
 			If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
-				SetNoThumbnail
+				ivPreviewLG.Load(File.DirAssets,gblConst.NO_THUMBNAIL)
 			Else
 				'ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
 				ivPreviewLG.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
@@ -392,10 +376,25 @@ Public Sub LoadThumbNail
 	
 End Sub
 
-Private Sub SetNoThumbnail
-	ivPreview.Load(File.DirAssets,gblConst.NO_THUMBNAIL)
-	ivPreviewLG.Load(File.DirAssets,gblConst.NO_THUMBNAIL)
+
+Private Sub ivPreviewLG_Click
+	
+	'--- show thumbnail or heat info
+	If ivPreviewLG.mBase.Visible = True Then
+		ivPreviewLG.mBase.Visible = False
+		pnlBGbed.Visible = True
+		pnlBGTool.Visible = True
+		Update_Printer_Temps
+	Else
+		ivPreviewLG.mBase.Visible = True
+		pnlBGbed.Visible = False
+		pnlBGTool.Visible = False
+	End If
+	
 End Sub
-
-
-
+Private Sub HeaterView_Click
+	ivPreviewLG_Click
+End Sub
+Private Sub HeaterViewLbl_Click
+	ivPreviewLG_Click
+End Sub

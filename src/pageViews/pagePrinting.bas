@@ -355,7 +355,7 @@ Public Sub LoadThumbNail
 	Dim currentFileInfo As tOctoFileInfo
 	currentFileInfo =  mMainObj.oMasterController.gMapOctoFilesList.Get(oc.JobFileName)
 	
-	If currentFileInfo.myThumbnail_filename_disk = "" Then
+	If currentFileInfo = Null Or currentFileInfo.myThumbnail_filename_disk = "" Then
 		SetNoThumbnail
 		Return
 	End If

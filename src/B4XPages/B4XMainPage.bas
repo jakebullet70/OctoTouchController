@@ -42,9 +42,9 @@ Sub Class_Globals
 	Private mToastTxtSize As Int
 	
 	'--- gesture crap --------------------------------------
-	Private GD As GestureDetector
-	Private FilterMoveEvents As Boolean 'ignore
-	Private DiscardOtherGestures As Boolean = True 'ignore
+'	Private GD As GestureDetector
+'	Private FilterMoveEvents As Boolean 'ignore
+'	Private DiscardOtherGestures As Boolean = True 'ignore
 	'-------------------------------------------------------
 
 	Private mapMasterPreHeaterMenu As Map
@@ -107,7 +107,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	BuildGUI
 	
 	'--- gesture crap
-	GD.SetOnGestureListener(pnlMenu, "Gesture")
+	'GD.SetOnGestureListener(pnlMenu, "Gesture")
 	
 	TryOctoConnection
 	

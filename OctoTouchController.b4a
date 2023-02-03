@@ -79,7 +79,6 @@ Library18=reflection
 Library19=runtimepermissions
 Library2=audio
 Library20=xui views
-Library21=gesturedetector
 Library3=b4xcollections
 Library4=b4xpages
 Library5=b4xpreferencesdialog
@@ -153,7 +152,7 @@ Module7=|relative|src\custom_controls\CircularProgressBar
 Module8=|relative|src\generic\clrTheme
 Module9=|relative|src\generic\config
 NumberOfFiles=33
-NumberOfLibraries=21
+NumberOfLibraries=20
 NumberOfModules=64
 Version=11.8
 @EndOfDesignText@

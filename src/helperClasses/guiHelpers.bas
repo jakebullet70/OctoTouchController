@@ -166,6 +166,7 @@ Public Sub SkinButton(obj() As Button)
 		btn.Background = sld1
 	Next
 End Sub
+
 Private Sub SetColorTextStateList(Btn As Button,Pressed As Int,Enabled As Int,Disabled As Int)
 	'--- sets the text color
 	Dim States(3,1) As Int
@@ -179,7 +180,6 @@ Private Sub SetColorTextStateList(Btn As Button,Pressed As Int,Enabled As Int,Di
 	CSL.InitializeNewInstance("android.content.res.ColorStateList",Array As Object(States,Color))
 	Dim B1 As JavaObject = Btn
 	B1.RunMethod("setTextColor",Array As Object(CSL))
-
 End Sub
 Private Sub ChangeColorVisible(clr As Int) As Int
 	Dim argb() As Int = clrTheme.Int2ARGB(clr)
@@ -268,5 +268,53 @@ Public Sub SetCBDrawable(CB As CheckBox,BoxColor As Int,BoxWidth As Int, _
 	Dim JO As JavaObject = CB
 	JO.RunMethod("setButtonDrawable",Array As Object(SLD))
 End Sub
+
+'-----------------------------------------------------------------------------
+
+Public Sub ResizeText(value As Object, lbl As B4XView) As Float
+	''Sleep(0)
+	lbl.Text = value
+	Dim multipleLines As Boolean = lbl.Text.Contains(CRLF)
+	Dim size As Float
+	For size = 5 To 72
+		If CheckSize(size, multipleLines,lbl) Then Exit
+	Next
+	size = size - 0.5
+	If CheckSize(size, multipleLines,lbl) Then size = size - 0.5
+	'Sleep(0)
+	lbl.TextSize = size
+	Return size
+	
+End Sub
+
+'returns true if the size is too large
+Private Sub CheckSize(size As Float, multipleLines As Boolean, lbl As B4XView) As Boolean
+	lbl.TextSize = size
+	If multipleLines Then
+		Dim su As StringUtils
+		Return su.MeasureMultilineTextHeight(lbl,lbl.Text) > lbl.Height
+	Else
+		Dim stuti As StringUtils
+		Return MeasureTextWidth(lbl.Text,lbl.Font) > lbl.Width Or stuti.MeasureMultilineTextHeight(lbl,lbl.Text) > lbl.Height
+	End If
+	
+End Sub
+Private Sub MeasureTextWidth(Text As String, Font1 As B4XFont) As Int
+	'https://www.b4x.com/android/forum/threads/b4x-xui-add-measuretextwidth-and-measuretextheight-to-b4xcanvas.91865/#content
+	Private bmp As Bitmap
+	bmp.InitializeMutable(1, 1)'ignore
+	Private cvs As Canvas
+	cvs.Initialize2(bmp)
+	Return cvs.MeasureStringWidth(Text, Font1.ToNativeFont, Font1.Size)
+End Sub
+'-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
 
 

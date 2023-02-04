@@ -65,10 +65,6 @@ public Sub Set_focus()
 	UpdateFileName
 	DisplayedFileName = oc.JobFileName
 	
-	'If ivPreview.mBase.Visible = True Then '--- V1.2.5
-	'LoadThumbNail
-	'End If
-	
 End Sub
 
 public Sub Lost_focus()
@@ -169,19 +165,17 @@ Public Sub Update_Printer_Btns
 	End If
 	
 	'--- enable / disable printing buttons depending on printing status
-	If oc.isPrinting = True Then
+	If oc.isPrinting Then
 		
 		'--- we are printing or heating
 		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel,btnPause),True)
-		'ShowThumbnailWhilePrinting(True)
+		guiHelpers.EnableDisableBtns2(Array As Button(btnPrint),False)
 	
 	else if oc.isPrinting = False And oc.isPaused2 = True Then
 		
 		'--- job is paused
 		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel,btnPrint),True)
-'		If ivPreviewLG.mBase.Visible = False Then
-'			ShowThumbnailWhilePrinting(True)
-'		End If
+		
 	Else
 		
 		'--- not printing anything
@@ -360,11 +354,9 @@ Public Sub LoadThumbNail
 			If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
 				ivPreviewLG.Load(File.DirAssets,gblConst.NO_THUMBNAIL)
 			Else
-				'ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
 				ivPreviewLG.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
 			End If
 		Else
-			'ivPreview.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
 			ivPreviewLG.Load(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk)
 		End If
 	Catch
@@ -397,4 +389,10 @@ Private Sub HeaterView_Click
 End Sub
 Private Sub HeaterViewLbl_Click
 	ivPreviewLG_Click
+End Sub
+Public Sub Printing_FromFilesPage
+	'--- called when starting a print from files page
+	If ivPreviewLG.mBase.Visible = True Then
+		ivPreviewLG_Click
+	End If
 End Sub

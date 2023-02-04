@@ -175,6 +175,7 @@ Public Sub Update_Printer_Btns
 		
 		'--- job is paused
 		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel,btnPrint),True)
+		guiHelpers.EnableDisableBtns2(Array As Button(btnPause),False)
 		
 	Else
 		

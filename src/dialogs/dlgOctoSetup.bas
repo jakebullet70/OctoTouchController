@@ -209,7 +209,7 @@ Public Sub connect_Complete (result As Object, success As Object)
 		guiHelpers.Show_toast("Connection OK",3000)
 	Else
 		
-		Dim w As Float = IIf(guiHelpers.gIsLandScape,500dip,390dip)
+		Dim w As Float = IIf(guiHelpers.gIsLandScape,500dip,90%x)
 
 		Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",w, 220dip,False)
 		Dim gui As guiMsgs  : gui.Initialize

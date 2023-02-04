@@ -147,12 +147,12 @@ Private Sub BuildGUI
 	lblSort.Text = Chr(0xF160) : Sleep(0)
 	lblSort.BaseLabel.TextSize = lblSort.BaseLabel.TextSize - 8
 	
-	If guiHelpers.gIsLandScape = False And guiHelpers.gScreenSizeAprox < 5.2 Then
-		btnLoadAndPrint.Text = "Print"
-	Else
-		btnLoadAndPrint.Text = "Load" & CRLF & "Print"
-	End If
-	
+'	If guiHelpers.gIsLandScape = False And guiHelpers.gScreenSizeAprox < 5.2 Then
+'		btnLoadAndPrint.Text = "Print"
+'	Else
+'		btnLoadAndPrint.Text = "Load" & CRLF & "Print"
+'	End If
+	btnLoadAndPrint.Text = "Print"
 	btnLoad.Text = "Load"
 	btnDelete.Text = "Delete"
 	
@@ -201,6 +201,7 @@ Private Sub btnAction_Click
 			CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_PRINTING)
 			Sleep(10)
 			guiHelpers.Show_toast2("Starting Print",2000)
+			Starter.tmrTimerCallSub.CallSubDelayedPlus(mMainObj.oPagePrinting,"Printing_FromFilesPage",500)
 			
 	End Select
 		

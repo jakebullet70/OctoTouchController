@@ -133,6 +133,9 @@ Private Sub BuildGUI
 	cs.Initialize
 	btnCancel.Text = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF04D)).Append(CRLF). _
 												Typeface(Typeface.DEFAULT).Append("Cancel").PopAll												
+'	cs.Initialize
+'	guiHelpers.ResizeText(cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF04C)).Append(CRLF). _
+'												Typeface(Typeface.DEFAULT).Append("Pause").PopAll,btnPause)
 #end region											
 End Sub
 

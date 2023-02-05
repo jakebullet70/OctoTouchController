@@ -147,22 +147,20 @@ Private Sub BuildGUI
 	lblSort.Text = Chr(0xF160) : Sleep(0)
 	lblSort.BaseLabel.TextSize = lblSort.BaseLabel.TextSize - 8
 	
-'	If guiHelpers.gIsLandScape = False And guiHelpers.gScreenSizeAprox < 5.2 Then
-'		btnLoadAndPrint.Text = "Print"
-'	Else
-'		btnLoadAndPrint.Text = "Load" & CRLF & "Print"
-'	End If
+	'guiHelpers.ResizeText("Delete",btnDelete)
 	btnLoadAndPrint.Text = "Print"
 	btnLoad.Text = "Load"
 	btnDelete.Text = "Delete"
 	
 	guiHelpers.SetTextColor(Array As B4XView(lblFileName.BaseLabel,lblHeaderFileName,lblSort.BaseLabel))
 	guiHelpers.SkinButton(Array As Button(btnLoadAndPrint,btnLoad,btnDelete))
+	If guiHelpers.gScreenSizeAprox > 7.5 Then
+		btnDelete.TextSize = 52
+	End If
 	guiHelpers.SetTextSize(Array As Button(btnLoadAndPrint,btnLoad,btnDelete), _
 										NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
 	
 End Sub
-
 
 Private Sub btnAction_Click
 	

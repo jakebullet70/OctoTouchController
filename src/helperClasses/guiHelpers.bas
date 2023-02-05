@@ -271,7 +271,7 @@ End Sub
 
 '-----------------------------------------------------------------------------
 
-Public Sub ResizeText(value As Object, lbl As B4XView) As Float
+Public Sub ResizeText(value As Object, lbl As B4XView) 
 	''Sleep(0)
 	lbl.Text = value
 	Dim multipleLines As Boolean = lbl.Text.Contains(CRLF)
@@ -283,7 +283,7 @@ Public Sub ResizeText(value As Object, lbl As B4XView) As Float
 	If CheckSize(size, multipleLines,lbl) Then size = size - 0.5
 	'Sleep(0)
 	lbl.TextSize = size
-	Return size
+	'Return size
 	
 End Sub
 

@@ -26,7 +26,7 @@ Built in filament loading - unloading wizard
 Support for Sonoff power device without Octoprint plugin  
 Colors themes to match your printers look  
 View / select and print files right on the touch screen  
-Theme builder  
+Theme color builder  
   
 
 ### Supported Octoprint Plugins

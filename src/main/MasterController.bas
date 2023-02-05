@@ -266,8 +266,7 @@ Private Sub GetConnectionPrinterStatus
 End Sub
 
 
-
-public Sub GetAllOctoFilesInfo
+Public Sub GetAllOctoFilesInfo
 	
 	If mGotFilesListFLAG_IsBusy = True Then
 		If config.logFILE_EVENTS Then logMe.Logit("mGotFilesListFLAG_IsBusy = True",mModule)

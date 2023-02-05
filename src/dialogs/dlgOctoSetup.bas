@@ -59,7 +59,7 @@ Public Sub Show(firstRun As Boolean)
 	
 	If guiHelpers.gScreenSizeAprox < 8 Then
 		w = 80%x
-		h = IIf(guiHelpers.gIsLandScape,74%y,65%y)
+		h = IIf(guiHelpers.gIsLandScape,74%y,62%y)
 	Else
 		w = 74%x : h = 70%y
 	End If

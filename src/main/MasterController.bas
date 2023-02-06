@@ -170,8 +170,17 @@ Private Sub GetPrinterProfileInfo
 		oc.RestPrinterProfileVars
 		
 	End If
-	
+	'GetSysCmds  TODO!!!!   Octo Sys commands
 End Sub
+
+'Private Sub GetSysCmds'ignore
+'	Dim rs As ResumableSub =  oCN.SendRequestGetInfo("/api/system/commands/core")
+'	
+'	Wait For(rs) Complete (Result As String)
+'	If Result.Length <> 0 Then
+'		Log(Result)	
+'	End If
+'End Sub
 
 
 

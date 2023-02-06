@@ -193,18 +193,10 @@ Public Sub Update_Printer_Btns
 End Sub
 
 Private Sub ShowThumbnailWhilePrinting(show As Boolean) 'ignore
-	'--- changed... not used anymore - V1.2.5
-	'--- we always show the thumbnail, lets see how the users feel about it...
-	'--- will be removed later
-	show = True
-	'------------------------------------
 	ivPreviewLG.mBase.Visible = show
 	pnlBGbed.Visible = Not (show)
 	pnlBGTool.Visible = Not (show)
-	If show = True Then
-		LoadThumbNail
-	End If
-	
+	LoadThumbNail
 End Sub
 
 Public Sub Update_Printer_Stats

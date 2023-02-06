@@ -117,8 +117,7 @@ Private Sub BuildGUI
 	lblPrintStats3.TextSize = lblPrintStats2.TextSize
 	
 	'--- will show thumbnail on startup
-	ivPreviewLG.mBase.Visible = False
-	ivPreviewLG_Click
+	ivPreviewLG.mBase.Visible = False : 	ivPreviewLG_Click
 	
 #region "PRINTER BTNS TXT"	
 	Dim cs As CSBuilder 
@@ -188,7 +187,6 @@ Public Sub Update_Printer_Btns
 		btnPrint.Enabled = oc.isFileLoaded 
 		guiHelpers.EnableDisableBtns2(Array As Button(btnPrint),oc.isFileLoaded)
 		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel,btnPause),False)
-		'ShowThumbnailWhilePrinting(False)
 		
 	End If
 	
@@ -285,7 +283,7 @@ Private Sub btnAction_Click
 				guiHelpers.Show_toast("Starting Print...",2000)
 				mMainObj.oMasterController.cn.PostRequest(oc.cCMD_PRINT)
 				If ivPreviewLG.mBase.Visible = True Then
-					ivPreviewLG_Click '--- show temp panel
+					ivPreviewLG_Click '--- show tempeture panel
 				End If
 
 			End If

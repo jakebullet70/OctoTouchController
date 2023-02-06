@@ -116,7 +116,9 @@ Private Sub BuildGUI
 	lblPrintStats2.TextSize = lblPrintStatsTMP.BaseLabel.Font.Size
 	lblPrintStats3.TextSize = lblPrintStats2.TextSize
 	
-	ShowThumbnailWhilePrinting(True) '--- we always do this now, V1.2.5
+	'--- will show thumbnail on startup
+	ivPreviewLG.mBase.Visible = False
+	ivPreviewLG_Click
 	
 #region "PRINTER BTNS TXT"	
 	Dim cs As CSBuilder 
@@ -190,13 +192,6 @@ Public Sub Update_Printer_Btns
 		
 	End If
 	
-End Sub
-
-Private Sub ShowThumbnailWhilePrinting(show As Boolean) 'ignore
-	ivPreviewLG.mBase.Visible = show
-	pnlBGbed.Visible = Not (show)
-	pnlBGTool.Visible = Not (show)
-	LoadThumbNail
 End Sub
 
 Public Sub Update_Printer_Stats

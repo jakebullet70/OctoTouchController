@@ -41,8 +41,6 @@ Sub Class_Globals
 	Private SortAscDesc As Boolean = True
 	Private	LastSort As String
 	
-	
-	
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
@@ -146,6 +144,8 @@ Private Sub BuildGUI
 	
 	lblSort.Text = Chr(0xF160) : Sleep(0)
 	lblSort.BaseLabel.TextSize = lblSort.BaseLabel.TextSize - 8
+
+	
 	
 	'guiHelpers.ResizeText("Delete",btnDelete)
 	btnLoadAndPrint.Text = "Print"
@@ -562,16 +562,20 @@ Private Sub cboSort_SelectedIndexChanged (Index As Int)
 	Else
 		SortAscDesc = True
 	End If
-	lblSort.Text = IIf(SortAscDesc,Chr(0xF160),Chr(0xF161))
+	
+	lblSort.Text = IIf(SortAscDesc,Chr(0xF160),Chr(0xF161)) : Sleep(0)
+	lblSort.BaseLabel.TextSize = lblSort.BaseLabel.TextSize - 8
+	
 	guiHelpers.Show_toast("Sorting file list - " & IIf(SortAscDesc,"Ascending","Descending") ,1800)
 	Build_ListViewFileList
 	Show1stFile
 	LastSort = cboSort.SelectedItem
-	
 End Sub
 
 Private Sub lblSort_Click
+	Log("sort fired")
 	cboSort_SelectedIndexChanged(cboSort.SelectedIndex)
 End Sub
 #end region
+
 

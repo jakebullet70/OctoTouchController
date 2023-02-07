@@ -210,56 +210,40 @@ Public Sub Build_ListViewFileList()
 	
 	Dim inSub As String = "Build_ListViewFileList"
 	
-	Try ' DEBUG try-catch
+	clvFiles.Clear
+	If rsFiles.IsInitialized Then rsFiles.Close
+	Starter.db.BuildTable
+	Starter.db.SeedTable(mMainObj.oMasterController.gMapOctoFilesList)
 
-		clvFiles.Clear
-		If rsFiles.IsInitialized Then rsFiles.Close
-		Starter.db.BuildTable
-		Starter.db.SeedTable(mMainObj.oMasterController.gMapOctoFilesList)
+	CSelections.Initialize(clvFiles)
+	CSelections.Mode = CSelections.MODE_SINGLE_ITEM_PERMANENT
 
-		CSelections.Initialize(clvFiles)
-		CSelections.Mode = CSelections.MODE_SINGLE_ITEM_PERMANENT
-	Catch
-		logMe.LogIt2("Build_ListViewFileList1: " & LastException,mModule,inSub)
-	End Try
+	Dim ndx As Int = 0
+	Dim fname As String
+	
+	If rsFiles.IsInitialized Then rsFiles.Close
+	rsFiles = Starter.db.sql.ExecQuery( _
+					$"SELECT * FROM files ORDER BY ${GetFileSortOrder} ${IIf(SortAscDesc,"ASC","DESC")}"$)
+	
+	Do While rsFiles.NextRow
+		fname = rsFiles.GetString("file_name")
+		Dim o As tOctoFileInfo  = mMainObj.oMasterController.gMapOctoFilesList.Get(fname)
+		clvFiles.InsertAt(ndx, CreateListItem(o, clvFiles.AsView.Width, 60dip), fname)
+		ndx = ndx + 1
+	Loop
+	
+	clvFiles.PressedColor = DimColor(clrTheme.txtNormal) 
+	CSelections.SelectionColor = clvFiles.PressedColor
+	clvFiles.DefaultTextColor  = clrTheme.txtNormal
+	clvFiles.DefaultTextBackgroundColor = xui.Color_Transparent
 
-	Try ' DEBUG try-catch
-		Dim ndx As Int = 0
-		Dim fname As String
-		
-		If rsFiles.IsInitialized Then rsFiles.Close
-		rsFiles = Starter.db.sql.ExecQuery( _
-						$"SELECT * FROM files ORDER BY ${GetFileSortOrder} ${IIf(SortAscDesc,"ASC","DESC")}"$)
-		
-		Do While rsFiles.NextRow
-			fname = rsFiles.GetString("file_name")
-			Dim o As tOctoFileInfo  = mMainObj.oMasterController.gMapOctoFilesList.Get(fname)
-			clvFiles.InsertAt(ndx, CreateListItem(o, clvFiles.AsView.Width, 60dip), fname)
-			ndx = ndx + 1
-		Loop
-		
-	Catch
-		logMe.LogIt2("Build_ListViewFileList 2:" & LastException,mModule,inSub)
-	End Try
-	
-	
-	Try ' DEBUG try-catch
-		clvFiles.PressedColor = DimColor(clrTheme.txtNormal) 
-		CSelections.SelectionColor = clvFiles.PressedColor
-		clvFiles.DefaultTextColor  = clrTheme.txtNormal
-		clvFiles.DefaultTextBackgroundColor = xui.Color_Transparent
-	
-		If clvFiles.Size > 0 Then
-			'--- if we have data select the 1st one
-			CSelections.ItemClicked(0)
-			clvLastIndexClicked = 0
-		Else
-			clvLastIndexClicked = NO_SELECTION
-		End If
-	
-	Catch
-		logMe.LogIt2("Build_ListViewFileList 3: " & LastException,mModule,inSub)
-	End Try
+	If clvFiles.Size > 0 Then
+		'--- if we have data select the 1st one
+		CSelections.ItemClicked(0)
+		clvLastIndexClicked = 0
+	Else
+		clvLastIndexClicked = NO_SELECTION
+	End If
 	
 	lblBusy.Visible = False
 	

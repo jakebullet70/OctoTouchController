@@ -36,8 +36,7 @@ Sub Class_Globals
 	Private lblFileName As AutoTextSizeLabel, lblHeaderFileName As B4XView
 	Private lblBusy As B4XView
 	
-	Private lblSort As AutoTextSizeLabel
-	Private cboSort As B4XComboBox, rsFiles As ResultSet
+	Private lblSort2 As Label, cboSort As B4XComboBox, rsFiles As ResultSet
 	Private SortAscDesc As Boolean = True
 	Private	LastSort As String
 	
@@ -123,6 +122,9 @@ End Sub
 Private Sub BuildGUI
 	
 	guiHelpers.ReSkinB4XComboBox(Array As B4XComboBox(cboSort))
+	guiHelpers.SetTextColor(Array As B4XView(lblFileName.BaseLabel,lblHeaderFileName,lblSort2,lblBusy))
+	guiHelpers.ResizeText(Chr(0xF160),lblSort2) : lblSort2.TextSize = lblSort2.TextSize - 6 '--- make text a little smaller
+	
 	cboSort.setitems(Array As String("File Name","Date Added"))
 	cboSort.SelectedIndex = 0
 	cboSort.cmbBox.Prompt = "Sort Order"
@@ -130,7 +132,6 @@ Private Sub BuildGUI
 	
 	lblBusy.Visible = True
 	lblBusy.SetColorAndBorder(clrTheme.BackgroundHeader,1dip,clrTheme.txtNormal,8dip)
-	lblBusy.TextColor = clrTheme.txtNormal
 	
 	pnlPortraitDivide.SetColorAndBorder(clrTheme.BackgroundHeader,2dip,clrTheme.BackgroundHeader,8dip)
 	
@@ -142,17 +143,10 @@ Private Sub BuildGUI
 		clvFiles_ItemClick(0,Null)
 	End If
 	
-	lblSort.Text = Chr(0xF160) : Sleep(0)
-	lblSort.BaseLabel.TextSize = lblSort.BaseLabel.TextSize - 8
-
-	
-	
-	'guiHelpers.ResizeText("Delete",btnDelete)
 	btnLoadAndPrint.Text = "Print"
 	btnLoad.Text = "Load"
 	btnDelete.Text = "Delete"
-	
-	guiHelpers.SetTextColor(Array As B4XView(lblFileName.BaseLabel,lblHeaderFileName,lblSort.BaseLabel))
+
 	guiHelpers.SkinButton(Array As Button(btnLoadAndPrint,btnLoad,btnDelete))
 	If guiHelpers.gScreenSizeAprox > 7.5 Then
 		btnDelete.TextSize = 52
@@ -562,9 +556,11 @@ Private Sub cboSort_SelectedIndexChanged (Index As Int)
 	Else
 		SortAscDesc = True
 	End If
+'	
+'	lblSort.Text = IIf(SortAscDesc,Chr(0xF160),Chr(0xF161)) : Sleep(0)
+'	lblSort.BaseLabel.TextSize = lblSort.BaseLabel.TextSize - 8
 	
-	lblSort.Text = IIf(SortAscDesc,Chr(0xF160),Chr(0xF161)) : Sleep(0)
-	lblSort.BaseLabel.TextSize = lblSort.BaseLabel.TextSize - 8
+	lblSort2.Text = IIf(SortAscDesc,Chr(0xF160),Chr(0xF161)) : Sleep(0)
 	
 	guiHelpers.Show_toast("Sorting file list - " & IIf(SortAscDesc,"Ascending","Descending") ,1800)
 	Build_ListViewFileList
@@ -579,3 +575,9 @@ End Sub
 #end region
 
 
+
+
+Private Sub lblSort2_Click
+	Log("sort2 fired")
+	cboSort_SelectedIndexChanged(cboSort.SelectedIndex)
+End Sub

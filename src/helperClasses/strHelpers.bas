@@ -76,3 +76,34 @@ End Sub
 
 
 
+' Inserts a CRLF at every N'th postition                                                                                        
+' txt     = string of charactors                                                                                                
+' lineLen = what position to insert the CRLF                                                                                    
+Public Sub InsertCRLF(txt As String, lineLen As Int) As String
+	Dim ss As StringBuilder : ss.Initialize
+	Dim pointer As Int = 0
+	Do While pointer < txt.Length
+		If pointer + lineLen > txt.Length Then
+			ss.Append(txt.SubString2(pointer,txt.Length))
+		Else
+			ss.Append(txt.SubString2(pointer,pointer+lineLen)).Append(CRLF).Append(" ")
+		End If
+		pointer = pointer + lineLen
+	Loop
+	Return ss.ToString
+End Sub
+
+
+Public Sub StripHTML(txt As String) As String
+	Dim parts() As String = Regex.Split(">",txt)
+	txt = ""
+	For x = 0 To parts.Length -1
+		If parts(x).IndexOf("<")>-1 Then
+			txt = txt & parts(x).SubString2(0,parts(x).IndexOf("<"))
+		Else
+			txt = txt & parts(x)
+		End If
+	Next
+	Return txt
+End Sub
+

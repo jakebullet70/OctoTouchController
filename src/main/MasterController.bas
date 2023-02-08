@@ -170,17 +170,21 @@ Private Sub GetPrinterProfileInfo
 		oc.RestPrinterProfileVars
 		
 	End If
-	'GetSysCmds  TODO!!!!   Octo Sys commands
+	
 End Sub
 
-'Private Sub GetSysCmds'ignore
-'	Dim rs As ResumableSub =  oCN.SendRequestGetInfo("/api/system/commands/core")
-'	
-'	Wait For(rs) Complete (Result As String)
-'	If Result.Length <> 0 Then
-'		Log(Result)	
-'	End If
-'End Sub
+
+Public Sub GetSysCmds() As ResumableSub 'ignore
+
+	Dim rs As ResumableSub =  oCN.SendRequestGetInfo("/api/system/commands/core")
+	'[{"action":"shutdown","confirm":"<strong>You are about to shutdown the system.</strong></p><p>This action may disrupt any ongoing print jobs (depending on your printer's controller and general setup that might also apply to prints run directly from your printer's internal storage).","name":"Shutdown system","resource":"http://192.168.1.207/api/system/commands/core/shutdown","source":"core"},{"action":"reboot","confirm":"<strong>You are about to reboot the system.</strong></p><p>This action may disrupt any ongoing print jobs (depending on your printer's controller and general setup that might also apply to prints run directly from your printer's internal storage).","name":"Reboot system","resource":"http://192.168.1.207/api/system/commands/core/reboot","source":"core"},{"action":"restart","confirm":"<strong>You are about to restart the OctoPrint server.</strong></p><p>This action may disrupt any ongoing print jobs (depending on your printer's controller and general setup that might also apply to prints run directly from your printer's internal storage).","name":"Restart OctoPrint","resource":"http://192.168.1.207/api/system/commands/core/restart","source":"core"},{"action":"restart_safe","confirm":"<strong>You are about to restart the OctoPrint server in safe mode.</strong></p><p>This action may disrupt any ongoing print jobs (depending on your printer's controller and general setup that might also apply to prints run directly from your printer's internal storage).","name":"Restart OctoPrint in safe mode","resource":"http://192.168.1.207/api/system/commands/core/restart_safe","source":"core"}]
+	Wait For(rs) Complete (Result As String)
+	If Result.Length <> 0 Then
+		Return Result
+	End If
+	Return ""
+	
+End Sub
 
 
 

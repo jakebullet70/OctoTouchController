@@ -42,6 +42,8 @@ Private Sub BuildGUI
 	guiHelpers.SetTextSize(Array As Button(btnUnload,btnLoad,btnPark,btnHeat,btnStuff), _
 							NumberFormat2(btnStuff.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
 	
+	btnStuff.TextSize = btnStuff.TextSize - 2 '--- 
+	
 	guiHelpers.SkinButton_Pugin(Array As Button(btnBack))
 	btnBack.BringToFront
 	

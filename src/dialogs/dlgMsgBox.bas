@@ -106,6 +106,8 @@ Private Sub ThemeInputDialogBtnsResize2(dlg As B4XDialog, w As Float)
 			btnCancel.Font = xui.CreateDefaultFont(NumberFormat2(btnCancel.Font.Size / guiHelpers.gFscale,1,0,0,False))
 			btnCancel.Width = btnCancel.Width + 20dip
 			btnCancel.Left = w - btnCancel.Width - 5dip
+			btnCancel.Height = btnCancel.Height - 4dip '--- resize height just a hair
+			btnCancel.Top = btnCancel.Top + 4dip
 			btnCancel.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
 		End If
 	Catch
@@ -122,6 +124,8 @@ Private Sub ThemeInputDialogBtnsResize2(dlg As B4XDialog, w As Float)
 			btnYes.Font = xui.CreateDefaultFont(NumberFormat2(btnYes.Font.Size / guiHelpers.gFscale,1,0,0,False))
 			btnYes.Width = btnYes.Width + 20dip
 			btnYes.Left = w - (btnYes.width * numOfBtns) - (5dip  * numOfBtns)
+			btnYes.Height = btnYes.Height - 4dip '--- resize height just a hair
+			btnYes.Top = btnYes.Top + 4dip
 			btnYes.SetColorAndBorder(xui.Color_Transparent,2dip,clrTheme.txtNormal,8dip)
 		End If
 	Catch
@@ -137,6 +141,8 @@ Private Sub ThemeInputDialogBtnsResize2(dlg As B4XDialog, w As Float)
 			numOfBtns = numOfBtns + 1
 			btnNo.Font = xui.CreateDefaultFont(NumberFormat2(btnNo.Font.Size / guiHelpers.gFscale,1,0,0,False))
 			btnNo.Width = btnNo.Width + 20dip
+			btnNo.Height = btnNo.Height - 4dip '--- resize height just a hair
+			btnNo.Top = btnNo.Top + 4dip
 			If mPutNegativeBtn2Left Then
 				btnNo.Left = 10dip
 			Else

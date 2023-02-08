@@ -91,7 +91,7 @@ Private Sub btnCtrl_Click
 	Select Case True
 		Case o.Text.Contains("estart") '--- restart
 			If oOctoCmds.mapRestart.Size <> 0 Then 
-				Wait For (AskThem(oOctoCmds.mapRestart.Get("confirm"))) Complete (ret As Int)
+				Wait For (AskThem(oOctoCmds.mapRestart.Get("confirm"),"RESTART")) Complete (ret As Int)
 				If ret <> xui.DialogResponse_Cancel Then 
 					
 				End If
@@ -107,20 +107,19 @@ End Sub
 
 	
 	
-Private Sub AskThem(txt As String) As ResumableSub
-	Log(txt)	
+Private Sub AskThem(txt As String,btnText As String) As ResumableSub
+	Dim formatedTxt As String
 	Dim mb As dlgMsgBox
 	Dim w,h As Float
 	If guiHelpers.gIsLandScape Then
-		w = 80%x
-		h = 80%y
+		w = 80%x : h = 80%y
+		formatedTxt = strHelpers.InsertCRLF(txt,90)
 	Else
-		w = 90%x
-		h = 50%y
+		w = 90%x : h = 60%y
+		formatedTxt = strHelpers.InsertCRLF(txt,70)
 	End If
 	mb.Initialize(mMainObj.Root,"Question", w, h,False)
-	Wait For (mb.Show(txt, _
-					gblConst.MB_ICON_WARNING,"","OK","CANCEL")) Complete (res As Int)
+	Wait For (mb.Show(formatedTxt, gblConst.MB_ICON_WARNING,"",btnText,"CANCEL")) Complete (res As Int)
 	Return res
 	
 End Sub

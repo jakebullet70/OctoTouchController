@@ -23,7 +23,6 @@ Sub Class_Globals
 	
 End Sub
 
-'--- Dual class, GUI and command
 
 Public Sub Initialize(mobj As B4XMainPage,cn As HttpOctoRestAPI)
 	mMainObj = mobj
@@ -32,6 +31,16 @@ End Sub
 
 
 Public Sub Show
+	
+	'--- show info about setting octoprint plugins first TODO, same code as in dlgPsuSetup
+	If Starter.kvs.GetDefault("sysWarning",False).As(Boolean) = False Then
+		Dim mb As dlgMsgBox
+		mb.Initialize(mMainObj.root,"Information",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip),260dip,False)
+		mb.SetAsOptionalMsgBox("sysWarning")
+		Dim gui As guiMsgs : gui.Initialize
+		Wait For (mb.Show(gui.GetOctoSysCmdsWarningTxt, _
+		gblConst.MB_ICON_INFO,"","","OK")) Complete (Result As Int)
+	End If
 	
 	'--- init
 	mDialog.Initialize(mMainObj.Root)
@@ -76,7 +85,6 @@ Private Sub BuildGUI
 	cs.Initialize
 	btn3.Text  = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(2dip).Append(Chr(0xF1E6)). _
 											 Typeface(Typeface.DEFAULT).Append("  Shutdown System").PopAll
-
 	
 '	guiHelpers.SetTextSize(Array As Button(btn1,btn2,btn3), _
 '					NumberFormat2(btn1.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
@@ -88,16 +96,32 @@ Private Sub btnCtrl_Click
 	
 	Dim o As B4XView : o = Sender
 	Dim ret As Int
+	
 	Select Case True
 		Case o.Text.Contains("estart") '--- restart
 			If oOctoCmds.mapRestart.Size <> 0 Then 
 				Wait For (AskThem(oOctoCmds.mapRestart.Get("confirm"),"RESTART")) Complete (ret As Int)
 				If ret <> xui.DialogResponse_Cancel Then 
-					
+					oOctoCmds.Restart
 				End If
 			End If
+			
 		Case o.Text.Contains("hutdo") 	'--- shutdown
+			If oOctoCmds.mapRestart.Size <> 0 Then
+				Wait For (AskThem(oOctoCmds.mapShutdown.Get("confirm"),"SHUTDOWN")) Complete (ret As Int)
+				If ret <> xui.DialogResponse_Cancel Then
+					oOctoCmds.Shutdown
+				End If
+			End If
+			
 		Case o.Text.Contains("eboot") '--- reboot
+			If oOctoCmds.mapRestart.Size <> 0 Then
+				Wait For (AskThem(oOctoCmds.mapReboot.Get("confirm"),"REBOOT")) Complete (ret As Int)
+				If ret <> xui.DialogResponse_Cancel Then
+					oOctoCmds.Reboot
+				End If
+			End If
+			
 	End Select
 	
 	mDialog.Close(-1) '--- close it, exit dialog
@@ -115,7 +139,7 @@ Private Sub AskThem(txt As String,btnText As String) As ResumableSub
 		w = 80%x : h = 80%y
 		formatedTxt = strHelpers.InsertCRLF(txt,90)
 	Else
-		w = 90%x : h = 60%y
+		w = 94%x : h = 60%y
 		formatedTxt = strHelpers.InsertCRLF(txt,70)
 	End If
 	mb.Initialize(mMainObj.Root,"Question", w, h,False)

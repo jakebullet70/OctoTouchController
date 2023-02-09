@@ -23,7 +23,7 @@ Sub Class_Globals
 	
 	Public Dialog As B4XDialog
 	
-	Private btnScrnOff,btnBrightness As Button
+	Private btnScrnOff,btnBrightness,btnSysCmds As Button
 	Private btnPlugin1,btnPlugin2,btnPlugin3 As Button
 	
 End Sub
@@ -54,7 +54,8 @@ Public Sub Set_focus()
 	
 	'--- set bottom action btn if visible
 	btnBrightness.Visible = config.ChangeBrightnessSettingsFLAG
-	btnScrnOff.Visible    = config.ShowScreenOffFLAG
+	btnScrnOff.Visible     = config.ShowScreenOffFLAG
+	btnSysCmds.Visible  = config.ShowSysCmdsFLAG
 	If btnBrightness.Visible = False And btnScrnOff.Visible = True Then
 		btnScrnOff.Left = btnBrightness.Left
 	else If btnBrightness.Visible = True And btnScrnOff.Visible = True Then
@@ -80,7 +81,7 @@ Private Sub BuildGUI
 	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
 	
 	guiHelpers.SetVisible(Array As B4XView(btnPlugin3,btnPlugin1),False)
-	guiHelpers.SkinButton_Pugin(Array As Button(btnPlugin3,btnPlugin2,btnPlugin1,btnScrnOff,btnBrightness))
+	guiHelpers.SkinButton_Pugin(Array As Button(btnPlugin3,btnPlugin2,btnPlugin1,btnScrnOff,btnBrightness,btnSysCmds))
 
 End Sub
 
@@ -152,6 +153,11 @@ Private Sub btnSubBtnAction_Click
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 	Select Case o.Tag
+		Case "sys"
+			Dim oa As dlgOctoSysCmds
+			oa.Initialize(mMainObj,mMainObj.oMasterController.CN)
+			oa.Show
+			
 		Case "br" '--- brightness
 			DoBrightnessDlg
 			

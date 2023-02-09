@@ -31,6 +31,7 @@ Sub Process_Globals
 	Public AndroidPrintingMinTill As Int
 	
 	'--- general dlg
+	Public ShowSysCmdsFLAG As Boolean = True
 	Public ChangeBrightnessSettingsFLAG As Boolean = True 
 	Public ShowScreenOffFLAG As Boolean = True 
 	Public logPOWER_EVENTS As Boolean = False 
@@ -157,7 +158,8 @@ Public Sub ReadGeneralCFG
 	
 	ChangeBrightnessSettingsFLAG = Data.Get("chgBrightness").As(Boolean)
 	ShowScreenOffFLAG = Data.Get("scrnoff").As(Boolean)
-	
+	ShowSysCmdsFLAG = Data.Get("syscmds").As(Boolean)
+		
 	If Data.Get("logall").As(Boolean) Then
 		logPOWER_EVENTS = True
 		logFILE_EVENTS = True

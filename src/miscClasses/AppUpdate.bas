@@ -50,8 +50,19 @@ Public Sub RunPrgUpdate
 	
 	'=============================================================================================
 	
+	If PrevVer <= 19 Then '--- V1.2.7
+		'--- add new sys command option
+		Dim mSys1 As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+		mSys1.Put("syscmds","false")
+		fileHelpers.SafeKill(gblConst.GENERAL_OPTIONS_FILE)
+		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,mSys1)
+	End If
+
+	'=============================================================================================
 	'--- update the version
 	Starter.kvs.Put("version_code",Application.VersionCode)
+	
+	
 	
 End Sub
 

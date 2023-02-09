@@ -21,6 +21,12 @@
             "required": false
         },
         {
+            "title": "System Cmds Button",
+            "type": "Boolean",
+            "key": "syscmds",
+            "required": false
+        },
+        {
             "title": "Logging (debug)",
             "type": "Separator",
             "key": "",

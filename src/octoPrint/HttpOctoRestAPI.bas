@@ -14,7 +14,7 @@ Sub Class_Globals
 	Private xui As XUI
 	Private Const mModule As String = "HttpOctoRestAPI" 'ignore
 	
-	Private mAPIkey As String
+	Public mAPIkey As String
 	Public gPort As String
 	Public gIP As String
 	
@@ -93,14 +93,21 @@ End Sub
 '===================================================================================
 
 
-public Sub PostRequest(PostApiCmd As String) As ResumableSub
+Public Sub PostRequest(PostApiCmd As String) As ResumableSub
 
 	Dim restAPI, JsonDataMsg As String
 	restAPI = Regex.Split("!!",PostApiCmd)(0)
 	JsonDataMsg = Regex.Split("!!",PostApiCmd)(1)
 			
 	Dim EndPoint As String = $"http://${gIP}:${gPort}${restAPI}?apikey=${mAPIkey}"$
+	
+	Wait For (PostRequest2(EndPoint,JsonDataMsg)) Complete(r As String)
+	Return r
+	
+End Sub
 
+
+Public Sub PostRequest2(EndPoint As String,JsonDataMsg As String) As ResumableSub
 
 	Dim job As HttpJob : job.Initialize("", Me)
 	Dim retStr As String = ""
@@ -126,7 +133,7 @@ public Sub PostRequest(PostApiCmd As String) As ResumableSub
 		logMe.LogIt( $"${UniqueStr}:-->${EndPoint}"$,mModule)
 	End If
 	
-	If PostApiCmd = oc.cCMD_PRINT Or PostApiCmd = oc.cCMD_CANCEL Then
+	If EndPoint.Contains(oc.cCMD_PRINT) Or EndPoint.Contains(oc.cCMD_CANCEL) Then
 		'--- reset the power / screen on-off (diff timeout when printing)
 		Starter.tmrTimerCallSub.CallSubDelayedPlus(Main,"Set_ScreenTmr",10000)
 	End If
@@ -134,7 +141,6 @@ public Sub PostRequest(PostApiCmd As String) As ResumableSub
 	Return retStr
 	
 End Sub
-
 
 
 '===================================================================================

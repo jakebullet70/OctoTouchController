@@ -86,9 +86,19 @@ Private Sub BuildGUI
 	btn3.Text  = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(2dip).Append(Chr(0xF1E6)). _
 											 Typeface(Typeface.DEFAULT).Append("  Shutdown System").PopAll
 	
-'	guiHelpers.SetTextSize(Array As Button(btn1,btn2,btn3), _
-'					NumberFormat2(btn1.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
-'	
+	If oOctoCmds.mapRestart.Size 		= 0 Then btn1.Enabled = False '
+	If oOctoCmds.mapReboot.Size 		= 0 Then btn2.Enabled = False ' --- enable/disable not working   TODO
+	If oOctoCmds.mapShutdown.Size 	= 0 Then btn3.Enabled = False '
+	
+	If oOctoCmds.mapRestart.Size = 0 And oOctoCmds.mapReboot.Size = 0 And oOctoCmds.mapShutdown.Size 	= 0 Then
+		CallSubDelayed(Me,"ShownNeedCfg")
+	End If
+
+End Sub
+
+
+Private Sub ShownNeedCfg
+	'--- TODO
 End Sub
 
 
@@ -99,27 +109,24 @@ Private Sub btnCtrl_Click
 	
 	Select Case True
 		Case o.Text.Contains("estart") '--- restart
-			If oOctoCmds.mapRestart.Size <> 0 Then 
-				Wait For (AskThem(oOctoCmds.mapRestart.Get("confirm"),"RESTART")) Complete (ret As Int)
-				If ret <> xui.DialogResponse_Cancel Then 
-					oOctoCmds.Restart
-				End If
+			If oOctoCmds.mapRestart.Size = 0 Then Return
+			Wait For (AskThem(oOctoCmds.mapRestart.Get("confirm"),"RESTART")) Complete (ret As Int)
+			If ret <> xui.DialogResponse_Cancel Then 
+				oOctoCmds.Restart
 			End If
 			
 		Case o.Text.Contains("hutdo") 	'--- shutdown
-			If oOctoCmds.mapRestart.Size <> 0 Then
-				Wait For (AskThem(oOctoCmds.mapShutdown.Get("confirm"),"SHUTDOWN")) Complete (ret As Int)
-				If ret <> xui.DialogResponse_Cancel Then
-					oOctoCmds.Shutdown
-				End If
+			If oOctoCmds.mapShutdown.Size = 0 Then Return
+			Wait For (AskThem(oOctoCmds.mapShutdown.Get("confirm"),"SHUTDOWN")) Complete (ret As Int)
+			If ret <> xui.DialogResponse_Cancel Then
+				oOctoCmds.Shutdown
 			End If
 			
 		Case o.Text.Contains("eboot") '--- reboot
-			If oOctoCmds.mapRestart.Size <> 0 Then
-				Wait For (AskThem(oOctoCmds.mapReboot.Get("confirm"),"REBOOT")) Complete (ret As Int)
-				If ret <> xui.DialogResponse_Cancel Then
-					oOctoCmds.Reboot
-				End If
+			If oOctoCmds.mapReboot.Size = 0 Then Return
+			Wait For (AskThem(oOctoCmds.mapReboot.Get("confirm"),"REBOOT")) Complete (ret As Int)
+			If ret <> xui.DialogResponse_Cancel Then
+				oOctoCmds.Reboot
 			End If
 			
 	End Select

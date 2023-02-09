@@ -55,6 +55,18 @@ Public Sub GetOctoPluginWarningTxt() As String
 End Sub
 
 
+Public Sub GetOctoSysCmdsWarningTxt() As String
+	
+	Dim Msg As StringBuilder : Msg.Initialize
+	Msg.Append("To have access to Octoprint System commands ")
+	Msg.Append("you first need to grant the 'SYSTEM' permission ")
+	Msg.Append("in Octoprint to the current user. Please see the ")
+	Msg.Append("(Wiki in GitHub for instuctions.)").Append(CRLF)
+	
+	Return Msg.ToString
+	
+End Sub
+
 Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	
 	Dim cs As CSBuilder 

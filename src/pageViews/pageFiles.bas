@@ -208,8 +208,6 @@ End Sub
 
 Public Sub Build_ListViewFileList()
 	
-	Dim inSub As String = "Build_ListViewFileList"
-	
 	clvFiles.Clear
 	If rsFiles.IsInitialized Then rsFiles.Close
 	Starter.db.BuildTable

@@ -11,7 +11,7 @@ Version=3.5
 Sub Class_Globals
 	Private Const mModule As String = "OctoSysCmds" 'ignore
 	Private oCN As HttpOctoRestAPI
-	Private XUI As XUI
+	Private xui As XUI
 	
 	Public mapShutdown As Map
 	Public mapRestart As Map
@@ -25,19 +25,6 @@ Public Sub Initialize(cn As HttpOctoRestAPI)
 End Sub
 
 '===========================================================================
-
-
-'===========================================================================
-
-'Public Sub IsSysCmdsAvail() As Boolean
-'	Try
-'		Return mapShutdown.Size.As(Boolean)
-'	Catch
-'		'Log(LastException)
-'	End Try 'ignore
-'	Return False
-'End Sub
-
 
 Public Sub GetSysCmds 'ignore
 

@@ -41,7 +41,7 @@ Public Sub Show
 		mb.SetAsOptionalMsgBox("sysWarning")
 		Dim gui As guiMsgs : gui.Initialize
 		Wait For (mb.Show(gui.GetOctoSysCmdsWarningTxt, _
-					gblConst.MB_ICON_INFO,"","","OK")) Complete (Result As Int)
+						gblConst.MB_ICON_INFO,"","","OK")) Complete (Result As Int)
 	End If
 	
 	If BuildMenu = 0 Then
@@ -103,6 +103,16 @@ Private Sub BuildMenu() As Int
 	If oOctoCmds.mapReboot.Size 		<> 0 Then popUpMnu.Put("Reboot System","rb")
 	If oOctoCmds.mapShutdown.Size 	<> 0 Then popUpMnu.Put("Shutdown System","sd")
 	
+	'--- PLUGIN NOT WORKING IN DOCKER ----   TODO, Search for 'USER_SYS_CMDS'
+'	If oOctoCmds.mapUserSys.Size <> 0 Then 
+'		If oOctoCmds.mapReboot.Size <> 0 Or oOctoCmds.mapRestart.Size <> 0 Or oOctoCmds.mapShutdown.Size <> 0 Then
+'			popUpMnu.Put(" ------------------------- ","")
+'		End If
+'		For xx = 0 To oOctoCmds.mapUserSys.Size - 1
+'			popUpMnu.Put("Shutdown System","custom-" & oOctoCmds.mapUserSys.GetKeyAt(xx))
+'		Next
+'	End If
+	
 	Return popUpMnu.Size
 	
 End Sub
@@ -111,8 +121,7 @@ Private Sub AskThem(txt As String,btnText As String, promptTxt As String) As Res
 	Dim s As StringBuilder : 	s.Initialize
 	s.Append($"You are about to ${promptTxt}."$)
 	s.Append("This action may disrupt any print jobs ")
-	s.Append("that are currently running.")
-	s.Append("Do you wish to continue?")
+	s.Append("that are currently running. Do you wish to continue?")
 	txt = s.ToString '--- not using the octoprint prompt text at this moment - its BIG
 	Dim mb As dlgMsgBox
 	Dim w,h As Float

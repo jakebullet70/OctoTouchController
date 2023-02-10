@@ -74,24 +74,60 @@ public Sub Str2Bool(txt As String) As Boolean
 End Sub
 
 
-
-
-' Inserts a CRLF at every N'th postition                                                                                        
-' txt     = string of charactors                                                                                                
-' lineLen = what position to insert the CRLF                                                                                    
-Public Sub InsertCRLF(txt As String, lineLen As Int) As String
-	Dim ss As StringBuilder : ss.Initialize
-	Dim pointer As Int = 0
-	Do While pointer < txt.Length
-		If pointer + lineLen > txt.Length Then
-			ss.Append(txt.SubString2(pointer,txt.Length))
-		Else
-			ss.Append(txt.SubString2(pointer,pointer+lineLen)).Append(CRLF).Append(" ")
+'---------------------------------------------------------------------------------------------------
+Public Sub WordWrap(txt As String, lineLen As Int) As String
+	Dim wordList As List : wordList.Initialize
+	wordList = CleanupPuncChar(Regex.Split("\b", txt))
+	
+	Dim sb As StringBuilder :  sb.Initialize
+	Dim word As String, CurrLineSize = 0 As Int
+	Dim wordListLen As Int = wordList.size - 1
+	
+	For wordPtr = 0 To wordListLen
+		
+		word = wordList.Get(wordPtr).As(String).Trim
+		If word.Length = 0 Then Continue
+		If sb.Length = 0 Then 
+			sb.Append(word).Append(" ")
+			Continue
 		End If
-		pointer = pointer + lineLen
-	Loop
-	Return ss.ToString
+
+		If wordPtr < wordListLen  Then
+			If CurrLineSize + wordList.Get(wordPtr + 1).As(String).Length < lineLen Then
+				sb.Append(word).Append(" ")
+				CurrLineSize = CurrLineSize + word.Length + 1 
+			Else
+				sb.Append(word).Append(CRLF)
+				CurrLineSize = 0
+			End If
+		End If
+		
+	Next
+	Return sb.ToString
+	
 End Sub
+Private Sub CleanupPuncChar(lst As List) As List
+	'--- regex espression above with the /bissuppose
+	'--- to include puctuation chars - its does not
+	'--- so this is a cludge to clean that up -- TODO
+	'--- when the bombs stop falling and you get internet again 
+	'--- figure out why this is not working as it should
+	Try
+		For x = 0 To lst.Size - 1
+			For Each ch As String In Array As String(".",",",":",";","?","!")
+				If lst.Get(x) = ch Then
+					Dim a1 As String = lst.Get(x-1)
+					lst.Set(x-1,a1 & ch)
+					lst.Set(x,"")
+				End If
+			Next
+		Next	
+	Catch
+		Log(LastException)
+	End Try
+	Return lst
+End Sub
+'---------------------------------------------------------------------------------------------------
 
 
 Public Sub StripHTML(txt As String) As String

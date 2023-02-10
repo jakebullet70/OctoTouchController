@@ -136,7 +136,7 @@ End Sub
 ' Inserts a CRLF at every N'th postition
 ' txt     = string of charactors
 ' lineLen = what position to insert the CRLF
-'Public Sub insertCRLF(txt As String, lineLen As Int) As String
+'Public Sub WordWrap(txt As String, lineLen As Int) As String
 '
 '	Dim ss As StringBuilder : ss.Initialize
 '	Dim pointer As Int = 0

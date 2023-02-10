@@ -21,12 +21,11 @@ End Sub
 
 Public Sub Initialize(cn As HttpOctoRestAPI)
 	oCN = cn
-	GetSysCmds
 End Sub
 
 '===========================================================================
 
-Public Sub GetSysCmds 'ignore
+Public Sub GetSysCmds() As ResumableSub 'ignore
 
 	mapReboot.Initialize
 	mapShutdown.Initialize

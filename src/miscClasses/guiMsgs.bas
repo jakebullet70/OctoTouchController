@@ -60,8 +60,9 @@ Public Sub GetOctoSysCmdsWarningTxt() As String
 	Dim Msg As StringBuilder : Msg.Initialize
 	Msg.Append("To have access to Octoprint System commands ")
 	Msg.Append("you first need to grant the 'SYSTEM' permission ")
-	Msg.Append("in Octoprint to the current user. Please see the ")
-	Msg.Append("(Wiki in GitHub for instuctions.)").Append(CRLF)
+	Msg.Append("in Octoprint to the current user.  ").Append(CRLF)
+	'Msg.Append("").Append(CRLF)
+	Msg.Append("(See the Wiki in GitHub for hints)").Append(CRLF)
 	
 	Return Msg.ToString
 	

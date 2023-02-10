@@ -15,12 +15,9 @@ Sub Class_Globals
 	Private mMainObj As B4XMainPage
 	Private xui As XUI
 	
-	Private pnlMain As B4XView
-	Private mDialog As B4XDialog
+	Private popUpMnu As Map
 	
-	Private btn1,btn2,btn3 As Button
 	Private oOctoCmds As OctoSysCmds
-	
 End Sub
 
 
@@ -30,127 +27,104 @@ Public Sub Initialize(mobj As B4XMainPage,cn As HttpOctoRestAPI)
 End Sub
 
 
+
+
 Public Sub Show
 	
-	'--- show info about setting octoprint plugins first TODO, same code as in dlgPsuSetup
+	'--- grab avail the octo sys commands
+	Wait For (oOctoCmds.GetSysCmds) Complete() 'ignore
+	
+	'--- show info about setting up octoprint permissions
 	If Starter.kvs.GetDefault("sysWarning",False).As(Boolean) = False Then
 		Dim mb As dlgMsgBox
 		mb.Initialize(mMainObj.root,"Information",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip),260dip,False)
 		mb.SetAsOptionalMsgBox("sysWarning")
 		Dim gui As guiMsgs : gui.Initialize
 		Wait For (mb.Show(gui.GetOctoSysCmdsWarningTxt, _
-		gblConst.MB_ICON_INFO,"","","OK")) Complete (Result As Int)
+					gblConst.MB_ICON_INFO,"","","OK")) Complete (Result As Int)
 	End If
 	
-	'--- init
-	mDialog.Initialize(mMainObj.Root)
+	If BuildMenu = 0 Then
+		Dim mb As dlgMsgBox
+		Dim h,w As Float
+		Dim txt As String = "System commands are not configured."
+		h = 200dip
+		If guiHelpers.gIsLandScape Then
+			w = 500dip
+		Else
+			txt = strHelpers.WordWrap(txt,24)
+			w = guiHelpers.gWidth-40dip
+		End If
+		mb.Initialize(mMainObj.root,"Warning",w,h,False)
+		Wait For (mb.Show(txt, gblConst.MB_ICON_INFO,"","","OK")) Complete (Result As Int)
+		Return
+	End If
 	
-	Dim p As B4XView = xui.CreatePanel("")
-	Dim h As Float
-	If guiHelpers.gScreenSizeAprox > 7 Then
-		h = 280dip
+	Dim o1 As dlgListbox
+	o1.Initialize(mMainObj,"System Menu",Me,"SysMenu_Event")
+	o1.IsMenu = True
+	If guiHelpers.gIsLandScape Then '- TODO needs refactor for sizes
+		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,320dip,280dip),280dip,popUpMnu)
 	Else
-		h = 240dip
+		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,436dip,340dip),280dip,popUpMnu)
 	End If
-	p.SetLayoutAnimated(0, 0, 0, 260dip,h)
-	p.LoadLayout("viewOctoSysCmds")
-	
-	BuildGUI
-
-	Dim dlgHelper As sadB4XDialogHelper
-	dlgHelper.Initialize(mDialog)
-	dlgHelper.ThemeDialogForm("System Commands")
-	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CLOSE")
-	dlgHelper.ThemeInputDialogBtnsResize
-	
-	Wait For (rs) Complete (Result As Int)
-	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 	
 End Sub
 
 
-
-Private Sub BuildGUI
+Private Sub SysMenu_Event(value As String, tag As Object)
 	
-	pnlMain.Color = clrTheme.Background
-	guiHelpers.SkinButton(Array As Button(btn1,btn2,btn3))
-
-	Dim cs As CSBuilder
-	cs.Initialize
-	btn1.Text = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(2dip).Append(Chr(0xF085)). _
-											 Typeface(Typeface.DEFAULT).Append("    Restart Octoprint").PopAll
-	cs.Initialize
-	btn2.Text  = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(2dip).Append(Chr(0xF144)). _
-											 Typeface(Typeface.DEFAULT).Append("     Reboot System").PopAll
-	cs.Initialize
-	btn3.Text  = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(2dip).Append(Chr(0xF1E6)). _
-											 Typeface(Typeface.DEFAULT).Append("  Shutdown System").PopAll
+	If value.Length = 0 Then Return
 	
-	If oOctoCmds.mapRestart.Size 		= 0 Then btn1.Enabled = False '
-	If oOctoCmds.mapReboot.Size 		= 0 Then btn2.Enabled = False ' --- enable/disable not working   TODO
-	If oOctoCmds.mapShutdown.Size 	= 0 Then btn3.Enabled = False '
-	
-	If oOctoCmds.mapRestart.Size = 0 And oOctoCmds.mapReboot.Size = 0 And oOctoCmds.mapShutdown.Size 	= 0 Then
-		CallSubDelayed(Me,"ShownNeedCfg")
-	End If
-
-End Sub
-
-
-Private Sub ShownNeedCfg
-	'--- TODO
-End Sub
-
-
-Private Sub btnCtrl_Click
-	
-	Dim o As B4XView : o = Sender
-	Dim ret As Int
-	
-	Select Case True
-		Case o.Text.Contains("estart") '--- restart
-			If oOctoCmds.mapRestart.Size = 0 Then Return
-			Wait For (AskThem(oOctoCmds.mapRestart.Get("confirm"),"RESTART")) Complete (ret As Int)
-			If ret <> xui.DialogResponse_Cancel Then 
-				oOctoCmds.Restart
-			End If
+	Select Case value
 			
-		Case o.Text.Contains("hutdo") 	'--- shutdown
-			If oOctoCmds.mapShutdown.Size = 0 Then Return
-			Wait For (AskThem(oOctoCmds.mapShutdown.Get("confirm"),"SHUTDOWN")) Complete (ret As Int)
-			If ret <> xui.DialogResponse_Cancel Then
-				oOctoCmds.Shutdown
-			End If
+		Case "ro"  '--- restart octo
+			Wait For (AskThem(oOctoCmds.mapRestart.Get("confirm"),"RESTART","restart Octoprint")) Complete (ret As Int)
+			If ret <> xui.DialogResponse_Cancel Then oOctoCmds.Restart
 			
-		Case o.Text.Contains("eboot") '--- reboot
-			If oOctoCmds.mapReboot.Size = 0 Then Return
-			Wait For (AskThem(oOctoCmds.mapReboot.Get("confirm"),"REBOOT")) Complete (ret As Int)
-			If ret <> xui.DialogResponse_Cancel Then
-				oOctoCmds.Reboot
-			End If
+		Case "sd" '--- shutdown
+			Wait For (AskThem(oOctoCmds.mapShutdown.Get("confirm"),"SHUTDOWN","shutdown the computer")) Complete (ret As Int)
+			If ret <> xui.DialogResponse_Cancel Then oOctoCmds.Shutdown
+			
+		Case "rb" '--- reboot
+			Wait For (AskThem(oOctoCmds.mapReboot.Get("confirm"),"REBOOT","reboot the computer")) Complete (ret As Int)
+			If ret <> xui.DialogResponse_Cancel Then oOctoCmds.Reboot
 			
 	End Select
 	
-	mDialog.Close(-1) '--- close it, exit dialog
-	
 End Sub
 
 
+Private Sub BuildMenu() As Int
 	
+	popUpMnu.Initialize
 	
-Private Sub AskThem(txt As String,btnText As String) As ResumableSub
-	Dim formatedTxt As String
+	If oOctoCmds.mapRestart.Size 		<> 0 Then popUpMnu.Put("Restart Octoprint","ro")
+	If oOctoCmds.mapReboot.Size 		<> 0 Then popUpMnu.Put("Reboot System","rb")
+	If oOctoCmds.mapShutdown.Size 	<> 0 Then popUpMnu.Put("Shutdown System","sd")
+	
+	Return popUpMnu.Size
+	
+End Sub
+	
+Private Sub AskThem(txt As String,btnText As String, promptTxt As String) As ResumableSub
+	Dim s As StringBuilder : 	s.Initialize
+	s.Append($"You are about to ${promptTxt}."$)
+	s.Append("This action may disrupt any print jobs ")
+	s.Append("that are currently running.")
+	s.Append("Do you wish to continue?")
+	txt = s.ToString '--- not using the octoprint prompt text at this moment - its BIG
 	Dim mb As dlgMsgBox
 	Dim w,h As Float
 	If guiHelpers.gIsLandScape Then
 		w = 80%x : h = 80%y
-		formatedTxt = strHelpers.InsertCRLF(txt,90)
+		txt = strHelpers.WordWrap(txt,42)
 	Else
-		w = 94%x : h = 60%y
-		formatedTxt = strHelpers.InsertCRLF(txt,70)
+		w = 96%x : h = 56%y
+		txt = strHelpers.WordWrap(txt,32)
 	End If
 	mb.Initialize(mMainObj.Root,"Question", w, h,False)
-	Wait For (mb.Show(formatedTxt, gblConst.MB_ICON_WARNING,"",btnText,"CANCEL")) Complete (res As Int)
+	Wait For (mb.Show(txt, gblConst.MB_ICON_WARNING,"",btnText,"CANCEL")) Complete (res As Int)
 	Return res
 	
 End Sub

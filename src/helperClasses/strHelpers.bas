@@ -100,6 +100,8 @@ Public Sub WordWrap(txt As String, lineLen As Int) As String
 				sb.Append(word).Append(CRLF)
 				CurrLineSize = 0
 			End If
+		Else
+			sb.Append(word)
 		End If
 		
 	Next

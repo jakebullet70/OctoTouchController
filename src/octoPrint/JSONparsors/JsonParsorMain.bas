@@ -18,7 +18,7 @@ Public Sub Initialize
 End Sub
 
 
-public Sub TempStatus(s As String)
+Public Sub TempStatus(s As String)
 	Dim CallingSub As String = "TempStatus"
 	Dim m, mTemp, mBed, mTool1 As Map
 	Dim jp As JSONParser

@@ -41,6 +41,7 @@ PSUControl			https://plugins.octoprint.org/plugins/psucontrol/
 ws281z LED			https://plugins.octoprint.org/plugins/ws281x_led_status/
 
 ** Arc Welder Aware **
+** Works with OctoKlipper **  
 
 ### Project Status
 Initialze release Aug/26/2022  

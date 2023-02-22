@@ -7,7 +7,7 @@
 
 # OctoTouchController
 A dedicated touch screen controller for Octoprint supporting older Android phones / tablets (Android 4.X) 
-Device specs: Android **4.x or above**, 4inch screen with a minimum resolution of 680x340. It is Free Software and released under the [GNU Affero General Public License V3](https://www.gnu.org/licenses/agpl-3.0.html).  
+Device specs: Android **4.x or above**, 4inch screen with a minimum resolution of 680x340. It is Free Software and released under the [GNU Affero General Public License V3](https://www.gnu.org/licenses/agpl-3.0.html).  ** Works with OctoKlipper **  
 
 
 Add a dedicated touch screen to your 3D printer with a *LOW/NO COST* Android device you probibly already have!  
@@ -40,7 +40,7 @@ PSUControl			https://plugins.octoprint.org/plugins/psucontrol/
 
 ws281z LED			https://plugins.octoprint.org/plugins/ws281x_led_status/
 
-** Arc Welder Aware **
+** Arc Welder Aware **  
 ** Works with OctoKlipper **  
 
 ### Project Status

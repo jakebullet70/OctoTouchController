@@ -16,7 +16,7 @@ End Sub
 Public Sub Initialize
 End Sub
 
-'--- code to parse plugs ----
+'--- code to parse plugins ----
 '--- but at this time we only care about detecting if OctoKlipper is installed --
 '----------------------------------------------------------------------------------------------
 

@@ -22,7 +22,7 @@ Sub Class_Globals
 	Private lblTxt As AutoTextSizeLabel
 	Private MadeWithLove1 As MadeWithLove
 	Private lblCheck4NewVer As Label
-	
+	Private lblOctoKlipper As Label
 End Sub
 
 Public Sub Initialize(mobj As B4XMainPage)
@@ -32,6 +32,7 @@ End Sub
 
 Public Sub Show
 	
+	Check4OctoKlipper
 	mDialog.Initialize(mMainObj.Root)
 	Dim dlgHelper As sadB4XDialogHelper
 	dlgHelper.Initialize(mDialog)
@@ -73,7 +74,7 @@ Private Sub BuildGUI
 	pnlMain.Color = clrTheme.Background
 	lmB4XImageViewX1.Load(File.DirAssets, "splash.png")
 	lblTxt.Text = GetAboutText
-	guiHelpers.SetTextColor(Array As B4XView(lblTxt.BaseLabel))
+	guiHelpers.SetTextColor(Array As B4XView(lblTxt.BaseLabel,lblOctoKlipper))
 	
 End Sub
 
@@ -113,3 +114,20 @@ Private Sub GetAboutText() As String
 End Sub
 
 
+Public Sub Check4OctoKlipper
+	
+	Dim rs As ResumableSub =  mMainObj.oMasterController.CN.SendRequestGetInfo("/plugin/pluginmanager/plugins")
+	
+	Wait For(rs) Complete (Result As String)
+	If Result.Length <> 0 Then
+
+		Dim o As JsonParsorPlugins  : o.Initialize 
+		If o.IsOctoKlipperRunning(Result) = True Then
+			lblOctoKlipper.Visible = True
+		End If
+		
+	End If
+	
+	
+End Sub
+#end region

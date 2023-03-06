@@ -62,9 +62,9 @@ public Sub Str2Bool(txt As String) As Boolean
 	
 	Try
 		Dim tmp As String = txt.ToLowerCase.Trim
-		If  tmp = "true" Or tmp <> "0"  Then
-			Return True
-		End If
+		If tmp = "false" Then Return False
+		If tmp = "true"  Then Return True
+		If (IsNumber(tmp)) And tmp <> "0" Then Return True
 	Catch
 		'Log(LastException)
 	End Try 'ignore

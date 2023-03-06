@@ -544,15 +544,21 @@ Public Sub ParsePrinterProfile(jsonTXT As String)
 	'Dim speed As Int = e.Get("speed")
 	
 	Dim xMap As Map = axes.Get("x")
-	oc.PrinterProfileInvertedZ = strHelpers.Str2Bool(xMap.Get("inverted"))
+	oc.PrinterProfileInvertedX = strHelpers.Str2Bool(xMap.Get("inverted"))
+	'Log("X invert:" & xMap.Get("inverted"))
+	'Log("X invert:" & oc.PrinterProfileInvertedX)
 	'Dim speed As Int = xMap.Get("speed")
 	
 	Dim yMap As Map = axes.Get("y")
 	oc.PrinterProfileInvertedY = strHelpers.Str2Bool(yMap.Get("inverted"))
+	'Log("Y invert:" & yMap.Get("inverted"))
+	'Log("Y invert:" & oc.PrinterProfileInvertedy)
 	'Dim speed As Int = yMap.Get("speed")
 	
 	Dim zMap As Map = axes.Get("z")
 	oc.PrinterProfileInvertedZ = strHelpers.Str2Bool(zMap.Get("inverted"))
+	'Log("Z invert:" & zMap.Get("inverted"))
+	'Log("Z invert:" & oc.PrinterProfileInvertedz)
 	'Dim speed As Int = z.Get("speed")
 	
 	oc.PrinterProfileName = root.Get("name")

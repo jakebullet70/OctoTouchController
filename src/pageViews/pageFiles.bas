@@ -141,6 +141,7 @@ Private Sub BuildGUI
 	Else
 		clvFiles.Clear
 		clvFiles_ItemClick(0,Null)
+		lblBusy.Visible = False
 	End If
 	
 	btnLoadAndPrint.Text = "Print"

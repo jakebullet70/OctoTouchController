@@ -48,17 +48,29 @@ End Sub
 Public Sub Show
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
+	Dim ToTop As Boolean = False
 	
-	Dim h As Float
+	Dim h,w As Float
 	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
 		h = 62%y
 	Else If guiHelpers.gScreenSizeAprox >= 8 Then
 		h = 55%y
 	Else '--- 4 to 5.9 inch
 		h = 80%y
+		ToTop = True
 	End If
 	
-	mPrefDlg.Initialize(mainObj.root, "Filament Change Settings", 360dip, h)
+	'Log("width: " & guiHelpers.gWidth)
+	'Log("height: " & guiHelpers.gHeight)
+	'Log("scale: " & guiHelpers.gFscale)
+	If guiHelpers.gIsLandScape = False Then
+		w = 94%x
+	Else
+		w = guiHelpers.gWidth - 90dip
+	End If
+	
+	 ' guiHelpers.gWidth * guiHelpers.gScreenSizeDPI
+	mPrefDlg.Initialize(mainObj.root, "Filament Change Settings", w, h)
 	mPrefDlg.LoadFromJson(File.ReadString(File.DirAssets,"dlgFilamentCtrl.json"))
 	mPrefDlg.SetEventsListener(Me,"dlgEvent")
 	
@@ -66,11 +78,12 @@ Public Sub Show
 	prefHelper.Initialize(mPrefDlg)
 	
 	prefHelper.ThemePrefDialogForm
-	mPrefDlg.PutAtTop = False
+	mPrefDlg.PutAtTop = ToTop
 	Dim RS As ResumableSub = mPrefDlg.ShowDialog(Data, "OK", "CANCEL")
 	mPrefDlg.Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
 	prefHelper.dlgHelper.ThemeInputDialogBtnsResize
 	BuildAboutLabel
+	
 	
 	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then

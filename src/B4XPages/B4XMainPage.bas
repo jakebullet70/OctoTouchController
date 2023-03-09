@@ -321,6 +321,8 @@ Private Sub PopupMainOptionMenu
 
 	Dim gui As guiMsgs : gui.Initialize		
 	If oc.isPrinting Or oc.IsPaused2 Then
+		'--- do not know why i did this, does not seem to matter
+		'--- if you change when printing
 		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
 		popUpMemuItems = gui.BuildOptionsMenu(True)
 	Else

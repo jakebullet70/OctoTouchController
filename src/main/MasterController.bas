@@ -167,6 +167,7 @@ Private Sub GetPrinterProfileInfo
 		
 	Else
 		
+		logMe.LogIt2("reseting vars",mModule,"GetPrinterProfileInfo") 
 		oc.RestPrinterProfileVars
 		
 	End If

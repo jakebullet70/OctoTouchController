@@ -165,8 +165,8 @@ Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: OctoTC
-	#VersionCode: 20
-	#VersionName: 1.2.8
+	#VersionCode: 21
+	#VersionName: 1.2.9
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: unspecified
 	#CanInstallToExternalStorage: false

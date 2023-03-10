@@ -1,0 +1,48 @@
+{
+    "Version": 1.66,
+    "Theme": "Dark Theme",
+    "Items": [
+        {
+            "title": "Travel Speed",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "X\/Y Speed (mm\/s)",
+            "type": "Number",
+            "key": "xyspeed",
+            "required": true
+        },
+        {
+            "title": "Z Speed (mm\/s)",
+            "type": "Number",
+            "key": "zspeed",
+            "required": true
+        },
+        {
+            "title": "Offsets",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "X\/Y Axes (mm)",
+            "type": "Number",
+            "key": "xyoffset",
+            "required": true
+        },
+        {
+            "title": "Z Leveling Height (mm)",
+            "type": "Number",
+            "key": "zlheight",
+            "required": true
+        },
+        {
+            "title": "Z Travel Height (mm)",
+            "type": "Decimal Number",
+            "key": "ztheight",
+            "required": true
+        }
+    ]
+}

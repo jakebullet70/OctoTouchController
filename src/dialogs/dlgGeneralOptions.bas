@@ -30,7 +30,8 @@ public Sub CreateDefaultFile
 	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
 		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE, _
 						CreateMap( "chgBrightness": "true", "scrnoff": "true", "logall": "false", _
-						 	"logpwr": "false",  "logfiles": "false", "logoctokey": "false", "logrest": "false","syscmds": "false"))					 
+						 	"logpwr": "false",  "logfiles": "false", "logoctokey": "false", "logrest": "false","syscmds": "false", _
+							"axesx": "false",  "axesy": "false", "axesz": "false"))					 
 	End If
 End Sub
 

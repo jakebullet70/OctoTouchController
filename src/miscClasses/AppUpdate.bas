@@ -59,10 +59,20 @@ Public Sub RunPrgUpdate
 	End If
 
 	'=============================================================================================
+	
+	If PrevVer <= 21 Then '--- V1.2.9
+		'--- add inverted options to general dialog
+		Dim mSys2 As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+		mSys2.Put("axesx","false")
+		mSys2.Put("axesy","false")
+		mSys2.Put("axesz","false")
+		fileHelpers.SafeKill(gblConst.GENERAL_OPTIONS_FILE)
+		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,mSys2)
+	End If
+
+	'=============================================================================================
 	'--- update the version
 	Starter.kvs.Put("version_code",Application.VersionCode)
-	
-	
 	
 End Sub
 

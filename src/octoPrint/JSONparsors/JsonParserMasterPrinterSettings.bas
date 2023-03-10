@@ -538,28 +538,28 @@ Public Sub ParsePrinterProfile(jsonTXT As String)
 	'Dim resource As String = root.Get("resource")
 	'Dim heatedChamber As String = root.Get("heatedChamber")
 	
-	Dim axes As Map = root.Get("axes")
+'	Dim axes As Map = root.Get("axes") '---------------------------->  now axes is read in general dialogs
 	'Dim e As Map = axes.Get("e")
 	'Dim inverted As String = e.Get("inverted")
 	'Dim speed As Int = e.Get("speed")
 	
-	Dim xMap As Map = axes.Get("x")
-	oc.PrinterProfileInvertedX = strHelpers.Str2Bool(xMap.Get("inverted"))
-	'Log("X invert:" & xMap.Get("inverted"))
-	'Log("X invert:" & oc.PrinterProfileInvertedX)
-	'Dim speed As Int = xMap.Get("speed")
-	
-	Dim yMap As Map = axes.Get("y")
-	oc.PrinterProfileInvertedY = strHelpers.Str2Bool(yMap.Get("inverted"))
-	'Log("Y invert:" & yMap.Get("inverted"))
-	'Log("Y invert:" & oc.PrinterProfileInvertedy)
-	'Dim speed As Int = yMap.Get("speed")
-	
-	Dim zMap As Map = axes.Get("z")
-	oc.PrinterProfileInvertedZ = strHelpers.Str2Bool(zMap.Get("inverted"))
-	'Log("Z invert:" & zMap.Get("inverted"))
-	'Log("Z invert:" & oc.PrinterProfileInvertedz)
-	'Dim speed As Int = z.Get("speed")
+'	Dim xMap As Map = axes.Get("x") '---------------------------->  now axes is read in general dialogs
+'	oc.PrinterProfileInvertedX = strHelpers.Str2Bool(xMap.Get("inverted"))
+'	'Log("X invert:" & xMap.Get("inverted"))
+'	'Log("X invert:" & oc.PrinterProfileInvertedX)
+'	'Dim speed As Int = xMap.Get("speed")
+'	
+'	Dim yMap As Map = axes.Get("y") '---------------------------->  now axes is read in general dialogs
+'	oc.PrinterProfileInvertedY = strHelpers.Str2Bool(yMap.Get("inverted"))
+'	'Log("Y invert:" & yMap.Get("inverted"))
+'	'Log("Y invert:" & oc.PrinterProfileInvertedy)
+'	'Dim speed As Int = yMap.Get("speed")
+'	
+'	Dim zMap As Map = axes.Get("z") '---------------------------->  now axes is read in general dialogs
+'	oc.PrinterProfileInvertedZ = strHelpers.Str2Bool(zMap.Get("inverted"))
+'	'Log("Z invert:" & zMap.Get("inverted"))
+'	'Log("Z invert:" & oc.PrinterProfileInvertedz)
+'	'Dim speed As Int = z.Get("speed")
 	
 	oc.PrinterProfileName = root.Get("name")
 	oc.PrinterProfileModel = root.Get("model")

@@ -27,6 +27,30 @@
             "required": false
         },
         {
+            "title": "Axes",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "Invert X",
+            "type": "Boolean",
+            "key": "axesx",
+            "required": false
+        },
+        {
+            "title": "Invert Y",
+            "type": "Boolean",
+            "key": "axesy",
+            "required": false
+        },
+        {
+            "title": "Invert Z",
+            "type": "Boolean",
+            "key": "axesz",
+            "required": false
+        },
+        {
             "title": "Logging (debug)",
             "type": "Separator",
             "key": "",

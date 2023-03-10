@@ -131,9 +131,13 @@ Private Sub btnXYZ_Click
 		guiHelpers.Show_toast(oc.cPRINTER_BUSY_MSG,2000)
 		Return
 	End If
+		
+'	Log("PrinterProfileInvertedZ" & oc.PrinterProfileInvertedZ )
+'	Log("PrinterProfileInvertedY" & oc.PrinterProfileInvertedy )
+'	Log("PrinterProfileInvertedX" & oc.PrinterProfileInvertedx )
 	
 	Select Case btn.Tag
-		
+			
 		Case "Zhome"
 			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_Z_HOME)
 		Case "XYhome"

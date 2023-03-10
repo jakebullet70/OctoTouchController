@@ -446,8 +446,8 @@ public Sub ResetJobVars
 	
 End Sub
 
-public Sub RestPrinterProfileVars
-	
+Public Sub RestPrinterProfileVars
+
 	PrinterProfileName = ""
 	PrinterProfileModel  = ""
 	PrinterProfileInvertedZ = False

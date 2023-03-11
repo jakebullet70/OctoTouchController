@@ -35,8 +35,8 @@ Sub Class_Globals
 	
 	Private ivBed,ivTool As lmB4XImageViewX
 	
-	Private lblBedTemp1 As B4XView
-	Private lblToolTemp1 As B4XView
+	Private lblToolTemp1,lblBedTemp1 As B4XView
+	
 End Sub
 
 
@@ -315,7 +315,9 @@ End Sub
 Public Sub LoadThumbNail
 	
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized = False Then
-		guiHelpers.Show_toast("Retriving info, try again later",1500)
+		'--- sometimes happens on 1st startup
+		guiHelpers.Show_toast("Thumbnail issue, trying again in 5 seconds",1500)
+		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"LoadThumbNail",6200)
 		Return
 	End If
 
@@ -323,6 +325,7 @@ Public Sub LoadThumbNail
 	currentFileInfo =  mMainObj.oMasterController.gMapOctoFilesList.Get(oc.JobFileName)
 	
 	If currentFileInfo = Null Or currentFileInfo.myThumbnail_filename_disk = "" Then
+		logMe.LogIt2("currentFileInfo=NULL or CurrentFileInfo.myThumbnail_filename_disk=''",mModule,"LoadThumbNail")
 		ivPreviewLG.Load(File.DirAssets,gblConst.NO_THUMBNAIL)
 		Return
 	End If

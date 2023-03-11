@@ -48,7 +48,7 @@ Public Sub LogIt(txt As String, callingModule As String)
 	#if release
 	Write2Disk2("** " & GetDateTime4LogMsg &  " :--> " &  callingModule & " <--> " & txt,mLogFileName)
 	#Else
-	Logcolor("**  " & GetDateTime4LogMsg &  "  :--> " &  callingModule & " <--> " & txt,xui.Color_Green)
+	LogColor("**  " & GetDateTime4LogMsg &  "  :--> " &  callingModule & " <--> " & txt,xui.Color_Green)
 	#End If
 
 End Sub

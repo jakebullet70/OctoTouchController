@@ -82,7 +82,7 @@ Public Sub Show
 	Dim RS As ResumableSub = mPrefDlg.ShowDialog(Data, "OK", "CANCEL")
 	mPrefDlg.Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
 	prefHelper.dlgHelper.ThemeInputDialogBtnsResize
-	BuildAboutLabel
+	BuildHelpLabel
 	
 	
 	Wait For (RS) Complete (Result As Int)
@@ -96,7 +96,7 @@ Public Sub Show
 End Sub
 
 
-Private Sub BuildAboutLabel
+Private Sub BuildHelpLabel
 	lblAboutLoadUnload.Initialize("ShowInfoLoad")
 	Dim cs As CSBuilder
 	lblAboutLoadUnload.Text = cs.Initialize.Underline.Color(clrTheme.txtNormal).Append("Help").PopAll

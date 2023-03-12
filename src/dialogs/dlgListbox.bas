@@ -63,7 +63,7 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	l.Font = xui.CreateDefaultFont(NumberFormat2(20 / guiHelpers.gFscale,1,0,0,False))
 	
 	If guiHelpers.gIsLandScape = False Then
-		If guiHelpers.gScreenSizeAprox > 5.5 Then
+		If guiHelpers.gScreenSizeAprox > 6.2 Then
 			l.Font = xui.CreateDefaultFont(NumberFormat2(26 / guiHelpers.gFscale,1,0,0,False))
 		End If
 	End If

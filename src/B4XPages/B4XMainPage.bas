@@ -297,8 +297,7 @@ Public Sub Switch_Pages(action As String)
 		Case gblConst.PAGE_MOVEMENT
 			If oPageMovement.IsInitialized = False Then oPageMovement.Initialize(pnlMovement,"")
 			oPageCurrent = oPageMovement
-			
-			
+
 	End Select
 	
 	'--- set focus to page object
@@ -422,10 +421,10 @@ End Sub
 '--- options plugin sub menu
 Private Sub PopupFunctionOptionsMnu
 	
-	Dim popUpMemuItems As Map = CreateMap("Filament Control":"fl")
+	Dim popUpMemuItems As Map = CreateMap("Filament Control Wizard":"fl","Bed Leveling Wizard":"bl")
 		
 	Dim cs As CSBuilder : cs.Initialize
-	Dim title As Object = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(10dip).Append(Chr(0xE24A)). _
+	Dim title As Object = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
 										Typeface(Typeface.DEFAULT).Append("  Functions Menu").PopAll
 	
 	Dim o1 As dlgListbox
@@ -447,12 +446,14 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 			oB.Initialize(Me)
 			oB.Show
 			
+		Case "bl" '--- bed level control
+			Dim o1 As dlgBedLevelSetup
+			o1.Initialize(Me)
+			o1.Show
+			
 	End Select
 	
-	
 End Sub
-
-
 
 
 '--------------------------------------

@@ -25,9 +25,7 @@ Sub Class_Globals
 	
 	Private btnScrnOff,btnBrightness,btnSysCmds As Button
 	Private btnPlugin1,btnPlugin2,btnPlugin3 As Button
-	
 End Sub
-
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String) 
 	
@@ -54,8 +52,8 @@ Public Sub Set_focus()
 	
 	'--- set bottom action btn if visible
 	btnBrightness.Visible = config.ChangeBrightnessSettingsFLAG
-	btnScrnOff.Visible     = config.ShowScreenOffFLAG
-	btnSysCmds.Visible  = config.ShowSysCmdsFLAG
+	btnScrnOff.Visible   = config.ShowScreenOffFLAG
+	btnSysCmds.Visible   = config.ShowSysCmdsFLAG
 	If btnBrightness.Visible = False And btnScrnOff.Visible = True Then
 		btnScrnOff.Left = btnBrightness.Left
 	else If btnBrightness.Visible = True And btnScrnOff.Visible = True Then
@@ -127,7 +125,7 @@ Private Sub mnuCardImg_Click
 End Sub
 
 
-#Region "BRIGHTNESS BTN"
+#Region "BRIGHTNESS BTN SUPPORT"
 Private Sub DoBrightnessDlg
 	
 	Dim o1 As dlgBrightness
@@ -146,7 +144,7 @@ End Sub
 
 #end region
 
-' small action buttons on main menu
+'---  small action buttons on main menu
 Private Sub btnSubBtnAction_Click
 	
 	Dim o As B4XView : o = Sender

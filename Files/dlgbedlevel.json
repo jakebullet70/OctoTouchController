@@ -3,7 +3,13 @@
     "Theme": "Dark Theme",
     "Items": [
         {
-            "title": "Travel Speed",
+            "title": "Add To Function Menu",
+            "type": "Boolean",
+            "key": "mnu",
+            "required": false
+        },
+        {
+            "title": "** Travel Speed **",
             "type": "Separator",
             "key": "",
             "required": false
@@ -21,7 +27,7 @@
             "required": true
         },
         {
-            "title": "Offsets",
+            "title": "** Offsets **",
             "type": "Separator",
             "key": "",
             "required": false
@@ -34,13 +40,13 @@
         },
         {
             "title": "Z Leveling Height (mm)",
-            "type": "Number",
+            "type": "Decimal Number",
             "key": "zlheight",
             "required": true
         },
         {
             "title": "Z Travel Height (mm)",
-            "type": "Decimal Number",
+            "type": "Number",
             "key": "ztheight",
             "required": true
         }

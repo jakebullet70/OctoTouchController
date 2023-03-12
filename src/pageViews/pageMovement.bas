@@ -207,7 +207,8 @@ Private Sub BuildFunctionMnu() As Map
 	Dim m As Map : m.Initialize
 	m.Put("Pre-Heat Menu","prh")
 	m.Put("Auto Bed Leveling (G29)","bl")
-	If config.ShowFilamentChangeFLAG Then m.Put("Change Filament","cf")
+	If config.ShowBedLevelFLAG 	Then m.Put("Manual Bed Leveling","blw")
+	If config.ShowFilamentChangeFLAG Then m.Put("Manual Change Filament","cf")
 	Return m
 End Sub
 
@@ -221,19 +222,25 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 	Dim Ask As String = "Touch OK to continue"
 	
 	Select Case value
-		Case "bl" '--- bed level
+		
+		Case "blw"
+			Dim uu As dlgBedLevelWiz
+			uu.Initialize(mMainObj,Null)
+			uu.Show
+			
+		Case "bl" '--- firmware bed level
 			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)
 			If ret = xui.DialogResponse_Cancel Then Return
 			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","G29"))
 			guiHelpers.Show_toast(msg & "Start Bed Leveling",3200)
 			
-'		Case "cfl" '--- Change filament
+'		Case "cfl" '--- Change filament through firmware
 '			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)
 '			If ret = xui.DialogResponse_Cancel Then Return
 '			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","M600"))
 '			msg = msg & "Sending M600"
 			
-		Case "cf"'--- unload / load filament
+		Case "cf"'--- built in load / unload filament wiz
 			Dim o1 As dlgFilamentCtrl
 			o1.Initialize(mMainObj)
 			o1.Show

@@ -7,6 +7,8 @@ Version=7.31
 ' Tweaker:  sadLogic-JakeBullet70
 #Region VERSIONS 
 ' My tweaks... (see TWEAKS comments)
+'V1.3		Mar/14/2023
+'			Added PeekEditedData
 ' V. 1.2 	Aug/29/2022
 '			Color / font changes
 ' V. 1.1 	Aug/29/2022
@@ -728,6 +730,96 @@ Private Sub CreateTimeItem (PrefItem As B4XPrefItem, p As B4XView)
 End Sub
 
 'return True if valid
+
+
+
+Public Sub getPeekEditedData() As Map
+	'--- TWEAKS - the whole method
+	Dim Temp As Map
+	Temp.Initialize
+	For i = 0 To CustomListView1.Size - 1
+		Dim Item As CLVItem = CustomListView1.GetRawListItem(i)
+		If (Item.Value Is B4XPrefItem) = False Then Exit
+		Dim PrefItem As B4XPrefItem = Item.Value
+		Dim ItemPanel As B4XView = Item.Panel.GetView(0)
+		Dim Required As Boolean = PrefItem.Required
+		Dim Value As Object
+		Select PrefItem.ItemType
+			Case TYPE_BOOLEAN
+				Dim switch As B4XSwitch = ItemPanel.GetView(1).Tag
+				Value = switch.Value
+			Case TYPE_TEXT, TYPE_PASSWORD, TYPE_MULTILINETEXT
+				Dim ft As B4XFloatTextField = ItemPanel.GetView(0).Tag
+				Value = ft.Text
+			Case TYPE_NUMBER, TYPE_DECIMALNUMBER
+				Dim ft As B4XFloatTextField = ItemPanel.GetView(0).Tag
+				Dim n As Double
+				If ft.Text <> "" Then
+					If IsNumber(ft.Text) Then
+						n = ft.Text
+						If PrefItem.ItemType = TYPE_NUMBER Then
+							Dim n2 As Int = n
+							Value = n2
+						Else
+							Value = n
+						End If
+					Else
+						'GoToItem(i) : Return False
+						Value = ""
+					End If
+				Else
+					Value = ""
+				End If
+			Case TYPE_DATE
+				Value = DateTime.DateParse(ItemPanel.GetView(1).Text)
+			Case TYPE_TIME
+				Dim pmHours As B4XPlusMinus = ItemPanel.GetView(0).Tag
+				Dim pmMinutes As B4XPlusMinus = ItemPanel.GetView(1).Tag
+				Dim pmAMPM As B4XPlusMinus = ItemPanel.GetView(2).Tag
+				Dim p As Period
+				p.Initialize
+				p.Hours = pmHours.SelectedValue
+				If PrefItem.Extra.GetDefault("24", False) = False Then
+					If p.Hours = 12 Then p.Hours = 0
+					If pmAMPM.SelectedValue = "pm" Then p.Hours = p.Hours + 12
+				End If
+				p.Minutes = pmMinutes.SelectedValue
+				Value = p
+			Case TYPE_NUMERICRANGE
+				Dim pm As B4XPlusMinus = ItemPanel.GetView(0).Tag
+				Value = pm.SelectedValue
+			Case TYPE_OPTIONS
+				Value = ItemPanel.GetView(1).Text
+			Case TYPE_SHORTOPTIONS
+				Dim cmb As B4XComboBox = ItemPanel.GetView(1).Tag
+				If cmb.SelectedIndex > -1 Then Value = cmb.GetItem(cmb.SelectedIndex) Else Value = ""
+			Case TYPE_COLOR
+				Value = ItemPanel.GetView(1).Color
+			Case TYPE_SEPARATOR, TYPE_EXPLANATION
+				Continue
+		End Select
+		If Value = "" Then
+			If Required Then
+				'GoToItem(i) : Return false
+				Continue
+			Else
+				Continue
+			End If
+		End If
+		Temp.Put(PrefItem.Key, Value)
+	Next
+'	If mEventName <> "" And xui.SubExists(mCallback, mEventName  & "_IsValid", 1) Then
+'		Dim Valid As Boolean = CallSub2(mCallback, mEventName & "_IsValid", Temp)
+'		If Valid = False Then Return False
+'	End If
+'	For Each key As String In Temp.Keys
+'		Data.Put(key, Temp.Get(key))
+'	Next
+	Return Temp
+End Sub
+'---
+
+
 Private Sub CommitChanges (Data As Map) As Boolean
 	Dim Temp As Map
 	Temp.Initialize

@@ -147,7 +147,7 @@ End Sub
 
 Public Sub ReadBedLevelCFG
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE)
-	ShowBedLevelFLAG = Data.Get(gblConst.filShow).As(Boolean)
+	ShowBedLevelFLAG = Data.Get(gblConst.bedShow).As(Boolean)
 End Sub
 
 Public Sub ReadFilamentChangeCFG

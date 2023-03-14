@@ -447,6 +447,10 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 			oB.Show
 			
 		Case "bl" '--- bed level control
+			If oc.PrinterCustomBoundingBox = True Then
+				Show_toast("Custom bounding box not supported at this time.",4500)
+				Return
+			End If
 			Dim o1 As dlgBedLevelSetup
 			o1.Initialize(Me)
 			o1.Show

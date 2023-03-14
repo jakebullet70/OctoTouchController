@@ -98,5 +98,8 @@ Sub Process_Globals
 	Public Const bedLevelHeight As String = "zlheight"
 	Public Const bedTravelHeight As String = "ztheight"
 	Public Const bedShow As String = "mnu"
+	Public Const bedStartGcode As String = "sgcode"
+	Public Const bedEndGCode As String = "egcode"
+	
 	
 End Sub

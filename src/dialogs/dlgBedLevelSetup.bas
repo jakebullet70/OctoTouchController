@@ -31,7 +31,8 @@ Public Sub CreateDefaultFile
 						CreateMap(gblConst.bedShow: "false", _
 						 gblConst.bedXYspeed: "80",  gblConst.bedZspeed: "20", _
 						 gblConst.bedXYoffset: "10", gblConst.bedLevelHeight: "0.1", _
-						 gblConst.bedTravelHeight: "10"))
+						 gblConst.bedTravelHeight: "10", _
+						 gblConst.bedEndGCode: "G28 X0 Y0", gblConst.bedStartGcode: "G28"))
 						 
 	End If
 
@@ -81,7 +82,7 @@ Public Sub Show
 		guiHelpers.Show_toast("Bed Level Data Saved",1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE,Data)
 		
-		config.ReadFilamentChangeCFG
+		config.ReadBedLevelCFG
 		
 		CallSub(mainObj.oPageCurrent,"Set_focus")
 	End If

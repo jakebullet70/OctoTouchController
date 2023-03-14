@@ -7,8 +7,9 @@ Version=11.5
 ' Author:  sadLogic
 #Region VERSIONS 
 ' V. 1.0 	Mar/11/2023
-'			This is UGLY! Been through about 4 revisions...
-'			It works but...
+'			This is UGLY! But it works but...  (BOOM! ) stupid Muscovy (written under daily shelling)
+' copied / stolen / borrowed from...
+' https://github.com/jneilliii/OctoPrint-BedLevelingWizard
 #End Region
 
 Sub Class_Globals
@@ -16,23 +17,31 @@ Sub Class_Globals
 	Private Const mModule As String = "dlgBedLevelWiz"' 'ignore
 	Private mainObj As B4XMainPage
 	Private xui As XUI
-	Private mGeneralDlg As sadPreferencesDialog
+	Private mWizDlg As sadPreferencesDialog
 	Private prefHelper As sadPreferencesDialogHelper
+	Private msgSteps As Label
 
-	Private mPanelBG As B4XView
+	Private btn1,btn2 As Button, mData As Map
+	Private current_point As Int  = 0
+	Private point1(),point2(),point3(),point4() As Int
+	Private min_x, max_x,  min_y,max_y As Int
+	Private endGCode, startGCode As String
+	
 End Sub
 
-Public Sub Initialize(mobj As B4XMainPage,p As B4XView)
+Public Sub Initialize(mobj As B4XMainPage)
 	mainObj = mobj
-	mPanelBG = p
 End Sub
 
 
 Public Sub Show
 	
-	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE)
+	endGCode   = Data.Get(gblConst.bedEndGCode)
+	startGCode = Data.Get(gblConst.bedStartGcode)
 	
 	Dim h,w As Float '--- TODO - needs refactor
+	w = 50%x
 	If guiHelpers.gIsLandScape Then
 		If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
 			h = 62%y
@@ -41,35 +50,29 @@ Public Sub Show
 		Else '--- 4 to 5.9 inch
 			h = 80%y
 		End If
-		w = 360dip
+		w = 320dip
 	Else
-		h = 440dip
-		w = guiHelpers.gWidth * .92
+		h = 354dip
+		w = guiHelpers.gWidth * .8
 	End If
-	w = 100%x
-	'mGeneralDlg.Initialize(mainObj.root, "General Settings", w, h)
 	
 	
-	mGeneralDlg.Initialize(mPanelBG, "General Settings", w, h)
-	mGeneralDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgGeneral.json"))
-	mGeneralDlg.SetEventsListener(Me,"dlgGeneral")
+	mWizDlg.Initialize(mainObj.root, "Bed Level Wizard", w, h)
+	mWizDlg.LoadFromJson(File.ReadString(File.DirAssets, "wizbedlevel.json"))
+	mWizDlg.SetEventsListener(Me,"dlgGeneral")
 	
 	
-	prefHelper.Initialize(mGeneralDlg)
+	prefHelper.Initialize(mWizDlg)
 	prefHelper.ThemePrefDialogForm
-	mGeneralDlg.PutAtTop = False
-	Dim RS As ResumableSub = mGeneralDlg.ShowDialog(Data, "", "CLOSE")
+	mWizDlg.PutAtTop = False
+	Dim RS As ResumableSub = mWizDlg.ShowDialog(Data, "", "CLOSE")
 	prefHelper.dlgHelper.ThemeInputDialogBtnsResize
+	BuildWizBtns
 	
 	Wait For (RS) Complete (Result As Int)
-'	If Result = xui.DialogResponse_Positive Then
-'		guiHelpers.Show_toast("General Data Saved",1500)
-'		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,Data)
-'		config.ReadGeneralCFG
-'		CallSub(mainObj.oPageCurrent,"Set_focus")
-'	End If
-'	
+	
 	Starter.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 End Sub
 
@@ -99,246 +102,187 @@ Private Sub dlgGeneral_BeforeDialogDisplayed (Template As Object)
 	prefHelper.SkinDialog(Template)
 End Sub
 
+Private Sub BuildWizBtns
+	btn1.Initialize("ActionBtn1") : btn1.Text = "START"
+	btn2.Initialize("ActionBtn2") : btn2.Text = "STOP"
+	btn1.TextSize = mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).TextSize
+	btn2.TextSize = btn1.TextSize
+	guiHelpers.SkinButton(Array As Button(btn1,btn2))
+	
+	'--- add steps info label
+	msgSteps.Initialize("")
+	msgSteps.Color = xui.Color_Blue
+	msgSteps.Visible = False
+	mWizDlg.mBase.AddView(msgSteps, 18dip, 50dip, 60dip,60dip)
+	
+	'--- add new buttons
+	Dim t,w,h As Float
+	w = mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Width
+	h = mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Height
+	t = mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Top
+	mWizDlg.Dialog.Base.AddView(btn1, 8dip, t, w,h)
+	mWizDlg.Dialog.Base.AddView(btn2,  mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Left, t, w,h)
+	btn2.Visible = False
+	
+End Sub
 
+Private Sub ActionBtn1_Click
+	Dim b As Button : b = Sender
+		
+	btn1.RequestFocus
+	If b.Text = "START" Then
+
+		'--- read data used to move head
+		mData = mWizDlg.PeekEditedData
+		SetMinMax
+		If SetPoints = False Then
+			CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "STOP! Error parsing offsets / speeds" & current_point, 3500)
+			Return
+		End If
+		
+		current_point = 0
+		b.Text = "NEXT"
+		btn2.Visible = True
+		mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = False
+		mWizDlg.CustomListView1.GetBase.GetView(0).Visible = False
+		msgSteps.Visible = True
+		ProcessSteps
+		Return
+		
+	End If
+	
+	If b.Text = "NEXT" Then
+		current_point = current_point + 1
+		ProcessSteps
+	End If
+	'xDialog.Close(xui.DialogResponse_Positive)
+End Sub
+
+Private Sub ActionBtn2_Click
+	'--- stop the action
+	btn2.Visible = False
+	btn1.Text = "START"
+	mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = True
+	mWizDlg.CustomListView1.GetBase.GetView(0).Visible = True
+	msgSteps.Visible = False
+End Sub
+
+Private Sub ProcessSteps
+	
+	Dim Const myMethod As String = "ProcessSteps"
+	Dim tmp As String
+	mData = mWizDlg.PeekEditedData
+	Log(current_point)
+	
+	Select Case current_point
+		Case 0
+			CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Homing Nozzle...", 2500)
+			SendMGcode(startGCode) : Wait For SendMGcode
+			
+		Case 1,2,3,4,5,6
+			CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Moving To Point " & current_point, 2500)
+			SendMGcode("G90") : Sleep(100)
+			
+			Try
+				
+				'If current_point = 1 Then
+					'self.gcode_cmds.push('G1 Z'+self.offset_z_travel()+' F'+self.travel_speed_probe());
+					tmp = $"G1 Z${mData.Get(gblConst.bedTravelHeight} F${mData.Get(gblConst.bedZspeed}"$))
+					SendMGcode(tmp) : Sleep(100)
+				'End If
+				
+				Select Case current_point
+					Case 1,5
+'					self.gcode_cmds.push('G1 X'+self.point_a()[0]+' Y'+self.point_a()[1]+' F'+self.travel_speed());
+'					self.gcode_cmds.push('G1 Z'+self.offset_z()+' F'+self.travel_speed_probe());
+'					var options = {text: 'You are at the first leveling position.  Adjust the bed to be a height of "0" and press Next.'};
+						tmp = $"G1 X${point1(0)} Y${point1(1)} F${mData.Get(gblConst.bedXYspeed)}"$
+						SendMGcode(tmp) : Sleep(100)
+					Case 2,6
+						tmp = $"G1 X${point2(0)} Y${point2(1)} F${mData.Get(gblConst.bedXYspeed)}"$
+						SendMGcode(tmp) : Sleep(100)
+					Case 3
+						tmp = $"G1 X${point3(0)} Y${point3(1)} F${mData.Get(gblConst.bedXYspeed)}"$
+						SendMGcode(tmp) : Sleep(100)
+					Case 4
+						tmp = $"G1 X${point4(0)} Y${point4(1)} F${mData.Get(gblConst.bedXYspeed)}"$
+						SendMGcode(tmp) : Sleep(100)
+						
+					Case Else '--- all done
+						CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Bed Leveling Complete...", 3500)
+						btn2.Visible = False
+						btn1.Text = "START"
+						mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = True
+						current_point = -1
+						SendMGcode(endGCode) : Sleep(200)
+						
+				End Select
+				
+				tmp = $"G1 Z${mData.Get(gblConst.bedTravelHeight)} F${mData.Get(gblConst.bedZspeed)}"$
+				SendMGcode(tmp) : Sleep(100)
+				
+			Catch
+				CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Something went wrong...", 2500)
+				logMe.LogIt2(LastException.Message, mModule,myMethod)
+			End Try
+			
+	End Select
+	
+	'xDialog.Close(xui.DialogResponse_Positive)
+End Sub
 
 
 '=================================================================
 
-'
-'Private Sub tmrTempCheck_Tick
-'	
-'	If mTmrOff Then Return
-'	lblTemp.Text = oc.Tool1Actual
-'	'Log("Tmr fired")
-'	If oc.Tool1TargetReal = 0 Then 
-'		SetTempMonitorTimer
-'		Return '--- waiting for target var to be set from the HTTP read
-'	End If
-'	
-'	If oc.Tool1ActualReal >= oc.Tool1TargetReal Then
-'		Sleep(999) '--- settle for a second 
-'		LoadUnLoadFil
-'	Else
-'		SetTempMonitorTimer
-'	End If
-'	
-'End Sub
-'
-'Private Sub SetTempMonitorTimer
-'	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrTempCheck_Tick",1000)
-'End Sub
+Private Sub SendMGcode(code As String)
+	If code = "" Then Return
+	Log(code)
+	Return
+	'TODO, check for CRLF
+	mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",code))
+End Sub
 
 
-Private Sub BeepMe
-	
-	Dim b As Beeper : 
-	b.Initialize(120,500)
-	For xx = 1 To 5
-		b.Beep : Sleep(200)
-	Next
+Private Sub SetMinMax
+	If oc.PrinterCustomBoundingBox = True Then
+		'--- TODO
+'		var min_x = parseInt(volume.custom_box.x_min());
+'		var max_x = parseInt(volume.custom_box.x_max());
+'		var min_y = parseInt(volume.custom_box.y_min());
+'		var max_y = parseInt(volume.custom_box.y_max());
+	Else
+		min_x = 0 : min_y = 0
+		max_x = oc.PrinterWidth
+		max_y = oc.PrinterDepth
+	End If
+End Sub
+
+Private Sub SetPoints() As Boolean
+	Try
+		'--- self.point_a([min_x + parseInt(self.offset_xy()),min_y + parseInt(self.offset_xy())]);
+		point1 = Array As Int(min_x + mData.Get(gblConst.bedXYoffset), min_y + mData.Get(gblConst.bedXYoffset))
+		'--- self.point_b([max_x - parseInt(self.offset_xy()),max_y - parseInt(self.offset_xy())]);
+		point2 = Array As Int(max_x - mData.Get(gblConst.bedXYoffset), max_y - mData.Get(gblConst.bedXYoffset))
+		'--- self.point_c([max_x - parseInt(self.offset_xy()),min_y + parseInt(self.offset_xy())]);
+		point3 = Array As Int(max_x - mData.Get(gblConst.bedXYoffset), min_y + mData.Get(gblConst.bedXYoffset))
+		'--- self.point_d([min_x + parseInt(self.offset_xy()),max_y - parseInt(self.offset_xy())]);
+		point4 = Array As Int(min_x + mData.Get(gblConst.bedXYoffset), max_y - mData.Get(gblConst.bedXYoffset))
+		Return True
+	Catch
+		Log(LastException)
+	End Try
+	Return False
 	
 End Sub
 
-'
-''======================================================================================
-'
-'
-'Private Sub btnStuff_Click
+
+'Private Sub BeepMe
 '	
-'	If btnStuff.Text.StartsWith("E") Then 
-'		SendMGcode("G1 E5 F60") '--- Extrude 5mm more
-'		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Extruding 5mm...", 1000)
-'		Return
-'	End If
-'	
-'	'--------------------------------------------
-'	Dim aLen() As String, speeds As String
-'	If mLoadUnload = "load" Then
-'		speeds = mData.Get(gblConst.filLoadSpeed)
-'	Else
-'		speeds = mData.Get(gblConst.filUnLoadSpeed)
-'	End If
-'	
-'	Dim speed1, speed2 As String
-'	If mData.Get(gblConst.filUnLoadSpeed).As(String).Contains(",") Then
-'		speed1 = Regex.split(",", speeds)(0)
-'		speed2 = Regex.split(",", speeds)(1)
-'	Else
-'		speed1 = mData.Get(gblConst.filUnLoadSpeed)
-'		speed2 = speed1
-'	End If
-'	
-'	Dim sLen As String
-'	Dim first As Boolean = True
-'	If mLoadUnload <> "load" Then
-'		'--- UNLOAD	------
-'		btnStuff.Visible = False
-'		SendMGcode("M117 UnLoading filament")
-'		SetStatusLabel("UnLoad filament") : Sleep(200)
-'		SendMGcode("M83") : Sleep(100)
-'		
-'		If mData.Get(gblConst.filSmallExtBeforeUload).As(Boolean) = True Then
-'			SendMGcode($"G1 E10 F${speed1}"$) : Sleep(500) '--- small push to avoid blobs
-'		End If
-'		
-'		sLen = mData.Get(gblConst.filUnLoadLen)
-'		If sLen.Contains(",") Then '--- multi lengths as marlin has EXTRUDE_MAXLENGTH set low
-'			aLen = Regex.Split(",",sLen)
-'			For Each partLen As String In aLen
-'				SendMGcode($"G1 E-${partLen} F${IIf(first,speed1,speed2)}"$) : Sleep(400)
-'				first = False
-'			Next
-'		Else
-'			SendMGcode($"G1 E-${sLen} F${speed2}"$) : Sleep(100)
-'		End If
-'		
-'		SendMGcode("M18 E") : Sleep(100)
-'		Sleep(600)
-'		ShowMainPnl
-'		
-'	Else
-'		
-'		'--- LOAD --------	
-'		SetStatusLabel("Filament load") : Sleep(100)
-'		SendMGcode("M117 Load filament") 
-'		SendMGcode("M83") : Sleep(100)
-'		sLen = mData.Get(gblConst.filLoadLen)
-'		Dim first As Boolean = True
-'		If sLen.Contains(",") Then '--- multi lengths as marlin has EXTRUDE_MAXLENGTH set low
-'			aLen = Regex.Split(",",sLen)
-'			Dim isLast As Int = 0
-'			For Each partLen As String In aLen
-'				SendMGcode($"G1 E${partLen} F${IIf(isLast = aLen.Length - 1,speed2,speed1)}"$) : Sleep(400)
-'				isLast = isLast + 1
-'			Next
-'		Else
-'			SendMGcode($"G1 E${sLen} F${speed2}"$) : Sleep(100)
-'		End If
-'		btnStuff.Text = "Extrude" & CRLF & "5mm More"
-'	
-'	End If
+'	Dim b As Beeper : 
+'	b.Initialize(120,500)
+'	For xx = 1 To 5
+'		b.Beep : Sleep(200)
+'	Next
 '	
 'End Sub
-'
-'
-'Private Sub ParkNozzle() As ResumableSub 'ignore
-'	
-'	CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Parking Nozzle...", 2600)
-'	
-'	If mData.GetDefault(gblConst.filPauseBeforePark,False).As(Boolean) = True Then
-'		SendMGcode("M0") : Sleep(100)
-'	End If
-'	
-'	If mData.GetDefault(gblConst.filRetractBeforePark,False).As(Boolean) = True Then
-'		SendMGcode("M83") : Sleep(100)
-'		SendMGcode("G1 E-5 F50") : Sleep(100)
-'	End If
-'	
-'	SendMGcode("G91") : Sleep(100)
-'	
-'	tmp = $"G0 Z${mData.Get(gblConst.filZLiftRel)} F${mData.Get(gblConst.filParkSpeed)}"$
-'	SendMGcode(tmp) : Sleep(100)
-'	
-'	If mData.GetDefault(mData.Get(gblConst.filHomeBeforePark),False).As(Boolean) = True Then
-'		SendMGcode("G28 X0 Y0") : Sleep(100)
-'	End If
-'	
-'	SendMGcode("G90") : Sleep(100)
-'	
-'	tmp = $"G0 Y${mData.Get(gblConst.filYPark)} X${mData.Get(gblConst.filXPark)} F${mData.Get(gblConst.filParkSpeed)}"$
-'	SendMGcode(tmp) : Sleep(100)
-'	
-'End Sub
-'
-'Private Sub SendMGcode(code As String)
-'	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",code))
-'End Sub
-'
-'Private Sub SetStatusLabel(txt As String)
-'	lblStatus.Text = txt & CRLF
-'End Sub
-'
-'Private Sub btnCtrl_Click
-'	Dim btn As B4XView : btn = Sender
-'	mLoadUnload = "" : mTmrOff = True
-'	btnStuff.Text = "Continue" ': btnStuff.Visible = True
-'	Select Case btn.Tag
-'		Case "ht" 	: PromptHeater
-'		Case "pk"	: ParkNozzle
-'		Case "ld"	'--- load
-'			mLoadUnload = "load"
-'			ShowWorkingPnl
-'			
-'		Case "ul"	'--- unload
-'			ShowWorkingPnl
-'			
-'		Case "bk" 	'--- back btn
-'			ShowMainPnl
-'	End Select
-'	
-'End Sub
-'
-'Private Sub ShowWorkingPnl
-'	Dim Const TOOL_NOT_HEATING As String = "0" & gblConst.DEGREE_SYMBOL & "C"
-'	If oc.Tool1Target = TOOL_NOT_HEATING Then
-'		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Tool heater not set", 3000)
-'		Return
-'	End If
-'	lblTemp.Text = "heating"
-'	mTmrOff = False
-'	pnlMain.Visible = False : pnlWorking.Visible = True
-'	pnlWorking.BringToFront
-'	btnStuff.Visible = False
-'	SetStatusLabel("Waiting for temperature...")
-'	SetTempMonitorTimer '--- turn on the timer and monitor temp
-'End Sub
-'Private Sub ShowMainPnl
-'	pnlMain.Visible = True : pnlWorking.Visible = False
-'	pnlMain.BringToFront
-'End Sub
-'
-'
-'#region "SHOW TEMP SELECT"
-'Public Sub PromptHeater
-'	Dim o1 As dlgListbox
-'	o1.Initialize(mMainObj,"Filament Change",Me,"HeatTempChange_Tool")
-'	'Dim mapTmp As Map = objHelpers.CopyMap(mMainObj.oMasterController.mapToolHeatValuesOnly)
-'	'mapTmp.Remove("Tool Off")
-'	o1.Show(250dip,270dip,mMainObj.oMasterController.mapToolHeatValuesOnly)
-'	Wait For HeatTempChange_Tool(value As String, tag As Object)
-'	ProcessHeatTempChange(value,tag)
-'End Sub
-'
-'
-'Private Sub ProcessHeatTempChange(value As String, tag As Object) 'ignore
-'	
-'	'--- callback for Show_SelectTemp
-'	If value.Length = 0 Then
-'		mTmrOff = True
-'		Return
-'	End If
-'
-'	If value = "ev" Then
-'		'--- type in a value
-'		Dim oo As HeaterRoutines : oo.Initialize
-'		oo.ChangeTempTool
-'		Return
-'	End If
-'	
-'	If value.EndsWith("off") Then value = 0 '--- tool off
-'	If fnc.CheckTempRange("tool", value) = False Then
-'		guiHelpers.Show_toast("Invalid Temperature",1800)
-'		Return
-'	End If
-'		
-'	mMainObj.oMasterController.cn.PostRequest( _
-'				oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))
-'
-'	oc.Tool1Target = "1" 
-'	mTmrOff = False
-'	
-'End Sub
-'
-'
-'#END REGION
-'
+

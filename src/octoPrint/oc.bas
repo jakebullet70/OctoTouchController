@@ -53,6 +53,9 @@ Sub Process_Globals
 	Public PrinterProfileInvertedX As Boolean
 	Public PrinterProfileInvertedY As Boolean
 	Public PrinterProfileNozzleCount As Int
+	
+	Public PrinterWidth,PrinterDepth As Double
+	Public PrinterCustomBoundingBox As Boolean
 		
 	Public JobFileName As String
 	Public JobFileOrigin As String
@@ -66,6 +69,8 @@ Sub Process_Globals
 	
 	Public JobPrintThumbnail As String
 	Public JobPrintThumbnailSrc As String
+	
+	Public GCodeStartTemplate, GCodeEndTemplate As String
 		
 	'======================================================================
 	
@@ -391,10 +396,12 @@ Sub Process_Globals
 	'	}	}	}
 	
 	
-	
+	Public const cPRINTER_TEMPLATES As String = "/api/settings/templates"
 	
 	
 End Sub
+
+
 
 
 public Sub ResetAllOctoVars
@@ -457,7 +464,7 @@ Public Sub RestPrinterProfileVars
 	
 End Sub
 
-public Sub ResetStateVars
+Public Sub ResetStateVars
 	
 	PrinterBaud = ""
 	PrinterPort = ""
@@ -465,6 +472,7 @@ public Sub ResetStateVars
 	PrinterProfile = ""
 	
 End Sub
+
 		
 	
 	

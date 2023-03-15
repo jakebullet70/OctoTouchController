@@ -7,8 +7,8 @@ Version=11.5
 ' Author:  sadLogic
 #Region VERSIONS 
 ' V. 1.0 	Mar/11/2023
-'			This is UGLY! But it works but...  (BOOM! ) stupid Muscovy (written under daily shelling)
-' copied / stolen / borrowed from...
+'			BOOM! stupid Muscovy (written while listening to an artillery dual)
+' inspired / copied / stolen / borrowed from...
 ' https://github.com/jneilliii/OctoPrint-BedLevelingWizard
 #End Region
 
@@ -19,13 +19,16 @@ Sub Class_Globals
 	Private xui As XUI
 	Private mWizDlg As sadPreferencesDialog
 	Private prefHelper As sadPreferencesDialogHelper
-	Private msgSteps As Label
+	Private lblMsgSteps As Label
 
 	Private btn1,btn2 As Button, mData As Map
 	Private current_point As Int  = 0
 	Private point1(),point2(),point3(),point4() As Int
 	Private min_x, max_x,  min_y,max_y As Int
 	Private endGCode, startGCode As String
+	Private zSpeed, xySpeed As Int
+	Private gcodeSendLevelingPoint As String
+	Private gcode2send,moveText As String
 	
 End Sub
 
@@ -36,9 +39,11 @@ End Sub
 
 Public Sub Show
 	
-	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE)
-	endGCode   = Data.Get(gblConst.bedEndGCode)
-	startGCode = Data.Get(gblConst.bedStartGcode)
+	Dim prefSavedData As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE)
+	endGCode   = prefSavedData.Get(gblConst.bedEndGCode)
+	startGCode = prefSavedData.Get(gblConst.bedStartGcode)
+	
+	moveText = "You are at the !P! leveling position. Adjust your bed and press Next.'"
 	
 	Dim h,w As Float '--- TODO - needs refactor
 	w = 50%x
@@ -65,7 +70,7 @@ Public Sub Show
 	prefHelper.Initialize(mWizDlg)
 	prefHelper.ThemePrefDialogForm
 	mWizDlg.PutAtTop = False
-	Dim RS As ResumableSub = mWizDlg.ShowDialog(Data, "", "CLOSE")
+	Dim RS As ResumableSub = mWizDlg.ShowDialog(prefSavedData, "", "CLOSE")
 	prefHelper.dlgHelper.ThemeInputDialogBtnsResize
 	BuildWizBtns
 	
@@ -75,7 +80,6 @@ Public Sub Show
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 End Sub
-
 
 Private Sub dlgGeneral_IsValid (TempData As Map) As Boolean 'ignore
 	Return True '--- all is good!
@@ -96,8 +100,6 @@ Private Sub dlgGeneral_IsValid (TempData As Map) As Boolean 'ignore
 
 End Sub
 
-
-
 Private Sub dlgGeneral_BeforeDialogDisplayed (Template As Object)
 	prefHelper.SkinDialog(Template)
 End Sub
@@ -110,10 +112,16 @@ Private Sub BuildWizBtns
 	guiHelpers.SkinButton(Array As Button(btn1,btn2))
 	
 	'--- add steps info label
-	msgSteps.Initialize("")
-	msgSteps.Color = xui.Color_Blue
-	msgSteps.Visible = False
-	mWizDlg.mBase.AddView(msgSteps, 18dip, 50dip, 60dip,60dip)
+	lblMsgSteps.Initialize("")
+	lblMsgSteps.Color = xui.Color_Transparent
+	lblMsgSteps.Visible = False
+	lblMsgSteps.TextColor = clrTheme.txtAccent
+	lblMsgSteps.SetTextSizeAnimated(300,22)
+	lblMsgSteps.SingleLine = False
+	lblMsgSteps.Gravity = Bit.Or(Gravity.CENTER_VERTICAL, Gravity.CENTER_HORIZONTAL)
+	lblMsgSteps.Text = "Bed Leveling Wizard"
+	mWizDlg.mBase.AddView(lblMsgSteps, 2dip,  50dip,  _
+				mWizDlg.CustomListView1.GetBase.GetView(0).Width-2dip,160dip)
 	
 	'--- add new buttons
 	Dim t,w,h As Float
@@ -128,15 +136,16 @@ End Sub
 
 Private Sub ActionBtn1_Click
 	Dim b As Button : b = Sender
-		
+	
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	
 	btn1.RequestFocus
 	If b.Text = "START" Then
-
+		
 		'--- read data used to move head
 		mData = mWizDlg.PeekEditedData
-		SetMinMax
-		If SetPoints = False Then
-			CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "STOP! Error parsing offsets / speeds" & current_point, 3500)
+		If SetMinMaxAndSpeeds = False Or SetPoints = False Then
+			CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "STOP! Error parsing offsets / speeds:  " & current_point, 3500)
 			Return
 		End If
 		
@@ -145,7 +154,7 @@ Private Sub ActionBtn1_Click
 		btn2.Visible = True
 		mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = False
 		mWizDlg.CustomListView1.GetBase.GetView(0).Visible = False
-		msgSteps.Visible = True
+		lblMsgSteps.Visible = True
 		ProcessSteps
 		Return
 		
@@ -162,73 +171,95 @@ Private Sub ActionBtn2_Click
 	'--- stop the action
 	btn2.Visible = False
 	btn1.Text = "START"
-	mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = True
 	mWizDlg.CustomListView1.GetBase.GetView(0).Visible = True
-	msgSteps.Visible = False
+	mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = True
+	lblMsgSteps.Visible = False
+	mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).RequestFocus
+	btn1.RequestFocus '--- not working
 End Sub
 
 Private Sub ProcessSteps
 	
-	Dim Const myMethod As String = "ProcessSteps"
-	Dim tmp As String
+	Dim txtHelp As Object 
+	Dim moveText As String = "You are at the !P! leveling position. Adjust your bed and press NEXT.'"
 	mData = mWizDlg.PeekEditedData
+	gcodeSendLevelingPoint = $"G1 Z${mData.Get(gblConst.bedLevelHeight)} F${zSpeed}"$
+	#if debug
 	Log(current_point)
+	#End If
+	
 	
 	Select Case current_point
 		Case 0
-			CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Homing Nozzle...", 2500)
+			BeepMe(1)
+			lblMsgSteps.Text = "Homing nozzle... Touch NEXT when complete to start the leveling sequence."
 			SendMGcode(startGCode) : Wait For SendMGcode
 			
 		Case 1,2,3,4,5,6
-			CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Moving To Point " & current_point, 2500)
-			SendMGcode("G90") : Sleep(100)
+			SendMGcode("G90") : Sleep(100) '--- absolute position
 			
 			Try
+
+				'--- set travel height and speed				
+				gcode2send = $"G1 Z${mData.Get(gblConst.bedTravelHeight)} F${zSpeed}"$
+				SendMGcode(gcode2send) : Sleep(100)
 				
-				'If current_point = 1 Then
-					'self.gcode_cmds.push('G1 Z'+self.offset_z_travel()+' F'+self.travel_speed_probe());
-					tmp = $"G1 Z${mData.Get(gblConst.bedTravelHeight} F${mData.Get(gblConst.bedZspeed}"$))
-					SendMGcode(tmp) : Sleep(100)
-				'End If
-				
+				'--- sending movement
 				Select Case current_point
 					Case 1,5
-'					self.gcode_cmds.push('G1 X'+self.point_a()[0]+' Y'+self.point_a()[1]+' F'+self.travel_speed());
-'					self.gcode_cmds.push('G1 Z'+self.offset_z()+' F'+self.travel_speed_probe());
-'					var options = {text: 'You are at the first leveling position.  Adjust the bed to be a height of "0" and press Next.'};
-						tmp = $"G1 X${point1(0)} Y${point1(1)} F${mData.Get(gblConst.bedXYspeed)}"$
-						SendMGcode(tmp) : Sleep(100)
-					Case 2,6
-						tmp = $"G1 X${point2(0)} Y${point2(1)} F${mData.Get(gblConst.bedXYspeed)}"$
-						SendMGcode(tmp) : Sleep(100)
-					Case 3
-						tmp = $"G1 X${point3(0)} Y${point3(1)} F${mData.Get(gblConst.bedXYspeed)}"$
-						SendMGcode(tmp) : Sleep(100)
-					Case 4
-						tmp = $"G1 X${point4(0)} Y${point4(1)} F${mData.Get(gblConst.bedXYspeed)}"$
-						SendMGcode(tmp) : Sleep(100)
+						gcode2send = $"G1 X${point1(0)} Y${point1(1)} F${xySpeed}"$
+						If current_point = 1 Then
+							txtHelp = BuildHelpTextHighlight("first",moveText)
+						Else
+							txtHelp = BuildHelpTextHighlight("fifth",moveText)
+						End If
+						SendMGcode(gcode2send) : Sleep(100) '--- move to point
 						
-					Case Else '--- all done
-						CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Bed Leveling Complete...", 3500)
-						btn2.Visible = False
-						btn1.Text = "START"
-						mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = True
-						current_point = -1
-						SendMGcode(endGCode) : Sleep(200)
+					Case 2,6
+						If current_point = 2 Then
+							txtHelp = BuildHelpTextHighlight("second",moveText)
+						Else
+							txtHelp = BuildHelpTextHighlight("sixth and final",moveText)
+						End If
+						gcode2send = $"G1 X${point2(0)} Y${point2(1)} F${xySpeed}"$
+						SendMGcode(gcode2send) : Sleep(100) '--- move to point
+						
+					Case 3
+						gcode2send = $"G1 X${point3(0)} Y${point3(1)} F${xySpeed}"$
+						txtHelp = BuildHelpTextHighlight("third",moveText)
+						SendMGcode(gcode2send) : Sleep(100) '--- move to point
+						
+					Case 4
+						gcode2send = $"G1 X${point4(0)} Y${point4(1)} F${xySpeed}"$
+						txtHelp = BuildHelpTextHighlight("forth",moveText)
+						SendMGcode(gcode2send) : Sleep(100) '--- move to point
 						
 				End Select
-				
-				tmp = $"G1 Z${mData.Get(gblConst.bedTravelHeight)} F${mData.Get(gblConst.bedZspeed)}"$
-				SendMGcode(tmp) : Sleep(100)
+
+				'--- lowers head so user can udjust				
+				SendMGcode(gcodeSendLevelingPoint) : Sleep(100)
 				
 			Catch
-				CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Something went wrong...", 2500)
-				logMe.LogIt2(LastException.Message, mModule,myMethod)
+				CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Something went wrong...", 3500)
+				logMe.LogIt2(LastException.Message, mModule,"ProcessSteps")
+				BeepMe(3)
+				ActionBtn2_Click
+				Return
+				
 			End Try
+			
+		Case 7 '--- all done!
+			CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Bed Leveling Complete... Sending end gcode.", 3500)
+			SendMGcode(endGCode) : Sleep(200)
+			BeepMe(1)
+			ActionBtn2_Click
+			Return
 			
 	End Select
 	
+	lblMsgSteps.Text = txtHelp
 	'xDialog.Close(xui.DialogResponse_Positive)
+	
 End Sub
 
 
@@ -236,14 +267,32 @@ End Sub
 
 Private Sub SendMGcode(code As String)
 	If code = "" Then Return
+	
+	#if debug
 	Log(code)
 	Return
-	'TODO, check for CRLF
-	mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",code))
+	#End If
+	
+	If code.Contains(CRLF) Then
+		Dim cd() As String = Regex.Split(CRLF, code)
+		For Each s As String In cd
+			mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",s))
+			Sleep(50)
+		Next
+	Else
+		mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",code))
+	End If
+	
+	Return
+	
 End Sub
 
 
-Private Sub SetMinMax
+
+'======================================================================
+
+
+Private Sub SetMinMaxAndSpeeds() As Boolean
 	If oc.PrinterCustomBoundingBox = True Then
 		'--- TODO
 '		var min_x = parseInt(volume.custom_box.x_min());
@@ -255,34 +304,57 @@ Private Sub SetMinMax
 		max_x = oc.PrinterWidth
 		max_y = oc.PrinterDepth
 	End If
+	
+	Try
+		zSpeed   = mData.Get(gblConst.bedZspeed)   * 60
+		xySpeed = mData.Get(gblConst.bedXYspeed) * 60
+	Catch
+		logMe.LogIt2(LastException.Message, mModule,"SetMinMaxAndSpeeds")
+		Return False
+	End Try
+	
+	Return True
+		
 End Sub
 
+
 Private Sub SetPoints() As Boolean
+	
 	Try
-		'--- self.point_a([min_x + parseInt(self.offset_xy()),min_y + parseInt(self.offset_xy())]);
-		point1 = Array As Int(min_x + mData.Get(gblConst.bedXYoffset), min_y + mData.Get(gblConst.bedXYoffset))
-		'--- self.point_b([max_x - parseInt(self.offset_xy()),max_y - parseInt(self.offset_xy())]);
+		point1 = Array As Int(min_x  + mData.Get(gblConst.bedXYoffset), min_y  + mData.Get(gblConst.bedXYoffset))
 		point2 = Array As Int(max_x - mData.Get(gblConst.bedXYoffset), max_y - mData.Get(gblConst.bedXYoffset))
-		'--- self.point_c([max_x - parseInt(self.offset_xy()),min_y + parseInt(self.offset_xy())]);
-		point3 = Array As Int(max_x - mData.Get(gblConst.bedXYoffset), min_y + mData.Get(gblConst.bedXYoffset))
-		'--- self.point_d([min_x + parseInt(self.offset_xy()),max_y - parseInt(self.offset_xy())]);
-		point4 = Array As Int(min_x + mData.Get(gblConst.bedXYoffset), max_y - mData.Get(gblConst.bedXYoffset))
+		point3 = Array As Int(max_x - mData.Get(gblConst.bedXYoffset), min_y  + mData.Get(gblConst.bedXYoffset))
+		point4 = Array As Int(min_x  + mData.Get(gblConst.bedXYoffset), max_y - mData.Get(gblConst.bedXYoffset))
 		Return True
 	Catch
-		Log(LastException)
+		logMe.LogIt2(LastException.Message, mModule,"SetPoints")
 	End Try
+	
 	Return False
 	
 End Sub
 
+'======================================================================
 
-'Private Sub BeepMe
-'	
-'	Dim b As Beeper : 
-'	b.Initialize(120,500)
-'	For xx = 1 To 5
-'		b.Beep : Sleep(200)
-'	Next
-'	
-'End Sub
+
+Private Sub BuildHelpTextHighlight(txt2hiLight As String, maintxt As String) As Object
+	
+	Dim m1 As String = Regex.Split("!P!",maintxt)(0)
+	Dim m2 As String = Regex.Split("!P!",maintxt)(1)
+	
+	Dim cs As CSBuilder : cs.Initialize
+	Return cs.Color(clrTheme.txtAccent).Append(m1).Color(clrTheme.txtNormal).Append(txt2hiLight). _
+					Color(clrTheme.txtAccent).Append(m2).PopAll
+	
+End Sub
+
+Private Sub BeepMe(num As Int	)
+	
+	Dim b As Beeper :
+	b.Initialize(120,500)
+	For xx = 1 To num
+		b.Beep : Sleep(200)
+	Next
+	
+End Sub
 

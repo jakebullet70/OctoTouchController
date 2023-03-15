@@ -25,7 +25,7 @@ Sub Class_Globals
 	Public mBase As B4XView
 	Public CustomListView1 As CustomListView
 	
-	'--- TWEAKS
+	'--- TWEAKS, gets this from the PrefDialog B4Xlib
 	'Type B4XPrefItem (Title As Object, ItemType As Int, Extra As Map, Key As String, Required As Boolean)
 	'---
 	

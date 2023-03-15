@@ -524,13 +524,21 @@ Public Sub ParsePrinterProfile(jsonTXT As String)
 	parser.Initialize(jsonTXT)
 	Dim root As Map = parser.NextObject
 	
-	'Dim volume As Map = root.Get("volume")
-	'Dim custom_box As String = volume.Get("custom_box")
-	'Dim depth As Double = volume.Get("depth")
+	Try
+		Dim volume As Map = root.Get("volume")
+		oc.PrinterWidth = volume.Get("width")
+		oc.PrinterDepth = volume.Get("depth")
+		oc.PrinterCustomBoundingBox  = (volume.Get("custom_box").As(Boolean))
+	Catch
+		oc.PrinterWidth = 0
+		oc.PrinterDepth = 0
+		Log(LastException)
+	End Try
+	'Log("cbox: " & oc.PrinterCustomBoundingBox)
 	'Dim formFactor As String = volume.Get("formFactor")
 	'Dim origin As String = volume.Get("origin")
-	'Dim width As Double = volume.Get("width")
 	'Dim height As Double = volume.Get("height")
+	
 	'Dim current As String = root.Get("current")
 	'Dim default As String = root.Get("default")
 	'Dim heatedBed As String = root.Get("heatedBed")
@@ -575,5 +583,6 @@ Public Sub ParsePrinterProfile(jsonTXT As String)
 	'Dim sharedNozzle As String = extruder.Get("sharedNozzle")
 	oc.PrinterProfileNozzleCount = extruder.Get("count")
 
-	
 End Sub
+
+

@@ -48,8 +48,9 @@ Sub Process_Globals
 	'--- Printer zled or ws281z  flag
 	Public ShowZLEDCtrlFLAG As Boolean = False
 	Public ShowWS281CtrlFLAG As Boolean = False
-	'---
+	'--- functions menu
 	Public ShowFilamentChangeFLAG As Boolean = False
+	Public ShowBedLevelFLAG As Boolean = False
 	
 
 End Sub
@@ -130,8 +131,24 @@ Private Sub LoadCfgs()
 	End If
 	ReadFilamentChangeCFG
 	
+	'======================================================================
+
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.BED_LEVEL_FILE) '--- Dev
+	If File.Exists(xui.DefaultFolder,gblConst.BED_LEVEL_FILE) = False Then
+		Dim oiy As dlgBedLevelSetup
+		oiy.Initialize(Null)
+		oiy.CreateDefaultFile
+	End If
+	ReadBedLevelCFG
+	
 End Sub
 
+'=========================================================================
+
+Public Sub ReadBedLevelCFG
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE)
+	ShowBedLevelFLAG = Data.Get(gblConst.bedShow).As(Boolean)
+End Sub
 
 Public Sub ReadFilamentChangeCFG
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)

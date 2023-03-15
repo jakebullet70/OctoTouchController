@@ -52,9 +52,11 @@ Sub Process_Globals
 	'---------------------------------------------------------------------------------------------------------------------
 	
 	'---------------------------------------------------------------------------------------------------------------------
+	'--- saved data for pref dialogs
 	Public Const ANDROID_POWER_OPTIONS_FILE As String = "power_options.map"
 	Public Const GENERAL_OPTIONS_FILE As String = "general_options.map"
 	Public Const FILAMENT_CHANGE_FILE As String = "fil_loadunload.map"
+	Public Const BED_LEVEL_FILE As String = "bed_level.map"
 	'---------------------------------------------------------------------------------------------------------------------
 	
 	'--- pages
@@ -80,13 +82,24 @@ Sub Process_Globals
 
 	'---------------------------------------------------------------------------------------------------------------------
 	'--- Filament wizard ---
-	Public filHomeBeforePark As String = "hbp",filRetractBeforePark As String = "rbp"
-	Public filPauseBeforePark As String = "pbp"
-	Public filUnloadLen As String = "ulen",filUnloadSpeed As String = "uspd"
-	Public filLoadLen As String = "llen", filLoadSpeed As String = "lspd"
-	Public filYPark As String = "yp",filXPark As String = "xp"
-	Public filZLiftRel As String = "zrel", filParkSpeed As String = "pmspd"
-	Public filShow As String = "mnu", filSmallExtBeforeUload As String = "extb"
+	Public Const filHomeBeforePark As String = "hbp",filRetractBeforePark As String = "rbp"
+	Public Const filPauseBeforePark As String = "pbp"
+	Public Const filUnloadLen As String = "ulen",filUnloadSpeed As String = "uspd"
+	Public Const filLoadLen As String = "llen", filLoadSpeed As String = "lspd"
+	Public Const filYPark As String = "yp",filXPark As String = "xp"
+	Public Const filZLiftRel As String = "zrel", filParkSpeed As String = "pmspd"
+	Public Const filShow As String = "mnu", filSmallExtBeforeUload As String = "extb"
+	
+	'---------------------------------------------------------------------------------------------------------------------
+	'--- bed level wizard ---
+	Public Const bedXYspeed As String = "xyspeed"
+	Public Const bedZspeed As String = "zspeed"
+	Public Const bedXYoffset As String = "xyoffset"
+	Public Const bedLevelHeight As String = "zlheight"
+	Public Const bedTravelHeight As String = "ztheight"
+	Public Const bedShow As String = "mnu"
+	Public Const bedStartGcode As String = "sgcode"
+	Public Const bedEndGCode As String = "egcode"
 	
 	
 End Sub

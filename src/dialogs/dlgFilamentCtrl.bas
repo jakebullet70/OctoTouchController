@@ -100,7 +100,9 @@ Public Sub Show
 		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Tool Heater Off", 1600)
 		mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
 	End If
+	
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF) '--- turn it off if its on
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	mTmrOff = True '--- if temp tmr is running will turn it off
 	
 End Sub

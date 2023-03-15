@@ -16,7 +16,7 @@ Sub Class_Globals
 	Private toast As BCToast
 
 	'--- panel to cover screen for power ctrl
-	Public pnlScreenOff As B4XView
+	Public pnlScreenOff As Panel
 	
 	'--- splash screen crap
 	Private ivSpash As ImageView, pnlSplash As Panel

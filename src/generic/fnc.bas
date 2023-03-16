@@ -19,7 +19,7 @@ End Sub
 '-------------------------------------------------------------------------------------------
 
 Public Sub BlankScreen
-	B4XPages.MainPage.pnlScreenOff.Elevation = 5dip '--- sort of like ZOrder
+	B4XPages.MainPage.pnlScreenOff.Elevation = 5dip '--- sort of like ZOrder, puts it above aby pref-dialog showing
 	B4XPages.MainPage.pnlScreenOff.Visible = True
 	B4XPages.MainPage.pnlScreenOff.BringToFront
 	powerHelpers.SetScreenBrightnessAndSave(0.1,False)

@@ -19,7 +19,7 @@ Sub Class_Globals
 	Private xui As XUI
 	Private mWizDlg As sadPreferencesDialog
 	Private prefHelper As sadPreferencesDialogHelper
-	Private lblMsgSteps As Label
+	Private lblMsgSteps As Label, btnPreheat As Button
 
 	Private btn1,btn2 As Button, mData As Map
 	Private current_point As Int  = 0
@@ -71,13 +71,13 @@ Public Sub Show
 	prefHelper.ThemePrefDialogForm
 	mWizDlg.PutAtTop = False
 	Dim RS As ResumableSub = mWizDlg.ShowDialog(prefSavedData, "", "CLOSE")
+	prefHelper.dlgHelper.NoCloseOn2ndDialog
 	prefHelper.dlgHelper.ThemeInputDialogBtnsResize
 	BuildWizBtns
 	
 	Wait For (RS) Complete (Result As Int)
 	
 	Starter.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
-	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 End Sub
 
@@ -109,7 +109,7 @@ Private Sub BuildWizBtns
 	btn2.Initialize("ActionBtn2") : btn2.Text = "STOP"
 	btn1.TextSize = mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).TextSize
 	btn2.TextSize = btn1.TextSize
-	guiHelpers.SkinButton(Array As Button(btn1,btn2))
+	
 	
 	'--- add steps info label
 	lblMsgSteps.Initialize("")
@@ -123,7 +123,7 @@ Private Sub BuildWizBtns
 	mWizDlg.mBase.AddView(lblMsgSteps, 2dip,  50dip,  _
 				mWizDlg.CustomListView1.GetBase.GetView(0).Width-2dip,160dip)
 	
-	'--- add new buttons
+	'--- add new buttons to dialog bottom
 	Dim t,w,h As Float
 	w = mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Width
 	h = mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Height
@@ -132,6 +132,20 @@ Private Sub BuildWizBtns
 	mWizDlg.Dialog.Base.AddView(btn2,  mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Left, t, w,h)
 	btn2.Visible = False
 	
+	'--- build pre-heat button
+	btnPreheat.Initialize("PreHeat")
+	btnPreheat.Text = "Pre-Heat Menu"
+	btnPreheat.TextSize = btn2.TextSize 
+	Dim w2 As Int = (w * 2) - 8dip '--- make btn a little wide'eeeer!
+	mWizDlg.Dialog.Base.AddView(btnPreheat, (lblMsgSteps.Width / 2) - (w2/2) ,  lblMsgSteps.Height +lblMsgSteps.top, w2,h)
+	btnPreheat.Visible = False
+	
+	guiHelpers.SkinButton(Array As Button(btn1,btn2,btnPreheat))
+	
+End Sub
+
+Private Sub PreHeat_Click
+	CallSub(B4XPages.MainPage,"ShowPreHeatMenu_All")
 End Sub
 
 Private Sub ActionBtn1_Click
@@ -170,29 +184,30 @@ End Sub
 Private Sub ActionBtn2_Click
 	'--- stop the action
 	btn2.Visible = False
+	btnPreheat.Visible = False
 	btn1.Text = "START"
 	mWizDlg.CustomListView1.GetBase.GetView(0).Visible = True
 	mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = True
 	lblMsgSteps.Visible = False
-	mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).RequestFocus
-	btn1.RequestFocus '--- not working
+	mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).RequestFocus '--- not working
+	'btn1.RequestFocus '--- not working
 End Sub
 
 Private Sub ProcessSteps
 	
 	Dim txtHelp As Object 
-	Dim moveText As String = "You are at the !P! leveling position. Adjust your bed and press NEXT.'"
+	'Dim moveText As String = "You are at the !P! leveling position. Adjust your bed and press NEXT.'"
 	mData = mWizDlg.PeekEditedData
 	gcodeSendLevelingPoint = $"G1 Z${mData.Get(gblConst.bedLevelHeight)} F${zSpeed}"$
-	#if debug
-	Log(current_point)
-	#End If
+	logMe.LogDebug2("Point: " & current_point,"ProcessSteps")
+	btnPreheat.Visible = False
 	
 	
 	Select Case current_point
 		Case 0
 			BeepMe(1)
-			lblMsgSteps.Text = "Homing nozzle... Touch NEXT when complete to start the leveling sequence."
+			btnPreheat.Visible = True
+			lblMsgSteps.Text = "Starting GCode sent... Touch NEXT when complete to start the leveling sequence."
 			SendMGcode(startGCode) : Wait For SendMGcode
 			
 		Case 1,2,3,4,5,6
@@ -268,10 +283,10 @@ End Sub
 Private Sub SendMGcode(code As String)
 	If code = "" Then Return
 	
-	#if debug
-	Log(code)
-	Return
-	#End If
+'	#if debug
+'	Log(code)
+'	Return
+'	#End If
 	
 	If code.Contains(CRLF) Then
 		Dim cd() As String = Regex.Split(CRLF, code)

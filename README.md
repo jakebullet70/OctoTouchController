@@ -23,6 +23,7 @@ Supports Android 4.X to the latest version
 Native Android app, not a re-packaged web app  
 Portrait or landscape modes  
 Built in filament loading - unloading wizard  
+Built in manual bed leveling wizard  
 Support for Sonoff power device without Octoprint plugin  
 Colors themes to match your printers look  
 View / select and print files right on the touch screen  
@@ -45,7 +46,7 @@ ws281z LED			https://plugins.octoprint.org/plugins/ws281x_led_status/
 
 ### Project Status
 Initialze release Aug/26/2022  
-Latest release V1.2.9: Mar/11/2023  
+Latest release V1.3.0: Mar/16/2023  
 
 ### Installing  
 See https://github.com/jakebullet70/OctoTouchController/wiki/Installing  

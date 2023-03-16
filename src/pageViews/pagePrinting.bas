@@ -231,6 +231,9 @@ Private Sub UpdateFileName
 		lblFileName.Text = gblConst.NO_FILE_LOADED
 	End If
 	LoadThumbNail
+	If (oc.isHeating Or oc.isPrinting) Then
+		Printing_FromFilesPage
+	End If
 End Sub
 
 Public Sub Update_Printer_Temps
@@ -390,6 +393,7 @@ Private Sub HeaterViewLbl_Click
 End Sub
 Public Sub Printing_FromFilesPage
 	'--- called when starting a print from files page
+	Log("Printing_FromFilesPage")
 	If ivPreviewLG.mBase.Visible = True Then
 		ivPreviewLG_Click
 	End If

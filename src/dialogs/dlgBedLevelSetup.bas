@@ -72,8 +72,9 @@ Public Sub Show
 	prefHelper.ThemePrefDialogForm
 	mPrefDlg.PutAtTop = ToTop
 	Dim RS As ResumableSub = mPrefDlg.ShowDialog(Data, "OK", "CANCEL")
-	mPrefDlg.Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
+	prefHelper.dlgHelper.NoCloseOn2ndDialog
 	prefHelper.dlgHelper.ThemeInputDialogBtnsResize
+	
 	'BuildHelpLabel
 	
 	

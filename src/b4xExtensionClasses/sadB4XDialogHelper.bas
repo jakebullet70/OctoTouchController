@@ -117,4 +117,7 @@ Public Sub AnimateDialog (FromEdge As String)
 End Sub
 
 
-
+Public Sub NoCloseOn2ndDialog
+	'dlg.Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
+	dlg.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
+End Sub

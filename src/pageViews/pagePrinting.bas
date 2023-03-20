@@ -318,6 +318,7 @@ End Sub
 Public Sub LoadThumbNail
 	
 	Dim Const THUMBNAIL_ISSUE As String = "Getting Thumbnail..."
+	If oc.JobFileName = "" Then Return
 	
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized = False Then
 		'--- sometimes happens on 1st startup

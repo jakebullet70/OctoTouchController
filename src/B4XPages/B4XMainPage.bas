@@ -372,7 +372,7 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			
 		Case "oc"  '--- octo setup
 			Dim o9 As dlgOctoSetup
-			o9.Initialize(Me,"Octoprint Connection","PrinterSetup_Closed")
+			o9.Initialize(Me,"Printer Connection","PrinterSetup_Closed")
 			o9.Show(False)
 		
 		Case "pw"  '--- android power setup

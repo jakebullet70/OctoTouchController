@@ -40,7 +40,7 @@ End Sub
 
 public Sub ReadConnectionFile(cn As HttpOctoRestAPI) As Boolean
 	
-	oc.IsOctoConnectionVarsValid = False '--- assume bad
+	oc.IsConnectionValid = False '--- assume bad
 	
 	Dim m As Map = LoadPrinterConnectionSettings
 	If m.IsInitialized = False Then
@@ -59,7 +59,7 @@ public Sub ReadConnectionFile(cn As HttpOctoRestAPI) As Boolean
 	'cn.Initialize("192.168.1.236","5003","D09FA63DCB9940109FDCB1750304A067",B4XPages.MainPage) 'octoAPIkey (MAIN GLOBAL key)
 	cn.Initialize(oc.OctoIp ,oc.OctoPort,oc.OctoKey) 'octoAPIkey (MAIN GLOBAL key)
 	
-	oc.IsOctoConnectionVarsValid = True
+	oc.IsConnectionValid = True
 	Return True
 	
 End Sub

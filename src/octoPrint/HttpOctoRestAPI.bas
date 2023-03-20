@@ -60,6 +60,10 @@ public Sub SendRequestGetInfo(octConst As String) As ResumableSub
 
 	Dim inSub As String = "SendRequestGetInfo"
 	Dim sAPI As String = $"http://${gIP}:${gPort}${octConst}?apikey=${mAPIkey}"$
+	#if klipper
+	sAPI = $"http://${gIP}:${gPort}${octConst}"$
+	#End If
+	
 	
 	Dim j As HttpJob: j.Initialize("", Me)
 	Dim retStr As String = ""
@@ -100,6 +104,9 @@ Public Sub PostRequest(PostApiCmd As String) As ResumableSub
 	JsonDataMsg = Regex.Split("!!",PostApiCmd)(1)
 			
 	Dim EndPoint As String = $"http://${gIP}:${gPort}${restAPI}?apikey=${mAPIkey}"$
+	#if klipper
+	EndPoint = $"http://${gIP}:${gPort}${restAPI}"$
+	#End If
 	
 	Wait For (PostRequest2(EndPoint,JsonDataMsg)) Complete(r As String)
 	Return r
@@ -250,6 +257,9 @@ public Sub DeleteRequest(DeleteApiCmd As String) As ResumableSub
 
 	Dim InSub As String = "DeleteRequest"
 	Dim sAPI As String = $"http://${gIP}:${gPort}${DeleteApiCmd}?apikey=${mAPIkey}"$
+	#if klipper
+	sAPI = $"http://${gIP}:${gPort}${DeleteApiCmd}"$
+	#End If
 	
 	Dim job As HttpJob : job.Initialize("", Me)
 	Dim retStr As String = ""

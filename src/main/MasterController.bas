@@ -132,7 +132,7 @@ Private Sub GetAllOctoSettingInfo
 		mGotOctoSettingFLAG = True '--- will stop it from firing in the main loop
 		
 		Build_PresetHeaterOption(mapMasterOctoTempSettings)
-	
+			
 		mGotOctoSettingFLAG_IsBusy = False
 	Else
 		
@@ -181,9 +181,6 @@ Private Sub GetTemps
 	
 	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(oc.cPRINTER_MASTER_STATE)
 
-	'{"error":"You don't have the permission to access the requested resource. It is either read-protected or not readable by the server."}
-	'Dim rs As ResumableSub =  gbl.cn.SendRequestGetInfo(oc.cPRINTER_HEATER) ERROR!!
-	
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
 		parser.TempStatus(Result)
@@ -298,12 +295,22 @@ Public Sub GetAllOctoFilesInfo
 	
 	mGotFilesListFLAG_IsBusy = True
 	
-	Dim rs As ResumableSub =  oCN.SendRequestGetInfo( oc.cFILES)
+	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(oc.cFILES)
 	
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
 
-		Dim o As JsonParserFiles  : o.Initialize(True) '--- download thumbnails
+		Dim o As JsonParserFiles  
+		o.Initialize(True) '--- download thumbnails
+		
+		#if klipper
+		If oc.KlipperFileSrcPath.Length <> 0 Then
+			Wait For (o.GetKlipperFilePath) Complete (retval As String)
+			'--- TODO, if supporting paths --- https://moonraker.readthedocs.io/en/latest/web_api/#list-available-files
+			oc.KlipperFileSrcPath = retval
+		End If
+		#End If
+			
 		gMapOctoFilesList.Initialize
 		gMapOctoFilesList = o.StartParseAllFiles(Result)
 		

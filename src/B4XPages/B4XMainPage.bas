@@ -110,7 +110,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	'--- gesture crap
 	'GD.SetOnGestureListener(pnlMenu, "Gesture")
 	
-	TryOctoConnection
+	TryPrinterConnection
 	
 End Sub
 
@@ -205,7 +205,7 @@ Public Sub HideSplash_StartUp
 	pnlMaster.Visible = True
 End Sub
 
-Private Sub TryOctoConnection
+Private Sub TryPrinterConnection
 	
 	If oMasterController.IsInitialized = False Then 
 		oMasterController.Initialize
@@ -228,7 +228,7 @@ Private Sub TryOctoConnection
 
 End Sub
 
-#Region "OCTO_EVENTS"
+#Region "PRINTER_EVENTS"
 '--- events called from the masterController
 
 Public Sub Update_Printer_Temps
@@ -335,7 +335,7 @@ Private Sub PopupMainOptionMenu
 	If oc.isPrinting Or oc.IsPaused2 Then
 		'--- do not know why i did this, does not seem to matter
 		'--- if you change when printing
-		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
+		Show_toast("Cannot Change Printer Connection Settings While Printing",2500)
 		popUpMemuItems = gui.BuildOptionsMenu(True)
 	Else
 		popUpMemuItems = gui.BuildOptionsMenu(False)
@@ -419,7 +419,7 @@ Public Sub PrinterSetup_Closed
 
 	If oc.IsConnectionValid Then
 		Show_toast("Trying to connect...",3000)		
-		TryOctoConnection
+		TryPrinterConnection
 	End If
 	'Sleep(100)
 	'guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
@@ -478,7 +478,11 @@ End Sub
 '--- options plugin sub menu
 Private Sub PopupPluginOptionMenu
 	
+	#if klipper
+	Dim popUpMemuItems As Map = CreateMap("SonOff Control":"psu")
+	#else
 	Dim popUpMemuItems As Map = CreateMap("PSU Control":"psu","ZLED Setup":"led","ws281x Setup":"ws2")
+	#End If
 	
 	Dim cs As CSBuilder : cs.Initialize
 	Dim title As Object = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE8C1)). _
@@ -499,7 +503,12 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			
 		Case "psu"  '--- sonoff / PSU control setup
 			Dim oA As dlgPsuSetup
+			#if klipper
+			oA.Initialize(Me,"PSU SonOff Config")
+			#else
 			oA.Initialize(Me,"PSU Config")
+			#End If
+			
 			oA.Show
 			
 		Case "led" '--- ZLED

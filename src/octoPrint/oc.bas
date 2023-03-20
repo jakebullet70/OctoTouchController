@@ -14,7 +14,7 @@ Sub Process_Globals
 
 	Public cPRINTER_BUSY_MSG As String = "Problem, Printer is busy"
 	
-	Public IsOctoConnectionVarsValid As Boolean = False
+	Public IsConnectionValid As Boolean = False
 	
 	Public OctoKey, OctoIp ,OctoPort As String
 	
@@ -69,10 +69,21 @@ Sub Process_Globals
 	
 	Public JobPrintThumbnail As String
 	Public JobPrintThumbnailSrc As String
+
+	#if klipper
+	Public KlipperFileSrcPath As String = ""
+	#End If
 	
-	Public GCodeStartTemplate, GCodeEndTemplate As String
 		
 	'======================================================================
+	'======================================================================
+	'======================================================================
+	'======================================================================
+	
+	
+	
+	
+	
 	
 	'https://github.com/kantlivelong/OctoPrint-PSUControl/wiki/API
 	Public Const cPSU_CONTROL_K As String = $"/api/plugin/psucontrol!!{"command":"turnPSU!ONOFF!"}"$ '--- POST
@@ -88,8 +99,12 @@ Sub Process_Globals
 	Public const cPOST_GCODE_COMMANDS As String = $"${cPOST_GCODE}!!{"commands": ["!CMDS!"]}"$
 	'---                                                      {"commands": ["M18","M106 S0"]}
 	
+	#if klipper
+	Public Const cFILES As String = "/server/files/list"
+	#else
 	Public Const cFILES As String = "/api/files"
 	Public Const cFILES_ALL As String = "/api/files?recursive=true" '----  NOT WORKING ------------   PERMISSION ERROR  
+	#End If
 	
 	Private const cPOST_FILES As String = "/api/files/!LOC!/!PATH!" '--- !LOC! = local or sdcard
 	Public const cPOST_FILES_PRINT As String = $"${cPOST_FILES}!!{"command": "select","print": true}"$
@@ -125,26 +140,12 @@ Sub Process_Globals
 	Public const cCMD_SET_TOOL_TEMP As String = $"${cPOST_PRINTER_TOOL}!!{"command": "target","targets": {"tool0": !VAL0!}}"$
 	
 	'======================================================================
-	Public const cCONNECTION_INFO As String = "/api/connection"
+	#if klipper
+	'Public Const cCONNECTION_INFO As String = "/printer/objects/list"
+	#else
+	Public Const cCONNECTION_INFO As String = "/api/connection"
 	Public Const cCMD_AUTO_CONNECT_STARTUP As String = $"${cCONNECTION_INFO}!!{ "command": "connect" }"$
-	'https://docs.octoprint.org/en/master/api/connection.html
-	'{"current": {
-	'	"state": "Operational",
-	'	"port": "/dev/ttyACM0",
-	'	"baudrate": 250000,
-	'	"printerProfile": "_default"
-	'	},
-	'	"options": {
-	'	"ports": ["/dev/ttyACM0", "VIRTUAL"],
-	'	"baudrates": [250000, 230400, 115200, 57600, 38400, 19200, 9600],
-	'	"printerProfiles": [{"name": "Default", "id": "_default"}],
-	'	"portPreference": "/dev/ttyACM0",
-	'	"baudratePreference": 250000,
-	'	"printerProfilePreference": "_default",
-	'	"autoconnect": True}
-	'	}
-	
-	
+	#End If
 	
 	'--- location – The location of the file for which to retrieve the information, either local or sdcard.
 	Public const cFILE_INFO As String = "/api/files/!LOCATION!/!FNAME!"   
@@ -413,6 +414,10 @@ public Sub ResetAllOctoVars
 	IsPaused2 = False
 	isHeating = False
 	OctoVersion   = "N/A"
+	#if klipper
+	KlipperFileSrcPath = ""
+	#End If
+
 	
 	FilesB4Xmap.Initialize
 		

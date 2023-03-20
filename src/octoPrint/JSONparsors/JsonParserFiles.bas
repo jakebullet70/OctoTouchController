@@ -19,9 +19,9 @@ Sub Class_Globals
 						Origin As String, Path As String,Thumbnail_src As String,Volume As Double,  _
 						Length As Double, Depth As Double, Width As Double, Height As Double, _
 						myThumbnail_filename_disk As String,Thumbnail_original As String, _
-						missingData As Boolean,hash As String)
+						missingData As Boolean,hash As String,filament_total As Double)
 						
-	Private mDownloadThumbnails As Boolean
+	Private mDownloadThumbnails As Boolean 'ignore
 	Public cacheTarget As Int = 4
 	
 	
@@ -103,6 +103,10 @@ End Sub
 
 Private Sub Parse(jsonTXT As String)
 	
+	#if klipper
+	ParseKlipper(jsonTXT)
+	#else
+	
 	'jsonTXT = File.ReadString(File.DirAssets,"ftest.txt")
 	
 	Dim InSub As String = "Parse"
@@ -146,7 +150,7 @@ Private Sub Parse(jsonTXT As String)
 				logMe.LogIt2("Parse05: " & LastException,mModule,InSub)
 			End Try
 
-			'If ff.Name.StartsWith("3D") Then LogColor("starts with --> "&ff.Thumbnail,Colors.Green)
+	'If ff.Name.StartsWith("3D") Then LogColor("starts with --> "&ff.Thumbnail,Colors.Green)
 			Try
 				If ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null" Then
 					ff.Thumbnail =  ff.Thumbnail.SubString2(0,ff.Thumbnail.IndexOf("?"))
@@ -180,7 +184,7 @@ Private Sub Parse(jsonTXT As String)
 			Try                                          'gcodeAnalysis
 				
 				Dim gcodeAnalysis As Map = colfiles.Get("gcodeAnalysis")
-				'Dim estimatedPrintTime As Double = gcodeAnalysis.Get("estimatedPrintTime")
+	'Dim estimatedPrintTime As Double = gcodeAnalysis.Get("estimatedPrintTime")
 				Dim filament As Map = gcodeAnalysis.Get("filament")
 				Dim tool0 As Map = filament.Get("tool0")
 				ff.Volume = GetVolume(tool0.Get("volume"))
@@ -191,8 +195,8 @@ Private Sub Parse(jsonTXT As String)
 				ff.Width = dimensions.Get("width")
 				ff.Height = dimensions.Get("height")
 			Catch
-				'--- thinking if we error out here - octoprint has not finished parsing the newly
-				'--- added file so the gcode analisys is incomplete
+	'--- thinking if we error out here - octoprint has not finished parsing the newly
+	'--- added file so the gcode analisys is incomplete
 				ff.missingData = True
 				logMe.LogIt2("ParseFile-missingData=True",mModule,InSub)
 			End Try
@@ -204,15 +208,15 @@ Private Sub Parse(jsonTXT As String)
 		If mDownloadThumbnails And (ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null") _
 							   And cacheTTL < cacheTarget Then
 							   
-			'--- cache files (will be random because of the sort)
-			'--- but if you only have a few files will not really matter
+	'--- cache files (will be random because of the sort)
+	'--- but if you only have a few files will not really matter
 			
 			cacheTTL = cacheTTL + 1
 			CallSub3(B4XPages.MainPage.oMasterController,"Download_ThumbnailAndCache2File",ff.Thumbnail,ff.myThumbnail_filename_disk)
 			
 		End If
 		
-		'--- stash results to map
+	'--- stash results to map
 		gMapFiles.Put(ff.Name,ff)
 		
 	Next
@@ -224,12 +228,13 @@ Private Sub Parse(jsonTXT As String)
 '		logMe.LogIt2("gMapFiles is 0 size",mModule,InSub)
 '	End If
 
+	#End If
+	
 End Sub
 
 
-
-
-
+'====================================================================================
+'   OCTOPRINT STUFF
 '====================================================================================
 
 'Dim parser As JSONParser
@@ -320,7 +325,7 @@ End Sub
 'Next
 'Dim free As String = root.Get("free")
 
-
+#if not (klipper)
 Private Sub GetLength(v As String) As Double
 	Try
 		If (v <> Null And v <> "null" And v <> 0) Then
@@ -344,4 +349,157 @@ Private Sub GetVolume(v As String) As Double
 	
 	Return 0
 End Sub
+#end if
+
+
+
+
+
+
+'====================================================================================
+'   KLIPPER - MOONRAKER STUFF
+'====================================================================================
+
+Public Sub GetKlipperFilePath() As ResumableSub
+	Try
+	
+		Dim rs As ResumableSub =  B4XPages.MainPage.oMasterController.CN.SendRequestGetInfo("/server/files/roots")
+		Wait For(rs) Complete (Result1 As String)
+		If Result1.Length <> 0 Then
+			Dim parser1 As JSONParser
+			parser1.Initialize(Result1)
+			Dim root As Map = parser1.NextObject
+			Dim r As List = root.Get("result")
+			For Each colresult As Map In r
+				If colresult.Get("name") = "gcodes" Then
+					Return colresult.Get("path")
+					Exit 'For
+				End If
+			Next
+		End If
+		
+	Catch
+		logMe.LogIt2(LastException.Message,mModule,"GetKlipperFilePath")
+	End Try
+	Return ""
+	
+End Sub
+
+
+Private Sub ParseKlipper(jsonTXT As String)
+	Dim Const InSub As String = "ParseKlipper"
+	Log(jsonTXT)
+	
+	Dim parser As JSONParser
+	parser.Initialize(jsonTXT)
+	Dim root As Map = parser.NextObject
+	Dim result As List = root.Get("result")
+	For Each colfiles As Map In result
+		
+		Dim ff As tOctoFileInfo
+		
+'		If colfiles.Get("type") = "folder" Then
+'			Continue '--- its a folder
+'		End If
+			
+		Try
+			ff.Date = colfiles.Get("modified")
+			ff.path = colfiles.Get("path")
+
+			ff.Size = colfiles.Get("size")
+			ff.hash = "" 'fnc.guid
+			GetExtendedFileInfo(ff) : Wait For GetExtendedFileInfo
+			
+		Catch
+			logMe.LogIt2("Parse00: " & LastException,mModule,InSub)
+		End Try
+		
+	Next
+
+End Sub
+
+Private Sub GetExtendedFileInfo(ff As tOctoFileInfo)
+
+	Dim ep As String = "/server/files/metadata?filename=" & ff.Path
+	'Dim ep As String = "/server/files/metadata?filename=" & oc.KlipperFileSrcPath & "/" &  ff.Path
+	Dim rs As ResumableSub =  B4XPages.MainPage.oMasterController.CN.SendRequestGetInfo(ep)
+	Wait For(rs) Complete (RetVal As String)
+	Try
+	
+		If RetVal.Length <> 0 Then
+			Dim parser As JSONParser
+			parser.Initialize(RetVal)
+			Dim root As Map = parser.NextObject
+			Dim Result As Map = root.Get("result")
+			ff.Height = Result.Get("object_height")
+			ff.filament_total = Result.Get("filament_total")
+			
+			Dim thumbnails As List = Result.Get("thumbnails")
+			For Each colthumbnails As Map In thumbnails
+				
+				Dim width As Int = colthumbnails.Get("width")
+				If width < 48 Then Continue
+				
+				ff.Thumbnail = colthumbnails.Get("relative_path")
+				
+				Try
+					If ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null" Then
+						ff.Thumbnail =  ff.Thumbnail.SubString2(0,ff.Thumbnail.IndexOf("?"))
+						ff.myThumbnail_filename_disk = fnc.BuildThumbnailTempFilename(fnc.GetFilenameFromHTTP(ff.Thumbnail))
+					Else
+						ff.Thumbnail = ""
+						ff.myThumbnail_filename_disk = ""
+					End If
+				Catch
+					'logMe.LogIt2("ParseFile 3: " & LastException,mModule,InSub)
+					ff.Thumbnail = ""
+					ff.myThumbnail_filename_disk = ""
+				End Try
+				
+			Next
+			
+			Return
+		End If
+		
+	Catch
+		Log(LastException)
+	End Try
+	
+	
+End Sub
+
+Dim parser As JSONParser
+parser.Initialize(<text>)
+Dim root As Map = parser.NextObject
+Dim Result As Map = root.Get("result")
+Dim slicer As String = Result.Get("slicer")
+Dim first_layer_extr_temp As Double = Result.Get("first_layer_extr_temp")
+Dim gcode_end_byte As Int = Result.Get("gcode_end_byte")
+Dim object_height As Double = Result.Get("object_height")
+Dim first_layer_bed_temp As Double = Result.Get("first_layer_bed_temp")
+Dim filament_type As String = Result.Get("filament_type")
+Dim first_layer_height As Double = Result.Get("first_layer_height")
+Dim layer_height As Double = Result.Get("layer_height")
+Dim uuid As String = Result.Get("uuid")
+Dim nozzle_diameter As Double = Result.Get("nozzle_diameter")
+Dim filament_weight_total As Double = Result.Get("filament_weight_total")
+Dim filename As String = Result.Get("filename")
+Dim size As Int = Result.Get("size")
+Dim job_id As String = Result.Get("job_id")
+Dim slicer_version As String = Result.Get("slicer_version")
+Dim modified As Double = Result.Get("modified")
+Dim filament_total As Double = Result.Get("filament_total")
+Dim gcode_start_byte As Int = Result.Get("gcode_start_byte")
+Dim filament_name As String = Result.Get("filament_name")
+Dim thumbnails As List = Result.Get("thumbnails")
+For Each colthumbnails As Map In thumbnails
+	Dim size As Int = colthumbnails.Get("size")
+	Dim width As Int = colthumbnails.Get("width")
+	Dim relative_path As String = colthumbnails.Get("relative_path")
+	Dim height As Int = colthumbnails.Get("height")
+Next
+Dim estimated_time As Int = Result.Get("estimated_time")
+Dim print_start_time As Double = Result.Get("print_start_time")
+
+
 

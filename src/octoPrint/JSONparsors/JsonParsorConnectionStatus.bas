@@ -57,7 +57,7 @@ Public Sub ConnectionStatusKlipper(s As String)
 		Dim state As Map = m.Get("state")
 		Dim flags As Map = state.Get("flags")
 		Dim error As Boolean = flags.Get("error")
-		oc.isConnected = Not ( error.As(Boolean))
+		oc.isConnected = Not (error.As(Boolean))
 	
 '		oc.PrinterBaud = mm.Get("baudrate")
 '		oc.PrinterPort = mm.Get("port")

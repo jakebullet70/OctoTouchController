@@ -83,7 +83,7 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	If NoOctoConnection = False Then
 		cs.Initialize
 		m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE308)). _
-				 	 Typeface(Typeface.DEFAULT).Append("   Octoprint Connection").PopAll,"oc")	
+				 	 Typeface(Typeface.DEFAULT).Append("   Printer Connection").PopAll,"oc")	
 	End If
 	
 	cs.Initialize

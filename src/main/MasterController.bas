@@ -238,8 +238,29 @@ Private Sub GetConnectionPrinterStatus
 	If oCN.IsInitialized = False Then
 		oCN.Initialize(oc.OctoIp ,oc.OctoPort,oc.OctoKey) 
 	End If
+	
 
-	'---force a connection if its not there	
+	#if klipper
+	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(oc.cPRINTER_MASTER_STATE)
+	'--- get some info!
+	Wait For(rs) Complete (Result As String)
+	If Result.Length <> 0 Then
+		
+		Dim o2 As JsonParsorConnectionStatus
+		o2.Initialize
+		o2.ConnectionStatusKlipper(Result)
+		
+	'--- turn on main loop timer
+		CallSub2(Main,"TurnOnOff_MainTmr",True)
+		tmrMain_Tick
+		
+	Else
+		oc.ResetStateVars
+	End If
+	#else	
+
+
+	'---force a connection if its not there
 	Dim rs As ResumableSub = oCN.PostRequest(oc.cCMD_AUTO_CONNECT_STARTUP)
 	Wait For(rs) Complete (Result As String)
 	
@@ -257,10 +278,13 @@ Private Sub GetConnectionPrinterStatus
 		tmrMain_Tick
 		
 	Else
-		
 		oc.ResetStateVars
-		
 	End If
+	
+	
+
+	#End If
+
 	
 End Sub
 

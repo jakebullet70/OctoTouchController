@@ -6,6 +6,8 @@ Version=11.5
 @EndOfDesignText@
 ' Author:  sadLogic
 #Region VERSIONS 
+' V. 2.0	Mar/20/2023
+'		Added code for klipper - moonraker
 ' V. 1.0 	June/30/2022
 #End Region
 
@@ -52,6 +54,9 @@ public Sub Check(ip As String,port As String,octo_key As String)
 
 	Dim InSub As String = "Check"
 	Dim sAPI As String = $"http://${ip}:${port}${oc.cSERVER}?apikey=${octo_key}"$
+	#if klipper
+	sAPI = $"http://${ip}:${port}${oc.cSERVER}"$ '--- moonraker emulates octoprint here
+	#End If
 	
 	Dim j As HttpJob: j.Initialize("", Me)
 	Dim resultStr As String = ""

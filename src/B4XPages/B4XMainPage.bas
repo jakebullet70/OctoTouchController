@@ -98,6 +98,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	
 	'--- splash screen
 	If Starter.FirstRun Then
+		LoadSplashPic
 		pnlMaster.Visible = False
 		pnlSplash.Visible = True
 	Else
@@ -191,6 +192,13 @@ Private Sub BuildGUI
 	
 End Sub
 
+Private Sub LoadSplashPic
+	Dim fname As String = "splash.png"
+	#if klipper
+	fname = "splashklipper.png"
+	#End If
+	ivSpash.Bitmap = LoadBitmapSample(File.DirAssets, fname, ivSpash.Width, ivSpash.Height)
+End Sub
 
 Public Sub HideSplash_StartUp
 	pnlSplash.Visible = False
@@ -204,10 +212,15 @@ Private Sub TryOctoConnection
 	End If
 	If fnc.ReadConnectionFile(oMasterController.CN) = False Then
 		Dim o9 As dlgOctoSetup 
+		#if klipper
+		o9.Initialize(Me,"Klipper Connection","PrinterSetup_Closed")
+		#else
 		o9.Initialize(Me,"Octoprint Connection","PrinterSetup_Closed")
+		#End If
+		
 		o9.Show(True)
 	Else
-		If oc.IsOctoConnectionVarsValid Then
+		If oc.IsConnectionValid Then
 			oMasterController.SetCallbackTargets(Me,"Update_Printer_Temps","Update_Printer_Status","Update_Printer_Btns")
 			oMasterController.Start
 		End If
@@ -404,7 +417,7 @@ End Sub
 '--- called from dlgOctoSetup on exit
 Public Sub PrinterSetup_Closed
 
-	If oc.IsOctoConnectionVarsValid Then
+	If oc.IsConnectionValid Then
 		Show_toast("Trying to connect...",3000)		
 		TryOctoConnection
 	End If

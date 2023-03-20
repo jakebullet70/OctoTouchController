@@ -18,11 +18,20 @@ Public Sub Initialize
 End Sub
 
 
+Private Sub ReplaceOcto2KlipperTxt(s As String) As String
+	#if klipper
+	Return s.Replace("Octoprint","Klipper")
+	#else
+	Return s
+	#End If
+	
+End Sub
+
 Public Sub GetConnectFailedMsg() As String
 	Dim msg As StringBuilder : msg.Initialize
 	msg.Append("Connection Failed.").Append(CRLF)
 	msg.Append("Is Octoprint turned on?").Append(CRLF).Append("Are Your IP And Port correct?").Append(CRLF)
-	Return msg.ToString
+	Return ReplaceOcto2KlipperTxt(msg.ToString)
 End Sub
 
 
@@ -40,7 +49,7 @@ Public Sub GetConnectionText(connectedButError As Boolean) As String
 		Msg.Append(CRLF).Append("Connected to the printer?")
 	End If
 	
-	Return Msg.ToString
+	Return ReplaceOcto2KlipperTxt(Msg.ToString)
 End Sub
 
 Public Sub GetOctoPluginWarningTxt() As String
@@ -50,7 +59,7 @@ Public Sub GetOctoPluginWarningTxt() As String
 	Msg.Append("plugin make sure it is working in Octoprint first ")
 	Msg.Append("before you complete the setup here.").Append(CRLF)
 	
-	Return Msg.ToString
+	Return ReplaceOcto2KlipperTxt(Msg.ToString)
 	
 End Sub
 
@@ -64,7 +73,7 @@ Public Sub GetOctoSysCmdsWarningTxt() As String
 	'Msg.Append("").Append(CRLF)
 	Msg.Append("(See the Wiki in GitHub for hints)").Append(CRLF)
 	
-	Return Msg.ToString
+	Return ReplaceOcto2KlipperTxt(Msg.ToString)
 	
 End Sub
 
@@ -87,9 +96,15 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	End If
 	
 	cs.Initialize
+	#if klipper
+	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
+				 Typeface(Typeface.DEFAULT).Append("   Macro's Menu").PopAll,"fn")
+	cs.Initialize
+	#else
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
 				 Typeface(Typeface.DEFAULT).Append("   Functions Menu").PopAll,"fn")
 	cs.Initialize
+	#End If
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE8C1)). _
 				 Typeface(Typeface.DEFAULT).Append("   Plugins Menu").PopAll,"plg")				 
 	cs.Initialize

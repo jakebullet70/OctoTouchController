@@ -194,6 +194,13 @@ End Sub
 
 Public Sub Update_Printer_Stats
 	
+	#if klipper 
+	If oc.isConnected = False Then
+		CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_MENU)
+		Return
+	End If
+	#End If
+	
 	'--- update printer job
 	If IsNumber(oc.JobCompletion) Then
 		CircularProgressBar1.Value = oc.JobCompletion

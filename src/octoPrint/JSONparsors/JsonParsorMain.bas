@@ -31,6 +31,11 @@ Public Sub TempStatus(s As String)
 		Dim TargetBedCheck,TargetToolCheck As Int
 	
 		'--- populate vars from json
+		
+		#if klipper
+		
+		#End If
+		
 		Try
 			jp.Initialize(s)
 			m = jp.NextObject

@@ -15,6 +15,9 @@ Sub Class_Globals
 	
 	Private oCN As HttpOctoRestAPI
 	Public parser As JsonParsorMain
+	#if klipper
+	Public parsorConStatus As JsonParsorConnectionStatus
+	#End If
 	
 	'--- populated by a REST calls, will be grabbed by their pages
 	Public gMapOctoFilesList As Map
@@ -51,6 +54,10 @@ Public Sub Initialize
 	
 	mainObj = B4XPages.MainPage
 	parser.Initialize() '--- init the octo rest parser
+	#if klipper
+	parsorConStatus.Initialize
+	#End If
+	
 	
 End Sub
 
@@ -176,6 +183,13 @@ End Sub
 
 Private Sub GetTemps
 	
+'	#if klipper
+'	If oc.isConnected = False Then
+'		mGetTempFLAG_Busy = False
+'		Return
+'	End If
+'	#End If
+	
 	If mGetTempFLAG_Busy = True Then Return '--- stop calls from backing up if we have had a disconect
 	mGetTempFLAG_Busy = True
 	
@@ -184,6 +198,10 @@ Private Sub GetTemps
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
 		parser.TempStatus(Result)
+		#if klipper
+		'--- moonraker can still be running even though it is not connected to klipper
+		parsorConStatus.ConnectionStatusKlipper(Result)
+		#End If
 	Else
 		oc.ResetTempVars
 	End If
@@ -201,6 +219,13 @@ End Sub
 
 
 Private Sub GetJobStatus
+	
+	#if klipper
+	If oc.isConnected = False Then
+		mJobStatusFLAG_Busy = False
+		Return
+	End If
+	#End If
 	
 	If mJobStatusFLAG_Busy = True Then Return '--- stop calls from backing up if we have had a disconnect
 	mJobStatusFLAG_Busy = True
@@ -287,6 +312,13 @@ End Sub
 
 
 Public Sub GetAllOctoFilesInfo
+	
+	#if klipper
+	If oc.isConnected = False Then 
+		mGotFilesListFLAG_IsBusy = False
+		Return
+	End If
+	#End If
 	
 	If mGotFilesListFLAG_IsBusy = True Then
 		If config.logFILE_EVENTS Then logMe.Logit("mGotFilesListFLAG_IsBusy = True",mModule)

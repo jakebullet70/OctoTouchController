@@ -35,6 +35,7 @@ End Sub
 
 Public Sub CheckIfChanged(jsonTXT As String,oldMap As Map) As Boolean
 	
+	
 	'--- just tell them something has changed
 	Dim InSub As String = "ParseCompareCheck"
 	Dim parser As JSONParser
@@ -444,8 +445,9 @@ Private Sub GetExtendedFileInfo(ff As tOctoFileInfo)
 				
 				Try
 					If ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null" Then
-						ff.Thumbnail =  ff.Thumbnail.SubString2(0,ff.Thumbnail.IndexOf("?"))
-						ff.myThumbnail_filename_disk = fnc.BuildThumbnailTempFilename(fnc.GetFilenameFromHTTP(ff.Thumbnail))
+						'ff.Thumbnail =  ff.Thumbnail.SubString2(0,ff.Thumbnail.IndexOf("?"))
+						Dim tmp As String = ff.Thumbnail.SubString(ff.Thumbnail.IndexOf("/")+1)
+						ff.myThumbnail_filename_disk = fnc.BuildThumbnailTempFilename(fnc.GetFilenameFromHTTP(tmp))
 					Else
 						ff.Thumbnail = ""
 						ff.myThumbnail_filename_disk = ""
@@ -468,38 +470,38 @@ Private Sub GetExtendedFileInfo(ff As tOctoFileInfo)
 	
 End Sub
 
-Dim parser As JSONParser
-parser.Initialize(<text>)
-Dim root As Map = parser.NextObject
-Dim Result As Map = root.Get("result")
-Dim slicer As String = Result.Get("slicer")
-Dim first_layer_extr_temp As Double = Result.Get("first_layer_extr_temp")
-Dim gcode_end_byte As Int = Result.Get("gcode_end_byte")
-Dim object_height As Double = Result.Get("object_height")
-Dim first_layer_bed_temp As Double = Result.Get("first_layer_bed_temp")
-Dim filament_type As String = Result.Get("filament_type")
-Dim first_layer_height As Double = Result.Get("first_layer_height")
-Dim layer_height As Double = Result.Get("layer_height")
-Dim uuid As String = Result.Get("uuid")
-Dim nozzle_diameter As Double = Result.Get("nozzle_diameter")
-Dim filament_weight_total As Double = Result.Get("filament_weight_total")
-Dim filename As String = Result.Get("filename")
-Dim size As Int = Result.Get("size")
-Dim job_id As String = Result.Get("job_id")
-Dim slicer_version As String = Result.Get("slicer_version")
-Dim modified As Double = Result.Get("modified")
-Dim filament_total As Double = Result.Get("filament_total")
-Dim gcode_start_byte As Int = Result.Get("gcode_start_byte")
-Dim filament_name As String = Result.Get("filament_name")
-Dim thumbnails As List = Result.Get("thumbnails")
-For Each colthumbnails As Map In thumbnails
-	Dim size As Int = colthumbnails.Get("size")
-	Dim width As Int = colthumbnails.Get("width")
-	Dim relative_path As String = colthumbnails.Get("relative_path")
-	Dim height As Int = colthumbnails.Get("height")
-Next
-Dim estimated_time As Int = Result.Get("estimated_time")
-Dim print_start_time As Double = Result.Get("print_start_time")
-
-
-
+'Dim parser As JSONParser
+'parser.Initialize(<text>)
+'Dim root As Map = parser.NextObject
+'Dim Result As Map = root.Get("result")
+'Dim slicer As String = Result.Get("slicer")
+'Dim first_layer_extr_temp As Double = Result.Get("first_layer_extr_temp")
+'Dim gcode_end_byte As Int = Result.Get("gcode_end_byte")
+'Dim object_height As Double = Result.Get("object_height")
+'Dim first_layer_bed_temp As Double = Result.Get("first_layer_bed_temp")
+'Dim filament_type As String = Result.Get("filament_type")
+'Dim first_layer_height As Double = Result.Get("first_layer_height")
+'Dim layer_height As Double = Result.Get("layer_height")
+'Dim uuid As String = Result.Get("uuid")
+'Dim nozzle_diameter As Double = Result.Get("nozzle_diameter")
+'Dim filament_weight_total As Double = Result.Get("filament_weight_total")
+'Dim filename As String = Result.Get("filename")
+'Dim size As Int = Result.Get("size")
+'Dim job_id As String = Result.Get("job_id")
+'Dim slicer_version As String = Result.Get("slicer_version")
+'Dim modified As Double = Result.Get("modified")
+'Dim filament_total As Double = Result.Get("filament_total")
+'Dim gcode_start_byte As Int = Result.Get("gcode_start_byte")
+'Dim filament_name As String = Result.Get("filament_name")
+'Dim thumbnails As List = Result.Get("thumbnails")
+'For Each colthumbnails As Map In thumbnails
+'	Dim size As Int = colthumbnails.Get("size")
+'	Dim width As Int = colthumbnails.Get("width")
+'	Dim relative_path As String = colthumbnails.Get("relative_path")
+'	Dim height As Int = colthumbnails.Get("height")
+'Next
+'Dim estimated_time As Int = Result.Get("estimated_time")
+'Dim print_start_time As Double = Result.Get("print_start_time")
+'
+'
+'

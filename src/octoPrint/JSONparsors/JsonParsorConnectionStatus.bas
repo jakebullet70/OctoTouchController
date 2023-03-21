@@ -44,6 +44,8 @@ Public Sub ConnectionStatus(s As String)
 	
 End Sub
 
+
+#if klipper
 Public Sub ConnectionStatusKlipper(s As String) 
 	
 	Dim m, flags As Map, InSub As String = "ConnectionStatusKlipper"
@@ -58,6 +60,7 @@ Public Sub ConnectionStatusKlipper(s As String)
 		Dim flags As Map = state.Get("flags")
 		Dim error As Boolean = flags.Get("error")
 		oc.isConnected = Not (error.As(Boolean))
+		If oc.isConnected = False Then oc.ResetTempVars
 	
 '		oc.PrinterBaud = mm.Get("baudrate")
 '		oc.PrinterPort = mm.Get("port")
@@ -71,6 +74,7 @@ Public Sub ConnectionStatusKlipper(s As String)
 	End Try
 	
 End Sub
+#End If
 
 'Dim parser As JSONParser
 'parser.Initialize(<text>)

@@ -175,8 +175,8 @@ Version=11.8
 #Region  Project Attributes 
 	#if klipper
 	#ApplicationLabel: KlipperTC
-	#VersionCode: 22
-	#VersionName: 1.3.0
+	#VersionCode: 1
+	#VersionName: 0.9.0
 	#Else
 	#ApplicationLabel: OctoTC
 	#VersionCode: 22

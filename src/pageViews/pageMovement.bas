@@ -79,6 +79,13 @@ End Sub
 
 public Sub Update_Printer_Btns
 	
+	#if klipper 
+	If oc.isConnected = False Then
+		CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_MENU)
+		Return
+	End If
+	#End If
+	
 	'--- sets enable, disable
 	mPageEnableDisable = IIf(oc.isPrinting,False,True)
 	guiHelpers.EnableDisableBtns2(Array As Button( _

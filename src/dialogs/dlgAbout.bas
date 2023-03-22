@@ -32,7 +32,9 @@ End Sub
 
 Public Sub Show
 	
+	#if not (klipper)
 	Check4OctoKlipper
+	#end if
 	mDialog.Initialize(mMainObj.Root)
 	Dim dlgHelper As sadB4XDialogHelper
 	dlgHelper.Initialize(mDialog)
@@ -109,11 +111,22 @@ Private Sub GetAboutText() As String
 	msg.Append("(©)sadLogic 2022").Append(CRLF)
 	msg.Append("Kherson Ukraine!").Append(CRLF)
 	msg.Append("AGPL-3.0 license")
+	
+	#if klipper
+	Dim v As String  = msg.ToString
+	v.Replace("Octoprint","Klipper").Replace("OctoTouch","KlipperTouch")
+	Return v
+	#else
 	Return msg.ToString
+	#End If
+	
+	
+	
 	
 End Sub
 
 
+#if not (klipper)
 Public Sub Check4OctoKlipper
 	
 	Dim rs As ResumableSub =  mMainObj.oMasterController.CN.SendRequestGetInfo("/plugin/pluginmanager/plugins")
@@ -130,4 +143,5 @@ Public Sub Check4OctoKlipper
 	
 	
 End Sub
+#end if
 #end region

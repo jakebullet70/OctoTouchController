@@ -98,17 +98,17 @@ End Sub
 
 
 Public Sub PostRequest(PostApiCmd As String) As ResumableSub
-
+	
+	#if klipper
+	Dim EndPoint As String = $"http://${gIP}:${gPort}${PostApiCmd}"$
+	Wait For (PostRequest2(EndPoint,"")) Complete(r As String)
+	#else
 	Dim restAPI, JsonDataMsg As String
 	restAPI = Regex.Split("!!",PostApiCmd)(0)
 	JsonDataMsg = Regex.Split("!!",PostApiCmd)(1)
-			
 	Dim EndPoint As String = $"http://${gIP}:${gPort}${restAPI}?apikey=${mAPIkey}"$
-	#if klipper
-	EndPoint = $"http://${gIP}:${gPort}${restAPI}"$
-	#End If
-	
 	Wait For (PostRequest2(EndPoint,JsonDataMsg)) Complete(r As String)
+	#End If
 	Return r
 	
 End Sub
@@ -125,13 +125,24 @@ Public Sub PostRequest2(EndPoint As String,JsonDataMsg As String) As ResumableSu
 	End If
 	
 	job.PostString(EndPoint,JsonDataMsg)
-	job.GetRequest.SetContentType("application/json")
-	
+	If JsonDataMsg = "" Then
+		job.GetRequest.SetContentType("text/plain")
+	Else
+		job.GetRequest.SetContentType("application/json")
+	End If
+		
 	Wait For (job) JobDone(job As HttpJob)
 	If job.Success Then
 		retStr = job.GetString
 	Else
+		#if klipper
+		If Not (EndPoint.Contains(oc.cCMD_CANCEL)) Then '--- timeout error happens sometimes when canceling
+			ProcessErrMsg( EndPoint & CRLF & JsonDataMsg & CRLF &  job.ErrorMessage)
+		End If
+		#else
 		ProcessErrMsg( EndPoint & CRLF & JsonDataMsg & CRLF &  job.ErrorMessage)
+		#end if
+		
 	End If
 	
 	job.Release '--- free up resources

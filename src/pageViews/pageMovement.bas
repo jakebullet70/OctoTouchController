@@ -108,7 +108,11 @@ Private Sub btnGeneral_Click
 	
 	If oc.isConnected = False Then Return
 	
+	#if klipper
+	If oc.JobPrintState.ToLowerCase <> "standby" Then
+	#Else
 	If oc.JobPrintState <> "Operational" Then
+	#End If
 		guiHelpers.Show_toast(oc.cPRINTER_BUSY_MSG,2000)
 		Return
 	End If
@@ -134,7 +138,11 @@ Private Sub btnXYZ_Click
 	
 	If oc.isConnected = False Then Return
 	
+	#if klipper
+	If oc.JobPrintState.ToLowerCase <> "standby" Then
+	#Else
 	If oc.JobPrintState <> "Operational" Then
+	#End If
 		guiHelpers.Show_toast(oc.cPRINTER_BUSY_MSG,2000)
 		Return
 	End If

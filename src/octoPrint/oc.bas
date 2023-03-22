@@ -25,6 +25,9 @@ Sub Process_Globals
 	Public isConnected As Boolean = False
 	Public isPrinting As Boolean = False
 	Public isCanceling As Boolean = False
+	#if klipper
+	Public isKlipperCanceling As Boolean = False
+	#End If
 	Public IsPaused2 As Boolean = False
 	Public isHeating As Boolean = False
 	Public isFileLoaded As Boolean = False
@@ -113,6 +116,12 @@ Sub Process_Globals
 	
 	Public const cSETTINGS As String = "/api/settings"
 	
+	#if klipper
+	Public const cCMD_PRINT As String =  $"/printer/print/start?filename=!FN!"$
+	Public const cCMD_CANCEL As String = "/printer/print/cancel"
+	Public const cCMD_PAUSE As String = "/printer/print/pause"
+	Public const cCMD_RESUME As String = "/printer/print/resume"
+	#else
 	'--- has a split char for the API and the JSON payload, char is '!!'
 	'--- has a split char for the API and the JSON payload, char is '!!'
 	'--- has a split char for the API and the JSON payload, char is '!!'
@@ -122,6 +131,8 @@ Sub Process_Globals
 	Public const cCMD_CANCEL As String = $"${cPOST_JOB}!!{ "command": "cancel" }"$
 	Public const cCMD_PAUSE As String = $"${cPOST_JOB}!!{ "command": "pause","action": "pause" }"$
 	Public const cCMD_RESUME As String = $"${cPOST_JOB}!!{ "command": "pause","action": "resume" }"$
+	#End If
+	
 	
 	Private const cPOST_JOG As String = "/api/printer/printhead"
 	Public const cJOG_XY_HOME As String = $"${cPOST_JOG}!!{"command": "home", "axes": ["x", "y"]}"$
@@ -254,31 +265,31 @@ Sub Process_Globals
 	'	]	}	},	}	}
 	'	
 	
-	
-	
-	Public const cJOB_INFO As String = "/api/job"
-	'{
-	'	"job": {
-	'	"file": {
-	'	"name": "whistle_v2.gcode",
-	'	"origin": "local",
-	'	"size": 1468987,
-	'	"date": 1378847754
-	'	},
-	'	"estimatedPrintTime": 8811,
-	'	"filament": {
-	'	"tool0": {
-	'	"length": 810,
-	'	"volume": 5.36
-	'	}	}	},
-	'	"progress": {
-	'	"completion": 0.2298468264184775,
-	'	"filepos": 337942,
-	'	"printTime": 276,
-	'	"printTimeLeft": 912
-	'	},
-	'	"state": "Printing"
-	'	}
+'	
+'	
+'	Public const cJOB_INFO As String = "/api/job"
+'	'{
+'	'	"job": {
+'	'	"file": {
+'	'	"name": "whistle_v2.gcode",
+'	'	"origin": "local",
+'	'	"size": 1468987,
+'	'	"date": 1378847754
+'	'	},
+'	'	"estimatedPrintTime": 8811,
+'	'	"filament": {
+'	'	"tool0": {
+'	'	"length": 810,
+'	'	"volume": 5.36
+'	'	}	}	},
+'	'	"progress": {
+'	'	"completion": 0.2298468264184775,
+'	'	"filepos": 337942,
+'	'	"printTime": 276,
+'	'	"printTimeLeft": 912
+'	'	},
+'	'	"state": "Printing"
+'	'	}
 
 	
 	Public const cSERVER As String = "/api/server"
@@ -416,8 +427,8 @@ public Sub ResetAllOctoVars
 	OctoVersion   = "N/A"
 	#if klipper
 	KlipperFileSrcPath = ""
+	isKlipperCanceling = False
 	#End If
-
 	
 	FilesB4Xmap.Initialize
 		

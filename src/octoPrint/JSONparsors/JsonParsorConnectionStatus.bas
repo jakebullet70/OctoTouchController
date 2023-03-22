@@ -53,13 +53,14 @@ Public Sub ConnectionStatusKlipper(s As String)
 	Try
 	
 		jp.Initialize(s)
-	
+	'Log(s)
 		'--- populate json maps
 		m = jp.NextObject
 		Dim state As Map = m.Get("state")
 		Dim flags As Map = state.Get("flags")
 		Dim error As Boolean = flags.Get("error")
-		oc.isConnected = Not (error.As(Boolean))
+		Dim closedOrError As Boolean = flags.Get("closedOrError")
+		oc.isConnected = (Not (error)) Or closedOrError
 		If oc.isConnected = False Then oc.ResetTempVars
 	
 '		oc.PrinterBaud = mm.Get("baudrate")

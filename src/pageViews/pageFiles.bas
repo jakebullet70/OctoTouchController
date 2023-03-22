@@ -101,7 +101,12 @@ public Sub Update_Printer_Btns
 
 	'--- sets enable, disable
 	mPnlMain.Enabled = oc.isConnected
+	#if klipper
+	Dim enableDisable As Boolean  = Not (oc.isKlipperCanceling Or oc.isPrinting Or oc.IsPaused2 Or (clvLastIndexClicked = NO_SELECTION))
+	#else
 	Dim enableDisable As Boolean  = Not (oc.isCanceling Or oc.isPrinting Or oc.IsPaused2 Or (clvLastIndexClicked = NO_SELECTION))
+	#End If
+	
 	guiHelpers.EnableDisableBtns2(Array As Button(btnLoad,btnLoadAndPrint,btnDelete),enableDisable)
 
 End Sub

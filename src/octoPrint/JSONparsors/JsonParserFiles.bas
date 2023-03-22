@@ -19,7 +19,7 @@ Sub Class_Globals
 						Origin As String, Path As String,Thumbnail_src As String,Volume As Double,  _
 						Length As Double, Depth As Double, Width As Double, Height As Double, _
 						myThumbnail_filename_disk As String,Thumbnail_original As String, _
-						missingData As Boolean,hash As String,filament_total As Double)
+						missingData As Boolean,hash As String,filament_total As Double,total_layers As String)
 						
 	Private mDownloadThumbnails As Boolean 'ignore
 	Public cacheTarget As Int = 4
@@ -389,7 +389,7 @@ End Sub
 
 Private Sub ParseKlipper(jsonTXT As String)
 	Dim Const InSub As String = "ParseKlipper"
-	Log(jsonTXT)
+	'Log(jsonTXT)
 	
 	Dim parser As JSONParser
 	parser.Initialize(jsonTXT)

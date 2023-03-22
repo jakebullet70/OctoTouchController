@@ -93,11 +93,6 @@ End Sub
 
 Public Sub tmrMain_Tick
 
-	'--- make API requested and update screen
-	'--- Timer is in 'Main'
-	GetTemps
-	GetJobStatus
-	
 	'--- do we have a valid printer profile?
 	If mGotProfileInfoFLAG = False And mGotProfileInfoFLAG_IsBusy = False Then
 		GetPrinterProfileInfo
@@ -112,6 +107,13 @@ Public Sub tmrMain_Tick
 	If mGotFilesListFLAG = False And  mGotFilesListFLAG_IsBusy = False Then
 		GetAllOctoFilesInfo
 	End If
+	
+	
+	'--- make API requested and update screen
+	'--- Timer is in 'Main'
+	GetTemps
+	GetJobStatus
+	
 
 End Sub
 #end region
@@ -126,8 +128,9 @@ Private Sub GetAllOctoSettingInfo
 		Return '---already been called
 	End If
 	
-	mGotOctoSettingFLAG_IsBusy = True
+	mGotOctoSettingFLAG_IsBusy = True ' TODO KLIPPER
 	
+	#if not (klipper)
 	Dim rs As ResumableSub =  oCN.SendRequestGetInfo( oc.cSETTINGS)
 	
 	Wait For(rs) Complete (Result As String)
@@ -140,12 +143,14 @@ Private Sub GetAllOctoSettingInfo
 		
 		Build_PresetHeaterOption(mapMasterOctoTempSettings)
 			
-		mGotOctoSettingFLAG_IsBusy = False
+		
 	Else
 		
 		'oc.RestPrinterProfileVars
 		
 	End If
+	#end if
+	mGotOctoSettingFLAG_IsBusy = False
 	
 End Sub
 
@@ -230,7 +235,14 @@ Private Sub GetJobStatus
 	If mJobStatusFLAG_Busy = True Then Return '--- stop calls from backing up if we have had a disconnect
 	mJobStatusFLAG_Busy = True
 	
-	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(oc.cJOB_INFO)
+	
+	#if klipper
+	Dim jobInfo As String = "/printer/objects/query?webhooks&virtual_sdcard&print_stats"
+	#else
+	Dim jobInfo As String =  "/api/job"
+	#End If
+	
+	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(jobInfo)
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
 		parser.JobStatus(Result)
@@ -240,13 +252,30 @@ Private Sub GetJobStatus
 
 	'--- Update printer btns (enable, disabled)
 	CallSub(mCallBack,mEventNameBtns)
-	
+	#if klipper
+	oc.FormatedJobPct = IIf(oc.isPrinting = True And oc.isHeating = False,fnc.RoundJobPctNoDecimals(oc.JobCompletion),"")
+	If oc.JobPrintState = "cancelled" Then
+		oc.isKlipperCanceling = False
+		oc.JobPrintState = "operational"
+	Else If oc.isKlipperCanceling Then
+		oc.FormatedStatus = "canceling"
+	Else If oc.JobPrintState = "printing" Then
+		oc.FormatedStatus = oc.JobPrintState & " " & oc.FormatedJobPct
+	Else
+		oc.FormatedStatus = oc.JobPrintState
+	End If
+	#else
 	oc.FormatedJobPct = IIf(oc.isPrinting = True And oc.isHeating = False,fnc.RoundJobPctNoDecimals(oc.JobCompletion),"")
 	If oc.JobPrintState = "Printing" Then
 		oc.FormatedStatus = oc.JobPrintState & " " & oc.FormatedJobPct
 	Else
 		oc.FormatedStatus = oc.JobPrintState
 	End If
+	#End If
+	
+	
+	
+	
 	
 	CallSub(mCallBack,mEventNameStatus)
 	

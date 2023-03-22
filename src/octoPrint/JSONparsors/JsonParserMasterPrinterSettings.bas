@@ -33,7 +33,7 @@ private Sub ParseMasterSettings(jsonTXT As String)
 	
 	Dim inSub As String	= "ParseMasterSettings"
 	Dim parser As JSONParser : parser.Initialize(jsonTXT)
-	
+	Log(jsonTXT)
 	Dim root As Map = parser.NextObject
 	'Dim oc_server As Map = root.Get("server") 'ignore
 	

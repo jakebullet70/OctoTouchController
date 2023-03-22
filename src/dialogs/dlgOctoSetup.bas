@@ -330,10 +330,12 @@ Private Sub CheckInputs() As String
 			txtPrinterPort.Text = "80"
 			'msg = "Missing Port Number" : Exit
 		End If
-		
+
+		#if not (klipper)
 		If txtOctoKey.Text.Length = 0 Then
 			msg = "Missing Octoprint Key" : Exit
 		End If
+		#End If
 		
 		If txtPrinterDesc.Text.Length = 0 Then
 			msg = "Missing Printer Description" : Exit

@@ -389,7 +389,7 @@ End Sub
 
 Private Sub ParseKlipper(jsonTXT As String)
 	Dim Const InSub As String = "ParseKlipper"
-	'Log(jsonTXT)
+	Log(jsonTXT)
 	
 	Dim parser As JSONParser
 	parser.Initialize(jsonTXT)
@@ -406,18 +406,41 @@ Private Sub ParseKlipper(jsonTXT As String)
 		Try
 			ff.Date = colfiles.Get("modified")
 			ff.path = colfiles.Get("path")
+			ff.Name = ff.path
+			ff.myThumbnail_filename_disk = ""
+			'ff.Thumbnail_original = ""
 
 			ff.Size = colfiles.Get("size")
 			ff.hash = "" 'fnc.guid
-			GetExtendedFileInfo(ff) : Wait For GetExtendedFileInfo
+'			GetExtendedFileInfo(ff) 
+'			Wait For GetExtendedFileInfo
 			
 		Catch
 			logMe.LogIt2("Parse00: " & LastException,mModule,InSub)
 		End Try
 		
+		
+		'--- stash results to map
+		gMapFiles.Put(ff.Name,ff)
 	Next
+	
+
 
 End Sub
+
+
+'Dim parser As JSONParser
+'parser.Initialize(<text>)
+'Dim root As Map = parser.NextObject
+'Dim result As List = root.Get("result")
+'For Each colresult As Map In result
+'	Dim path As String = colresult.Get("path")
+'	Dim size As Int = colresult.Get("size")
+'	Dim permissions As String = colresult.Get("permissions")
+'	Dim modified As Double = colresult.Get("modified")
+'Next
+
+
 
 Private Sub GetExtendedFileInfo(ff As tOctoFileInfo)
 

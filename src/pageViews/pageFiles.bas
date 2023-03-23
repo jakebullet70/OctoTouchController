@@ -280,9 +280,13 @@ Private Sub CreateListItem(oData As tOctoFileInfo, Width As Int, Height As Int) 
 
 	lblpnlFileViewBottom.TextColor = clrTheme.txtAccent
 	lblpnlFileViewBottom.Font = lblpnlFileViewTop.Font
+	#if klipper
+	lblpnlFileViewBottom.Text = "Size: " &  fileHelpers.BytesToReadableString(oData.Size)
+	#else
 	lblpnlFileViewBottom.Text = "Size: " &  fileHelpers.BytesToReadableString(oData.Size) & _
 								$"  ${oData.length.As(String)}m / ${oData.Volume.As(String)}³"$
-
+	#End If
+	
 	Return p
 	
 End Sub

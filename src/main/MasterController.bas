@@ -252,17 +252,25 @@ Private Sub GetJobStatus
 
 	'--- Update printer btns (enable, disabled)
 	CallSub(mCallBack,mEventNameBtns)
+	
 	#if klipper
 	oc.FormatedJobPct = IIf(oc.isPrinting = True And oc.isHeating = False,fnc.RoundJobPctNoDecimals(oc.JobCompletion),"")
+	Dim Const OP As String = "operational"
 	If oc.JobPrintState = "cancelled" Then
 		oc.isKlipperCanceling = False
-		oc.JobPrintState = "operational"
-	Else If oc.isKlipperCanceling Then
-		oc.FormatedStatus = "canceling"
+		oc.JobPrintState = OP
+		oc.FormatedStatus = oc.JobPrintState
+	else If oc.isKlipperCanceling Then
+		oc.FormatedStatus = "--> canceling <--"
 	Else If oc.JobPrintState = "printing" Then
 		oc.FormatedStatus = oc.JobPrintState & " " & oc.FormatedJobPct
 	Else
-		oc.FormatedStatus = oc.JobPrintState
+		If oc.JobPrintState = "complete" Then
+			oc.JobPrintState = OP
+		Else
+			oc.FormatedStatus = oc.JobPrintState
+		End If
+		
 	End If
 	#else
 	oc.FormatedJobPct = IIf(oc.isPrinting = True And oc.isHeating = False,fnc.RoundJobPctNoDecimals(oc.JobCompletion),"")
@@ -272,10 +280,6 @@ Private Sub GetJobStatus
 		oc.FormatedStatus = oc.JobPrintState
 	End If
 	#End If
-	
-	
-	
-	
 	
 	CallSub(mCallBack,mEventNameStatus)
 	

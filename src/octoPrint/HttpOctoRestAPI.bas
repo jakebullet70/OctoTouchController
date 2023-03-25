@@ -223,11 +223,17 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String) As Resumable
 	End If
 	
 	If fileName.Length <> 0 Then fileHelpers.SafeKill(fileName)
-		
+	
+	Dim j As HttpJob :	j.Initialize("", Me)
 	Try
-		Dim j As HttpJob :	j.Initialize("", Me)
+		
+		#if klipper
+		'--- TODO, nned  to parse exact file paths for gcode / files storage
+		j.Download(Link.Replace(".thumbs","server/files/gcodes/.thumbs"))
+		#else
 		j.Download(Link)
 		'j.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
+		#End If
 		
 	Catch
 		If config.logFILE_EVENTS Then logMe.LogIt2(LastException,mModule,InSub)
@@ -240,15 +246,18 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String) As Resumable
 		If j.Success Then
 			
 			Dim oo As B4XBitmap = j.GetBitmap
+			'j.GetBitmapResize(200,200,True)
 			Dim Out As OutputStream '--- write it out
 			Out = File.OpenOutput(xui.DefaultFolder, fileName, False)
 			oo.WriteToStream(Out, 100, "PNG")
 			Out.Close
 			'Log("Download_AndSaveFile-dloading: " & fileName)
+		Else
+			Log("failed to dload thumbnail")
 		End If
 		
 	Catch
-		
+		Log(j.Response.StatusCode)
 		If config.logFILE_EVENTS Then logMe.LogIt2(LastException,mModule,InSub)
 		
 	End Try
@@ -257,6 +266,7 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String) As Resumable
 	Return Null
 	
 End Sub
+
 
 
 '===================================================================================

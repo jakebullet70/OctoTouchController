@@ -22,8 +22,10 @@ Sub Class_Globals
 						missingData As Boolean,hash As String,filament_total As Double,total_layers As String)
 						
 	Private mDownloadThumbnails As Boolean 'ignore
-	Public cacheTarget As Int = 4
-	
+	Public CacheTarget As Int = 4
+	#if klipper
+	Private klipperCacheTotal As Int = 0
+	#end if
 	
 End Sub
 
@@ -51,7 +53,7 @@ Public Sub CheckIfChanged(jsonTXT As String,oldMap As Map) As Boolean
 	Dim InSub As String = "ParseCompareCheck"
 	Dim parser As JSONParser
 	parser.Initialize(jsonTXT)
-	Log(jsonTXT)
+	'Log(jsonTXT)
 	
 	
 	#if klipper
@@ -217,11 +219,10 @@ Private Sub Parse(jsonTXT As String)
 			logMe.LogIt2("ParseFile 2: " & LastException,mModule,InSub)
 		End Try
 		
-		If mDownloadThumbnails And (ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null") _
-							   And cacheTTL < cacheTarget Then
+		If mDownloadThumbnails And (ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null")  And cacheTTL < CacheTarget Then
 							   
-	'--- cache files (will be random because of the sort)
-	'--- but if you only have a few files will not really matter
+			'--- cache files (will be random because of the sort)
+			'--- but if you only have a few files will not really matter
 			
 			cacheTTL = cacheTTL + 1
 			CallSub3(B4XPages.MainPage.oMasterController,"Download_ThumbnailAndCache2File",ff.Thumbnail,ff.myThumbnail_filename_disk)
@@ -367,7 +368,7 @@ End Sub
 
 
 
-
+#if klipper
 '====================================================================================
 '   KLIPPER - MOONRAKER STUFF
 '====================================================================================
@@ -420,12 +421,10 @@ Private Sub ParseKlipper(jsonTXT As String)
 			'ff.Thumbnail_original = ""
 
 			ff.Size = colfiles.Get("size")
-			ff.hash = "" 'fnc.guid
+			'ff.hash = "" 'fnc.guid
 			
-			'GetExtendedFileInfo(ff)
 			Log(ff.Name)
-			wait for (GetExtendedFileInfo(ff)) Complete (s As String)
-			Log(s)
+			Wait For (GetExtendedFileInfo(ff)) Complete (b As Boolean)
 			
 		Catch
 			logMe.LogIt2("Parse00: " & LastException,mModule,InSub)
@@ -483,6 +482,12 @@ Private Sub GetExtendedFileInfo(ff As tOctoFileInfo)As ResumableSub
 						'ff.Thumbnail =  ff.Thumbnail.SubString2(0,ff.Thumbnail.IndexOf("?"))
 						Dim tmp As String = ff.Thumbnail.SubString(ff.Thumbnail.IndexOf("/")+1)
 						ff.myThumbnail_filename_disk = fnc.BuildThumbnailTempFilename(fnc.GetFilenameFromHTTP(tmp))
+						
+						klipperCacheTotal = klipperCacheTotal + 1
+						If klipperCacheTotal < CacheTarget Then
+							CallSub3(B4XPages.MainPage.oMasterController,"Download_ThumbnailAndCache2File",ff.Thumbnail,ff.myThumbnail_filename_disk)
+						End If
+						
 					Else
 						ff.Thumbnail = ""
 						ff.myThumbnail_filename_disk = ""
@@ -495,13 +500,14 @@ Private Sub GetExtendedFileInfo(ff As tOctoFileInfo)As ResumableSub
 				
 			Next
 			
-			Return ff.Thumbnail
+			Return True '--- all good
 		End If
 		
 	Catch
 		Log(LastException)
 	End Try
-	Return ""
+	
+	Return False '--- bad
 	
 End Sub
 
@@ -538,5 +544,4 @@ End Sub
 'Dim estimated_time As Int = Result.Get("estimated_time")
 'Dim print_start_time As Double = Result.Get("print_start_time")
 '
-'
-'
+#End If

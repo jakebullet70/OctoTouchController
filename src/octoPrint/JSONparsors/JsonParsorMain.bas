@@ -127,7 +127,7 @@ Public Sub  JobStatus(s As String)
 		'---- get status
 		oc.JobPrintState = print_stats.Get("state")
 		'Dim is_active As String = virtual_sdcard.Get("is_active") if true does it mean its printing?
-		Log( oc.JobPrintState.ToLowerCase)
+		'Log( oc.JobPrintState.ToLowerCase)
 		Select Case oc.JobPrintState.ToLowerCase
 			Case "printing"      : oc.isPrinting = True
 			Case "cancelling"   : oc.isKlipperCanceling = True
@@ -237,7 +237,7 @@ End Sub
 '    Issues found when octoprint is running but the Klipper host is not
 '================================================================================
 
-
+#if not (klipper)
 Private Sub CheckNull(v As String) As String
 	Try
 		Return IIf(v = Null Or v = "null" Or v = "","",v)
@@ -245,6 +245,7 @@ Private Sub CheckNull(v As String) As String
 		Return ""
 	End Try
 End Sub
+#end if
 
 
 Private Sub CheckNull0(v As String) As String
@@ -255,7 +256,7 @@ Private Sub CheckNull0(v As String) As String
 	End Try
 End Sub
 
-
+#if not (klipper)
 Private Sub CheckNullDash(v As String) As String
 	Try
 		Return IIf(v = Null Or v = "null" Or v = "","-",v)
@@ -263,5 +264,5 @@ Private Sub CheckNullDash(v As String) As String
 		Return "-"
 	End Try
 End Sub
-
+#end if
 '================================================================================

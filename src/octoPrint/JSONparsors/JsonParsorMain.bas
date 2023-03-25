@@ -110,7 +110,7 @@ Public Sub  JobStatus(s As String)
 	Try
 		
 		jp.Initialize(s)
-		Log(s)
+		'Log(s)
 		
 		'--- reset status of printer -------------
 		oc.isCanceling = False

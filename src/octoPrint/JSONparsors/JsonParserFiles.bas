@@ -31,6 +31,17 @@ Public Sub Initialize(DownloadThumbnails As Boolean)
 	mDownloadThumbnails = DownloadThumbnails
 End Sub
 
+Public Sub StartParseAllFiles(jsonTXT As String) As Map
+	
+	gMapFiles.Initialize
+	Parse(jsonTXT)
+	Return gMapFiles
+	
+End Sub
+
+
+'==========================================================================================
+
 #Region "CHECK_FOR_SOME_CHANGES"
 
 Public Sub CheckIfChanged(jsonTXT As String,oldMap As Map) As Boolean
@@ -40,6 +51,12 @@ Public Sub CheckIfChanged(jsonTXT As String,oldMap As Map) As Boolean
 	Dim InSub As String = "ParseCompareCheck"
 	Dim parser As JSONParser
 	parser.Initialize(jsonTXT)
+	Log(jsonTXT)
+	
+	
+	#if klipper
+	
+	#else
 	
 	Dim root As Map = parser.NextObject
 	Dim files As List = root.Get("files")
@@ -49,8 +66,8 @@ Public Sub CheckIfChanged(jsonTXT As String,oldMap As Map) As Boolean
 	For Each colfiles As Map In files
 		Try
 			If colfiles.Get("type") = "folder" Then 
-				'--- not supporting dir at the moment
-				'--- this can fire if they add a dir
+	'--- not supporting dir at the moment
+	'--- this can fire if they add a dir
 				Continue
 			End If
 			
@@ -61,20 +78,20 @@ Public Sub CheckIfChanged(jsonTXT As String,oldMap As Map) As Boolean
 		Catch
 			logMe.LogIt2("ParseComp00: ",mModule,InSub)
 		End Try
-		'Log(fileName & fileDate)
+	'Log(fileName & fileDate)
 
-		'--- see if we have this file in the original map
+	'--- see if we have this file in the original map
 		Dim ff As tOctoFileInfo
 		ff = oldMap.Get(fileName)
 
 		If ff = Null Then
-			'--- we did Not find this file so lets tell them something changed (file was added)
+	'--- we did Not find this file so lets tell them something changed (file was added)
 			If config.logFILE_EVENTS Then logMe.LogIt2("file added",mModule,InSub)
 			Return True
 			
 		Else
 			If ((hash <> "") And ff.hash <> hash) Or ff.Date <> fileDate Then
-				'--- file is there but date changed, tell them (same file name, new date)
+	'--- file is there but date changed, tell them (same file name, new date)
 				If config.logFILE_EVENTS Then logMe.LogIt2("same file name, new hash/date",mModule,InSub)
 				Return True
 			End If
@@ -91,16 +108,10 @@ Public Sub CheckIfChanged(jsonTXT As String,oldMap As Map) As Boolean
 	End If
 	
 	
+	#End If
+	
 End Sub
 #end region
-
-Public Sub StartParseAllFiles(jsonTXT As String) As Map
-	
-	gMapFiles.Initialize
-	Parse(jsonTXT)
-	Return gMapFiles
-	
-End Sub
 
 Private Sub Parse(jsonTXT As String)
 	
@@ -389,8 +400,6 @@ End Sub
 
 Private Sub ParseKlipper(jsonTXT As String)
 	Dim Const InSub As String = "ParseKlipper"
-	Log(jsonTXT)
-	
 	Dim parser As JSONParser
 	parser.Initialize(jsonTXT)
 	Dim root As Map = parser.NextObject
@@ -412,8 +421,11 @@ Private Sub ParseKlipper(jsonTXT As String)
 
 			ff.Size = colfiles.Get("size")
 			ff.hash = "" 'fnc.guid
-'			GetExtendedFileInfo(ff) 
-'			Wait For GetExtendedFileInfo
+			
+			'GetExtendedFileInfo(ff)
+			Log(ff.Name)
+			wait for (GetExtendedFileInfo(ff)) Complete (s As String)
+			Log(s)
 			
 		Catch
 			logMe.LogIt2("Parse00: " & LastException,mModule,InSub)
@@ -442,7 +454,7 @@ End Sub
 
 
 
-Private Sub GetExtendedFileInfo(ff As tOctoFileInfo)
+Private Sub GetExtendedFileInfo(ff As tOctoFileInfo)As ResumableSub
 
 	Dim ep As String = "/server/files/metadata?filename=" & ff.Path
 	'Dim ep As String = "/server/files/metadata?filename=" & oc.KlipperFileSrcPath & "/" &  ff.Path
@@ -483,13 +495,13 @@ Private Sub GetExtendedFileInfo(ff As tOctoFileInfo)
 				
 			Next
 			
-			Return
+			Return ff.Thumbnail
 		End If
 		
 	Catch
 		Log(LastException)
 	End Try
-	
+	Return ""
 	
 End Sub
 

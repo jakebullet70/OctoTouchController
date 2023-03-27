@@ -38,7 +38,7 @@ Sub Class_Globals
 	
 	Private lblSort2 As Label, cboSort As B4XComboBox, rsFiles As ResultSet
 	Private SortAscDesc As Boolean = True
-	Private	LastSort As String
+	Private LastSort As String
 	
 End Sub
 
@@ -135,12 +135,16 @@ Private Sub BuildGUI
 	
 	guiHelpers.ReSkinB4XComboBox(Array As B4XComboBox(cboSort))
 	guiHelpers.SetTextColor(Array As B4XView(lblFileName.BaseLabel,lblHeaderFileName,lblSort2,lblBusy))
-	guiHelpers.ResizeText(Chr(0xF160),lblSort2) : lblSort2.TextSize = lblSort2.TextSize - 6 '--- make text a little smaller
+	guiHelpers.ResizeText(Chr(0xF175),lblSort2) : lblSort2.TextSize = lblSort2.TextSize - 6 '--- make text a little smaller
 	
 	cboSort.setitems(Array As String("File Name","Date Added"))
-	cboSort.SelectedIndex = 0
+	
+	cboSort.SelectedIndex = Starter.kvs.GetDefault("fsort-idx",0)
+	LastSort = Starter.kvs.GetDefault("fsort-lbl","File Name")
+	SortAscDesc = Starter.kvs.GetDefault("fsort-asc",True)
+	lblSort2.Text = IIf(SortAscDesc,Chr(0xF176),Chr(0xF175)) : Sleep(0)
+	
 	cboSort.cmbBox.Prompt = "Sort Order"
-	LastSort = "File Name"
 	
 	lblBusy.Visible = True
 	lblBusy.SetColorAndBorder(clrTheme.BackgroundHeader,1dip,clrTheme.txtNormal,8dip)
@@ -575,16 +579,20 @@ Private Sub cboSort_SelectedIndexChanged (Index As Int)
 	Else
 		SortAscDesc = True
 	End If
-'	
-'	lblSort.Text = IIf(SortAscDesc,Chr(0xF160),Chr(0xF161)) : Sleep(0)
-'	lblSort.BaseLabel.TextSize = lblSort.BaseLabel.TextSize - 8
 	
-	lblSort2.Text = IIf(SortAscDesc,Chr(0xF160),Chr(0xF161)) : Sleep(0)
+	lblSort2.Text = IIf(SortAscDesc,Chr(0xF176),Chr(0xF175)) : Sleep(0)
 	
 	guiHelpers.Show_toast("Sorting file list - " & IIf(SortAscDesc,"Ascending","Descending") ,1800)
 	Build_ListViewFileList
 	Show1stFile
+	
 	LastSort = cboSort.SelectedItem
+	
+	'--- save last sort
+	Starter.kvs.Put("fsort-idx",cboSort.SelectedIndex)
+	Starter.kvs.Put("fsort-lbl",LastSort)
+	Starter.kvs.Put("fsort-asc",SortAscDesc)
+	
 End Sub
 
 Private Sub lblSort_Click

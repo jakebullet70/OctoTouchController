@@ -257,7 +257,6 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String) As Resumable
 		End If
 		
 	Catch
-		Log(j.Response.StatusCode)
 		If config.logFILE_EVENTS Then logMe.LogIt2(LastException,mModule,InSub)
 		
 	End Try

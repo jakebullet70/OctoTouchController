@@ -364,7 +364,8 @@ Public Sub GetAllOctoFilesInfo
 	
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
-
+		gMapOctoFilesList.Initialize
+		
 		Dim o As JsonParserFiles  
 		o.Initialize(True) '--- download thumbnails
 		
@@ -374,10 +375,12 @@ Public Sub GetAllOctoFilesInfo
 			'--- TODO, if supporting paths --- https://moonraker.readthedocs.io/en/latest/web_api/#list-available-files
 			oc.KlipperFileSrcPath = retval
 		End If
+		Wait For (o.StartParseAllFilesKlipper(Result)) Complete (m As Map)
+		gMapOctoFilesList = m
+		#else
+		gMapOctoFilesList = o.StartParseAllFilesOcto(Result)
 		#End If
-			
-		gMapOctoFilesList.Initialize
-		gMapOctoFilesList = o.StartParseAllFiles(Result)
+		
 		
 		mGotFilesListFLAG = True '--- will stop it from firing in the main loop
 		

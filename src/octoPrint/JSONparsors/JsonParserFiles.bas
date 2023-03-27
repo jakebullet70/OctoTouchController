@@ -33,13 +33,19 @@ Public Sub Initialize(DownloadThumbnails As Boolean)
 	mDownloadThumbnails = DownloadThumbnails
 End Sub
 
-Public Sub StartParseAllFiles(jsonTXT As String) As Map
-	
+#if klipper
+Public Sub StartParseAllFilesKlipper(jsonTXT As String) As ResumableSub
 	gMapFiles.Initialize
-	Parse(jsonTXT)
+	Wait For (ParseKlipper(jsonTXT)) Complete (b As Boolean)
 	Return gMapFiles
-	
 End Sub
+#Else
+Public Sub StartParseAllFilesOcto(jsonTXT As String) As Map
+	gMapFiles.Initialize
+	ParseOcto(jsonTXT)
+	Return gMapFiles
+End Sub
+#End If
 
 
 '==========================================================================================
@@ -50,26 +56,63 @@ Public Sub CheckIfChanged(jsonTXT As String,oldMap As Map) As Boolean
 	
 	
 	'--- just tell them something has changed
-	Dim InSub As String = "ParseCompareCheck"
+	'--- just tell them something has changed
+	'--- just tell them something has changed
+	'--- just tell them something has changed
+	
+	
+	Dim InSub As String = "CheckIfChanged"
 	Dim parser As JSONParser
 	parser.Initialize(jsonTXT)
+	Dim root As Map = parser.NextObject
+	Dim totalFiles As Int = 0
 	'Log(jsonTXT)
 	
 	
 	#if klipper
 	
+	Dim result As List = root.Get("result")
+	For Each colfiles As Map In result
+		
+		Try
+			Dim fileDate, fileName As String
+			fileDate = colfiles.Get("modified")
+			fileName = colfiles.Get("path")
+			'size = colfiles.Get("size")
+		Catch
+			logMe.LogIt2("Parse00: " & LastException,mModule,InSub)
+		End Try
+		
+		'--- see if we have this file in the original map
+		Dim ff As tOctoFileInfo
+		ff = oldMap.Get(fileName)
+		
+		If ff = Null Then
+			'--- we did Not find this file so lets tell them something changed (file was added)
+			If config.logFILE_EVENTS Then logMe.LogIt2("file added",mModule,InSub)
+			Return True '--- bail out, something changed
+		Else
+			If ff.Date <> fileDate Then
+				'--- file is there but date changed, tell them (same file name, new date)
+				If config.logFILE_EVENTS Then logMe.LogIt2("same file name, new date",mModule,InSub)
+				Return True '--- bail out, something changed
+			End If
+		End If
+			
+		totalFiles = totalFiles + 1
+
+	Next
+	
 	#else
 	
-	Dim root As Map = parser.NextObject
 	Dim files As List = root.Get("files")
 	Dim fileDate As String, fileName As String, hash As String
-	Dim totalFiles As Int = 0
 	
 	For Each colfiles As Map In files
 		Try
 			If colfiles.Get("type") = "folder" Then 
-	'--- not supporting dir at the moment
-	'--- this can fire if they add a dir
+		  		'--- not supporting dir at the moment
+				'--- this can fire if they add a dir
 				Continue
 			End If
 			
@@ -82,45 +125,93 @@ Public Sub CheckIfChanged(jsonTXT As String,oldMap As Map) As Boolean
 		End Try
 	'Log(fileName & fileDate)
 
-	'--- see if we have this file in the original map
+		'--- see if we have this file in the original map
 		Dim ff As tOctoFileInfo
 		ff = oldMap.Get(fileName)
 
 		If ff = Null Then
-	'--- we did Not find this file so lets tell them something changed (file was added)
+			'--- we did Not find this file so lets tell them something changed (file was added)
 			If config.logFILE_EVENTS Then logMe.LogIt2("file added",mModule,InSub)
-			Return True
+			Return True '--- bail out, something changed
 			
 		Else
 			If ((hash <> "") And ff.hash <> hash) Or ff.Date <> fileDate Then
-	'--- file is there but date changed, tell them (same file name, new date)
+				'--- file is there but date changed, tell them (same file name, new date)
 				If config.logFILE_EVENTS Then logMe.LogIt2("same file name, new hash/date",mModule,InSub)
-				Return True
+				Return True '--- bail out, something changed
 			End If
 			
 		End If
 		totalFiles = totalFiles + 1
 	Next
+	#End If
+	
 	
 	If oldMap.Size <> totalFiles Then
 		Log("files have been removed or added")
-		Return True '--- files have been removed
+		Return True '--- files have been removed, tell them!!!!
 	Else
-		Return False '--- nothing has changed
+		Return False '--- nothing has changed, all good!
 	End If
 	
 	
-	#End If
+	
 	
 End Sub
 #end region
 
-Private Sub Parse(jsonTXT As String)
+
+#if klipper
+'Dim parser As JSONParser
+'parser.Initialize(<text>)
+'Dim root As Map = parser.NextObject
+'Dim result As List = root.Get("result")
+'For Each colresult As Map In result
+'	Dim path As String = colresult.Get("path")
+'	Dim size As Int = colresult.Get("size")
+'	Dim permissions As String = colresult.Get("permissions")
+'	Dim modified As Double = colresult.Get("modified")
+'Next
+Private Sub ParseKlipper(jsonTXT As String) As ResumableSub 'ignore
+	Dim Const InSub As String = "ParseKlipper"
+	Dim parser As JSONParser
+	parser.Initialize(jsonTXT)
+	Dim root As Map = parser.NextObject
+	Dim result As List = root.Get("result")
+	For Each colfiles As Map In result
+		
+		Dim ff As tOctoFileInfo
+		Try
+			ff.Date = colfiles.Get("modified")
+			ff.path = colfiles.Get("path")
+			ff.Name = ff.path
+			ff.myThumbnail_filename_disk = ""
+			'ff.Thumbnail_original = ""
+
+			ff.Size = colfiles.Get("size")
+			'ff.hash = "" 'fnc.guid
+			
+			Log(ff.name)
+			Wait For (GetExtendedFileInfo(ff)) Complete (b As Boolean)
+			
+			
+		Catch
+			logMe.LogIt2("Parse00: " & LastException,mModule,InSub)
+		End Try
+		
+		'--- stash results to map
+		gMapFiles.Put(ff.Name,ff)
+	Next
 	
-	#if klipper
-	ParseKlipper(jsonTXT)
-	#else
+	Return True
+
+End Sub
+
+#Else
+
+Private Sub ParseOcto(jsonTXT As String)
 	
+
 	'jsonTXT = File.ReadString(File.DirAssets,"ftest.txt")
 	
 	Dim InSub As String = "Parse"
@@ -198,7 +289,7 @@ Private Sub Parse(jsonTXT As String)
 			Try                                          'gcodeAnalysis
 				
 				Dim gcodeAnalysis As Map = colfiles.Get("gcodeAnalysis")
-	'Dim estimatedPrintTime As Double = gcodeAnalysis.Get("estimatedPrintTime")
+				'Dim estimatedPrintTime As Double = gcodeAnalysis.Get("estimatedPrintTime")
 				Dim filament As Map = gcodeAnalysis.Get("filament")
 				Dim tool0 As Map = filament.Get("tool0")
 				ff.Volume = GetVolume(tool0.Get("volume"))
@@ -209,8 +300,8 @@ Private Sub Parse(jsonTXT As String)
 				ff.Width = dimensions.Get("width")
 				ff.Height = dimensions.Get("height")
 			Catch
-	'--- thinking if we error out here - octoprint has not finished parsing the newly
-	'--- added file so the gcode analisys is incomplete
+				'--- thinking if we error out here - octoprint has not finished parsing the newly
+				'--- added file so the gcode analisys is incomplete
 				ff.missingData = True
 				logMe.LogIt2("ParseFile-missingData=True",mModule,InSub)
 			End Try
@@ -229,7 +320,7 @@ Private Sub Parse(jsonTXT As String)
 			
 		End If
 		
-	'--- stash results to map
+		'--- stash results to map
 		gMapFiles.Put(ff.Name,ff)
 		
 	Next
@@ -240,11 +331,12 @@ Private Sub Parse(jsonTXT As String)
 '	If gMapFiles.Size = 0 Then
 '		logMe.LogIt2("gMapFiles is 0 size",mModule,InSub)
 '	End If
-
-	#End If
 	
 End Sub
+#End If
 
+
+#region "Octo sample JSON"
 
 '====================================================================================
 '   OCTOPRINT STUFF
@@ -337,9 +429,18 @@ End Sub
 '	Dim _default As Double = averagePrintTime.Get("_default")
 'Next
 'Dim free As String = root.Get("free")
+#end region
 
-#if not (klipper)
-Private Sub GetLength(v As String) As Double
+#region HELPER VAR PARSERS
+
+#if klipper
+Private Sub ParseDouble(v As String) As Double
+	Return(GetLength(v))
+End Sub
+#end if
+
+
+Private Sub GetLength(v As String) As Double 'ignore
 	Try
 		If (v <> Null And v <> "null" And v <> 0) Then
 			Return Round2(v.As(Double) * .001,2)
@@ -351,7 +452,7 @@ Private Sub GetLength(v As String) As Double
 	Return 0
 End Sub
 
-Private Sub GetVolume(v As String) As Double
+Private Sub GetVolume(v As String) As Double 'ignore
 	Try
 		If (v <> Null And v <> "null" And v <> 0) Then
 			Return Round2(v.As(Double),2)		
@@ -362,7 +463,8 @@ Private Sub GetVolume(v As String) As Double
 	
 	Return 0
 End Sub
-#end if
+#END REGION
+
 
 
 
@@ -399,60 +501,6 @@ Public Sub GetKlipperFilePath() As ResumableSub
 End Sub
 
 
-Private Sub ParseKlipper(jsonTXT As String)
-	Dim Const InSub As String = "ParseKlipper"
-	Dim parser As JSONParser
-	parser.Initialize(jsonTXT)
-	Dim root As Map = parser.NextObject
-	Dim result As List = root.Get("result")
-	For Each colfiles As Map In result
-		
-		Dim ff As tOctoFileInfo
-		
-'		If colfiles.Get("type") = "folder" Then
-'			Continue '--- its a folder
-'		End If
-			
-		Try
-			ff.Date = colfiles.Get("modified")
-			ff.path = colfiles.Get("path")
-			ff.Name = ff.path
-			ff.myThumbnail_filename_disk = ""
-			'ff.Thumbnail_original = ""
-
-			ff.Size = colfiles.Get("size")
-			'ff.hash = "" 'fnc.guid
-			
-			Log(ff.Name)
-			Wait For (GetExtendedFileInfo(ff)) Complete (b As Boolean)
-			
-		Catch
-			logMe.LogIt2("Parse00: " & LastException,mModule,InSub)
-		End Try
-		
-		
-		'--- stash results to map
-		gMapFiles.Put(ff.Name,ff)
-	Next
-	
-
-
-End Sub
-
-
-'Dim parser As JSONParser
-'parser.Initialize(<text>)
-'Dim root As Map = parser.NextObject
-'Dim result As List = root.Get("result")
-'For Each colresult As Map In result
-'	Dim path As String = colresult.Get("path")
-'	Dim size As Int = colresult.Get("size")
-'	Dim permissions As String = colresult.Get("permissions")
-'	Dim modified As Double = colresult.Get("modified")
-'Next
-
-
-
 Private Sub GetExtendedFileInfo(ff As tOctoFileInfo)As ResumableSub
 
 	Dim ep As String = "/server/files/metadata?filename=" & ff.Path
@@ -466,8 +514,9 @@ Private Sub GetExtendedFileInfo(ff As tOctoFileInfo)As ResumableSub
 			parser.Initialize(RetVal)
 			Dim root As Map = parser.NextObject
 			Dim Result As Map = root.Get("result")
-			ff.Height = Result.Get("object_height")
-			ff.filament_total = Result.Get("filament_total")
+			
+			ff.Height = ParseDouble( Result.Get("object_height"))
+			ff.filament_total = ParseDouble(Result.Get("filament_total"))
 			
 			Dim thumbnails As List = Result.Get("thumbnails")
 			For Each colthumbnails As Map In thumbnails
@@ -475,16 +524,15 @@ Private Sub GetExtendedFileInfo(ff As tOctoFileInfo)As ResumableSub
 				Dim width As Int = colthumbnails.Get("width")
 				If width < 48 Then Continue
 				
-				ff.Thumbnail = colthumbnails.Get("relative_path")
-				
 				Try
+					ff.Thumbnail = colthumbnails.Get("relative_path")
+					
 					If ff.Thumbnail.Length <> 0 And ff.Thumbnail <> "null" Then
-						'ff.Thumbnail =  ff.Thumbnail.SubString2(0,ff.Thumbnail.IndexOf("?"))
 						Dim tmp As String = ff.Thumbnail.SubString(ff.Thumbnail.IndexOf("/")+1)
 						ff.myThumbnail_filename_disk = fnc.BuildThumbnailTempFilename(fnc.GetFilenameFromHTTP(tmp))
 						
-						klipperCacheTotal = klipperCacheTotal + 1
-						If klipperCacheTotal < CacheTarget Then
+						If klipperCacheTotal < CacheTarget And mDownloadThumbnails = True Then
+							klipperCacheTotal = klipperCacheTotal + 1
 							CallSub3(B4XPages.MainPage.oMasterController,"Download_ThumbnailAndCache2File",ff.Thumbnail,ff.myThumbnail_filename_disk)
 						End If
 						

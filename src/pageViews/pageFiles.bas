@@ -370,9 +370,14 @@ Public Sub CheckIfFilesChanged
 	If Result.Length <> 0 Then
 	
 		'--- compare new list with old
-		Dim o As JsonParserFiles : o.Initialize(False) '--- DO NOT download thumbnails
+		Dim o As JsonParserFiles 
+		o.Initialize(False) '--- DO NOT download thumbnails
 		Dim didSomethingChange As Boolean = o.CheckIfChanged(Result, mMainObj.oMasterController.gMapOctoFilesList)
+		#if klipper
+		Dim IncompleteData As Boolean = False
+		#else
 		Dim IncompleteData As Boolean = mMainObj.oMasterController.IsIncompleteFileData
+		#End If
 		
 		Dim SizeMisMatch As Boolean = (clvFiles.Size <> mMainObj.oMasterController.gMapOctoFilesList.Size)
 		
@@ -383,11 +388,22 @@ Public Sub CheckIfFilesChanged
 			
 			logMe.LogIt2($"did change:(incomplete:${IncompleteData})(SizeMisMatch:${SizeMisMatch})"$,mModule,inSub)
 			
-			Dim mapNewFileList As Map = o.StartParseAllFiles(Result)
+			#if klipper
+			Wait For (o.StartParseAllFilesKlipper(Result)) Complete (mapNewFileList As Map)
+			#else
+			Dim mapNewFileList As Map = o.StartParseAllFilesOcto(Result)
+			#End If
+			
+			
 			ProcessNewOldThumbnails(mapNewFileList)
 			
 			'--- refresh the old list with new changes
-			mMainObj.oMasterController.gMapOctoFilesList = objHelpers.CopyMap(mapNewFileList)'  o.StartParseAllFiles(Result)
+			#if klipper
+			
+			#else
+			
+			#End If
+			mMainObj.oMasterController.gMapOctoFilesList = objHelpers.CopyMap(mapNewFileList)
 			
 			If IncompleteData = False Then
 				Build_ListViewFileList

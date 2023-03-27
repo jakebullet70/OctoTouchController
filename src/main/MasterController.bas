@@ -267,6 +267,7 @@ Private Sub GetJobStatus
 	Else
 		If oc.JobPrintState = "complete" Then
 			oc.JobPrintState = OP
+			oc.FormatedStatus = OP
 		Else
 			oc.FormatedStatus = oc.JobPrintState
 		End If

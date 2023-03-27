@@ -165,11 +165,16 @@ Private Sub BuildGUI
 	btnDelete.Text = "Delete"
 
 	guiHelpers.SkinButton(Array As Button(btnLoadAndPrint,btnLoad,btnDelete))
+	
 	If guiHelpers.gScreenSizeAprox > 7.5 Then
 		btnDelete.TextSize = 52
 	End If
 	guiHelpers.SetTextSize(Array As Button(btnLoadAndPrint,btnLoad,btnDelete), _
 										NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
+	
+	#if klipper
+	btnLoad.Visible = False
+	#End If
 	
 End Sub
 
@@ -190,22 +195,33 @@ Private Sub btnAction_Click
 			
 			Dim mb As dlgMsgBox 
 			mb.Initialize(mMainObj.Root,"Question", IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip), 170dip,False)
+			#if klipper
+			Wait For (mb.Show("Delete file from Klipper?",gblConst.MB_ICON_QUESTION,"Yes - Delete It","","No")) Complete (res As Int)
+			#else
 			Wait For (mb.Show("Delete file from Octoprint?",gblConst.MB_ICON_QUESTION,"Yes - Delete It","","No")) Complete (res As Int)
+			#End If
 			
 			If res = xui.DialogResponse_Positive Then
 				SendDeleteCmdAndRemoveFromGrid
 			End If
 			CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
-			
+
+		#if not (klipper)			
 		Case "load"
 			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_FILES_SELECT.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
+			'guiHelpers.Show_toast("Loading file...",2000)
 			guiHelpers.Show_toast("Loading file...",2000)
 			Sleep(500) '<--- needed
 			CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
 			Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName2Scrn",400)
+		#end if
 			
 		Case "loadandprint"
+			#if klipper
+			mMainObj.oMasterController.cn.PostRequest($"/printer/print/start?filename=${mCurrentFileInfo.Name}"$)
+			#else
 			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_FILES_PRINT.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
+			#End If
 			guiHelpers.EnableDisableBtns2(Array As Button(btnLoad,btnLoadAndPrint,btnDelete),False)
 			CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_PRINTING)
 			Sleep(10)
@@ -517,7 +533,12 @@ End Sub
 
 Private Sub SendDeleteCmdAndRemoveFromGrid
 	
+	#if klipper
+	mMainObj.oMasterController.cn.DeleteRequest($"/server/files/gcodes/${mCurrentFileInfo.Name}"$)
+	#else
 	mMainObj.oMasterController.cn.DeleteRequest(oc.cDELETE_FILES_DELETE.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
+	#End If
+	
 	'Sleep(500)
 	
 	guiHelpers.Show_toast("Deleting File",1200)
@@ -582,7 +603,8 @@ Private Sub cboSort_SelectedIndexChanged (Index As Int)
 	
 	lblSort2.Text = IIf(SortAscDesc,Chr(0xF176),Chr(0xF175)) : Sleep(0)
 	
-	guiHelpers.Show_toast("Sorting file list - " & IIf(SortAscDesc,"Ascending","Descending") ,1800)
+	'guiHelpers.Show_toast("Sorting file list - " & IIf(SortAscDesc,"Ascending","Descending") ,1800)
+	guiHelpers.Show_toast("Sorting file list" ,1800)
 	Build_ListViewFileList
 	Show1stFile
 	
@@ -596,7 +618,7 @@ Private Sub cboSort_SelectedIndexChanged (Index As Int)
 End Sub
 
 Private Sub lblSort_Click
-	Log("sort fired")
+	'Log("sort fired")
 	cboSort_SelectedIndexChanged(cboSort.SelectedIndex)
 End Sub
 #end region

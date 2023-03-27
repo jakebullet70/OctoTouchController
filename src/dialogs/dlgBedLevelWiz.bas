@@ -291,11 +291,19 @@ Private Sub SendMGcode(code As String)
 	If code.Contains(CRLF) Then
 		Dim cd() As String = Regex.Split(CRLF, code)
 		For Each s As String In cd
+			#if klipper
+			mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",code))
+			#else
 			mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",s))
+			#End If
 			Sleep(50)
 		Next
 	Else
+		#if klipper
+		mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",code))
+		#else
 		mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",code))
+		#end if
 	End If
 	
 	Return

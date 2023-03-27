@@ -263,9 +263,17 @@ Private Sub ParkNozzle() As ResumableSub 'ignore
 	
 End Sub
 
+
 Private Sub SendMGcode(code As String)
+	
+	#if klipper
+	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",code))
+	#else
 	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",code))
+	#End If
+	
 End Sub
+
 
 Private Sub SetStatusLabel(txt As String)
 	lblStatus.Text = txt & CRLF

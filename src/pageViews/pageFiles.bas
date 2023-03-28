@@ -172,9 +172,9 @@ Private Sub BuildGUI
 	guiHelpers.SetTextSize(Array As Button(btnLoadAndPrint,btnLoad,btnDelete), _
 										NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
 	
-	#if klipper
-	btnLoad.Visible = False
-	#End If
+'	#if klipper
+'	btnLoad.Visible = False
+'	#End If
 	
 End Sub
 

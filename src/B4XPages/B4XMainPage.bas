@@ -25,8 +25,9 @@ Sub Class_Globals
 	Private pnlMaster As B4XView 
 	
 	'--- header
-	Private pnlHeader As B4XView, lblStatus As Label,  lblTemp As Label
+	Private pnlHeader As B4XView,  lblTemp As Label
 	Private btnPower, btnPageAction As Button
+	Public lblStatus As Label
 	
 	'--- page-panel classes
 	Public oPageCurrent As Object = Null

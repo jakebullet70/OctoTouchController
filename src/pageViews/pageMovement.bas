@@ -320,10 +320,8 @@ Private Sub ExtrudeRetract(Extrude As Boolean)
 	
 	#if klipper
 	SendRelPosCmd
-	Dim pp As String = oc.cPOST_GCODE.Replace("!G!","G1 E" & ExtruderLengthSize & "F150")
+	Dim pp As String = oc.cPOST_GCODE.Replace("!G!","G1 E" & IIf(Extrude,"","-") & ExtruderLengthSize & "F150")
 	mMainObj.oMasterController.cn.PostRequest(pp)
-	Log(pp)
-	'mMainObj.oMasterController.cn.PostRequest(oc.cCMD_TOOL_EXTRUDE_RETRACT.Replace("!LEN!", IIf(Extrude,"","-") & ExtruderLengthSize))
 	guiHelpers.Show_toast(IIf(Extrude,"Extrusion","Retraction") & ": " & ExtruderLengthSize & "mm",1200)
 	#else
 	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_TOOL_EXTRUDE_RETRACT.Replace("!LEN!", IIf(Extrude,"","-") & ExtruderLengthSize))
@@ -343,52 +341,3 @@ Private Sub MotorsOff
 	guiHelpers.Show_toast("Command sent: Motors Off",1800)
 End Sub
 #end region
-
-'Dim parser As JSONParser
-'parser.Initialize(<text>)
-'Dim root As Map = parser.NextObject
-'Dim result As Map = root.Get("result")
-'Dim namespace As String = result.Get("namespace")
-'Dim value As Map = result.Get("value")
-'Dim presets As Map = value.Get("presets")
-'Dim 1bab081f-bdab-4364-b571-531fa357172b As Map = presets.Get("1bab081f-bdab-4364-b571-531fa357172b")
-'Dim values As Map = 1bab081f-bdab-4364-b571-531fa357172b.Get("values")
-'Dim heater_bed As Map = values.Get("heater_bed")
-'Dim bool As String = heater_bed.Get("bool")
-'Dim Type As String = heater_bed.Get("type")
-'Dim value As String = heater_bed.Get("value")
-'Dim extruder As Map = values.Get("extruder")
-'Dim bool As String = extruder.Get("bool")
-'Dim Type As String = extruder.Get("type")
-'Dim value As String = extruder.Get("value")
-'Dim name As String = 1bab081f-bdab-4364-b571-531fa357172b.Get("name")
-'Dim gcode As String = 1bab081f-bdab-4364-b571-531fa357172b.Get("gcode")
-'Dim b8fc0adf-1d6a-450d-9188-37db5507e18d As Map = presets.Get("b8fc0adf-1d6a-450d-9188-37db5507e18d")
-'Dim values As Map = b8fc0adf-1d6a-450d-9188-37db5507e18d.Get("values")
-'Dim heater_bed As Map = values.Get("heater_bed")
-'Dim bool As String = heater_bed.Get("bool")
-'Dim Type As String = heater_bed.Get("type")
-'Dim value As String = heater_bed.Get("value")
-'Dim extruder As Map = values.Get("extruder")
-'Dim bool As String = extruder.Get("bool")
-'Dim Type As String = extruder.Get("type")
-'Dim value As String = extruder.Get("value")
-'Dim name As String = b8fc0adf-1d6a-450d-9188-37db5507e18d.Get("name")
-'Dim gcode As String = b8fc0adf-1d6a-450d-9188-37db5507e18d.Get("gcode")
-'Dim accf07af-0d07-4d51-ba47-7a1f4db74688 As Map = presets.Get("accf07af-0d07-4d51-ba47-7a1f4db74688")
-'Dim values As Map = accf07af-0d07-4d51-ba47-7a1f4db74688.Get("values")
-'Dim heater_bed As Map = values.Get("heater_bed")
-'Dim bool As String = heater_bed.Get("bool")
-'Dim Type As String = heater_bed.Get("type")
-'Dim value As String = heater_bed.Get("value")
-'Dim extruder As Map = values.Get("extruder")
-'Dim bool As String = extruder.Get("bool")
-'Dim Type As String = extruder.Get("type")
-'Dim value As String = extruder.Get("value")
-'Dim name As String = accf07af-0d07-4d51-ba47-7a1f4db74688.Get("name")
-'Dim gcode As String = accf07af-0d07-4d51-ba47-7a1f4db74688.Get("gcode")
-'Dim key As String = result.Get("key")
-'
-'
-'
-'

@@ -131,7 +131,7 @@ Private Sub GetAllOctoSettingInfo
 	mGotOctoSettingFLAG_IsBusy = True ' TODO KLIPPER
 	
 	#if not (klipper)
-	Dim rs As ResumableSub =  oCN.SendRequestGetInfo( oc.cSETTINGS)
+	Dim rs As ResumableSub =  oCN.SendRequestGetInfo("/api/settings")
 	
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
@@ -149,7 +149,28 @@ Private Sub GetAllOctoSettingInfo
 		'oc.RestPrinterProfileVars
 		
 	End If
+	
+	#else
+	
+	Dim rs As ResumableSub =  oCN.SendRequestGetInfo("/server/database/item?namespace=mainsail&key=presets")
+	
+	Wait For(rs) Complete (Result As String)
+	If Result.Length <> 0 Then
+	
+		Dim o As JsonParserMasterPrinterSettings  : o.Initialize
+		mapMasterOctoTempSettings.Initialize
+		mapMasterOctoTempSettings = o.GetPresetHeaterSettings(Result)
+		mGotOctoSettingFLAG = True '--- will stop it from firing in the main loop
+		
+		Build_PresetHeaterOption(mapMasterOctoTempSettings)
+		
+	Else
+		
+		'oc.RestPrinterProfileVars
+		
+	End If
 	#end if
+	
 	mGotOctoSettingFLAG_IsBusy = False
 	
 End Sub

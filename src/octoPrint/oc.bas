@@ -124,7 +124,7 @@ Sub Process_Globals
 	Public const cDELETE_FILES_DELETE As String = $"${cPOST_FILES}"$
 	
 	
-	Public const cSETTINGS As String = "/api/settings"
+	
 	
 	#if klipper
 	Public const cCMD_PRINT As String =  $"/printer/print/start?filename=!FN!"$

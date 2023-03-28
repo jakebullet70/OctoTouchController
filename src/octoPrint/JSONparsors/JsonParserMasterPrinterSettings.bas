@@ -23,13 +23,17 @@ End Sub
 
 Public Sub GetPresetHeaterSettings(MasterJsonTXT As String) As Map
 	
+	#if klipper
+	ParseHeaterSettings(MasterJsonTXT)
+	#else
 	ParseMasterSettings(MasterJsonTXT)
+	#End If
+	
 	Return mapHeatingPresets
 	
 End Sub
 
-
-private Sub ParseMasterSettings(jsonTXT As String)
+Private Sub ParseMasterSettings(jsonTXT As String)
 	
 	Dim inSub As String	= "ParseMasterSettings"
 	Dim parser As JSONParser : parser.Initialize(jsonTXT)
@@ -586,3 +590,111 @@ Public Sub ParsePrinterProfile(jsonTXT As String)
 End Sub
 
 
+
+Private Sub ParseHeaterSettings(jsonTXT As String)
+	Dim parser As JSONParser
+	parser.Initialize(jsonTXT)
+	Dim root As Map = parser.NextObject
+	Dim result As Map = root.Get("result")
+	Dim inner As Map = result.Get("value")
+	mapHeatingPresets.Initialize
+	Try
+		Dim presets As Map = inner.Get("presets")
+		
+		For x = 0 To presets.Size - 1
+			Dim m1 As Map = presets.GetValueAt(x)
+			For y = 0 To m1.Size - 1
+				Add2map( m1.Get("values"),m1.Get("name"))
+			Next
+		Next
+
+	Catch
+		logMe.LogIt2(LastException,mModule,"ParseHeaterSettings")
+	End Try
+	
+End Sub
+
+
+Private Sub Add2map(m As Map,name As String)
+	
+	Try
+		Dim tool As Map = m.Get("extruder")
+		Dim bed As Map = m.Get("heater_bed")
+		Dim toolValue As Int = tool.Get("value")
+		Dim bedValue As Int = bed.Get("value")
+		If toolValue = 0 And bedValue = 0 Then Return
+		mapHeatingPresets.Put(name,toolValue & "!!" & bedValue)
+	Catch
+		logMe.LogIt2(LastException,mModule,"Add2map")
+	End Try
+	
+End Sub
+
+
+
+'{"result": {"namespace": "mainsail", "key": "presets", "value": 
+'{"presets": {
+'"b8fc0adf-1d6a-450d-9188-37db5507e18d": {"name": "PLA", "gcode": "", "values": {"extruder": {"bool": True, "value": "195", "type": "heater"}, "heater_bed": {"bool": True, "value": "55", "type": "heater"}}}, 
+'"1bab081f-bdab-4364-b571-531fa357172b": {"name": "PETG", "gcode": "", "values": {"extruder": {"bool": true, "value": "220", "type": "heater"}, "heater_bed": {"bool": true, "value": "75", "type": "heater"}}}, 
+'"accf07af-0d07-4d51-ba47-7a1f4db74688": {"name": "Pre heat ABS", "gcode": "", "values": {"extruder": {"bool": true, "value": "235", "type": "heater"}, "heater_bed": {"bool": true, "value": "105", "type": "heater"}}},
+'"4c1e509e-66b4-4beb-a97f-6fa4f1c0c6a0": {"name": "test", "gcode": "G28", "values": {"extruder": {"bool": false, "value": 0, "type": "heater"}, "heater_bed": {"bool": false, "value": 0, "type": "heater"}}}
+'}}}
+
+''''''Dim parser As JSONParser
+''''''parser.Initialize(<text>)
+''''''Dim root As Map = parser.NextObject
+''''''Dim result As Map = root.Get("result")
+''''''Dim namespace As String = result.Get("namespace")
+''''''Dim value As Map = result.Get("value")
+''''''Dim presets As Map = value.Get("presets")
+
+
+'Dim 4c1e509e-66b4-4beb-a97f-6fa4f1c0c6a0 As Map = presets.Get("4c1e509e-66b4-4beb-a97f-6fa4f1c0c6a0")
+'Dim values As Map = 4c1e509e-66b4-4beb-a97f-6fa4f1c0c6a0.Get("values")
+'Dim heater_bed As Map = values.Get("heater_bed")
+'Dim bool As String = heater_bed.Get("bool")
+'Dim Type As String = heater_bed.Get("type")
+'Dim value As Int = heater_bed.Get("value")
+'Dim extruder As Map = values.Get("extruder")
+'Dim bool As String = extruder.Get("bool")
+'Dim Type As String = extruder.Get("type")
+'Dim value As Int = extruder.Get("value")
+'Dim name As String = 4c1e509e-66b4-4beb-a97f-6fa4f1c0c6a0.Get("name")
+'Dim gcode As String = 4c1e509e-66b4-4beb-a97f-6fa4f1c0c6a0.Get("gcode")
+'Dim 1bab081f-bdab-4364-b571-531fa357172b As Map = presets.Get("1bab081f-bdab-4364-b571-531fa357172b")
+'Dim values As Map = 1bab081f-bdab-4364-b571-531fa357172b.Get("values")
+'Dim heater_bed As Map = values.Get("heater_bed")
+'Dim bool As String = heater_bed.Get("bool")
+'Dim Type As String = heater_bed.Get("type")
+'Dim value As String = heater_bed.Get("value")
+'Dim extruder As Map = values.Get("extruder")
+'Dim bool As String = extruder.Get("bool")
+'Dim Type As String = extruder.Get("type")
+'Dim value As String = extruder.Get("value")
+'Dim name As String = 1bab081f-bdab-4364-b571-531fa357172b.Get("name")
+'Dim gcode As String = 1bab081f-bdab-4364-b571-531fa357172b.Get("gcode")
+'Dim b8fc0adf-1d6a-450d-9188-37db5507e18d As Map = presets.Get("b8fc0adf-1d6a-450d-9188-37db5507e18d")
+'Dim values As Map = b8fc0adf-1d6a-450d-9188-37db5507e18d.Get("values")
+'Dim heater_bed As Map = values.Get("heater_bed")
+'Dim bool As String = heater_bed.Get("bool")
+'Dim Type As String = heater_bed.Get("type")
+'Dim value As String = heater_bed.Get("value")
+'Dim extruder As Map = values.Get("extruder")
+'Dim bool As String = extruder.Get("bool")
+'Dim Type As String = extruder.Get("type")
+'Dim value As String = extruder.Get("value")
+'Dim name As String = b8fc0adf-1d6a-450d-9188-37db5507e18d.Get("name")
+'Dim gcode As String = b8fc0adf-1d6a-450d-9188-37db5507e18d.Get("gcode")
+'Dim accf07af-0d07-4d51-ba47-7a1f4db74688 As Map = presets.Get("accf07af-0d07-4d51-ba47-7a1f4db74688")
+'Dim values As Map = accf07af-0d07-4d51-ba47-7a1f4db74688.Get("values")
+'Dim heater_bed As Map = values.Get("heater_bed")
+'Dim bool As String = heater_bed.Get("bool")
+'Dim Type As String = heater_bed.Get("type")
+'Dim value As String = heater_bed.Get("value")
+'Dim extruder As Map = values.Get("extruder")
+'Dim bool As String = extruder.Get("bool")
+'Dim Type As String = extruder.Get("type")
+'Dim value As String = extruder.Get("value")
+'Dim name As String = accf07af-0d07-4d51-ba47-7a1f4db74688.Get("name")
+'Dim gcode As String = accf07af-0d07-4d51-ba47-7a1f4db74688.Get("gcode")
+'Dim key As String = result.Get("key")

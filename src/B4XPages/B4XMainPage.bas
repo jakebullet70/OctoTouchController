@@ -646,7 +646,13 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	If selectedMsg.Length = 0 Then Return
 	
 	If selectedMsg = "alloff" Then
+		#if klipper
+		oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M140 S0"))
+		oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M104 S0"))
+		#else
 		oMasterController.AllHeaters_Off
+		#End If
+		
 		Show_toast("Tool / Bed Off",1200)
 		Return
 	End If
@@ -658,11 +664,19 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	Select Case True
 		
 		Case selectedMsg = "bedoff"
+			#if klipper
+			oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M140 S0"))
+			#else
 			oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",0))
+			#End If
 			msg = "Bed Off"
 
 		Case selectedMsg = "tooloff"
+			#if klipper
+			oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M104 S0"))
+			#else
 			oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
+			#End If
 			msg = "Tool Off"
 		
 		Case selectedMsg = "evb"
@@ -678,7 +692,11 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 			startNDX = selectedMsg.IndexOf(": ")
 			endNDX   = selectedMsg.IndexOf(gblConst.DEGREE_SYMBOL)
 			getTemp  = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
+			#if klipper
+			oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M104 S" & getTemp))
+			#else
 			oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
+			#End If
 			msg = selectedMsg.Replace("Set","Setting")
 			
 		Case selectedMsg.Contains("Bed") And Not (selectedMsg.Contains("Tool"))
@@ -686,7 +704,11 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 			startNDX = selectedMsg.IndexOf(": ")
 			endNDX   = selectedMsg.IndexOf(gblConst.DEGREE_SYMBOL)
 			getTemp  = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
+			#if klipper
+			oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M140 S" & getTemp))
+			#else
 			oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
+			#End If
 			msg = selectedMsg.Replace("Set","Setting")
 			
 		Case Else
@@ -697,12 +719,20 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 			startNDX = toolMSG.IndexOf(": ")
 			endNDX   = toolMSG.IndexOf(gblConst.DEGREE_SYMBOL)
 			getTemp  = toolMSG.SubString2(startNDX + 2,endNDX).Trim
+			#if klipper
+			oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M104 S" & getTemp))
+			#else
 			oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
-				
+			#End If
+							
 			startNDX = bedMSG.IndexOf(": ")
 			endNDX   = bedMSG.IndexOf(gblConst.DEGREE_SYMBOL)
 			getTemp  = bedMSG.SubString2(startNDX + 2,endNDX).Trim
+			#if klipper
+			oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M140 S" & getTemp))
+			#else
 			oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
+			#End If
 			msg = selectedMsg.Replace("Set","Setting")
 			
 	End Select

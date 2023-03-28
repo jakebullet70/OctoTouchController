@@ -172,9 +172,11 @@ Private Sub BuildGUI
 	guiHelpers.SetTextSize(Array As Button(btnLoadAndPrint,btnLoad,btnDelete), _
 										NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
 	
-'	#if klipper
-'	btnLoad.Visible = False
-'	#End If
+	#if klipper  
+	'btnLoad.Visible = False '------------------  happens in the screen file now
+	lblHeaderFileName.Text = "Viewing File"
+	lblFileName.Text = ""
+	#End If
 	
 End Sub
 
@@ -324,6 +326,9 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	If Value = Null Then
 		clvLastIndexClicked = NO_SELECTION
 		SetThumbnail2Nothing
+		#if klipper
+		Update_LoadedFileName2Scrn
+		#End If
 		Return 
 	End If
 	
@@ -333,6 +338,9 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	
 	If mCurrentFileInfo.myThumbnail_filename_disk = "" Then
 		SetThumbnail2Nothing
+		#if klipper
+		Update_LoadedFileName2Scrn
+		#End If
 		Return
 	End If
 	
@@ -358,6 +366,11 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	Else
 		ivPreview.Load(xui.DefaultFolder,mCurrentFileInfo.myThumbnail_filename_disk)
 	End If
+	#if klipper
+	Update_LoadedFileName2Scrn
+	#End If
+	
+	
 	
 End Sub
 
@@ -578,11 +591,19 @@ End Sub
 
 
 Public Sub Update_LoadedFileName2Scrn
+	#if klipper
+	If mCurrentFileInfo.myThumbnail_filename_disk = "" Then
+		lblFileName.Text = ""
+	Else
+		lblFileName.Text = fileHelpers.RemoveExtFromeFileName(mCurrentFileInfo.Name)
+	End If
+	#else
 	If oc.isFileLoaded Then
 		lblFileName.Text = fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
 	Else
 		lblFileName.Text = gblConst.NO_FILE_LOADED
 	End If
+	#End If
 End Sub
 
 Private Sub Show1stFile
@@ -627,6 +648,6 @@ End Sub
 
 
 Private Sub lblSort2_Click
-	Log("sort2 fired")
+	'Log("sort2 fired")
 	cboSort_SelectedIndexChanged(cboSort.SelectedIndex)
 End Sub

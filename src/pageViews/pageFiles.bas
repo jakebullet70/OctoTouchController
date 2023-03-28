@@ -36,6 +36,8 @@ Sub Class_Globals
 	Private lblFileName As AutoTextSizeLabel, lblHeaderFileName As B4XView
 	Private lblBusy As B4XView
 	
+	Private mOldFileName as String
+	
 	Private lblSort2 As Label, cboSort As B4XComboBox, rsFiles As ResultSet
 	Private SortAscDesc As Boolean = True
 	Private LastSort As String
@@ -431,11 +433,6 @@ Public Sub CheckIfFilesChanged
 			ProcessNewOldThumbnails(mapNewFileList)
 			
 			'--- refresh the old list with new changes
-			#if klipper
-			
-			#else
-			
-			#End If
 			mMainObj.oMasterController.gMapOctoFilesList = objHelpers.CopyMap(mapNewFileList)
 			
 			If IncompleteData = False Then
@@ -591,6 +588,13 @@ End Sub
 
 
 Public Sub Update_LoadedFileName2Scrn
+	'dim fname as String
+	
+	If mCurrentFileInfo =Null Then Return
+	If mOldFileName = fileHelpers.RemoveExtFromeFileName(mCurrentFileInfo.Name) Then
+		Return
+	End If
+	
 	#if klipper
 	If mCurrentFileInfo.myThumbnail_filename_disk = "" Then
 		lblFileName.Text = ""
@@ -604,6 +608,7 @@ Public Sub Update_LoadedFileName2Scrn
 		lblFileName.Text = gblConst.NO_FILE_LOADED
 	End If
 	#End If
+	mOldFileName = lblFileName.Text
 End Sub
 
 Private Sub Show1stFile

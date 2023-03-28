@@ -590,25 +590,31 @@ End Sub
 Public Sub Update_LoadedFileName2Scrn
 	'dim fname as String
 	
-	If mCurrentFileInfo =Null Then Return
+	If mCurrentFileInfo = Null Then Return
 	If mOldFileName = fileHelpers.RemoveExtFromeFileName(mCurrentFileInfo.Name) Then
 		Return
 	End If
 	
-	#if klipper
-	If mCurrentFileInfo.myThumbnail_filename_disk = "" Then
-		lblFileName.Text = ""
-	Else
-		lblFileName.Text = fileHelpers.RemoveExtFromeFileName(mCurrentFileInfo.Name)
-	End If
-	#else
-	If oc.isFileLoaded Then
-		lblFileName.Text = fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
-	Else
-		lblFileName.Text = gblConst.NO_FILE_LOADED
-	End If
-	#End If
+	Try
+		#if klipper
+		If mCurrentFileInfo.myThumbnail_filename_disk = "" Then
+			lblFileName.Text = ""
+		Else
+			lblFileName.Text = fileHelpers.RemoveExtFromeFileName(mCurrentFileInfo.Name)
+		End If
+		#else
+		If oc.isFileLoaded Then
+			lblFileName.Text = fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
+		Else
+			lblFileName.Text = gblConst.NO_FILE_LOADED
+		End If
+		#End If	
+	Catch
+		Log(LastException)
+	End Try
+	
 	mOldFileName = lblFileName.Text
+	
 End Sub
 
 Private Sub Show1stFile

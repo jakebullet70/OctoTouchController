@@ -8,6 +8,9 @@ Version=5.5
 #Region VERSIONS 
 ' V. 1.0	Nov 27, 2022
 '			https://www.b4x.com/android/forum/threads/b4x-dse_layout-align-and-spread-controls.144438/
+'
+'			--- Code called from the designer!!!!
+'
 #End Region
 
 Sub Class_Globals

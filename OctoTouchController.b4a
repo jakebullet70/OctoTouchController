@@ -174,7 +174,7 @@ Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
 	#if klipper
-	#ApplicationLabel: KlipperTC
+	#ApplicationLabel: MoonrakerTC
 	#VersionCode: 1
 	#VersionName: 0.9.0
 	#SignKeyFile: ..\keystore\klipper\release.keystore

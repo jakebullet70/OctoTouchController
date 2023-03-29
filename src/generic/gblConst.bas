@@ -15,13 +15,12 @@ Sub Process_Globals
 	
 	Public Const DEGREE_SYMBOL As String = "°" 
 		
-	#if klipper
+	#if not (klipper)
 	Public const APP_TITLE As String = "OctoTC ™"
 	Private Const WEB_ADDR As String = "http://sadlogic.com/octotouchcontroller/"
 	Public Const APK_NAME As String         = WEB_ADDR & "MoonrakerTouchController.apk"
 	Public Const APK_FILE_INFO As String = WEB_ADDR & "MoonrakerTouchController.txt"
 	#else
-	
 	Public const APP_TITLE As String = "MoonrakerTC ™"
 	Private Const WEB_ADDR As String = "http://sadlogic.com/moonrakertouchcontroller/"
 	Public Const APK_NAME As String         = WEB_ADDR & "OctoTouchController.apk"
@@ -33,11 +32,20 @@ Sub Process_Globals
 	Public Const SELECTED_CLR_THEME As String = "themeclr" '--- selected theme color
 	Public Const CUSTOM_THEME_COLORS As String = "customClrs" '--- users custom colors
 	
+	#if klipper
+	Public Const psetupPRINTER_DESC As String = "desc"
+	Public Const psetupPRINTER_IP As String = "ip"
+	Public Const psetupPRINTER_PORT As String = "port"
+	Public Const psetupPRINTER_X As String = "bx"
+	Public Const psetupPRINTER_Y As String = "by"
+	#else
 	Public Const PRINTER_SETTING_BASE_FILE_NAME As String = "p_settings"
 	Public Const PRINTER_DESC As String = "desc"
 	Public Const PRINTER_IP As String = "ip"
 	Public Const PRINTER_PORT As String = "port"
 	Public Const PRINTER_OCTO_KEY As String = "octokey"
+	#End If
+	
 	'---------------------------------------------------------------------------------------------------------------------
 	
 	'--- data in kvs PWRControl -------------------------------------------------------------------------------
@@ -66,6 +74,7 @@ Sub Process_Globals
 	Public Const GENERAL_OPTIONS_FILE As String = "general_options.map"
 	Public Const FILAMENT_CHANGE_FILE As String = "fil_loadunload.map"
 	Public Const BED_LEVEL_FILE As String = "bed_level.map"
+	Public Const PRINTER_SETUP_FILE As String = "printer_setup.map"
 	'---------------------------------------------------------------------------------------------------------------------
 	
 	'--- pages

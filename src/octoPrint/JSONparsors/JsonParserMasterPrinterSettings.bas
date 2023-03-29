@@ -33,6 +33,7 @@ Public Sub GetPresetHeaterSettings(MasterJsonTXT As String) As Map
 	
 End Sub
 
+#if not (klipper)
 Private Sub ParseMasterSettings(jsonTXT As String)
 	
 	Dim inSub As String	= "ParseMasterSettings"
@@ -518,6 +519,7 @@ Private Sub ParseMasterSettings(jsonTXT As String)
 '	Dim bedZ As Double = gcodeAnalysis.Get("bedZ")
 
 End Sub
+#end if
 #end region
 
 

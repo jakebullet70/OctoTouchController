@@ -12,14 +12,6 @@ Version=11.5
 ' https://github.com/jneilliii/OctoPrint-BedLevelingWizard
 #End Region
 
-'=============================================
-'
-'   needs work for klipper - TODO
-'
-'============================================
-
-
-
 Sub Class_Globals
 	
 	Private Const mModule As String = "dlgBedLevelWiz"' 'ignore
@@ -38,10 +30,20 @@ Sub Class_Globals
 	Private gcodeSendLevelingPoint As String
 	Private gcode2send,moveText As String
 	
+	#if klipper
+	Private printerW,printerL As Int
+	#end if
+
+	
 End Sub
 
 Public Sub Initialize(mobj As B4XMainPage)
 	mainObj = mobj
+	#if klipper
+	Dim m As Map = File.ReadMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE)
+	printerW = m.Get( gblConst.psetupPRINTER_X)
+	printerL  = m.Get( gblConst.psetupPRINTER_Y)
+	#end if
 End Sub
 
 
@@ -292,7 +294,7 @@ Private Sub SendMGcode(code As String)
 	If code = "" Then Return
 	
 '	#if debug
-	Log(code)
+	'Log(code)
 '	Return
 '	#End If
 	
@@ -375,10 +377,7 @@ End Sub
 
 
 #if klipper
-Private Sub CalcRelitive(n As Int, LorW As String) As Int
-	Dim printerW As Int = 200
-	Dim printerL As Int = 200
-	
+Private Sub CalcRelitive(n As Int, LorW As String) As Int	
 	If n >= 0 Then
 		n = mData.Get(gblConst.bedXYoffset)
 	Else

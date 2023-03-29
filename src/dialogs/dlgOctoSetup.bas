@@ -9,8 +9,15 @@ Version=11.5
 ' V. 1.0 	Aug/23/2022
 #End Region
 
+'
+' --- NOT USED IN KLIPPER, USED FOR OCTOPRINT
+' --- NOT USED IN KLIPPER, USED FOR OCTOPRINT
+'
+
+
 Sub Class_Globals
 	
+	#if not (klipper)
 	Private const mModule As String = "dlgOctoSetup"' 'ignore
 	Private mMainObj As B4XMainPage
 	Private xui As XUI
@@ -32,20 +39,22 @@ Sub Class_Globals
 	Private oGetOctoKey As RequestApiKey
 	
 	Private Dialog As B4XDialog
+	#end if
 	
 End Sub
 
 
 
 Public Sub Initialize(mobj As B4XMainPage, title As String, EventName As String)
-	
+	#if not (klipper)
 	mMainObj = mobj
 	mTitle = title
 	mEventName = EventName
-	
+	#end if
 End Sub
 
 
+#if not (klipper)
 Public Sub Show(firstRun As Boolean)
 	
 	mMainObj.pPrinterCfgDlgShowingFLAG = True
@@ -378,9 +387,11 @@ private Sub ReadSettingsFile
 	Dim m As Map = fnc.LoadPrinterConnectionSettings
 	If m.IsInitialized = False Then Return
 	
+	
 	txtOctoKey.Text = m.Get( gblConst.PRINTER_OCTO_KEY)
 	txtPrinterDesc.Text = m.Get( gblConst.PRINTER_DESC)
 	txtPrinterIP.Text = m.Get( gblConst.PRINTER_IP)
 	txtPrinterPort.Text = m.Get( gblConst.PRINTER_PORT)
 
 End Sub
+#end if

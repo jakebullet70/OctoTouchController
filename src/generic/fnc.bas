@@ -38,29 +38,31 @@ Public Sub ProcessPowerFlags()
 End Sub
 
 
-public Sub ReadConnectionFile(cn As HttpOctoRestAPI) As Boolean
+Public Sub ReadConnectionFile(cn As HttpOctoRestAPI) As Boolean
 	
 	oc.IsConnectionValid = False '--- assume bad
 	
+	#if klipper
+	Dim m As Map = File.ReadMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE)
+	If m.IsInitialized = False Then Return False
+	oc.OctoIp     = m.Get( gblConst.psetupPRINTER_IP)
+	oc.OctoPort = m.Get( gblConst.psetupPRINTER_PORT)
+	#else
 	Dim m As Map = LoadPrinterConnectionSettings
-	If m.IsInitialized = False Then
-		Return False
-	End If
-	
-	oc.OctoIp = m.Get( gblConst.PRINTER_IP)
+	If m.IsInitialized = False Then Return False
+	oc.OctoIp     = m.Get( gblConst.PRINTER_IP)
 	oc.OctoKey = m.Get( gblConst.PRINTER_OCTO_KEY)
 	oc.OctoPort = m.Get( gblConst.PRINTER_PORT)
-	
-	'--- Baby Hypercube
-	'gbl.cn.Initialize("192.168.1.207","80","C2F4DA9C48494DB3BE4AD241158E96D5")
-	'---- VIRT test
-	'cn.Initialize("192.168.1.236","5003","255A0F82BEFB49689062A3290C125F10") 'octoAPIkey (sub key) has permission issues
-	'
-	'cn.Initialize("192.168.1.236","5003","D09FA63DCB9940109FDCB1750304A067",B4XPages.MainPage) 'octoAPIkey (MAIN GLOBAL key)
-	cn.Initialize(oc.OctoIp ,oc.OctoPort,oc.OctoKey) 'octoAPIkey (MAIN GLOBAL key)
-	
-	oc.IsConnectionValid = True
-	Return True
+	#End If
+
+	If oc.OctoIp = "" Then 
+		oc.IsConnectionValid = False
+	Else
+		cn.Initialize(oc.OctoIp ,oc.OctoPort,oc.OctoKey) 'octoAPIkey (MAIN GLOBAL key)
+		oc.IsConnectionValid = True
+	End If
+
+	Return oc.IsConnectionValid
 	
 End Sub
 
@@ -101,6 +103,7 @@ End Sub
 '================================= misc functions - methods ====================================
 '================================= misc functions - methods ====================================
 
+#if not (klipper)
 public Sub GetPrinterProfileConnectionFileName(UserProfileDescription As String) As String
 	
 	'--- returns a valid printer settings filename based off of the user entered description
@@ -114,7 +117,7 @@ public Sub GetPrinterProfileConnectionFileName(UserProfileDescription As String)
 	
 
 End Sub
-
+#end if
 
 
 Public Sub IsValidIPv4Address(IPAddress As String) As Boolean

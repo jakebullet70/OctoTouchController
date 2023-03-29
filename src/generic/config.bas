@@ -141,9 +141,25 @@ Private Sub LoadCfgs()
 	End If
 	ReadBedLevelCFG
 	
+	'======================================================================
+
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE) '--- Dev
+	If File.Exists(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE) = False Then
+		Dim oiq As dlgPrinterSetup
+		oiq.Initialize(Null)
+		oiq.CreateDefaultFile
+	End If
+	'ReadPrinterCFG '--- this will be done on connection init
+	
 End Sub
 
 '=========================================================================
+
+'Public Sub ReadPrinterCFG
+'--- this will be done on connection init
+'	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE)
+'End Sub
+
 
 Public Sub ReadBedLevelCFG
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE)

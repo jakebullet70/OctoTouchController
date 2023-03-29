@@ -194,11 +194,15 @@ Private Sub BuildGUI
 End Sub
 
 Private Sub LoadSplashPic
-	Dim fname As String = "splash.png"
+	
 	#if klipper
-	fname = "splashklipper.png"
+	Dim fname As String = "splashklipper.png"
+	#else
+	Dim fname As String = "splash.png"
 	#End If
 	ivSpash.Bitmap = LoadBitmapSample(File.DirAssets, fname, ivSpash.Width, ivSpash.Height)
+	'ivSpash.Bitmap = LoadBitmapResize(File.DirAssets, fname, ivSpash.Width, ivSpash.Height,True)
+	
 End Sub
 
 Public Sub HideSplash_StartUp
@@ -212,12 +216,21 @@ Private Sub TryPrinterConnection
 		oMasterController.Initialize
 	End If
 	If fnc.ReadConnectionFile(oMasterController.CN) = False Then
-		Dim o9 As dlgOctoSetup 
 		#if klipper
-		o9.Initialize(Me,"Klipper Connection","PrinterSetup_Closed")
+		Dim o9 As dlgPrinterSetup
+		o9.Initialize(Me)
+		o9.Show(False)
 		#else
-		o9.Initialize(Me,"Octoprint Connection","PrinterSetup_Closed")
+		Dim o9 As dlgOctoSetup
+		o9.Initialize(Me,"Printer Connection","PrinterSetup_Closed")
+		o9.Show(False)
 		#End If
+'		Dim o9 As dlgOctoSetup 
+'		#if klipper
+'		o9.Initialize(Me,"Klipper Connection","PrinterSetup_Closed")
+'		#else
+'		o9.Initialize(Me,"Octoprint Connection","PrinterSetup_Closed")
+'		#End If
 		
 		o9.Show(True)
 	Else
@@ -371,11 +384,17 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			Dim o3 As dlgGeneralOptions : o3.Initialize(Me)
 			o3.Show
 			
-		Case "oc"  '--- octo setup
+		Case "oc"  '--- octo / klipper setup
+			#if klipper
+			Dim o9 As dlgPrinterSetup
+			o9.Initialize(Me)
+			o9.Show(False)
+			#else
 			Dim o9 As dlgOctoSetup
 			o9.Initialize(Me,"Printer Connection","PrinterSetup_Closed")
 			o9.Show(False)
-		
+			#End If
+			
 		Case "pw"  '--- android power setup
 			Dim o1 As dlgPowerOptions : o1.Initialize(Me)
 			o1.Show

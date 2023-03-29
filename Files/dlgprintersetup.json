@@ -1,0 +1,42 @@
+{
+    "Version": 1.66,
+    "Theme": "Dark Theme",
+    "Items": [
+        {
+            "title": "Printer name",
+            "type": "Text",
+            "key": "desc",
+            "required": true
+        },
+        {
+            "title": "IP",
+            "type": "Text",
+            "key": "ip",
+            "required": true
+        },
+        {
+            "title": "Port",
+            "type": "Number",
+            "key": "port",
+            "required": false
+        },
+        {
+            "title": "Bed size",
+            "type": "Separator",
+            "key": "",
+            "required": true
+        },
+        {
+            "title": "Bed size X",
+            "type": "Number",
+            "key": "bx",
+            "required": true
+        },
+        {
+            "title": "Bed size Y",
+            "type": "Number",
+            "key": "by",
+            "required": true
+        }
+    ]
+}

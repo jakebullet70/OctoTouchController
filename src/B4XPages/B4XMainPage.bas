@@ -646,6 +646,7 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	If selectedMsg.Length = 0 Then Return
 	
 	If selectedMsg = "alloff" Then
+		
 		#if klipper
 		oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M140 S0"))
 		oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M104 S0"))
@@ -655,6 +656,7 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 		
 		Show_toast("Tool / Bed Off",1200)
 		Return
+		
 	End If
 	
 	'Dim tagme As String = tag.As(String)

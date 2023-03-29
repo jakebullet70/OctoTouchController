@@ -98,7 +98,13 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	cs.Initialize
 	#if klipper
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
-				 Typeface(Typeface.DEFAULT).Append("   Macro's Menu").PopAll,"fn")
+				 Typeface(Typeface.DEFAULT).Append("   Macro's Menu").PopAll,"mac")
+	cs.Initialize
+'	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
+'				 Typeface(Typeface.DEFAULT).Append("   Presets Menu").PopAll,"prs")
+'	cs.Initialize
+	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE308)). _
+				 Typeface(Typeface.DEFAULT).Append("   Firmware MCU Menu").PopAll,"fmw")
 	cs.Initialize
 	#else
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _

@@ -16,9 +16,15 @@ Sub Process_Globals
 	Public Const DEGREE_SYMBOL As String = "°" 
 	Public const APP_TITLE As String = "OctoTC ™"
 	
-	Private Const WEB_ADDR As String = "http://sadlogic.com/octotouchcontroller/"
-	Public Const APK_NAME As String = WEB_ADDR & "OctoTouchController.apk"
+	Private Const WEB_ADDR As String = "http://sadlogic.com/moonrakertouchcontroller/"
+	#if klipper
+	Public Const APK_NAME As String         = WEB_ADDR & "MoonrakerTouchController.apk"
+	Public Const APK_FILE_INFO As String = WEB_ADDR & "MoonrakerTouchController.txt"
+	#else
+	Public Const APK_NAME As String         = WEB_ADDR & "OctoTouchController.apk"
 	Public Const APK_FILE_INFO As String = WEB_ADDR & "OctoTouchController.txt"
+	#End If
+	
 	
 	Public Const NO_THUMBNAIL As String = "no_thumbnail.jpg"
 	Public Const SELECTED_CLR_THEME As String = "themeclr" '--- selected theme color

@@ -11,6 +11,15 @@ Version=11.5
 '			It works but...
 #End Region
 
+
+'=============================================
+'
+'   needs work for klipper - TODO
+'
+'============================================
+
+
+
 Sub Class_Globals
 	
 	Private const mModule As String = "dlgFilamentCtrl"' 'ignore

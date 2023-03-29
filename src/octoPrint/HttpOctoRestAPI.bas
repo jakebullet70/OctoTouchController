@@ -60,6 +60,10 @@ public Sub SendRequestGetInfo(octConst As String) As ResumableSub
 
 	Dim inSub As String = "SendRequestGetInfo"
 	Dim sAPI As String = $"http://${gIP}:${gPort}${octConst}?apikey=${mAPIkey}"$
+	#if klipper
+	sAPI = $"http://${gIP}:${gPort}${octConst}"$
+	#End If
+	
 	
 	Dim j As HttpJob: j.Initialize("", Me)
 	Dim retStr As String = ""
@@ -94,14 +98,17 @@ End Sub
 
 
 Public Sub PostRequest(PostApiCmd As String) As ResumableSub
-
+	
+	#if klipper
+	Dim EndPoint As String = $"http://${gIP}:${gPort}${PostApiCmd}"$
+	Wait For (PostRequest2(EndPoint,"")) Complete(r As String)
+	#else
 	Dim restAPI, JsonDataMsg As String
 	restAPI = Regex.Split("!!",PostApiCmd)(0)
 	JsonDataMsg = Regex.Split("!!",PostApiCmd)(1)
-			
 	Dim EndPoint As String = $"http://${gIP}:${gPort}${restAPI}?apikey=${mAPIkey}"$
-	
 	Wait For (PostRequest2(EndPoint,JsonDataMsg)) Complete(r As String)
+	#End If
 	Return r
 	
 End Sub
@@ -118,13 +125,27 @@ Public Sub PostRequest2(EndPoint As String,JsonDataMsg As String) As ResumableSu
 	End If
 	
 	job.PostString(EndPoint,JsonDataMsg)
-	job.GetRequest.SetContentType("application/json")
-	
+	If JsonDataMsg = "" Then
+		job.GetRequest.SetContentType("text/plain")
+	Else
+		job.GetRequest.SetContentType("application/json")
+	End If
+		
 	Wait For (job) JobDone(job As HttpJob)
 	If job.Success Then
 		retStr = job.GetString
 	Else
+		#if klipper
+		If job.ErrorMessage.Contains("Move out of") Or  job.ErrorMessage.Contains("Movement out of r") Then
+			guiHelpers.Show_toast2("Movement out of  range",2200)
+		End If
+		If Not (EndPoint.Contains(oc.cCMD_CANCEL)) Then '--- timeout error happens sometimes when canceling
+			ProcessErrMsg( EndPoint & CRLF & JsonDataMsg & CRLF &  job.ErrorMessage)
+		End If
+		#else
 		ProcessErrMsg( EndPoint & CRLF & JsonDataMsg & CRLF &  job.ErrorMessage)
+		#end if
+		
 	End If
 	
 	job.Release '--- free up resources
@@ -205,11 +226,17 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String) As Resumable
 	End If
 	
 	If fileName.Length <> 0 Then fileHelpers.SafeKill(fileName)
-		
+	
+	Dim j As HttpJob :	j.Initialize("", Me)
 	Try
-		Dim j As HttpJob :	j.Initialize("", Me)
+		
+		#if klipper
+		'--- TODO, nned  to parse exact file paths for gcode / files storage
+		j.Download(Link.Replace(".thumbs","server/files/gcodes/.thumbs"))
+		#else
 		j.Download(Link)
 		'j.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
+		#End If
 		
 	Catch
 		If config.logFILE_EVENTS Then logMe.LogIt2(LastException,mModule,InSub)
@@ -222,15 +249,17 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String) As Resumable
 		If j.Success Then
 			
 			Dim oo As B4XBitmap = j.GetBitmap
+			'j.GetBitmapResize(200,200,True)
 			Dim Out As OutputStream '--- write it out
 			Out = File.OpenOutput(xui.DefaultFolder, fileName, False)
 			oo.WriteToStream(Out, 100, "PNG")
 			Out.Close
 			'Log("Download_AndSaveFile-dloading: " & fileName)
+		Else
+			Log("failed to dload thumbnail")
 		End If
 		
 	Catch
-		
 		If config.logFILE_EVENTS Then logMe.LogIt2(LastException,mModule,InSub)
 		
 	End Try
@@ -239,6 +268,7 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String) As Resumable
 	Return Null
 	
 End Sub
+
 
 
 '===================================================================================
@@ -250,6 +280,9 @@ public Sub DeleteRequest(DeleteApiCmd As String) As ResumableSub
 
 	Dim InSub As String = "DeleteRequest"
 	Dim sAPI As String = $"http://${gIP}:${gPort}${DeleteApiCmd}?apikey=${mAPIkey}"$
+	#if klipper
+	sAPI = $"http://${gIP}:${gPort}${DeleteApiCmd}"$
+	#End If
 	
 	Dim job As HttpJob : job.Initialize("", Me)
 	Dim retStr As String = ""

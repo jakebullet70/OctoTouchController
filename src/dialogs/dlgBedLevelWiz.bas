@@ -12,6 +12,14 @@ Version=11.5
 ' https://github.com/jneilliii/OctoPrint-BedLevelingWizard
 #End Region
 
+'=============================================
+'
+'   needs work for klipper - TODO
+'
+'============================================
+
+
+
 Sub Class_Globals
 	
 	Private Const mModule As String = "dlgBedLevelWiz"' 'ignore
@@ -24,7 +32,7 @@ Sub Class_Globals
 	Private btn1,btn2 As Button, mData As Map
 	Private current_point As Int  = 0
 	Private point1(),point2(),point3(),point4() As Int
-	Private min_x, max_x,  min_y,max_y As Int
+	Private min_x, max_x,  min_y,max_y As Int 'ignore
 	Private endGCode, startGCode As String
 	Private zSpeed, xySpeed As Int
 	Private gcodeSendLevelingPoint As String
@@ -284,18 +292,26 @@ Private Sub SendMGcode(code As String)
 	If code = "" Then Return
 	
 '	#if debug
-'	Log(code)
+	Log(code)
 '	Return
 '	#End If
 	
 	If code.Contains(CRLF) Then
 		Dim cd() As String = Regex.Split(CRLF, code)
 		For Each s As String In cd
+			#if klipper
+			mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",s))
+			#else
 			mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",s))
+			#End If
 			Sleep(50)
 		Next
 	Else
+		#if klipper
+		mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",code))
+		#else
 		mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",code))
+		#end if
 	End If
 	
 	Return
@@ -334,12 +350,20 @@ End Sub
 
 
 Private Sub SetPoints() As Boolean
-	
+
 	Try
+		
+		#if klipper
+		point1 = Array As Int(CalcRelitive(min_x  + mData.Get(gblConst.bedXYoffset),"L"), CalcRelitive(min_y  + mData.Get(gblConst.bedXYoffset),"W"))
+		point2 = Array As Int(CalcRelitive(min_x  - mData.Get(gblConst.bedXYoffset),"L"), CalcRelitive(min_y  - mData.Get(gblConst.bedXYoffset),"W"))
+		point3 = Array As Int(CalcRelitive(min_x  - mData.Get(gblConst.bedXYoffset),"L"), CalcRelitive(min_y  + mData.Get(gblConst.bedXYoffset),"W"))
+		point4 = Array As Int(CalcRelitive(min_x  + mData.Get(gblConst.bedXYoffset),"L"), CalcRelitive(min_y  - mData.Get(gblConst.bedXYoffset),"W"))
+		#else
 		point1 = Array As Int(min_x  + mData.Get(gblConst.bedXYoffset), min_y  + mData.Get(gblConst.bedXYoffset))
 		point2 = Array As Int(max_x - mData.Get(gblConst.bedXYoffset), max_y - mData.Get(gblConst.bedXYoffset))
 		point3 = Array As Int(max_x - mData.Get(gblConst.bedXYoffset), min_y  + mData.Get(gblConst.bedXYoffset))
 		point4 = Array As Int(min_x  + mData.Get(gblConst.bedXYoffset), max_y - mData.Get(gblConst.bedXYoffset))
+		#End If
 		Return True
 	Catch
 		logMe.LogIt2(LastException.Message, mModule,"SetPoints")
@@ -348,6 +372,26 @@ Private Sub SetPoints() As Boolean
 	Return False
 	
 End Sub
+
+
+#if klipper
+Private Sub CalcRelitive(n As Int, LorW As String) As Int
+	Dim printerW As Int = 200
+	Dim printerL As Int = 200
+	
+	If n >= 0 Then
+		n = mData.Get(gblConst.bedXYoffset)
+	Else
+		If LorW = "L" Then
+			n = printerL - Abs(mData.Get(gblConst.bedXYoffset))
+		Else
+			n = printerW - Abs(mData.Get(gblConst.bedXYoffset))
+		End If
+	End If
+	Return n
+End Sub
+#End If
+
 
 '======================================================================
 
@@ -372,4 +416,5 @@ Private Sub BeepMe(num As Int	)
 	Next
 	
 End Sub
+
 

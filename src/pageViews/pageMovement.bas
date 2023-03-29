@@ -79,6 +79,13 @@ End Sub
 
 public Sub Update_Printer_Btns
 	
+	#if klipper 
+	If oc.isConnected = False Then
+		CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_MENU)
+		Return
+	End If
+	#End If
+	
 	'--- sets enable, disable
 	mPageEnableDisable = IIf(oc.isPrinting,False,True)
 	guiHelpers.EnableDisableBtns2(Array As Button( _
@@ -101,7 +108,11 @@ Private Sub btnGeneral_Click
 	
 	If oc.isConnected = False Then Return
 	
+	#if klipper
+	If oc.JobPrintState.ToLowerCase <> "standby" And oc.JobPrintState.ToLowerCase <> "operational" Then
+	#Else
 	If oc.JobPrintState <> "Operational" Then
+	#End If
 		guiHelpers.Show_toast(oc.cPRINTER_BUSY_MSG,2000)
 		Return
 	End If
@@ -127,7 +138,11 @@ Private Sub btnXYZ_Click
 	
 	If oc.isConnected = False Then Return
 	
-	If oc.JobPrintState <> "Operational" Then
+		#if klipper
+		If oc.JobPrintState.ToLowerCase <> "standby" And oc.JobPrintState.ToLowerCase <> "operational" Then
+		#Else
+		If oc.JobPrintState <> "Operational" Then
+		#End If
 		guiHelpers.Show_toast(oc.cPRINTER_BUSY_MSG,2000)
 		Return
 	End If
@@ -137,7 +152,30 @@ Private Sub btnXYZ_Click
 '	Log("PrinterProfileInvertedX" & oc.PrinterProfileInvertedx )
 	
 	Select Case btn.Tag
-			
+		#if klipper
+		Case "Zhome"
+			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G28 Z"))
+		Case "XYhome"
+			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G28 X Y"))
+		Case "Zup"
+			SendRelPosCmd
+			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G1 Z " & $"${IIf(oc.PrinterProfileInvertedZ,"-","")}"$ & MoveJogSize))
+		Case "Zdown"
+			SendRelPosCmd
+			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G1 Z " & $"${IIf(oc.PrinterProfileInvertedZ,"","-")}"$ & MoveJogSize))
+		Case "XYleft"
+			SendRelPosCmd
+			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G1 X " & $"${IIf(oc.PrinterProfileInvertedX,"","-")}"$ & MoveJogSize))
+		Case "XYright"
+			SendRelPosCmd
+			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G1 X " & $"${IIf(oc.PrinterProfileInvertedx,"-","")}"$ & MoveJogSize))
+		Case "XYforward"
+			SendRelPosCmd
+			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G1 Y " & $"${IIf(oc.PrinterProfileInvertedY,"","-")}"$ & MoveJogSize))
+		Case "XYback"
+			SendRelPosCmd
+			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G1 Y " & $"${IIf(oc.PrinterProfileInvertedY,"-","")}"$ & MoveJogSize))
+		#else
 		Case "Zhome"
 			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_Z_HOME)
 		Case "XYhome"
@@ -154,12 +192,20 @@ Private Sub btnXYZ_Click
 			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!",$"${IIf(oc.PrinterProfileInvertedY,"","-")}"$ & MoveJogSize).Replace("!DIR!","y"))
 		Case "XYback"
 			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!",$"${IIf(oc.PrinterProfileInvertedY,"-","")}"$ & MoveJogSize).Replace("!DIR!","y"))
+		#End If
+		
 			
 	
 	End Select
 	guiHelpers.Show_toast("Command Sent",1200)
 	
 End Sub
+
+#if klipper
+Private Sub SendRelPosCmd
+	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",oc.gcodeRelPos))
+End Sub
+#End If
 
 Private Sub cboMovementSize_SelectedIndexChanged (Index As Int)
 	
@@ -206,7 +252,9 @@ End Sub
 Private Sub BuildFunctionMnu() As Map
 	Dim m As Map : m.Initialize
 	m.Put("Pre-Heat Menu","prh")
-	m.Put("Auto Bed Leveling (G29)","bl")
+	#if not (klipper)
+	m.Put("Auto Bed Leveling (G29)","bl")  '''-----  needs to be an option in octoprint
+	#end if
 	If config.ShowBedLevelFLAG 	Then m.Put("Manual Bed Leveling","blw")
 	If config.ShowFilamentChangeFLAG Then m.Put("Manual Change Filament","cf")
 	Return m
@@ -231,7 +279,12 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 		Case "bl" '--- firmware bed level
 			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)
 			If ret = xui.DialogResponse_Cancel Then Return
+			#if klipper
+			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G29"))
+			#else
 			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","G29"))
+			#End If
+			
 			guiHelpers.Show_toast(msg & "Start Bed Leveling",3200)
 			
 '		Case "cfl" '--- Change filament through firmware
@@ -267,19 +320,26 @@ Private Sub ExtrudeRetract(Extrude As Boolean)
 		Return
 	End If
 	
+	#if klipper
+	SendRelPosCmd
+	Dim pp As String = oc.cPOST_GCODE.Replace("!G!","G1 E" & IIf(Extrude,"","-") & ExtruderLengthSize & "F150")
+	mMainObj.oMasterController.cn.PostRequest(pp)
+	guiHelpers.Show_toast(IIf(Extrude,"Extrusion","Retraction") & ": " & ExtruderLengthSize & "mm",1200)
+	#else
 	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_TOOL_EXTRUDE_RETRACT.Replace("!LEN!", IIf(Extrude,"","-") & ExtruderLengthSize))
 	guiHelpers.Show_toast(IIf(Extrude,"Extrusion","Retraction") & ": " & ExtruderLengthSize & "mm",1200)
+	#End If
 	
 End Sub
 
 Private Sub MotorsOff
 	'--- DISABLE_ALL_STEPPERS
+	#if klipper
+	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M18"))
+	#else
 	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","M18"))
+	#End If
+	
 	guiHelpers.Show_toast("Command sent: Motors Off",1800)
 End Sub
 #end region
-
-
-
-
-

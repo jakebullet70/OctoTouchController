@@ -15,6 +15,9 @@ Sub Class_Globals
 	
 	Private oCN As HttpOctoRestAPI
 	Public parser As JsonParsorMain
+	#if klipper
+	Public parsorConStatus As JsonParsorConnectionStatus
+	#End If
 	
 	'--- populated by a REST calls, will be grabbed by their pages
 	Public gMapOctoFilesList As Map
@@ -51,6 +54,10 @@ Public Sub Initialize
 	
 	mainObj = B4XPages.MainPage
 	parser.Initialize() '--- init the octo rest parser
+	#if klipper
+	parsorConStatus.Initialize
+	#End If
+	
 	
 End Sub
 
@@ -86,11 +93,6 @@ End Sub
 
 Public Sub tmrMain_Tick
 
-	'--- make API requested and update screen
-	'--- Timer is in 'Main'
-	GetTemps
-	GetJobStatus
-	
 	'--- do we have a valid printer profile?
 	If mGotProfileInfoFLAG = False And mGotProfileInfoFLAG_IsBusy = False Then
 		GetPrinterProfileInfo
@@ -105,6 +107,13 @@ Public Sub tmrMain_Tick
 	If mGotFilesListFLAG = False And  mGotFilesListFLAG_IsBusy = False Then
 		GetAllOctoFilesInfo
 	End If
+	
+	
+	'--- make API requested and update screen
+	'--- Timer is in 'Main'
+	GetTemps
+	GetJobStatus
+	
 
 End Sub
 #end region
@@ -119,9 +128,10 @@ Private Sub GetAllOctoSettingInfo
 		Return '---already been called
 	End If
 	
-	mGotOctoSettingFLAG_IsBusy = True
+	mGotOctoSettingFLAG_IsBusy = True ' TODO KLIPPER
 	
-	Dim rs As ResumableSub =  oCN.SendRequestGetInfo( oc.cSETTINGS)
+	#if not (klipper)
+	Dim rs As ResumableSub =  oCN.SendRequestGetInfo("/api/settings")
 	
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
@@ -132,13 +142,36 @@ Private Sub GetAllOctoSettingInfo
 		mGotOctoSettingFLAG = True '--- will stop it from firing in the main loop
 		
 		Build_PresetHeaterOption(mapMasterOctoTempSettings)
-	
-		mGotOctoSettingFLAG_IsBusy = False
+			
+		
 	Else
 		
 		'oc.RestPrinterProfileVars
 		
 	End If
+	
+	#else
+	
+	Dim rs As ResumableSub =  oCN.SendRequestGetInfo("/server/database/item?namespace=mainsail&key=presets") 'TODO --- Fluid as a front end?
+	
+	Wait For(rs) Complete (Result As String)
+	If Result.Length <> 0 Then
+	
+		Dim o As JsonParserMasterPrinterSettings  : o.Initialize
+		mapMasterOctoTempSettings.Initialize
+		mapMasterOctoTempSettings = o.GetPresetHeaterSettings(Result)
+		mGotOctoSettingFLAG = True '--- will stop it from firing in the main loop
+		
+		Build_PresetHeaterOption(mapMasterOctoTempSettings)
+		
+	Else
+		
+		'oc.RestPrinterProfileVars
+		
+	End If
+	#end if
+	
+	mGotOctoSettingFLAG_IsBusy = False
 	
 End Sub
 
@@ -176,17 +209,25 @@ End Sub
 
 Private Sub GetTemps
 	
+'	#if klipper
+'	If oc.isConnected = False Then
+'		mGetTempFLAG_Busy = False
+'		Return
+'	End If
+'	#End If
+	
 	If mGetTempFLAG_Busy = True Then Return '--- stop calls from backing up if we have had a disconect
 	mGetTempFLAG_Busy = True
 	
 	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(oc.cPRINTER_MASTER_STATE)
 
-	'{"error":"You don't have the permission to access the requested resource. It is either read-protected or not readable by the server."}
-	'Dim rs As ResumableSub =  gbl.cn.SendRequestGetInfo(oc.cPRINTER_HEATER) ERROR!!
-	
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
 		parser.TempStatus(Result)
+		#if klipper
+		'--- moonraker can still be running even though it is not connected to klipper
+		parsorConStatus.ConnectionStatusKlipper(Result)
+		#End If
 	Else
 		oc.ResetTempVars
 	End If
@@ -205,10 +246,24 @@ End Sub
 
 Private Sub GetJobStatus
 	
+	#if klipper
+	If oc.isConnected = False Then
+		mJobStatusFLAG_Busy = False
+		Return
+	End If
+	#End If
+	
 	If mJobStatusFLAG_Busy = True Then Return '--- stop calls from backing up if we have had a disconnect
 	mJobStatusFLAG_Busy = True
 	
-	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(oc.cJOB_INFO)
+	
+	#if klipper
+	Dim jobInfo As String = "/printer/objects/query?webhooks&virtual_sdcard&print_stats"
+	#else
+	Dim jobInfo As String =  "/api/job"
+	#End If
+	
+	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(jobInfo)
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
 		parser.JobStatus(Result)
@@ -219,12 +274,34 @@ Private Sub GetJobStatus
 	'--- Update printer btns (enable, disabled)
 	CallSub(mCallBack,mEventNameBtns)
 	
+	#if klipper
+	oc.FormatedJobPct = IIf(oc.isPrinting = True And oc.isHeating = False,fnc.RoundJobPctNoDecimals(oc.JobCompletion),"")
+	Dim Const OP As String = "operational"
+	If oc.JobPrintState = "cancelled" Then
+		oc.isKlipperCanceling = False
+		oc.JobPrintState = OP
+		oc.FormatedStatus = oc.JobPrintState
+	else If oc.isKlipperCanceling Then
+		oc.FormatedStatus = "--> canceling <--"
+	Else If oc.JobPrintState = "printing" Then
+		oc.FormatedStatus = oc.JobPrintState & " " & oc.FormatedJobPct
+	Else
+		If oc.JobPrintState = "complete" Then
+			oc.JobPrintState = OP
+			oc.FormatedStatus = OP
+		Else
+			oc.FormatedStatus = oc.JobPrintState
+		End If
+		
+	End If
+	#else
 	oc.FormatedJobPct = IIf(oc.isPrinting = True And oc.isHeating = False,fnc.RoundJobPctNoDecimals(oc.JobCompletion),"")
 	If oc.JobPrintState = "Printing" Then
 		oc.FormatedStatus = oc.JobPrintState & " " & oc.FormatedJobPct
 	Else
 		oc.FormatedStatus = oc.JobPrintState
 	End If
+	#End If
 	
 	CallSub(mCallBack,mEventNameStatus)
 	
@@ -238,8 +315,29 @@ Private Sub GetConnectionPrinterStatus
 	If oCN.IsInitialized = False Then
 		oCN.Initialize(oc.OctoIp ,oc.OctoPort,oc.OctoKey) 
 	End If
+	
 
-	'---force a connection if its not there	
+	#if klipper
+	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(oc.cPRINTER_MASTER_STATE)
+	'--- get some info!
+	Wait For(rs) Complete (Result As String)
+	If Result.Length <> 0 Then
+		
+		Dim o2 As JsonParsorConnectionStatus
+		o2.Initialize
+		o2.ConnectionStatusKlipper(Result)
+		
+	'--- turn on main loop timer
+		CallSub2(Main,"TurnOnOff_MainTmr",True)
+		tmrMain_Tick
+		
+	Else
+		oc.ResetStateVars
+	End If
+	#else	
+
+
+	'---force a connection if its not there
 	Dim rs As ResumableSub = oCN.PostRequest(oc.cCMD_AUTO_CONNECT_STARTUP)
 	Wait For(rs) Complete (Result As String)
 	
@@ -257,15 +355,25 @@ Private Sub GetConnectionPrinterStatus
 		tmrMain_Tick
 		
 	Else
-		
 		oc.ResetStateVars
-		
 	End If
+	
+	
+
+	#End If
+
 	
 End Sub
 
 
 Public Sub GetAllOctoFilesInfo
+	
+	#if klipper
+	If oc.isConnected = False Then 
+		mGotFilesListFLAG_IsBusy = False
+		Return
+	End If
+	#End If
 	
 	If mGotFilesListFLAG_IsBusy = True Then
 		If config.logFILE_EVENTS Then logMe.Logit("mGotFilesListFLAG_IsBusy = True",mModule)
@@ -274,14 +382,27 @@ Public Sub GetAllOctoFilesInfo
 	
 	mGotFilesListFLAG_IsBusy = True
 	
-	Dim rs As ResumableSub =  oCN.SendRequestGetInfo( oc.cFILES)
+	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(oc.cFILES)
 	
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
-
-		Dim o As JsonParserFiles  : o.Initialize(True) '--- download thumbnails
 		gMapOctoFilesList.Initialize
-		gMapOctoFilesList = o.StartParseAllFiles(Result)
+		
+		Dim o As JsonParserFiles  
+		o.Initialize(True) '--- download thumbnails
+		
+		#if klipper
+		If oc.KlipperFileSrcPath.Length <> 0 Then
+			Wait For (o.GetKlipperFilePath) Complete (retval As String)
+			'--- TODO, if supporting paths --- https://moonraker.readthedocs.io/en/latest/web_api/#list-available-files
+			oc.KlipperFileSrcPath = retval
+		End If
+		Wait For (o.StartParseAllFilesKlipper(Result)) Complete (m As Map)
+		gMapOctoFilesList = m
+		#else
+		gMapOctoFilesList = o.StartParseAllFilesOcto(Result)
+		#End If
+		
 		
 		mGotFilesListFLAG = True '--- will stop it from firing in the main loop
 		

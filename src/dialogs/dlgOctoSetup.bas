@@ -18,7 +18,8 @@ Sub Class_Globals
 	Private mEventName As String
 	
 	Private B4XLoadingIndicator1 As B4XLoadingIndicator
-	Private btnCheckConnection,btnGetOctoKey As Button
+	Private btnCheckConnection As Button
+	Private btnGetOctoKey As Button
 	
 	Private txtOctoKey As B4XFloatTextField
 	Private txtPrinterDesc As B4XFloatTextField
@@ -123,6 +124,11 @@ private Sub Build_GUI
 	
 	btnCheckConnection.TextSize = NumberFormat2(btnCheckConnection.TextSize / guiHelpers.gFscale,1,0,0,False)
 	btnGetOctoKey.TextSize = NumberFormat2(btnGetOctoKey.TextSize / guiHelpers.gFscale,1,0,0,False)
+	
+	#if klipper
+	btnGetOctoKey.Visible = False
+	#End If
+	
 End Sub
 
 
@@ -138,7 +144,7 @@ private Sub Save_settings
 	guiHelpers.Show_toast("Saved",2500)							
 	fileHelpers.SafeKill(fname)
 	File.WriteMap(xui.DefaultFolder,fname,outMap)
-	oc.IsOctoConnectionVarsValid = True
+	oc.IsConnectionValid = True
 	
 End Sub
 
@@ -153,10 +159,17 @@ Private Sub SetSaveButtonState
 End Sub
 
 Private Sub EnableDisableBtns(en As Boolean)
+									
+	#if klipper
+	guiHelpers.EnableDisableViews(Array As B4XView( _
+									Dialog.GetButton(xui.DialogResponse_Positive),Dialog.GetButton(xui.DialogResponse_Cancel), _
+								 	btnCheckConnection),en)
 	
+	#else
 	guiHelpers.EnableDisableViews(Array As B4XView( _
 									Dialog.GetButton(xui.DialogResponse_Positive),Dialog.GetButton(xui.DialogResponse_Cancel), _
 								 	btnCheckConnection,btnGetOctoKey),en)
+	#End If
 			
 End Sub
 
@@ -317,10 +330,12 @@ Private Sub CheckInputs() As String
 			txtPrinterPort.Text = "80"
 			'msg = "Missing Port Number" : Exit
 		End If
-		
+
+		#if not (klipper)
 		If txtOctoKey.Text.Length = 0 Then
 			msg = "Missing Octoprint Key" : Exit
 		End If
+		#End If
 		
 		If txtPrinterDesc.Text.Length = 0 Then
 			msg = "Missing Printer Description" : Exit

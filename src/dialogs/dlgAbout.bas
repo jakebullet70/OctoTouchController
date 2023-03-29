@@ -32,7 +32,9 @@ End Sub
 
 Public Sub Show
 	
+	#if not (klipper)
 	Check4OctoKlipper
+	#end if
 	mDialog.Initialize(mMainObj.Root)
 	Dim dlgHelper As sadB4XDialogHelper
 	dlgHelper.Initialize(mDialog)
@@ -57,7 +59,7 @@ Public Sub Show
 	p.LoadLayout("dlgAbout")
 	BuildGUI
 	
-	dlgHelper.ThemeDialogForm("About")
+	dlgHelper.ThemeDialogForm("About - " & Application.LabelName)
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "OK")
 	BuildAboutLabel
 	dlgHelper.ThemeInputDialogBtnsResize
@@ -106,14 +108,23 @@ Private Sub GetAboutText() As String
 	Dim msg As StringBuilder : msg.Initialize
 	msg.Append("OctoTouchController™ V" & Application.VersionName).Append(CRLF)
 	msg.Append("A dedicated touch screen controller for Octoprint using older Android devices").Append(CRLF).Append(CRLF)
-	msg.Append("(©)sadLogic 2022").Append(CRLF)
+	msg.Append("(©)sadLogic 2022-23").Append(CRLF)
 	msg.Append("Kherson Ukraine!").Append(CRLF)
 	msg.Append("AGPL-3.0 license")
+	
+	#if klipper
+	Return msg.ToString.Replace("Octoprint","Moonraker / Klipper").Replace("OctoTouch","MoonrakerTouch")
+	#else
 	Return msg.ToString
+	#End If
+	
+	
+	
 	
 End Sub
 
 
+#if not (klipper)
 Public Sub Check4OctoKlipper
 	
 	Dim rs As ResumableSub =  mMainObj.oMasterController.CN.SendRequestGetInfo("/plugin/pluginmanager/plugins")
@@ -130,4 +141,5 @@ Public Sub Check4OctoKlipper
 	
 	
 End Sub
+#end if
 #end region

@@ -11,6 +11,15 @@ Version=11.5
 '			It works but...
 #End Region
 
+
+'=============================================
+'
+'   needs work for klipper - TODO
+'
+'============================================
+
+
+
 Sub Class_Globals
 	
 	Private const mModule As String = "dlgFilamentCtrl"' 'ignore
@@ -263,9 +272,17 @@ Private Sub ParkNozzle() As ResumableSub 'ignore
 	
 End Sub
 
+
 Private Sub SendMGcode(code As String)
+	
+	#if klipper
+	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",code))
+	#else
 	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",code))
+	#End If
+	
 End Sub
+
 
 Private Sub SetStatusLabel(txt As String)
 	lblStatus.Text = txt & CRLF

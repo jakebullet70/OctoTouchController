@@ -112,7 +112,14 @@ End Sub
 
 Private Sub mnuCardImg_Click
 	
+'	Log(oc.isConnected) 
+'	Log(oc.FormatedStatus)
+	
+	#if klipper
+	If oc.isConnected = False Or mMainObj.lblStatus.Text = "No Connection"  Then
+	#else
 	If oc.isConnected = False Then 
+	#End If
 		guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
 		Return
 	End If
@@ -152,9 +159,13 @@ Private Sub btnSubBtnAction_Click
 	
 	Select Case o.Tag
 		Case "sys"
+			#if klipper
+			guiHelpers.Show_toast2("System Commands Are Not Available At This Time",4000)
+			#else
 			Dim oa As dlgOctoSysCmds
 			oa.Initialize(mMainObj,mMainObj.oMasterController.CN)
 			oa.Show
+			#End If
 			
 		Case "br" '--- brightness
 			DoBrightnessDlg

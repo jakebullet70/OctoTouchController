@@ -31,6 +31,11 @@ Public Sub TempStatus(s As String)
 		Dim TargetBedCheck,TargetToolCheck As Int
 	
 		'--- populate vars from json
+		
+		#if klipper
+		
+		#End If
+		
 		Try
 			jp.Initialize(s)
 			m = jp.NextObject
@@ -97,22 +102,87 @@ Public Sub TempStatus(s As String)
 End Sub
 
 
-public Sub  JobStatus(s As String)
+Public Sub  JobStatus(s As String)
 	Dim CallingSub As String = "JobStatus"
-	Dim m, mProgress, mJob, mFile As Map
-	Dim jp As JSONParser
 	
+	Dim jp As JSONParser
+	'Log(s)
 	Try
 		
 		jp.Initialize(s)
-		m = jp.NextObject
+		'Log(s)
 		
 		'--- reset status of printer -------------
 		oc.isCanceling = False
 		oc.isPrinting = False
 		oc.isPaused2 = False
 
-		'---- get status		
+		#if klipper
+		Dim root As Map = jp.NextObject
+		Dim result As Map = root.Get("result")
+		Dim status As Map = result.Get("status")
+		Dim print_stats As Map = status.Get("print_stats")
+		Dim virtual_sdcard As Map = status.Get("virtual_sdcard")
+		
+		'---- get status
+		oc.JobPrintState = print_stats.Get("state")
+		'Dim is_active As String = virtual_sdcard.Get("is_active") if true does it mean its printing?
+		'Log( oc.JobPrintState.ToLowerCase)
+		Select Case oc.JobPrintState.ToLowerCase
+			Case "printing"      : oc.isPrinting = True
+			Case "cancelling"   : oc.isKlipperCanceling = True
+			Case "paused"       : oc.isPaused2 = True
+			Case "standby"
+				
+			Case Else
+				
+		End Select
+		
+		oc.JobFileName = print_stats.Get("filename")
+		oc.isFileLoaded  = (oc.JobFileName.Length <> 0)
+		oc.JobFileSize  = virtual_sdcard.Get("file_size")
+		oc.JobFilePos   = virtual_sdcard.Get("file_position")
+		
+		oc.JobCompletion = (Round2(virtual_sdcard.Get("progress"),2) * 100)
+		oc.JobPrintTime = print_stats.Get("total_duration")
+		oc.JobEstPrintTime = print_stats.Get("print_duration")
+		
+		'Dim eventtime As Double = result.Get("eventtime")
+		''Dim status As Map = result.Get("status")
+		''Dim print_stats As Map = status.Get("print_stats")
+		''Dim filename As String = print_stats.Get("filename")
+		''Dim total_duration As Double = print_stats.Get("total_duration")
+		
+		'Dim print_duration As Double = print_stats.Get("print_duration")
+		'Dim state As String = print_stats.Get("state")
+		'Dim message As String = print_stats.Get("message") '--- blank when printing
+		'Dim filament_used As Double = print_stats.Get("filament_used")
+		
+		'Dim info As Map = print_stats.Get("info")
+		'Dim current_layer As String = info.Get("current_layer")
+		'Dim total_layer As String = info.Get("total_layer")
+		
+		Dim webhooks As Map = status.Get("webhooks") 
+		Dim state As String = webhooks.Get("state") 
+		If state = "shutdown" Then
+			oc.isConnected = False
+		End If
+		'Dim state_message As String = webhooks.Get("state_message")
+		
+		'Dim virtual_sdcard As Map = status.Get("virtual_sdcard")
+		'Dim file_path As String = virtual_sdcard.Get("file_path")
+		'Dim file_position As Int = virtual_sdcard.Get("file_position")
+		'Dim is_active As String = virtual_sdcard.Get("is_active")
+		'Dim progress As Double = virtual_sdcard.Get("progress")
+		'Dim file_size As Int = virtual_sdcard.Get("file_size")
+		
+		#else
+		
+		Dim m, mProgress As Map
+		Dim mJob, mFile As Map	
+		m = jp.NextObject
+		
+		'---- get status
 		oc.JobPrintState = m.Get("state")
 		Select Case oc.JobPrintState
 			Case "Printing"     : oc.isPrinting = True
@@ -120,7 +190,7 @@ public Sub  JobStatus(s As String)
 			Case "Paused"      : oc.isPaused2 = True
 		End Select
 		
-		'--- populate vars from json 
+		'--- populate vars from json
 		mJob = m.Get("job").As(Map)
 		mFile = mJob.Get("file").As(Map)
 		mProgress = m.Get("progress").As(Map)
@@ -144,11 +214,12 @@ public Sub  JobStatus(s As String)
 		End If
 		
 		If oc.lastJobPrintState <> oc.JobPrintState Then
-			'--- updated master buttons as soon as STATE changes
+		'--- updated master buttons as soon as STATE changes
 			CallSubDelayed(B4XPages.MainPage,"Update_Printer_Btns")
 		End If
 		oc.lastJobPrintState = oc.JobPrintState
 		'------------------------------------
+		#End If
 		
 	Catch
 		
@@ -166,17 +237,18 @@ End Sub
 '    Issues found when octoprint is running but the Klipper host is not
 '================================================================================
 
-
-private Sub CheckNull(v As String) As String
+#if not (klipper)
+Private Sub CheckNull(v As String) As String
 	Try
 		Return IIf(v = Null Or v = "null" Or v = "","",v)
 	Catch
 		Return ""
 	End Try
 End Sub
+#end if
 
 
-private Sub CheckNull0(v As String) As String
+Private Sub CheckNull0(v As String) As String
 	Try
 		Return IIf(v = Null Or v = "null" Or v = "" Or v = "0.0","0",v)
 	Catch
@@ -184,12 +256,13 @@ private Sub CheckNull0(v As String) As String
 	End Try
 End Sub
 
-private Sub CheckNullDash(v As String) As String
+#if not (klipper)
+Private Sub CheckNullDash(v As String) As String
 	Try
 		Return IIf(v = Null Or v = "null" Or v = "","-",v)
 	Catch
 		Return "-"
 	End Try
 End Sub
-
+#end if
 '================================================================================

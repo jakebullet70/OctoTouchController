@@ -16,7 +16,8 @@ Sub Class_Globals
 	Private mCallBackEvent As String 'ignore
 	Private mMainObj As B4XMainPage'ignore
 	
-	Private DisplayedFileName As String '--- curently displayed file name
+	Private mDisplayedFileName As String '--- curently displayed file name
+	Private mNumOfTries4Thumbnail As Int = 0
 	
 	Private btnCancel, btnPause, btnPrint As Button
 	
@@ -63,7 +64,7 @@ public Sub Set_focus()
 	Update_Printer_Btns
 	
 	UpdateFileName
-	DisplayedFileName = oc.JobFileName
+	mDisplayedFileName = oc.JobFileName
 	
 End Sub
 
@@ -155,7 +156,11 @@ Public Sub Update_Printer_Btns
 	
 	
 	'--- is a file loaded and ready?
+	#if klipper
+	If oc.isFileLoaded = False Or oc.isKlipperCanceling Then
+	#else
 	If oc.isFileLoaded = False Then
+	#End If
 		
 		guiHelpers.EnableDisableBtns2(Array As Button(btnPrint,btnPause,btnCancel),False)
 		Return
@@ -194,6 +199,13 @@ End Sub
 
 Public Sub Update_Printer_Stats
 	
+	#if klipper 
+	If oc.isConnected = False Then
+		CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_MENU)
+		Return
+	End If
+	#End If
+	
 	'--- update printer job
 	If IsNumber(oc.JobCompletion) Then
 		CircularProgressBar1.Value = oc.JobCompletion
@@ -216,11 +228,11 @@ Public Sub Update_Printer_Stats
 	
 	If (oc.JobFileName.Length = 0 And lblFileName.Text <> gblConst.NO_FILE_LOADED) Or _
 		(oc.JobFileName.Length <> 0 And lblFileName.Text = gblConst.NO_FILE_LOADED) Or _
-		(DisplayedFileName <> oc.JobFileName) Then
+		(mDisplayedFileName <> oc.JobFileName) Then
 		UpdateFileName
 	End If
 	
-	DisplayedFileName = oc.JobFileName
+	mDisplayedFileName = oc.JobFileName
 	
 End Sub
 
@@ -230,6 +242,7 @@ Private Sub UpdateFileName
 	Else
 		lblFileName.Text = gblConst.NO_FILE_LOADED
 	End If
+	mNumOfTries4Thumbnail = 0
 	LoadThumbNail
 	If (oc.isHeating Or oc.isPrinting) Then
 		Printing_FromFilesPage
@@ -278,13 +291,23 @@ Private Sub btnAction_Click
 				
 				CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
 				
+				#if klipper
+				If oc.isklipperCanceling = True Then
+				#else
 				If oc.isCanceling = True Then
+				#End If
 					guiHelpers.Show_toast("Printer Is Canceling, Please Wait...",2000)
 					Return
 				End If
 				
 				guiHelpers.Show_toast("Starting Print...",2000)
+				#if klipper
+				Dim fname As String = oc.cCMD_PRINT.Replace("!FN!",oc.JobFileName) '--- TODO KLIPPER, folders?
+				mMainObj.oMasterController.cn.PostRequest(fname)
+				#else
 				mMainObj.oMasterController.cn.PostRequest(oc.cCMD_PRINT)
+				#End If
+				
 				If ivPreviewLG.mBase.Visible = True Then
 					ivPreviewLG_Click '--- show tempeture panel
 				End If
@@ -299,6 +322,9 @@ Private Sub btnAction_Click
 
 			If res = xui.DialogResponse_Positive Then
 				guiHelpers.Show_toast("Canceling...",2000)
+				#if klipper
+				oc.isKlipperCanceling = True
+				#end if
 				mMainObj.oMasterController.cn.PostRequest(oc.cCMD_CANCEL)
 			End If
 			
@@ -318,7 +344,11 @@ End Sub
 Public Sub LoadThumbNail
 	
 	Dim Const THUMBNAIL_ISSUE As String = "Getting Thumbnail..."
-	
+	If oc.JobFileName = "" Then Return
+	#if klipper
+	If oc.isConnected = False Then Return
+	#End If
+		
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized = False Then
 		'--- sometimes happens on 1st startup
 		guiHelpers.Show_toast(THUMBNAIL_ISSUE,1500)
@@ -328,6 +358,9 @@ Public Sub LoadThumbNail
 
 	Dim currentFileInfo As tOctoFileInfo
 	currentFileInfo =  mMainObj.oMasterController.gMapOctoFilesList.Get(oc.JobFileName)
+	
+	mNumOfTries4Thumbnail = mNumOfTries4Thumbnail + 1
+	If mNumOfTries4Thumbnail > 5 Then Return '--- I have tried 5 times, something is wrong
 	
 	If currentFileInfo = Null Or currentFileInfo.myThumbnail_filename_disk = "" Then
 		If currentFileInfo = Null Then 

@@ -36,9 +36,11 @@ Sub Class_Globals
 	Private lblFileName As AutoTextSizeLabel, lblHeaderFileName As B4XView
 	Private lblBusy As B4XView
 	
+	Private mOldFileName as String
+	
 	Private lblSort2 As Label, cboSort As B4XComboBox, rsFiles As ResultSet
 	Private SortAscDesc As Boolean = True
-	Private	LastSort As String
+	Private LastSort As String
 	
 End Sub
 
@@ -91,10 +93,22 @@ End Sub
 
 
 public Sub Update_Printer_Btns
+	
+	#if klipper 
+	If oc.isConnected = False Then
+		CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_MENU)
+		Return
+	End If
+	#End If
 
 	'--- sets enable, disable
 	mPnlMain.Enabled = oc.isConnected
+	#if klipper
+	Dim enableDisable As Boolean  = Not (oc.isKlipperCanceling Or oc.isPrinting Or oc.IsPaused2 Or (clvLastIndexClicked = NO_SELECTION))
+	#else
 	Dim enableDisable As Boolean  = Not (oc.isCanceling Or oc.isPrinting Or oc.IsPaused2 Or (clvLastIndexClicked = NO_SELECTION))
+	#End If
+	
 	guiHelpers.EnableDisableBtns2(Array As Button(btnLoad,btnLoadAndPrint,btnDelete),enableDisable)
 
 End Sub
@@ -123,12 +137,16 @@ Private Sub BuildGUI
 	
 	guiHelpers.ReSkinB4XComboBox(Array As B4XComboBox(cboSort))
 	guiHelpers.SetTextColor(Array As B4XView(lblFileName.BaseLabel,lblHeaderFileName,lblSort2,lblBusy))
-	guiHelpers.ResizeText(Chr(0xF160),lblSort2) : lblSort2.TextSize = lblSort2.TextSize - 6 '--- make text a little smaller
+	guiHelpers.ResizeText(Chr(0xF175),lblSort2) : lblSort2.TextSize = lblSort2.TextSize - 6 '--- make text a little smaller
 	
 	cboSort.setitems(Array As String("File Name","Date Added"))
-	cboSort.SelectedIndex = 0
+	
+	cboSort.SelectedIndex = Starter.kvs.GetDefault("fsort-idx",0)
+	LastSort = Starter.kvs.GetDefault("fsort-lbl","File Name")
+	SortAscDesc = Starter.kvs.GetDefault("fsort-asc",True)
+	lblSort2.Text = IIf(SortAscDesc,Chr(0xF176),Chr(0xF175)) : Sleep(0)
+	
 	cboSort.cmbBox.Prompt = "Sort Order"
-	LastSort = "File Name"
 	
 	lblBusy.Visible = True
 	lblBusy.SetColorAndBorder(clrTheme.BackgroundHeader,1dip,clrTheme.txtNormal,8dip)
@@ -149,11 +167,18 @@ Private Sub BuildGUI
 	btnDelete.Text = "Delete"
 
 	guiHelpers.SkinButton(Array As Button(btnLoadAndPrint,btnLoad,btnDelete))
+	
 	If guiHelpers.gScreenSizeAprox > 7.5 Then
 		btnDelete.TextSize = 52
 	End If
 	guiHelpers.SetTextSize(Array As Button(btnLoadAndPrint,btnLoad,btnDelete), _
 										NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
+	
+	#if klipper  
+	'btnLoad.Visible = False '------------------  happens in the screen file now
+	lblHeaderFileName.Text = "Viewing File"
+	lblFileName.Text = ""
+	#End If
 	
 End Sub
 
@@ -174,22 +199,33 @@ Private Sub btnAction_Click
 			
 			Dim mb As dlgMsgBox 
 			mb.Initialize(mMainObj.Root,"Question", IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip), 170dip,False)
+			#if klipper
+			Wait For (mb.Show("Delete file from Klipper?",gblConst.MB_ICON_QUESTION,"Yes - Delete It","","No")) Complete (res As Int)
+			#else
 			Wait For (mb.Show("Delete file from Octoprint?",gblConst.MB_ICON_QUESTION,"Yes - Delete It","","No")) Complete (res As Int)
+			#End If
 			
 			If res = xui.DialogResponse_Positive Then
 				SendDeleteCmdAndRemoveFromGrid
 			End If
 			CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
-			
+
+		#if not (klipper)			
 		Case "load"
 			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_FILES_SELECT.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
+			'guiHelpers.Show_toast("Loading file...",2000)
 			guiHelpers.Show_toast("Loading file...",2000)
 			Sleep(500) '<--- needed
 			CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
 			Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName2Scrn",400)
+		#end if
 			
 		Case "loadandprint"
+			#if klipper
+			mMainObj.oMasterController.cn.PostRequest($"/printer/print/start?filename=${mCurrentFileInfo.Name}"$)
+			#else
 			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_FILES_PRINT.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
+			#End If
 			guiHelpers.EnableDisableBtns2(Array As Button(btnLoad,btnLoadAndPrint,btnDelete),False)
 			CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_PRINTING)
 			Sleep(10)
@@ -268,9 +304,13 @@ Private Sub CreateListItem(oData As tOctoFileInfo, Width As Int, Height As Int) 
 
 	lblpnlFileViewBottom.TextColor = clrTheme.txtAccent
 	lblpnlFileViewBottom.Font = lblpnlFileViewTop.Font
+	#if klipper
+	lblpnlFileViewBottom.Text = "Size: " &  fileHelpers.BytesToReadableString(oData.Size)
+	#else
 	lblpnlFileViewBottom.Text = "Size: " &  fileHelpers.BytesToReadableString(oData.Size) & _
 								$"  ${oData.length.As(String)}m / ${oData.Volume.As(String)}³"$
-
+	#End If
+	
 	Return p
 	
 End Sub
@@ -288,6 +328,9 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	If Value = Null Then
 		clvLastIndexClicked = NO_SELECTION
 		SetThumbnail2Nothing
+		#if klipper
+		Update_LoadedFileName2Scrn
+		#End If
 		Return 
 	End If
 	
@@ -297,6 +340,9 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	
 	If mCurrentFileInfo.myThumbnail_filename_disk = "" Then
 		SetThumbnail2Nothing
+		#if klipper
+		Update_LoadedFileName2Scrn
+		#End If
 		Return
 	End If
 	
@@ -322,6 +368,11 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	Else
 		ivPreview.Load(xui.DefaultFolder,mCurrentFileInfo.myThumbnail_filename_disk)
 	End If
+	#if klipper
+	Update_LoadedFileName2Scrn
+	#End If
+	
+	
 	
 End Sub
 
@@ -330,6 +381,10 @@ End Sub
 
 
 Public Sub CheckIfFilesChanged
+	
+	#if klipper
+	If oc.isConnected = False Then Return
+	#End If
 	
 	Dim inSub As String = "CheckIfFilesChanged"
 	If FilesCheckChangeIsBusyFLAG Then Return
@@ -350,9 +405,14 @@ Public Sub CheckIfFilesChanged
 	If Result.Length <> 0 Then
 	
 		'--- compare new list with old
-		Dim o As JsonParserFiles : o.Initialize(False) '--- DO NOT download thumbnails
+		Dim o As JsonParserFiles 
+		o.Initialize(False) '--- DO NOT download thumbnails
 		Dim didSomethingChange As Boolean = o.CheckIfChanged(Result, mMainObj.oMasterController.gMapOctoFilesList)
+		#if klipper
+		Dim IncompleteData As Boolean = False
+		#else
 		Dim IncompleteData As Boolean = mMainObj.oMasterController.IsIncompleteFileData
+		#End If
 		
 		Dim SizeMisMatch As Boolean = (clvFiles.Size <> mMainObj.oMasterController.gMapOctoFilesList.Size)
 		
@@ -363,11 +423,17 @@ Public Sub CheckIfFilesChanged
 			
 			logMe.LogIt2($"did change:(incomplete:${IncompleteData})(SizeMisMatch:${SizeMisMatch})"$,mModule,inSub)
 			
-			Dim mapNewFileList As Map = o.StartParseAllFiles(Result)
+			#if klipper
+			Wait For (o.StartParseAllFilesKlipper(Result)) Complete (mapNewFileList As Map)
+			#else
+			Dim mapNewFileList As Map = o.StartParseAllFilesOcto(Result)
+			#End If
+			
+			
 			ProcessNewOldThumbnails(mapNewFileList)
 			
 			'--- refresh the old list with new changes
-			mMainObj.oMasterController.gMapOctoFilesList = objHelpers.CopyMap(mapNewFileList)'  o.StartParseAllFiles(Result)
+			mMainObj.oMasterController.gMapOctoFilesList = objHelpers.CopyMap(mapNewFileList)
 			
 			If IncompleteData = False Then
 				Build_ListViewFileList
@@ -477,7 +543,12 @@ End Sub
 
 Private Sub SendDeleteCmdAndRemoveFromGrid
 	
+	#if klipper
+	mMainObj.oMasterController.cn.DeleteRequest($"/server/files/gcodes/${mCurrentFileInfo.Name}"$)
+	#else
 	mMainObj.oMasterController.cn.DeleteRequest(oc.cDELETE_FILES_DELETE.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
+	#End If
+	
 	'Sleep(500)
 	
 	guiHelpers.Show_toast("Deleting File",1200)
@@ -517,11 +588,33 @@ End Sub
 
 
 Public Sub Update_LoadedFileName2Scrn
-	If oc.isFileLoaded Then
-		lblFileName.Text = fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
-	Else
-		lblFileName.Text = gblConst.NO_FILE_LOADED
+	'dim fname as String
+	
+	If mCurrentFileInfo = Null Then Return
+	If mOldFileName = fileHelpers.RemoveExtFromeFileName(mCurrentFileInfo.Name) Then
+		Return
 	End If
+	
+	Try
+		#if klipper
+		If mCurrentFileInfo.myThumbnail_filename_disk = "" Then
+			lblFileName.Text = ""
+		Else
+			lblFileName.Text = fileHelpers.RemoveExtFromeFileName(mCurrentFileInfo.Name)
+		End If
+		#else
+		If oc.isFileLoaded Then
+			lblFileName.Text = fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
+		Else
+			lblFileName.Text = gblConst.NO_FILE_LOADED
+		End If
+		#End If	
+	Catch
+		Log(LastException)
+	End Try
+	
+	mOldFileName = lblFileName.Text
+	
 End Sub
 
 Private Sub Show1stFile
@@ -539,20 +632,25 @@ Private Sub cboSort_SelectedIndexChanged (Index As Int)
 	Else
 		SortAscDesc = True
 	End If
-'	
-'	lblSort.Text = IIf(SortAscDesc,Chr(0xF160),Chr(0xF161)) : Sleep(0)
-'	lblSort.BaseLabel.TextSize = lblSort.BaseLabel.TextSize - 8
 	
-	lblSort2.Text = IIf(SortAscDesc,Chr(0xF160),Chr(0xF161)) : Sleep(0)
+	lblSort2.Text = IIf(SortAscDesc,Chr(0xF176),Chr(0xF175)) : Sleep(0)
 	
-	guiHelpers.Show_toast("Sorting file list - " & IIf(SortAscDesc,"Ascending","Descending") ,1800)
+	'guiHelpers.Show_toast("Sorting file list - " & IIf(SortAscDesc,"Ascending","Descending") ,1800)
+	guiHelpers.Show_toast("Sorting file list" ,1800)
 	Build_ListViewFileList
 	Show1stFile
+	
 	LastSort = cboSort.SelectedItem
+	
+	'--- save last sort
+	Starter.kvs.Put("fsort-idx",cboSort.SelectedIndex)
+	Starter.kvs.Put("fsort-lbl",LastSort)
+	Starter.kvs.Put("fsort-asc",SortAscDesc)
+	
 End Sub
 
 Private Sub lblSort_Click
-	Log("sort fired")
+	'Log("sort fired")
 	cboSort_SelectedIndexChanged(cboSort.SelectedIndex)
 End Sub
 #end region
@@ -561,6 +659,6 @@ End Sub
 
 
 Private Sub lblSort2_Click
-	Log("sort2 fired")
+	'Log("sort2 fired")
 	cboSort_SelectedIndexChanged(cboSort.SelectedIndex)
 End Sub

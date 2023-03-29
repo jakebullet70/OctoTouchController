@@ -1,4 +1,5 @@
 ﻿Build1=Default,sadLogic.OctoTouchController
+Build2=klipper,sadLogic.KlipperTouchController,klipper
 File1=bed.png
 File10=dlgViewText.bal
 File11=ftest.txt
@@ -20,16 +21,17 @@ File25=pageMovement.bal
 File26=pagePrinting.bal
 File27=ptest.txt
 File28=splash.png
-File29=viewAppUpdate.bal
+File29=splashklipper.png
 File3=dlgbedlevel.json
-File30=viewFilamentCtrl.bal
-File31=viewfiles.bal
-File32=viewMsgBox.bal
-File33=viewOctoSetup.bal
-File34=viewPsuCtrl.bal
-File35=viewPsuSetup.bal
-File36=viewRoundSlider.bal
-File37=wizbedlevel.json
+File30=viewAppUpdate.bal
+File31=viewFilamentCtrl.bal
+File32=viewfiles.bal
+File33=viewMsgBox.bal
+File34=viewOctoSetup.bal
+File35=viewPsuCtrl.bal
+File36=viewPsuSetup.bal
+File37=viewRoundSlider.bal
+File38=wizbedlevel.json
 File4=dlgFilamentCtrl.json
 File5=dlggeneral.json
 File6=dlgLogging.json
@@ -57,16 +59,17 @@ FileGroup25=VIEWS_PAGES
 FileGroup26=VIEWS_PAGES
 FileGroup27=Default Group
 FileGroup28=MISC
-FileGroup29=DIALOG_CUSTOM_VIEWS
+FileGroup29=MISC
 FileGroup3=JSON_CONFIGS
 FileGroup30=DIALOG_CUSTOM_VIEWS
-FileGroup31=VIEWS
-FileGroup32=DIALOG_CUSTOM_VIEWS
+FileGroup31=DIALOG_CUSTOM_VIEWS
+FileGroup32=VIEWS
 FileGroup33=DIALOG_CUSTOM_VIEWS
 FileGroup34=DIALOG_CUSTOM_VIEWS
 FileGroup35=DIALOG_CUSTOM_VIEWS
 FileGroup36=DIALOG_CUSTOM_VIEWS
-FileGroup37=Default Group
+FileGroup37=DIALOG_CUSTOM_VIEWS
+FileGroup38=Default Group
 FileGroup4=JSON_CONFIGS
 FileGroup5=JSON_CONFIGS
 FileGroup6=JSON_CONFIGS
@@ -164,15 +167,31 @@ Module69=|relative|src\miscClasses\WildCardFilesList
 Module7=|relative|src\custom_controls\CircularProgressBar
 Module8=|relative|src\generic\clrTheme
 Module9=|relative|src\generic\config
-NumberOfFiles=37
+NumberOfFiles=38
 NumberOfLibraries=20
 NumberOfModules=69
 Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
+	#if klipper
+	#ApplicationLabel: MoonrakerTC
+	#VersionCode: 1
+	#VersionName: 0.9.0
+	#SignKeyFile: ..\keystore\klipper\release.keystore
+ 	#SignKeyPassword: !!yt43k98!!  
+	#Else
 	#ApplicationLabel: OctoTC
 	#VersionCode: 22
 	#VersionName: 1.3.0
+	#SignKeyFile: ..\keystore\octo\release.keystore
+ 	'#SignKeyPassword: yt43k98!  
+	#end if
+	
+	'==================================================================================================
+	' -----  support for different icons for klipper / octo
+	'  https://www.b4x.com/android/forum/threads/how-do-i-set-different-icons-for-different-configurations.128776/
+	'==================================================================================================
+	
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: unspecified
 	#CanInstallToExternalStorage: false
@@ -187,7 +206,6 @@ Version=11.8
 	'---  ALWAYS SET FALSE IN DEBUG MODE
 	#BridgeLogger: False 
 	'-----------------------------------
-	
 #End Region
 
 '#AdditionalJar: com.android.support:support-compat

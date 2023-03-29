@@ -14,7 +14,7 @@ Sub Process_Globals
 
 	Public cPRINTER_BUSY_MSG As String = "Problem, Printer is busy"
 	
-	Public IsOctoConnectionVarsValid As Boolean = False
+	Public IsConnectionValid As Boolean = False
 	
 	Public OctoKey, OctoIp ,OctoPort As String
 	
@@ -25,6 +25,9 @@ Sub Process_Globals
 	Public isConnected As Boolean = False
 	Public isPrinting As Boolean = False
 	Public isCanceling As Boolean = False
+	#if klipper
+	Public isKlipperCanceling As Boolean = False
+	#End If
 	Public IsPaused2 As Boolean = False
 	Public isHeating As Boolean = False
 	Public isFileLoaded As Boolean = False
@@ -69,10 +72,22 @@ Sub Process_Globals
 	
 	Public JobPrintThumbnail As String
 	Public JobPrintThumbnailSrc As String
+
+	#if klipper
+	Public KlipperFileSrcPath As String = ""
+	Public Const gcodeRelPos As String = "G91"
+	#End If
 	
-	Public GCodeStartTemplate, GCodeEndTemplate As String
 		
 	'======================================================================
+	'======================================================================
+	'======================================================================
+	'======================================================================
+	
+	
+	
+	
+	
 	
 	'https://github.com/kantlivelong/OctoPrint-PSUControl/wiki/API
 	Public Const cPSU_CONTROL_K As String = $"/api/plugin/psucontrol!!{"command":"turnPSU!ONOFF!"}"$ '--- POST
@@ -81,23 +96,44 @@ Sub Process_Globals
 	Public Const cAPI_KEY_PROBE As String = "/plugin/appkeys/probe" '--- GET
 	Public Const cAPI_KEY_REQUEST As String = $"/plugin/appkeys/request!!{"app": "!APP!"}"$ '--- POST
 	Public Const cAPI_KEY_PROBE_WAIT As String = "/plugin/appkeys/request/!APP_TOKEN!" '--- GET
-		
+	
+	#if klipper
+	Public const cPOST_GCODE As String = "/printer/gcode/script?script=!G!"
+	#else
 	'--- has a split char for the API and the JSON payload, char is '!!'
 	Private const cPOST_GCODE As String = "/api/printer/command"
 	Public const cPOST_GCODE_COMMAND As String = $"${cPOST_GCODE}!!{"command": "!CMD!"}"$
 	Public const cPOST_GCODE_COMMANDS As String = $"${cPOST_GCODE}!!{"commands": ["!CMDS!"]}"$
 	'---                                                      {"commands": ["M18","M106 S0"]}
+	#End If
 	
+		
+	
+	
+	#if klipper
+	Public Const cFILES As String = "/server/files/list"
+	#else
 	Public Const cFILES As String = "/api/files"
 	Public Const cFILES_ALL As String = "/api/files?recursive=true" '----  NOT WORKING ------------   PERMISSION ERROR  
+	#End If
+	
 	
 	Private const cPOST_FILES As String = "/api/files/!LOC!/!PATH!" '--- !LOC! = local or sdcard
 	Public const cPOST_FILES_PRINT As String = $"${cPOST_FILES}!!{"command": "select","print": true}"$
 	Public const cPOST_FILES_SELECT As String = $"${cPOST_FILES}!!{"command": "select","print": false}"$
 	Public const cDELETE_FILES_DELETE As String = $"${cPOST_FILES}"$
 	
-	Public const cSETTINGS As String = "/api/settings"
 	
+	
+	
+	#if klipper
+	Public const cCMD_PRINT As String =  $"/printer/print/start?filename=!FN!"$
+	Public const cCMD_CANCEL As String = "/printer/print/cancel"
+	Public const cCMD_PAUSE As String = "/printer/print/pause"
+	Public const cCMD_RESUME As String = "/printer/print/resume"
+	
+	
+	#else
 	'--- has a split char for the API and the JSON payload, char is '!!'
 	'--- has a split char for the API and the JSON payload, char is '!!'
 	'--- has a split char for the API and the JSON payload, char is '!!'
@@ -107,6 +143,8 @@ Sub Process_Globals
 	Public const cCMD_CANCEL As String = $"${cPOST_JOB}!!{ "command": "cancel" }"$
 	Public const cCMD_PAUSE As String = $"${cPOST_JOB}!!{ "command": "pause","action": "pause" }"$
 	Public const cCMD_RESUME As String = $"${cPOST_JOB}!!{ "command": "pause","action": "resume" }"$
+	#End If
+	
 	
 	Private const cPOST_JOG As String = "/api/printer/printhead"
 	Public const cJOG_XY_HOME As String = $"${cPOST_JOG}!!{"command": "home", "axes": ["x", "y"]}"$
@@ -125,26 +163,12 @@ Sub Process_Globals
 	Public const cCMD_SET_TOOL_TEMP As String = $"${cPOST_PRINTER_TOOL}!!{"command": "target","targets": {"tool0": !VAL0!}}"$
 	
 	'======================================================================
-	Public const cCONNECTION_INFO As String = "/api/connection"
+	#if klipper
+	'Public Const cCONNECTION_INFO As String = "/printer/objects/list"
+	#else
+	Public Const cCONNECTION_INFO As String = "/api/connection"
 	Public Const cCMD_AUTO_CONNECT_STARTUP As String = $"${cCONNECTION_INFO}!!{ "command": "connect" }"$
-	'https://docs.octoprint.org/en/master/api/connection.html
-	'{"current": {
-	'	"state": "Operational",
-	'	"port": "/dev/ttyACM0",
-	'	"baudrate": 250000,
-	'	"printerProfile": "_default"
-	'	},
-	'	"options": {
-	'	"ports": ["/dev/ttyACM0", "VIRTUAL"],
-	'	"baudrates": [250000, 230400, 115200, 57600, 38400, 19200, 9600],
-	'	"printerProfiles": [{"name": "Default", "id": "_default"}],
-	'	"portPreference": "/dev/ttyACM0",
-	'	"baudratePreference": 250000,
-	'	"printerProfilePreference": "_default",
-	'	"autoconnect": True}
-	'	}
-	
-	
+	#End If
 	
 	'--- location – The location of the file for which to retrieve the information, either local or sdcard.
 	Public const cFILE_INFO As String = "/api/files/!LOCATION!/!FNAME!"   
@@ -253,31 +277,31 @@ Sub Process_Globals
 	'	]	}	},	}	}
 	'	
 	
-	
-	
-	Public const cJOB_INFO As String = "/api/job"
-	'{
-	'	"job": {
-	'	"file": {
-	'	"name": "whistle_v2.gcode",
-	'	"origin": "local",
-	'	"size": 1468987,
-	'	"date": 1378847754
-	'	},
-	'	"estimatedPrintTime": 8811,
-	'	"filament": {
-	'	"tool0": {
-	'	"length": 810,
-	'	"volume": 5.36
-	'	}	}	},
-	'	"progress": {
-	'	"completion": 0.2298468264184775,
-	'	"filepos": 337942,
-	'	"printTime": 276,
-	'	"printTimeLeft": 912
-	'	},
-	'	"state": "Printing"
-	'	}
+'	
+'	
+'	Public const cJOB_INFO As String = "/api/job"
+'	'{
+'	'	"job": {
+'	'	"file": {
+'	'	"name": "whistle_v2.gcode",
+'	'	"origin": "local",
+'	'	"size": 1468987,
+'	'	"date": 1378847754
+'	'	},
+'	'	"estimatedPrintTime": 8811,
+'	'	"filament": {
+'	'	"tool0": {
+'	'	"length": 810,
+'	'	"volume": 5.36
+'	'	}	}	},
+'	'	"progress": {
+'	'	"completion": 0.2298468264184775,
+'	'	"filepos": 337942,
+'	'	"printTime": 276,
+'	'	"printTimeLeft": 912
+'	'	},
+'	'	"state": "Printing"
+'	'	}
 
 	
 	Public const cSERVER As String = "/api/server"
@@ -413,6 +437,10 @@ public Sub ResetAllOctoVars
 	IsPaused2 = False
 	isHeating = False
 	OctoVersion   = "N/A"
+	#if klipper
+	KlipperFileSrcPath = ""
+	isKlipperCanceling = False
+	#End If
 	
 	FilesB4Xmap.Initialize
 		

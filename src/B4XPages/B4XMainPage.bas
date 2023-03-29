@@ -25,8 +25,9 @@ Sub Class_Globals
 	Private pnlMaster As B4XView 
 	
 	'--- header
-	Private pnlHeader As B4XView, lblStatus As Label,  lblTemp As Label
+	Private pnlHeader As B4XView,  lblTemp As Label
 	Private btnPower, btnPageAction As Button
+	Public lblStatus As Label
 	
 	'--- page-panel classes
 	Public oPageCurrent As Object = Null
@@ -98,6 +99,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	
 	'--- splash screen
 	If Starter.FirstRun Then
+		LoadSplashPic
 		pnlMaster.Visible = False
 		pnlSplash.Visible = True
 	Else
@@ -109,7 +111,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	'--- gesture crap
 	'GD.SetOnGestureListener(pnlMenu, "Gesture")
 	
-	TryOctoConnection
+	TryPrinterConnection
 	
 End Sub
 
@@ -191,23 +193,35 @@ Private Sub BuildGUI
 	
 End Sub
 
+Private Sub LoadSplashPic
+	Dim fname As String = "splash.png"
+	#if klipper
+	fname = "splashklipper.png"
+	#End If
+	ivSpash.Bitmap = LoadBitmapSample(File.DirAssets, fname, ivSpash.Width, ivSpash.Height)
+End Sub
 
 Public Sub HideSplash_StartUp
 	pnlSplash.Visible = False
 	pnlMaster.Visible = True
 End Sub
 
-Private Sub TryOctoConnection
+Private Sub TryPrinterConnection
 	
 	If oMasterController.IsInitialized = False Then 
 		oMasterController.Initialize
 	End If
 	If fnc.ReadConnectionFile(oMasterController.CN) = False Then
 		Dim o9 As dlgOctoSetup 
+		#if klipper
+		o9.Initialize(Me,"Klipper Connection","PrinterSetup_Closed")
+		#else
 		o9.Initialize(Me,"Octoprint Connection","PrinterSetup_Closed")
+		#End If
+		
 		o9.Show(True)
 	Else
-		If oc.IsOctoConnectionVarsValid Then
+		If oc.IsConnectionValid Then
 			oMasterController.SetCallbackTargets(Me,"Update_Printer_Temps","Update_Printer_Status","Update_Printer_Btns")
 			oMasterController.Start
 		End If
@@ -215,7 +229,7 @@ Private Sub TryOctoConnection
 
 End Sub
 
-#Region "OCTO_EVENTS"
+#Region "PRINTER_EVENTS"
 '--- events called from the masterController
 
 Public Sub Update_Printer_Temps
@@ -322,7 +336,7 @@ Private Sub PopupMainOptionMenu
 	If oc.isPrinting Or oc.IsPaused2 Then
 		'--- do not know why i did this, does not seem to matter
 		'--- if you change when printing
-		Show_toast("Cannot Change OctoPrint Settings While Printing",2500)
+		Show_toast("Cannot Change Printer Connection Settings While Printing",2500)
 		popUpMemuItems = gui.BuildOptionsMenu(True)
 	Else
 		popUpMemuItems = gui.BuildOptionsMenu(False)
@@ -359,7 +373,7 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			
 		Case "oc"  '--- octo setup
 			Dim o9 As dlgOctoSetup
-			o9.Initialize(Me,"Octoprint Connection","PrinterSetup_Closed")
+			o9.Initialize(Me,"Printer Connection","PrinterSetup_Closed")
 			o9.Show(False)
 		
 		Case "pw"  '--- android power setup
@@ -404,9 +418,9 @@ End Sub
 '--- called from dlgOctoSetup on exit
 Public Sub PrinterSetup_Closed
 
-	If oc.IsOctoConnectionVarsValid Then
+	If oc.IsConnectionValid Then
 		Show_toast("Trying to connect...",3000)		
-		TryOctoConnection
+		TryPrinterConnection
 	End If
 	'Sleep(100)
 	'guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
@@ -465,7 +479,11 @@ End Sub
 '--- options plugin sub menu
 Private Sub PopupPluginOptionMenu
 	
+	#if klipper
+	Dim popUpMemuItems As Map = CreateMap("SonOff Control":"psu")
+	#else
 	Dim popUpMemuItems As Map = CreateMap("PSU Control":"psu","ZLED Setup":"led","ws281x Setup":"ws2")
+	#End If
 	
 	Dim cs As CSBuilder : cs.Initialize
 	Dim title As Object = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE8C1)). _
@@ -486,7 +504,12 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			
 		Case "psu"  '--- sonoff / PSU control setup
 			Dim oA As dlgPsuSetup
+			#if klipper
+			oA.Initialize(Me,"PSU SonOff Config")
+			#else
 			oA.Initialize(Me,"PSU Config")
+			#End If
+			
 			oA.Show
 			
 		Case "led" '--- ZLED
@@ -623,9 +646,17 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	If selectedMsg.Length = 0 Then Return
 	
 	If selectedMsg = "alloff" Then
+		
+		#if klipper
+		oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M140 S0"))
+		oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M104 S0"))
+		#else
 		oMasterController.AllHeaters_Off
+		#End If
+		
 		Show_toast("Tool / Bed Off",1200)
 		Return
+		
 	End If
 	
 	'Dim tagme As String = tag.As(String)
@@ -635,11 +666,19 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	Select Case True
 		
 		Case selectedMsg = "bedoff"
+			#if klipper
+			oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M140 S0"))
+			#else
 			oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",0))
+			#End If
 			msg = "Bed Off"
 
 		Case selectedMsg = "tooloff"
+			#if klipper
+			oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M104 S0"))
+			#else
 			oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
+			#End If
 			msg = "Tool Off"
 		
 		Case selectedMsg = "evb"
@@ -655,7 +694,11 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 			startNDX = selectedMsg.IndexOf(": ")
 			endNDX   = selectedMsg.IndexOf(gblConst.DEGREE_SYMBOL)
 			getTemp  = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
+			#if klipper
+			oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M104 S" & getTemp))
+			#else
 			oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
+			#End If
 			msg = selectedMsg.Replace("Set","Setting")
 			
 		Case selectedMsg.Contains("Bed") And Not (selectedMsg.Contains("Tool"))
@@ -663,7 +706,11 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 			startNDX = selectedMsg.IndexOf(": ")
 			endNDX   = selectedMsg.IndexOf(gblConst.DEGREE_SYMBOL)
 			getTemp  = selectedMsg.SubString2(startNDX + 2,endNDX).Trim
+			#if klipper
+			oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M140 S" & getTemp))
+			#else
 			oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
+			#End If
 			msg = selectedMsg.Replace("Set","Setting")
 			
 		Case Else
@@ -674,12 +721,20 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 			startNDX = toolMSG.IndexOf(": ")
 			endNDX   = toolMSG.IndexOf(gblConst.DEGREE_SYMBOL)
 			getTemp  = toolMSG.SubString2(startNDX + 2,endNDX).Trim
+			#if klipper
+			oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M104 S" & getTemp))
+			#else
 			oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",getTemp.As(Int)))
-				
+			#End If
+							
 			startNDX = bedMSG.IndexOf(": ")
 			endNDX   = bedMSG.IndexOf(gblConst.DEGREE_SYMBOL)
 			getTemp  = bedMSG.SubString2(startNDX + 2,endNDX).Trim
+			#if klipper
+			oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M140 S" & getTemp))
+			#else
 			oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",getTemp.As(Int)))
+			#End If
 			msg = selectedMsg.Replace("Set","Setting")
 			
 	End Select

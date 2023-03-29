@@ -139,3 +139,12 @@ Private Sub AskThem(txt As String,btnText As String, promptTxt As String) As Res
 End Sub
 
 
+'#if (klipper)
+'
+'Public Sub ServerRestart
+'	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G28 X Y"))
+'End Sub
+'
+'
+'
+'#End If

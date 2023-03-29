@@ -152,7 +152,7 @@ Private Sub GetAllOctoSettingInfo
 	
 	#else
 	
-	Dim rs As ResumableSub =  oCN.SendRequestGetInfo("/server/database/item?namespace=mainsail&key=presets")
+	Dim rs As ResumableSub =  oCN.SendRequestGetInfo("/server/database/item?namespace=mainsail&key=presets") 'TODO --- Fluid as a front end?
 	
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then

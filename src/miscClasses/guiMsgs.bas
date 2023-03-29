@@ -94,37 +94,41 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 		m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE308)). _
 				 	 Typeface(Typeface.DEFAULT).Append("   Printer Connection").PopAll,"oc")	
 	End If
-	
-	cs.Initialize
 	#if klipper
+	cs.Initialize
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
 				 Typeface(Typeface.DEFAULT).Append("   Macro's Menu").PopAll,"mac")
-	cs.Initialize
+'	cs.Initialize
 '	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
 '				 Typeface(Typeface.DEFAULT).Append("   Presets Menu").PopAll,"prs")
+	'cs.Initialize
+'	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE308)). _
+'				 Typeface(Typeface.DEFAULT).Append("   Firmware MCU Menu").PopAll,"fmw")
 '	cs.Initialize
-	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE308)). _
-				 Typeface(Typeface.DEFAULT).Append("   Firmware MCU Menu").PopAll,"fmw")
+	#end if
+	
+	#if not (klipper)
 	cs.Initialize
-	#else
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
-				 Typeface(Typeface.DEFAULT).Append("   Functions Menu").PopAll,"fn")
+				 Typeface(Typeface.DEFAULT).Append("   Internal Functions Menu").PopAll,"fn")
 	cs.Initialize
-	#End If
+	#end if
+	
+	cs.Initialize
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE8C1)). _
 				 Typeface(Typeface.DEFAULT).Append("   Plugins Menu").PopAll,"plg")				 
 	cs.Initialize
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3B7)). _
-				 Typeface(Typeface.DEFAULT).Append("   Color Theme").PopAll,"thm1")				 
+				 Typeface(Typeface.DEFAULT).Append("   Color Themes").PopAll,"thm1")				 
 	cs.Initialize
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24D)). _
-				 Typeface(Typeface.DEFAULT).Append("   Read Log File").PopAll,"rt")
+				 Typeface(Typeface.DEFAULT).Append("   Read Internal Log File").PopAll,"rt")
 	cs.Initialize
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE864)). _
 				 Typeface(Typeface.DEFAULT).Append("   Check For Update").PopAll,"cup")
 	cs.Initialize
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE85A)). _
-				 Typeface(Typeface.DEFAULT).Append("   About Me!").PopAll,"ab")
+				 Typeface(Typeface.DEFAULT).Append("   About Me (Yes, Me!)").PopAll,"ab")
 	
 	Return m
 	

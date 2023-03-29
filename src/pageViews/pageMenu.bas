@@ -159,9 +159,13 @@ Private Sub btnSubBtnAction_Click
 	
 	Select Case o.Tag
 		Case "sys"
+			#if klipper
+			guiHelpers.Show_toast2("System Commands Are Not Available At This Time",4000)
+			#else
 			Dim oa As dlgOctoSysCmds
 			oa.Initialize(mMainObj,mMainObj.oMasterController.CN)
 			oa.Show
+			#End If
 			
 		Case "br" '--- brightness
 			DoBrightnessDlg

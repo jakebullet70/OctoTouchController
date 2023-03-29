@@ -95,9 +95,11 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 				 	 Typeface(Typeface.DEFAULT).Append("   Printer Connection").PopAll,"oc")	
 	End If
 	#if klipper
-	cs.Initialize
-	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
-				 Typeface(Typeface.DEFAULT).Append("   Macro's Menu").PopAll,"mac")
+	'------------------------------  TODO !!!!!!!!!!!!!!!!!
+'	cs.Initialize
+'	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
+'				 Typeface(Typeface.DEFAULT).Append("   Macro's Menu").PopAll,"mac")
+				 
 '	cs.Initialize
 '	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
 '				 Typeface(Typeface.DEFAULT).Append("   Presets Menu").PopAll,"prs")
@@ -105,6 +107,7 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 '	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE308)). _
 '				 Typeface(Typeface.DEFAULT).Append("   Firmware MCU Menu").PopAll,"fmw")
 '	cs.Initialize
+	'------------------------------  TODO !!!!!!!!!!!!!!!!!
 	#end if
 	
 	#if not (klipper)
@@ -112,11 +115,12 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
 				 Typeface(Typeface.DEFAULT).Append("   Internal Functions Menu").PopAll,"fn")
 	cs.Initialize
-	#end if
-	
-	cs.Initialize
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE8C1)). _
 				 Typeface(Typeface.DEFAULT).Append("   Plugins Menu").PopAll,"plg")				 
+	cs.Initialize
+
+	#end if
+	
 	cs.Initialize
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3B7)). _
 				 Typeface(Typeface.DEFAULT).Append("   Color Themes").PopAll,"thm1")				 

@@ -136,7 +136,7 @@ Public Sub PostRequest2(EndPoint As String,JsonDataMsg As String) As ResumableSu
 		retStr = job.GetString
 	Else
 		#if klipper
-		If job.ErrorMessage.Contains("Move out of") Then
+		If job.ErrorMessage.Contains("Move out of") Or  job.ErrorMessage.Contains("Movement out of r") Then
 			guiHelpers.Show_toast2("Movement out of  range",2200)
 		End If
 		If Not (EndPoint.Contains(oc.cCMD_CANCEL)) Then '--- timeout error happens sometimes when canceling

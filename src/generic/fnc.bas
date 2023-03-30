@@ -126,10 +126,10 @@ Public Sub IsValidIPv4Address(IPAddress As String) As Boolean
 End Sub
 
 
-'Public Sub IsValidIPv6Address(IPAddress As String) As Boolean
-'	'Tests given string if it looks like an ipv6 address
-'	Return Regex.IsMatch("^([0-9a-f]{1,4}:){7}([0-9a-f]){1,4}$", IPAddress)
-'End Sub
+Public Sub IsValidIPv6Address(IPAddress As String) As Boolean
+	'Tests given string if it looks like an ipv6 address
+	Return Regex.IsMatch("^([0-9a-f]{1,4}:){7}([0-9a-f]){1,4}$", IPAddress)
+End Sub
 
 
 Public Sub CleanOldThumbnailFiles

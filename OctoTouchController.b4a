@@ -242,7 +242,7 @@ Sub Activity_Create(FirstTime As Boolean) 'ignore
 	If FirstTime Then
 		Log("Activity_Create - FirstTime = True")
 		#if debug
-		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrSplash_Tick",6000)   '--- just a splash screen
+		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrSplash_Tick",1000)   '--- just a splash screen
 		#else
 		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrSplash_Tick",3500)   '--- just a splash screen
 		#End If

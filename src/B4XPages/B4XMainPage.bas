@@ -217,21 +217,10 @@ Private Sub TryPrinterConnection
 	End If
 	If fnc.ReadConnectionFile(oMasterController.CN) = False Then
 		#if klipper
-		Dim o9 As dlgPrinterSetup
-		o9.Initialize(Me)
-		o9.Show(False)
+		Dim o9 As dlgPrinterSetup : o9.Initialize(Me)
 		#else
-		Dim o9 As dlgOctoSetup
-		o9.Initialize(Me,"Printer Connection","PrinterSetup_Closed")
-		o9.Show(False)
+		Dim o9 As dlgOctoSetup : o9.Initialize(Me,"Printer Connection","PrinterSetup_Closed")
 		#End If
-'		Dim o9 As dlgOctoSetup 
-'		#if klipper
-'		o9.Initialize(Me,"Klipper Connection","PrinterSetup_Closed")
-'		#else
-'		o9.Initialize(Me,"Octoprint Connection","PrinterSetup_Closed")
-'		#End If
-		
 		o9.Show(True)
 	Else
 		If oc.IsConnectionValid Then
@@ -645,7 +634,7 @@ End Sub
 
 Private Sub lblStatus_Click
 	'--- if not connected then popup the connection screen
-	If lblStatus.Text.Contains("No C") Or oc.isConnected = False Then
+If lblStatus.Text.Contains("No C") Or oc.isConnected = False  Then
 		CallSetupErrorConnecting(False)
 	End If
 End Sub

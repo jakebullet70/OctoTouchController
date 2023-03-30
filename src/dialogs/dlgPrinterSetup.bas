@@ -58,9 +58,9 @@ Public Sub Show(firstRun As Boolean)
 	End If
 	
 	If guiHelpers.gIsLandScape = False Then
-		w = 90%x
+		w = 92%x
 	Else
-		w = guiHelpers.gWidth - 90dip
+		w = guiHelpers.gWidth - 92dip
 	End If
 	
 	 ' guiHelpers.gWidth * guiHelpers.gScreenSizeDPI
@@ -83,10 +83,9 @@ Public Sub Show(firstRun As Boolean)
 	If Result = xui.DialogResponse_Positive Then
 		guiHelpers.Show_toast("Printer Config Saved",1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE,Data)
-		
-		'config.ReadPrinter
-		
-		CallSub(mainObj.oPageCurrent,"Set_focus")
+		oc.IsConnectionValid = True
+		CallSubDelayed(mainObj,"PrinterSetup_Closed")
+		CallSubDelayed(mainObj.oPageCurrent,"Set_focus")
 	End If
 	
 End Sub
@@ -94,7 +93,7 @@ End Sub
 
 Private Sub BuildBtn
 
-	btn1.Initialize("ActionBtn1") : btn1.Text = "Validate"
+	btn1.Initialize("ActionBtn1") : btn1.Text = "TEST"
 	btn1.TextSize = mPrefDlg.Dialog.GetButton(xui.DialogResponse_Cancel).TextSize
 	
 	Dim t,w,h As Float
@@ -110,60 +109,64 @@ End Sub
 Private Sub ActionBtn1_Click
 
 	Dim data As Map = mPrefDlg.PeekEditedData
-	If data.Get(gblConst.psetupPRINTER_IP) = "" Then
+	Dim ip As String = data.Get(gblConst.psetupPRINTER_IP)
+	Dim port As String = data.Get(gblConst.psetupPRINTER_PORT)
 	
+	If  (fnc.IsValidIPv4Address(ip) = False And fnc.IsValidIPv6Address(ip) = False) Or IsNumber(port) = False   Then
+		Dim mb As dlgMsgBox : mb.Initialize(mainObj.Root,"Problem",320dip, 160dip,False)
+		Wait For (mb.Show("Check if your IP and Port are set", gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
+		Return
 	End If
+	
+	mPrefDlg.Dialog.GetButton(xui.DialogResponse_Positive).Visible = False
+	mPrefDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible  = False
+	btn1.Visible = False
+	
+	'--- now test connection.
+	Dim sAPI As String = $"http://${ip}:${port}${oc.cSERVER}"$
+	Dim j As HttpJob: j.Initialize("", Me)
+	j.Download(sAPI)
+	Wait For (j) JobDone(j As HttpJob)
+	If j.Success Then
+		If j.GetString.Contains("server") Then
+			mPrefDlg.Dialog.GetButton(xui.DialogResponse_Positive).Visible = True
+			guiHelpers.Show_toast2("Connection OK!",2000)
+		End If
+	Else
+		Dim mb As dlgMsgBox : mb.Initialize(mainObj.Root,"Problem",320dip, 160dip,False)
+		Wait For (mb.Show("Connection failure.", gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
+	End If
+	
+	j.Release '--- free up resources
+	mPrefDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = True
+	btn1.Visible = True
 	
 End Sub
 
 
-
-'Private Sub ShowInfoLoad_Click
-'	
-'	Dim s As String= $"Marlin firmware uses the EXTRUDE_MAXLENGTH setting to stop extruding large amounts.
-'To ensure that that you don't hit the limit, divide the extrude length into segments.
-'For example, if your printer has a path of 500mm, set it up like this, each segment
-'length less then the EXTRUDE_MAXLENGTH:
-'
-'Extrude Length: `160,160,150,30` (total is 500mm)
-'Extrude Speed: `2500,60` (last segment is extruded at 60mm/s)
-'
-'Note: Unload works in reverse."$
-'	
-'
-'	Dim msgDlg As dlgMsgBox
-'	Dim w,h As Float
-'	
-'	If guiHelpers.gScreenSizeAprox < 5.8 Then
-'		w = guiHelpers.gWidth-40dip
-'		h = guiHelpers.gHeight-110dip
-'	Else
-'		w = IIf(guiHelpers.gIsLandScape,660dip,guiHelpers.gWidth-40dip)
-'		h=290dip
-'	End If
-'	
-'	msgDlg.Initialize(mainObj.root,"About Setting Up Load/UnLoad",w, h,False)
-'	Wait For (msgDlg.Show(s, gblConst.MB_ICON_INFO,"","","OK")) Complete (res As Int)
-'	
-'End Sub
-
+Private Sub Rebuild_GUI
+	'--- needed when using dlgEvent_IsValid
+	prefHelper.dlgHelper.ThemeInputDialogBtnsResize
+	BuildBtn
+End Sub
 
 Private Sub dlgEvent_IsValid (TempData As Map) As Boolean 'ignore
-	Return True '--- all is good!
-	'--- NOT USED BUT HERE IF NEEDED
 	
-'	Try
-'		Dim number As Int = TempData.GetDefault("days", 1)
-'		If number < 1 Or number > 14 Then
-'			guiHelpers.Show_toast("Days must be between 1 and 14",1200)
-'			pdlgLogging.ScrollToItemWithError("days")
-'			Return False
-'		End If
-'		Return True
-'	Catch
-'		Log(LastException)
-'	End Try
-'	Return False
+	Dim retval As Boolean = True
+	Do While True
+
+		'--- force a printer description		
+		If  strHelpers.IsNullOrEmpty( TempData.Get(gblConst.psetupPRINTER_DESC) ) Then
+			mPrefDlg.ScrollToItemWithError(gblConst.psetupPRINTER_DESC)
+			retval =  False
+			Exit 'Do
+		End If
+		
+		Exit 'Do	
+	Loop
+	
+	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Rebuild_GUI",50) '--- needed when using dlgEvent_IsValid
+	Return retval '--- all is good!
 
 End Sub
 

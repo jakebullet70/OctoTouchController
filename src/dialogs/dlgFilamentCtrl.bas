@@ -107,7 +107,12 @@ Public Sub Show
 	
 	If chkHeatOff.Checked Then
 		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Tool Heater Off", 1600)
+		#if klipper
+		mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M104 S0"))
+		#else
 		mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
+		#End If
+		
 	End If
 	
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF) '--- turn it off if its on
@@ -168,8 +173,8 @@ End Sub
 Private Sub btnStuff_Click
 	
 	If btnStuff.Text.StartsWith("E") Then 
-		SendMGcode("G1 E5 F60") '--- Extrude 5mm more
-		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Extruding 5mm...", 1000)
+		SendMGcode("G1 E10 F60") '--- Extrude 5mm more
+		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Extruding 10mm...", 1000)
 		Return
 	End If
 	
@@ -236,7 +241,7 @@ Private Sub btnStuff_Click
 		Else
 			SendMGcode($"G1 E${sLen} F${speed2}"$) : Sleep(100)
 		End If
-		btnStuff.Text = "Extrude" & CRLF & "5mm More"
+		btnStuff.Text = "Extrude" & CRLF & "10mm More"
 	
 	End If
 	
@@ -361,10 +366,20 @@ Private Sub ProcessHeatTempChange(value As String, tag As Object) 'ignore
 		Return
 	End If
 		
+	#if klipper
+	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M104 S" & value))
+	#else
 	mMainObj.oMasterController.cn.PostRequest( _
-				oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))
-
+				oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))		
 	oc.Tool1Target = "1" 
+	#End If
+	
+	If value = 0 Then
+		guiHelpers.Show_toast2("Tool turned off",1200)
+	Else
+		guiHelpers.Show_toast2("Tool set to: " & value & gblConst.DEGREE_SYMBOL & "C",2200)
+	End If
+	
 	mTmrOff = False
 	
 End Sub

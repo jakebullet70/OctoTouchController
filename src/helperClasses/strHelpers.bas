@@ -145,3 +145,9 @@ Public Sub StripHTML(txt As String) As String
 	Return txt
 End Sub
 
+
+
+Public Sub IsNullOrEmpty(s As String) As Boolean
+	Return s = Null Or s.CompareTo(Null) = 0 Or s = ""
+End Sub
+

@@ -44,8 +44,13 @@ Private Sub HeatTempChange_Tool(value As String, tag As String)
 		guiHelpers.Show_toast("Invalid Temperature",1800)
 		Return
 	End If
-		
-	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))
+
+	#if klipper
+	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M104 S" & value))
+	#else
+	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))		
+	#End If
+	
 		
 	guiHelpers.Show_toast("Tool Temperature Change",1400)
 	

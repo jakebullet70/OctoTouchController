@@ -75,8 +75,7 @@ Private Sub TempChangePrompt(what As String)
 	
 	Dim o1 As dlgNumericInput
 	o1.Initialize(mMainObj, _
-		IIf(what = "bed","Bed Temperature","Tool Temperature"), _
-		"Enter Temperature",Me, _
+		IIf(what = "bed","Bed Temperature","Tool Temperature"), "Enter Temperature",Me, _
 		IIf(what = "bed","TempChange_Bed","TempChange_Tool1"))
 		
 	o1.Show
@@ -92,9 +91,13 @@ Private Sub TempChange_Tool1(value As String)
 		guiHelpers.Show_toast("Invalid Temperature",1800)
 		Return
 	End If
-		
+	
+	#if klipper
+	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M104 S" & value))
+	#else
 	mMainObj.oMasterController.cn.PostRequest( _
-		oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))
+				oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))	
+	#End If
 		
 	guiHelpers.Show_toast("Tool Temperature Change",1400)
 	
@@ -111,7 +114,12 @@ Private Sub TempChange_Bed(value As String)
 		Return
 	End If
 		
+	#if klipper
+	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M140 S" & value))
+	#else
 	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",value))
+	#End If
+	
 	guiHelpers.Show_toast("Bed Temperature Change",1400)
 	
 End Sub

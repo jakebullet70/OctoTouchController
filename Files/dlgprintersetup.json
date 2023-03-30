@@ -6,13 +6,13 @@
             "title": "Printer name",
             "type": "Text",
             "key": "desc",
-            "required": true
+            "required": false
         },
         {
             "title": "IP",
             "type": "Text",
             "key": "ip",
-            "required": true
+            "required": false
         },
         {
             "title": "Port",
@@ -30,13 +30,13 @@
             "title": "Bed size X",
             "type": "Number",
             "key": "bx",
-            "required": true
+            "required": false
         },
         {
             "title": "Bed size Y",
             "type": "Number",
             "key": "by",
-            "required": true
+            "required": false
         }
     ]
 }

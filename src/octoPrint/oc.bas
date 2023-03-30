@@ -86,9 +86,6 @@ Sub Process_Globals
 	
 	
 	
-	
-	
-	
 	'https://github.com/kantlivelong/OctoPrint-PSUControl/wiki/API
 	Public Const cPSU_CONTROL_K As String = $"/api/plugin/psucontrol!!{"command":"turnPSU!ONOFF!"}"$ '--- POST
 	
@@ -380,44 +377,44 @@ Sub Process_Globals
 	'	"closedOrError": False
 	'	}	}	}
 
-	'----  NOT WORKING ------------   PERMISSION ERROR  exclude issue?????
-	'----  NOT WORKING ------------   PERMISSION ERROR  exclude issue?????
-	Public const cPRINTER_HEATER As String = "/api/printer?exclude=sd,state"
-	'	{
-	'	"temperature": {
-	'	"tool0": {
-	'	"actual": 214.8821,
-	'	"target": 220.0,
-	'	"offset": 0
-	'	},
-	'	"tool1": {
-	'	"actual": 25.3,
-	'	"target": Null,
-	'	"offset": 0
-	'	},
-	'	"bed": {
-	'	"actual": 50.221,
-	'	"target": 70.0,
-	'	"offset": 5
-	'	}, }
+''''''''	'----  NOT WORKING ------------   PERMISSION ERROR  exclude issue?????
+''''''''	'----  NOT WORKING ------------   PERMISSION ERROR  exclude issue?????
+''''''''	Public const cPRINTER_HEATER As String = "/api/printer?exclude=sd,state"
+''''''''	'	{
+''''''''	'	"temperature": {
+''''''''	'	"tool0": {
+''''''''	'	"actual": 214.8821,
+''''''''	'	"target": 220.0,
+''''''''	'	"offset": 0
+''''''''	'	},
+''''''''	'	"tool1": {
+''''''''	'	"actual": 25.3,
+''''''''	'	"target": Null,
+''''''''	'	"offset": 0
+''''''''	'	},
+''''''''	'	"bed": {
+''''''''	'	"actual": 50.221,
+''''''''	'	"target": 70.0,
+''''''''	'	"offset": 5
+''''''''	'	}, }
 
-	'----  NOT WORKING ------------   PERMISSION ERROR exclude issue?????
-	'----  NOT WORKING ------------   PERMISSION ERROR   exclude issue?????
-	Public const cPRINTER_OPERATION_STATUS As String = "/api/printer?exclude=temperature,sd"
-	'	{
-	'	"state": {
-	'	"text": "Operational",
-	'	"flags": {
-	'	"operational": True,
-	'	"paused": False,
-	'	"printing": False,
-	'	"cancelling": False,
-	'	"pausing": False,
-	'	"sdReady": True,
-	'	"error": False,
-	'	"ready": True,
-	'	"closedOrError": False
-	'	}	}	}
+''''''''	'----  NOT WORKING ------------   PERMISSION ERROR exclude issue?????
+''''''''	'----  NOT WORKING ------------   PERMISSION ERROR   exclude issue?????
+''''''''	Public const cPRINTER_OPERATION_STATUS As String = "/api/printer?exclude=temperature,sd"
+''''''''	'	{
+''''''''	'	"state": {
+''''''''	'	"text": "Operational",
+''''''''	'	"flags": {
+''''''''	'	"operational": True,
+''''''''	'	"paused": False,
+''''''''	'	"printing": False,
+''''''''	'	"cancelling": False,
+''''''''	'	"pausing": False,
+''''''''	'	"sdReady": True,
+''''''''	'	"error": False,
+''''''''	'	"ready": True,
+''''''''	'	"closedOrError": False
+''''''''	'	}	}	}
 	
 	
 	Public const cPRINTER_TEMPLATES As String = "/api/settings/templates"

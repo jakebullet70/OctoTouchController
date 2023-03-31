@@ -32,19 +32,19 @@ Sub Process_Globals
 	Public Const SELECTED_CLR_THEME As String = "themeclr" '--- selected theme color
 	Public Const CUSTOM_THEME_COLORS As String = "customClrs" '--- users custom colors
 	
-	#if klipper
+	'#if klipper
 	Public Const psetupPRINTER_DESC As String = "desc"
 	Public Const psetupPRINTER_IP As String = "ip"
 	Public Const psetupPRINTER_PORT As String = "port"
 	Public Const psetupPRINTER_X As String = "bx"
 	Public Const psetupPRINTER_Y As String = "by"
-	#else
+	'#else
 	Public Const PRINTER_SETTING_BASE_FILE_NAME As String = "p_settings"
 	Public Const PRINTER_DESC As String = "desc"
 	Public Const PRINTER_IP As String = "ip"
 	Public Const PRINTER_PORT As String = "port"
 	Public Const PRINTER_OCTO_KEY As String = "octokey"
-	#End If
+	'#End If
 	
 	'---------------------------------------------------------------------------------------------------------------------
 	

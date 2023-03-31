@@ -193,11 +193,6 @@ Version=11.8
  	#SignKeyPassword: yt43k98!  
 	#end if
 	
-	'==================================================================================================
-	' -----  support for different icons for klipper / octo
-	'  https://www.b4x.com/android/forum/threads/how-do-i-set-different-icons-for-different-configurations.128776/
-	'==================================================================================================
-	
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: unspecified
 	#CanInstallToExternalStorage: false

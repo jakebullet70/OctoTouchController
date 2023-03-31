@@ -180,9 +180,9 @@ Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
 	#if klipper
-	#ApplicationLabel: MoonrakerTC
+	#ApplicationLabel: KlipperTC
 	#VersionCode: 1
-	#VersionName: 0.9.0
+	#VersionName: 0.8.0
 	#SignKeyFile: ..\keystore\klipper\release.keystore
  	#SignKeyPassword: !!yt43k98!!  
 	#Else
@@ -190,7 +190,7 @@ Version=11.8
 	#VersionCode: 22
 	#VersionName: 1.3.0
 	#SignKeyFile: ..\keystore\octo\release.keystore
- 	'#SignKeyPassword: yt43k98!  
+ 	#SignKeyPassword: yt43k98!  
 	#end if
 	
 	'==================================================================================================
@@ -202,6 +202,21 @@ Version=11.8
 	#SupportedOrientations: unspecified
 	#CanInstallToExternalStorage: false
 #End Region
+
+#region 	BUILD ACTIONS
+'1 - Before the compiler cleans the objects folder (it happens after the code Is parsed).
+'2 - Before R.java File Is generated.
+'3 - Before the package Is signed (the APK File at this point Is: bin\temp.ap_).
+'4 - Before the APK Is installed.
+'5 - After the APK Is installed.​
+
+#If klipper
+#CustomBuildAction:1, %WINDIR%\system32\cmd.exe,  /c copy "..\icons\klipper\klipper-icon.png" "..\build-icon.png" /y 
+#else
+#CustomBuildAction:1, %WINDIR%\system32\cmd.exe,  /c copy "..\icons\octo\octo-icon.png" "..\build-icon.png" /y 
+#End If
+#end region
+
 
 #Region  Activity Attributes 
 	#FullScreen: True
@@ -609,3 +624,6 @@ Public Sub Start_ApkInstall(args() As String)
 End Sub
 
 #end region
+
+
+

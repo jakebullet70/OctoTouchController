@@ -15,14 +15,14 @@ Sub Process_Globals
 	
 	Public Const DEGREE_SYMBOL As String = "°" 
 		
-	#if not (klipper)
-	Public const APP_TITLE As String = "OctoTC ™"
-	Private Const WEB_ADDR As String = "http://sadlogic.com/octotouchcontroller/"
+	#if klipper
+	Public const APP_TITLE As String = "MoonrakerTC ™"
+	Private Const WEB_ADDR As String = "http://sadlogic.com/moonrakertouchcontroller/"
 	Public Const APK_NAME As String         = WEB_ADDR & "MoonrakerTouchController.apk"
 	Public Const APK_FILE_INFO As String = WEB_ADDR & "MoonrakerTouchController.txt"
 	#else
-	Public const APP_TITLE As String = "MoonrakerTC ™"
-	Private Const WEB_ADDR As String = "http://sadlogic.com/moonrakertouchcontroller/"
+	Public const APP_TITLE As String = "OctoTC ™"
+	Private Const WEB_ADDR As String = "http://sadlogic.com/octotouchcontroller/"
 	Public Const APK_NAME As String         = WEB_ADDR & "OctoTouchController.apk"
 	Public Const APK_FILE_INFO As String = WEB_ADDR & "OctoTouchController.txt"
 	#End If

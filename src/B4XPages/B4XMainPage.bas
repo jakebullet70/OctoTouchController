@@ -200,8 +200,7 @@ Private Sub LoadSplashPic
 	#else
 	Dim fname As String = "splash.png"
 	#End If
-	ivSpash.Bitmap = LoadBitmapSample(File.DirAssets, fname, ivSpash.Width, ivSpash.Height)
-	'ivSpash.Bitmap = LoadBitmapResize(File.DirAssets, fname, ivSpash.Width, ivSpash.Height,True)
+	ivSpash.Bitmap = LoadBitmapResize(File.DirAssets, fname, ivSpash.Width, ivSpash.Height,True)
 	
 End Sub
 

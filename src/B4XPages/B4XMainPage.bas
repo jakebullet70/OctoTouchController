@@ -198,7 +198,8 @@ Private Sub LoadSplashPic
 	
 	#if klipper
 	Dim fname As String = "splashklipper.png"
-	lblSplash.Text = "MoonrakerTouchController"
+	lblSplash.Text = "Powered by Moonraker"
+	If guiHelpers.gIsLandScape = False Then lblSplash.TextSize = lblSplash.TextSize - 7
 	#else
 	Dim fname As String = "splash.png"
 	#End If
@@ -867,3 +868,28 @@ End Sub
 '	'pointerCount=1, historySize=0, eventTime=11159447, downTime=11159052, deviceId=3, source=0x1002 }
 'End Sub
 #END REGION
+
+
+
+
+'#If JAVA
+'
+'//'''https://www.b4x.com/android/forum/threads/b4x-lineutils-v1-2-get-required-height-for-multiline-textview-label-with-variable-line-spacing.138786/#content
+'//'''''Dim Label1 As Label
+'//'/''''Label1.Initialize("")
+'//'''''Label1.Text = "this is a long sentence, and we need to " _
+'//'''''& "know the height required in order To show it completely."
+'//'''''Label1.TextSize = 20
+'//'''''Activity.AddView(Label1, 10dip, 10dip, 200dip, 30dip)
+'//'''''Dim LineS As LineUtils
+'//'''''Label1.Height = LineS.getMultilineHeight(Label1, Label1.Text, 1.5)
+'
+'    Public int getMultilineHeight(TextView TextView, CharSequence Text, float multi) {
+'        StaticLayout sl = new StaticLayout(Text, TextView.getPaint(),
+'                TextView.getLayoutParams().width - TextView.getPaddingLeft() - TextView.getPaddingRight(),
+'                Alignment.ALIGN_NORMAL, multi, 0 , True);
+'        Return sl.getLineTop(sl.getLineCount());
+'    }
+'
+'
+'#End If

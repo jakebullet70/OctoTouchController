@@ -50,6 +50,7 @@ Sub Class_Globals
 
 	Private mapMasterPreHeaterMenu As Map
 	
+	Private lblSplash As Label
 End Sub
 
 '======================================================================================
@@ -197,6 +198,7 @@ Private Sub LoadSplashPic
 	
 	#if klipper
 	Dim fname As String = "splashklipper.png"
+	lblSplash.Text = "MoonrakerTouchController"
 	#else
 	Dim fname As String = "splash.png"
 	#End If

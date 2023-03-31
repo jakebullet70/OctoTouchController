@@ -36,7 +36,7 @@ Sub Class_Globals
 	Private lblFileName As AutoTextSizeLabel, lblHeaderFileName As B4XView
 	Private lblBusy As B4XView
 	
-	Private mOldFileName as String
+	Private mOldFileName As String
 	
 	Private lblSort2 As Label, cboSort As B4XComboBox, rsFiles As ResultSet
 	Private SortAscDesc As Boolean = True
@@ -221,6 +221,11 @@ Private Sub btnAction_Click
 		#end if
 			
 		Case "loadandprint"
+			Dim mb2 As dlgMsgBox2
+			mb2.Initialize(mMainObj.Root,"Question",280dip, 150dip,False)
+			mb2.NewTextSize = 32
+			Wait For (mb2.Show("Start print job?",gblConst.MB_ICON_QUESTION, "PRINT","","CANCEL")) Complete (res As Int)
+			If res = xui.DialogResponse_Cancel Then Return
 			#if klipper
 			mMainObj.oMasterController.cn.PostRequest($"/printer/print/start?filename=${mCurrentFileInfo.Name}"$)
 			#else

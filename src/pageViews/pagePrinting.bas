@@ -300,6 +300,11 @@ Private Sub btnAction_Click
 					Return
 				End If
 				
+				Dim mb2 As dlgMsgBox2 : 	mb2.Initialize(mMainObj.Root,"Question",280dip, 150dip,False)
+				mb2.NewTextSize = 32
+				Wait For (mb2.Show("Start print job?",gblConst.MB_ICON_QUESTION, "PRINT","","CANCEL")) Complete (res As Int)
+				If res = xui.DialogResponse_Cancel Then Return
+				
 				guiHelpers.Show_toast("Starting Print...",2000)
 				#if klipper
 				Dim fname As String = oc.cCMD_PRINT.Replace("!FN!",oc.JobFileName) '--- TODO KLIPPER, folders?

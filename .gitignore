@@ -2,3 +2,5 @@
 **/AutoBackups
 *.meta
 *.keystore
+KlipperTouchController.apk
+*.apk

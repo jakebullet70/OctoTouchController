@@ -94,6 +94,7 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 		m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE308)). _
 				 	 Typeface(Typeface.DEFAULT).Append("   Printer Connection").PopAll,"oc")	
 	End If
+	
 	#if klipper
 	'------------------------------  TODO !!!!!!!!!!!!!!!!!
 '	cs.Initialize
@@ -111,12 +112,12 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	#end if
 	
 	#if not (klipper)
-
+	cs.Initialize
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE8C1)). _
 				 Typeface(Typeface.DEFAULT).Append("   Plugins Menu").PopAll,"plg")				 
 	cs.Initialize
-
 	#end if
+	
 	cs.Initialize
 	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
 				 Typeface(Typeface.DEFAULT).Append("   Internal Functions Menu").PopAll,"fn")

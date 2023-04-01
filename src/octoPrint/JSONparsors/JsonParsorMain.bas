@@ -146,8 +146,15 @@ Public Sub  JobStatus(s As String)
 		oc.JobCompletion = (Round2(virtual_sdcard.Get("progress"),2) * 100)
 		oc.JobPrintTime = print_stats.Get("total_duration")
 		oc.JobEstPrintTime = print_stats.Get("print_duration")
+'		Dim td,pd As Double
+'		td = print_stats.Get("total_duration")
+'		pd = print_stats.Get("print_duration")
+''		Log(td)
+''		Log(pd)
+'		oc.JobPrintTimeLeft =	oc.JobEstPrintTime
 		
-		'Dim eventtime As Double = result.Get("eventtime")
+'		Dim eventtime As Double = result.Get("eventtime")
+'		Log(eventtime)
 		''Dim status As Map = result.Get("status")
 		''Dim print_stats As Map = status.Get("print_stats")
 		''Dim filename As String = print_stats.Get("filename")

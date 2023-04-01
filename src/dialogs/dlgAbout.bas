@@ -63,6 +63,9 @@ Public Sub Show
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "OK")
 	BuildAboutLabel
 	dlgHelper.ThemeInputDialogBtnsResize
+	#if klipper
+	lmB4XImageViewX1.Load(File.DirAssets,"splashklipper.png")
+	#End If
 
 	Wait For (rs) Complete (Result As Int)
 	
@@ -77,6 +80,12 @@ Private Sub BuildGUI
 	lmB4XImageViewX1.Load(File.DirAssets, "splash.png")
 	lblTxt.Text = GetAboutText
 	guiHelpers.SetTextColor(Array As B4XView(lblTxt.BaseLabel,lblOctoKlipper))
+	
+	
+	#if klipper
+	lblOctoKlipper.Visible = True
+	lblOctoKlipper.Text = "Powered by Moonraker!"
+	#End If
 	
 End Sub
 
@@ -113,7 +122,7 @@ Private Sub GetAboutText() As String
 	msg.Append("AGPL-3.0 license")
 	
 	#if klipper
-	Return msg.ToString.Replace("Octoprint","Moonraker / Klipper").Replace("OctoTouch","MoonrakerTouch")
+	Return msg.ToString.Replace("Octoprint","Klipper").Replace("OctoTouch","KlipperTouch")
 	#else
 	Return msg.ToString
 	#End If
@@ -143,3 +152,5 @@ Public Sub Check4OctoKlipper
 End Sub
 #end if
 #end region
+
+

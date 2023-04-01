@@ -120,6 +120,10 @@ Private Sub BuildGUI
 	'--- will show thumbnail on startup
 	ivPreviewLG.mBase.Visible = False : 	ivPreviewLG_Click
 	
+	#if klipper
+	lblPrintStats3.Visible = false '--- cannot figure thisa one out yet!!!!  TODO
+	#End If
+	
 #region "PRINTER BTNS TXT"	
 	Dim cs As CSBuilder 
 	 

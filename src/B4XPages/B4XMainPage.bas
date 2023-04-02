@@ -141,6 +141,13 @@ End Sub
 
 Private Sub B4XPage_CloseRequest As ResumableSub
 	
+	#if klipper
+	If Drawer.RightOpen Then
+		Drawer.RightOpen = False
+		Return False
+	End If
+	#end if
+	
 	'--- catch the android BACK button
 	If oPageCurrent <> oPageMenu Then
 		Switch_Pages(gblConst.PAGE_MENU)		
@@ -908,6 +915,8 @@ Public Sub btnSidePnl_Click
 	SideMenu.BtnPressed(b)
 End Sub
 #end if
+
+
 
 
 

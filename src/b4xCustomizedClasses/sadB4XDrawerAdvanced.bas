@@ -388,9 +388,3 @@ End Sub
 '#End If
 '
 '
-
-Public Sub btnSidePnl_Click
-	Dim b As Button
-	b = Sender
-	Log(b.Tag)
-End Sub

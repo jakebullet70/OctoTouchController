@@ -17,7 +17,6 @@ Sub Class_Globals
 	Private xui As XUI
 	Private btnSTOP,btnFRESTART,btnRESTART As Button
 	Private pnlBtnsDrawer As B4XView
-	'Private mLastOpenStatus As Boolean = False
 End Sub
 
 
@@ -27,9 +26,7 @@ End Sub
 
 
 Private Sub mnuPanel_StateChanged (Open As Boolean)
-	'If mLastOpenStatus = Open Then Return
 	IsOpen = Open
-	'mLastOpenStatus = Open
 	If Open Then Display_Btns
 End Sub
 

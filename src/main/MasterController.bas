@@ -302,7 +302,7 @@ Private Sub GetJobStatus
 		oc.FormatedStatus = oc.JobPrintState
 	End If
 	#End If
-	
+	Log(oc.JobPrintState)
 	CallSub(mCallBack,mEventNameStatus)
 	
 	mJobStatusFLAG_Busy = False

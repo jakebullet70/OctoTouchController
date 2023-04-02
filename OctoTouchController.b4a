@@ -173,15 +173,16 @@ Module67=|relative|src\b4xExtensionClasses\sadPreferencesDialogHelper
 Module68=|relative|src\custom_controls\sadRoundSlider
 Module69=|relative|src\miscClasses\Stack
 Module7=|relative|src\custom_controls\CircularProgressBar
-Module70=|relative|src\main\Starter
-Module71=|relative|src\helperClasses\strHelpers
-Module72=|relative|src\miscClasses\SysInfo
-Module73=|relative|src\miscClasses\WildCardFilesList
+Module70=startAtBoot
+Module71=|relative|src\main\Starter
+Module72=|relative|src\helperClasses\strHelpers
+Module73=|relative|src\miscClasses\SysInfo
+Module74=|relative|src\miscClasses\WildCardFilesList
 Module8=|relative|src\generic\clrTheme
 Module9=|relative|src\generic\config
 NumberOfFiles=41
 NumberOfLibraries=22
-NumberOfModules=73
+NumberOfModules=74
 Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
@@ -226,7 +227,7 @@ Version=11.8
 	'#DebuggerForceStandardAssets: true
 	
 	'---  ALWAYS SET FALSE IN DEBUG MODE
-	#BridgeLogger: False 
+	#BridgeLogger: True 
 	'-----------------------------------
 #End Region
 

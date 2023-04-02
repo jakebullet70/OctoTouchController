@@ -26,6 +26,7 @@ End Sub
 
 Sub Service_Create '--- This is the program entry point.
 	
+	Log("Service_Create - starter")
 	tmrTimerCallSub.Initialize
 	kvs.Initialize(xui.DefaultFolder, "kvs.db3")
 	Provider.Initialize
@@ -48,6 +49,8 @@ Sub Service_Create '--- This is the program entry point.
 		Dim oo As AppUpdate : oo.Initialize : oo.RunPrgUpdate
 	End If
 	
+	'File.WriteString(xui.DefaultFolder,"autostart.bin","boot")
+	fileHelpers.SafeKill("autostart.bin")
 	
 End Sub
 

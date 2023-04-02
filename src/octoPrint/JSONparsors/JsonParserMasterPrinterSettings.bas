@@ -592,7 +592,7 @@ Public Sub ParsePrinterProfile(jsonTXT As String)
 End Sub
 
 
-
+#if klipper
 Private Sub ParseHeaterSettings(jsonTXT As String)
 	Dim parser As JSONParser
 	parser.Initialize(jsonTXT)
@@ -615,9 +615,9 @@ Private Sub ParseHeaterSettings(jsonTXT As String)
 	End Try
 	
 End Sub
+#end if
 
-
-Private Sub Add2map(m As Map,name As String)
+Private Sub Add2map(m As Map,name As String) 'ignore
 	
 	Try
 		Dim tool As Map = m.Get("extruder")

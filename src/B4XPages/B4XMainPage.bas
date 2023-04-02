@@ -19,7 +19,7 @@ Sub Class_Globals
 	Public pnlScreenOff As Panel
 	
 	'--- splash screen crap
-	Private ivSpash As ImageView, pnlSplash As Panel
+	Private ivSpash As ImageView, pnlSplash As Panel,lblSplash As Label
 	
 	'--- master base panel
 	Private pnlMaster As B4XView 
@@ -50,7 +50,16 @@ Sub Class_Globals
 
 	Private mapMasterPreHeaterMenu As Map
 	
-	Private lblSplash As Label
+	#if klipper
+	'--- side menu
+	Private SideMenu As sadB4XDrawerAdvancedHelper
+	Private Drawer As sadB4XDrawerAdvanced
+	Private btnSTOP,btnFRESTART,btnRESTART As Button
+	Private pnlBtnsDrawer,pnlMainDrawer As B4XView
+	Private pnlLineBreakDrawer As B4XView
+	#end if
+	
+	
 End Sub
 
 '======================================================================================
@@ -86,12 +95,26 @@ Public Sub Initialize
 	
 End Sub
 
+
 #Region "PAGE EVENTS"
 Private Sub B4XPage_Created (Root1 As B4XView)
 
 	Root = Root1
 	Root.SetLayoutAnimated(0,0,0,Root.Width,Root.Height)
+	
+	#if klipper
+	'--- sliding side menu ---------------------------
+	SideMenu.Initialize(Drawer)
+	Drawer.Initialize(SideMenu, "mnuPanel", Root, 260dip)
+	Drawer.CenterPanel.LoadLayout("MainPage")
+	Drawer.RightPanel.LoadLayout("viewSlidingWindow")
+	Drawer.RightPanelEnabled = True
+	Drawer.LeftPanelEnabled = False
+	#else
 	Root.LoadLayout("MainPage")
+	#End If
+	
+	
 	
 	toast.Initialize(Root)
 	toast.pnl.Color = clrTheme.txtNormal
@@ -189,6 +212,11 @@ Private Sub BuildGUI
 	guiHelpers.SkinButton_Pugin(Array As Button(btnPower, btnPageAction))
 	ShowNoShow_PowerBtn
 	
+	#if klipper
+	SideMenu.SkinMe(Array As Button(btnSTOP,btnFRESTART,btnRESTART),pnlMainDrawer,pnlBtnsDrawer)
+	pnlLineBreakDrawer.Color = clrTheme.txtNormal
+	#end if
+	
 	Switch_Pages(gblConst.PAGE_MENU)
 	Starter.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
 	
@@ -261,6 +289,10 @@ Public Sub Update_Printer_Status
 	If SubExists(oPageCurrent,"Update_Printer_Stats") Then
 		CallSub(oPageCurrent,"Update_Printer_Stats")
 	End If
+	
+	#if klipper
+	If SideMenu.IsOpen Then  CallSubDelayed(SideMenu,"Display_Btns")
+	#end if
 	
 End Sub
 
@@ -869,6 +901,13 @@ End Sub
 'End Sub
 #END REGION
 
+#if klipper
+'--- side drawer
+Public Sub btnSidePnl_Click
+	Dim b As Button : b = Sender
+	SideMenu.BtnPressed(b)
+End Sub
+#end if
 
 
 

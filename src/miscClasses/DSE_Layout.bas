@@ -39,17 +39,25 @@ End Sub
 
 
 
+Public Sub SpreadHorizontally (DesignerArgs As DesignerArgs )
+	Dim pnl As B4XView = DesignerArgs.GetViewFromArgs(0)
+	Dim Maxsize As Int = DesignerArgs.Arguments.Get(1)
+	Dim MinGap  As Int = DesignerArgs.Arguments.Get(2)
+	Dim align  As String  = DesignerArgs.Arguments.Get(3)
+	SpreadHorizontally2(pnl,Maxsize,MinGap,align)
+End Sub
+
 'Spreads the controls horizontally.
 'Parameters: pnl, max, gap, align
 '#0 Panel with controls in it 
 '#1 Maximum size of each control (0 for no maximum, -1 to retain size),
 '#2 Minimum gap between controls
 '#3 Align with first control ( "top", "bottom", "center")
-Public Sub SpreadHorizontally (DesignerArgs As DesignerArgs )
-	Dim pnl As B4XView = DesignerArgs.GetViewFromArgs(0)
-	Dim Maxsize As Int = DesignerArgs.Arguments.Get(1)
-	Dim MinGap  As Int = DesignerArgs.Arguments.Get(2)
-	Dim align  As String  = DesignerArgs.Arguments.Get(3)
+Public Sub SpreadHorizontally2(pnl As B4XView, Maxsize As Int,MinGap  As Int,align  As String )
+'	Dim pnl As B4XView = DesignerArgs.GetViewFromArgs(0)
+'	Dim Maxsize As Int = DesignerArgs.Arguments.Get(1)
+'	Dim MinGap  As Int = DesignerArgs.Arguments.Get(2)
+'	Dim  = DesignerArgs.Arguments.Get(3)
 	Dim Change As Boolean = Maxsize >= 0
 	
 	If pnl.IsInitialized = False Then Return
@@ -115,17 +123,29 @@ Public Sub SpreadHorizontally (DesignerArgs As DesignerArgs )
 End Sub
 
 
+'=================================================================================
+
+
+
+Public Sub SpreadVertically (DesignerArgs As DesignerArgs )
+	Dim pnl As B4XView = DesignerArgs.GetViewFromArgs(0)
+	Dim Maxsize As Int = DesignerArgs.Arguments.Get(1)
+	Dim MinGap  As Int = DesignerArgs.Arguments.Get(2)
+	Dim align  As String  = DesignerArgs.Arguments.Get(3)
+	SpreadVertically2(pnl,Maxsize,MinGap,align)
+End Sub
+
 'Spreads the controls Vertically.
 'Parameters: pnl, max, gap, align
 '#0 Panel with controls in it 
 '#1 Maximum size of each control (0 for no maximum, -1 to retain size),
 '#2 Minimum gap between controls
 '#3 Align with first control ( "left", "right", "center")
-Public Sub SpreadVertically  (DesignerArgs As DesignerArgs )
-	Dim pnl As B4XView = DesignerArgs.GetViewFromArgs(0)
-	Dim Maxsize As Int = DesignerArgs.Arguments.Get(1)
-	Dim MinGap  As Int = DesignerArgs.Arguments.Get(2)
-	Dim align  As String  = DesignerArgs.Arguments.Get(3)
+Public Sub SpreadVertically2 (pnl As B4XView, Maxsize As Int,MinGap  As Int,align  As String )
+'	Dim pnl As B4XView = DesignerArgs.GetViewFromArgs(0)
+'	Dim Maxsize As Int = DesignerArgs.Arguments.Get(1)
+'	Dim MinGap  As Int = DesignerArgs.Arguments.Get(2)
+'	Dim align  As String  = DesignerArgs.Arguments.Get(3)
 	Dim Change As Boolean = Maxsize >= 0
 	
 	If pnl.IsInitialized = False Then Return

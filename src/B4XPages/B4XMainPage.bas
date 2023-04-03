@@ -75,8 +75,7 @@ Public Sub Initialize
 	logMe.Init(xui.DefaultFolder,"_OCTOTC_","log")
 	clrTheme.Init(Main.kvs.Get(gblConst.SELECTED_CLR_THEME).As(String).ToLowerCase)
 	
-	'Main.InitLogCleanup
-	CallSub(Main,"InitLogCleanup")
+	CallSub(Main,"InitLog_Cleanup")
 	
 	'  debug - remove for release
 	'fileHelpers.DeleteFiles(xui.DefaultFolder,"*.log")

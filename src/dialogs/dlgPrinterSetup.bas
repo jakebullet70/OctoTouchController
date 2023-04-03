@@ -165,7 +165,7 @@ Private Sub dlgEvent_IsValid (TempData As Map) As Boolean 'ignore
 		Exit 'Do	
 	Loop
 	
-	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Rebuild_GUI",50) '--- needed when using dlgEvent_IsValid
+	Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Rebuild_GUI",50) '--- needed when using dlgEvent_IsValid
 	Return retval '--- all is good!
 
 End Sub

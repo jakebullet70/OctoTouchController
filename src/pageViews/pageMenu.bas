@@ -37,7 +37,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	mPnlMain.LoadLayout("pageMenu")
 	
 	BuildGUI
-	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"ShowVer",2300)
+	Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"ShowVer",2300)
 	
 End Sub
 
@@ -175,7 +175,7 @@ Private Sub btnSubBtnAction_Click
 			fnc.BlankScreen
 			
 		Case "snof" '--- Sonoff / power crap
-			If oc.isConnected = False And Starter.kvs.GetDefault(gblConst.PWR_SONOFF_PLUGIN,False).As(Boolean) = False Then
+			If oc.isConnected = False And Main.kvs.GetDefault(gblConst.PWR_SONOFF_PLUGIN,False).As(Boolean) = False Then
 				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
 				Return
 			End If

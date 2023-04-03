@@ -67,7 +67,7 @@ Public Sub Show(mobj As B4XMainPage)
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
 	Wait For (rs) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
-		Starter.kvs.Put(gblConst.SELECTED_CLR_THEME,Spinner1.SelectedItem)
+		Main.kvs.Put(gblConst.SELECTED_CLR_THEME,Spinner1.SelectedItem)
 		If Spinner1.SelectedItem = CUSTOM_SELECTION Then
 			SaveCustomClrs
 		End If
@@ -82,7 +82,7 @@ Private Sub BuildGUI
 	pnlBG.Color = clrTheme.Background
 
 	'--- theme
-	Dim DefaultColor As String = Starter.kvs.Get(gblConst.SELECTED_CLR_THEME)
+	Dim DefaultColor As String = Main.kvs.Get(gblConst.SELECTED_CLR_THEME)
 	Spinner1.AddAll(Array As String("Green","Blue","Red","Dark","Dark-Blue","Dark-Green","Gray","Prusa","Rose",CUSTOM_SELECTION))
 	Spinner1.Prompt = "Theme"
 	Spinner1.SelectedIndex = Spinner1.IndexOf(DefaultColor)
@@ -150,7 +150,7 @@ Private Sub SaveCustomClrs
 	clrTheme.CustomColors.Disabled = lblDisabled.TextColor 
 	clrTheme.CustomColors.Divider = clrTheme.DividerColor '--- no GUI yet
 	
-	Starter.kvs.Put(gblConst.CUSTOM_THEME_COLORS,clrTheme.CustomColors)
+	Main.kvs.Put(gblConst.CUSTOM_THEME_COLORS,clrTheme.CustomColors)
 	Log("Saved custom colors")
 	
 End Sub

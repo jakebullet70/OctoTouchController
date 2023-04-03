@@ -95,8 +95,8 @@ End Sub
 
 Public Sub ReadSettingsCfg
 
-	mIPaddr = Starter.kvs.GetDefault(gblConst.PWR_SONOFF_IP,"")
-	If Starter.kvs.Get(gblConst.PWR_SONOFF_PLUGIN).As(Boolean) = True Then
+	mIPaddr = Main.kvs.GetDefault(gblConst.PWR_SONOFF_IP,"")
+	If Main.kvs.Get(gblConst.PWR_SONOFF_PLUGIN).As(Boolean) = True Then
 		mPSU_Type = "sonoff"
 	Else
 		mPSU_Type = "octo_k"

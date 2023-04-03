@@ -52,7 +52,7 @@ End Sub
 
 Public Sub SetAsOptionalMsgBox(kvKey As String)
 	mKvStr = kvKey
-	Starter.kvs.Put(mKvStr,False.As(String))
+	Main.kvs.Put(mKvStr,False.As(String))
 End Sub
 
 
@@ -96,7 +96,7 @@ Private Sub CreateDoNotShowCheckbox
 	
 End Sub
 Private Sub DoNotShow_CheckedChange(Checked As Boolean)
-	Starter.kvs.Put(mKvStr,Checked.As(String))
+	Main.kvs.Put(mKvStr,Checked.As(String))
 End Sub
 
 

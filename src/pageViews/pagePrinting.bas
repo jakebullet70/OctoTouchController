@@ -361,7 +361,7 @@ Public Sub LoadThumbNail
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized = False Then
 		'--- sometimes happens on 1st startup
 		guiHelpers.Show_toast(THUMBNAIL_ISSUE,1500)
-		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"LoadThumbNail",6200)
+		Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"LoadThumbNail",6200)
 		Return
 	End If
 
@@ -374,7 +374,7 @@ Public Sub LoadThumbNail
 	If currentFileInfo = Null Or currentFileInfo.myThumbnail_filename_disk = "" Then
 		If currentFileInfo = Null Then 
 			CallSubDelayed(mMainObj.oMasterController, "GetAllOctoFilesInfo")
-			Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"LoadThumbNail",3000)
+			Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"LoadThumbNail",3000)
 			guiHelpers.Show_toast(THUMBNAIL_ISSUE,1500)
 		End If
 		ivPreviewLG.Load(File.DirAssets,gblConst.NO_THUMBNAIL)

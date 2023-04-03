@@ -55,7 +55,7 @@ End Sub
 Public Sub Show
 	
 	'--- show info about setting octoprint plugins first TODO, same code as in dlgPsuSetup
-	If Starter.kvs.GetDefault("ledWarning",False).As(Boolean) = False Then
+	If Main.kvs.GetDefault("ledWarning",False).As(Boolean) = False Then
 		Dim mb As dlgMsgBox
 		mb.Initialize(mMainObj.root,"Information",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip),260dip,False)
 		mb.SetAsOptionalMsgBox("ledWarning")
@@ -105,7 +105,7 @@ Public Sub Show
 		End If
 		CallSub(mMainObj.oPageCurrent,"Set_focus")
 	End If
-	Starter.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
+	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
 	
 End Sub
 

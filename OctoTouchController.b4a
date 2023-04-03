@@ -239,6 +239,12 @@ Version=11.8
 Sub Process_Globals
 	
 	Public ActionBarHomeClicked As Boolean
+	
+	'--- was in starter serves
+	Public tmrTimerCallSub As CallSubUtils
+	Public kvs As KeyValueStore
+	Public db As InMemDB
+	Public Provider As FileProvider
 			
 	'--- timers need to be in 'Process_Globals'
 	Private tmrMain As Timer
@@ -250,6 +256,8 @@ End Sub
 Sub Globals
 	Private mModule As String = "Main"
 	Private ph As Phone	
+	Private xui As XUI
+	Private FirstRun As Boolean
 End Sub
 
 
@@ -257,14 +265,17 @@ End Sub
 
 Sub Activity_Create(FirstTime As Boolean) 'ignore
 	
-	Starter.FirstRun = FirstTime
+	FirstRun = FirstTime '--- am I using this?
 	
 	If FirstTime Then
 		Log("Activity_Create - FirstTime = True")
+		tmrTimerCallSub.Initialize
+		kvs.Initialize(xui.DefaultFolder, "kvs.db3")
+		InitApp
 		#if debug
-		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrSplash_Tick",1000)   '--- just a splash screen
+		tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrSplash_Tick",1000)   '--- just a splash screen
 		#else
-		Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrSplash_Tick",3500)   '--- just a splash screen
+		tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrSplash_Tick",3500)   '--- just a splash screen
 		#End If
 	Else
 		Log("Activity_Create - FirstTime = False")
@@ -606,7 +617,7 @@ End Sub
 Private Sub SendInstallIntent(path As String) 'ignore
 	Dim i As Intent, fullpath As String
 	If ph.SdkVersion >= 24 Then
-		fullpath = Starter.Provider.GetFileUri(fileHelpers.GetFilenameFromPath(gblConst.APK_NAME))
+		fullpath = Provider.GetFileUri(fileHelpers.GetFilenameFromPath(gblConst.APK_NAME))
 		i.Initialize("android.intent.action.INSTALL_PACKAGE", fullpath)
 		i.Flags = Bit.Or(i.Flags, 1) '--- FLAG_GRANT_READ_URI_PERMISSION
 	Else
@@ -628,4 +639,45 @@ End Sub
 #end region
 
 
+ '--- from starter serves
+#region STARTUP_INIT  
+Private Sub InitApp
+	Provider.Initialize
+	
+	If kvs.ContainsKey("install_date") = False Then
+		kvs.Put("install_date",DateTime.Now)
+		kvs.Put("version_code",Application.VersionCode)
+	End If
+	
+	db.Initialize
+	
+	Dim oo1 As dlgAppUpdate : oo1.Initialize(Null)
+	oo1.CleanUpApkDownload
+	
+	If Application.VersionCode <> kvs.Get("version_code").As(Int) Then
+		Dim oo As AppUpdate : oo.Initialize : oo.RunPrgUpdate
+	End If
+	
+	'File.WriteString(xui.DefaultFolder,"autostart.bin","boot")
+	'fileHelpers.SafeKill("autostart.bin")
+End Sub
 
+
+Public Sub Clean_OldLogs
+	logMe.DeleteOldFiles("*.log")
+	'---check every X hours for old logs / crash files
+	Dim hrs As Int = 12
+	tmrTimerCallSub.CallSubDelayedPlus(Me,"Clean_OldLogs",60000 * 60 * hrs)
+End Sub
+Public Sub Clean_OldCrash
+	logMe.DeleteOldFiles("*.crash")
+	'---check every X hours for old logs / crash files
+	Dim hrs As Int = 12
+	tmrTimerCallSub.CallSubDelayedPlus(Me,"Clean_OldCrash",60000 * 60 * hrs)
+End Sub
+Public Sub InitLogCleanup
+	'--- in about 15 minutes check for old logs, crash files (3 days old) and delete them
+	tmrTimerCallSub.CallSubDelayedPlus(Me,"Clean_OldLogs",60000 * 13)
+	tmrTimerCallSub.CallSubDelayedPlus(Me,"Clean_OldCrash",60000 * 17)
+End Sub
+#end region

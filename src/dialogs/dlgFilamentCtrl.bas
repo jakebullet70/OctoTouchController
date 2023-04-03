@@ -68,12 +68,12 @@ Private Sub BuildChkbox
 	guiHelpers.SetCBDrawable(chkHeatOff, clrTheme.txtNormal, 1,clrTheme.txtNormal, Chr(8730), Colors.LightGray, 32dip, 2dip)
 	mDialog.Base.AddView(chkHeatOff,10dip,mDialog.Base.Height - 50dip, _
 		(mDialog.Base.Width - mDialog.GetButton(xui.DialogResponse_Cancel).Width - 16dip),36dip)
-	'chkHeatOff.Checked = Starter.kvs.GetDefault(FIL_WIZ_TURN_OFF_ON_HEAT,False)
+	'chkHeatOff.Checked = Main.kvs.GetDefault(FIL_WIZ_TURN_OFF_ON_HEAT,False)
 End Sub
 
 Private Sub TurnOffHeat_CheckedChange(Checked As Boolean)
 	' save?
-	'Starter.kvs.Put(FIL_WIZ_TURN_OFF_ON_HEAT,Checked)
+	'Main.kvs.Put(FIL_WIZ_TURN_OFF_ON_HEAT,Checked)
 End Sub
 
 Public Sub Show
@@ -145,7 +145,7 @@ Private Sub tmrTempCheck_Tick
 End Sub
 
 Private Sub SetTempMonitorTimer
-	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrTempCheck_Tick",1000)
+	Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrTempCheck_Tick",1000)
 End Sub
 
 Private Sub LoadUnLoadFil

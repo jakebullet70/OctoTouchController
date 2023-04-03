@@ -60,7 +60,10 @@ Public Sub ConnectionStatusKlipper(s As String)
 		Dim flags As Map = state.Get("flags")
 		Dim error As Boolean = flags.Get("error")
 		Dim closedOrError As Boolean = flags.Get("closedOrError")
-		oc.isConnected = (Not (error)) Or closedOrError
+		Dim op As Boolean =  flags.Get("operational")
+		Dim ready As Boolean = flags.Get("ready")
+		'oc.isConnected = ((Not (error)) Or closedOrError) 'And op
+		oc.isConnected = ready
 		If oc.isConnected = False Then oc.ResetTempVars
 	
 '		oc.PrinterBaud = mm.Get("baudrate")

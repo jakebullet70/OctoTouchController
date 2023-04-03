@@ -141,9 +141,9 @@ Private Sub BuildGUI
 	
 	cboSort.setitems(Array As String("File Name","Date Added"))
 	
-	cboSort.SelectedIndex = Starter.kvs.GetDefault("fsort-idx",0)
-	LastSort = Starter.kvs.GetDefault("fsort-lbl","File Name")
-	SortAscDesc = Starter.kvs.GetDefault("fsort-asc",True)
+	cboSort.SelectedIndex = Main.kvs.GetDefault("fsort-idx",0)
+	LastSort = Main.kvs.GetDefault("fsort-lbl","File Name")
+	SortAscDesc = Main.kvs.GetDefault("fsort-asc",True)
 	lblSort2.Text = IIf(SortAscDesc,Chr(0xF176),Chr(0xF175)) : Sleep(0)
 	
 	cboSort.cmbBox.Prompt = "Sort Order"
@@ -217,7 +217,7 @@ Private Sub btnAction_Click
 			guiHelpers.Show_toast("Loading file...",2000)
 			Sleep(500) '<--- needed
 			CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
-			Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName2Scrn",400)
+			Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName2Scrn",400)
 		#end if
 			
 		Case "loadandprint"
@@ -235,7 +235,7 @@ Private Sub btnAction_Click
 			CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_PRINTING)
 			Sleep(10)
 			guiHelpers.Show_toast2("Starting Print",2000)
-			Starter.tmrTimerCallSub.CallSubDelayedPlus(mMainObj.oPagePrinting,"Printing_FromFilesPage",500)
+			Main.tmrTimerCallSub.CallSubDelayedPlus(mMainObj.oPagePrinting,"Printing_FromFilesPage",500)
 			
 	End Select
 		
@@ -252,8 +252,8 @@ Public Sub Build_ListViewFileList()
 	
 	clvFiles.Clear
 	If rsFiles.IsInitialized Then rsFiles.Close
-	Starter.db.BuildTable
-	Starter.db.SeedTable(mMainObj.oMasterController.gMapOctoFilesList)
+	Main.db.BuildTable
+	Main.db.SeedTable(mMainObj.oMasterController.gMapOctoFilesList)
 
 	CSelections.Initialize(clvFiles)
 	CSelections.Mode = CSelections.MODE_SINGLE_ITEM_PERMANENT
@@ -262,7 +262,7 @@ Public Sub Build_ListViewFileList()
 	Dim fname As String
 	
 	If rsFiles.IsInitialized Then rsFiles.Close
-	rsFiles = Starter.db.sql.ExecQuery( _
+	rsFiles = Main.db.sql.ExecQuery( _
 					$"SELECT * FROM files ORDER BY ${GetFileSortOrder} ${IIf(SortAscDesc,"ASC","DESC")}"$)
 	
 	Do While rsFiles.NextRow
@@ -458,7 +458,7 @@ Public Sub CheckIfFilesChanged
 	FilesCheckChangeIsBusyFLAG = False
 	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 	
-	Dim ttlRecsInDB As Int = Starter.db.GetTotalRecs
+	Dim ttlRecsInDB As Int = Main.db.GetTotalRecs
 	If oldListViewSize <> clvFiles.Size And ttlRecsInDB > 0 Then
 		'--- highllight the first row
 		Sleep(100) : Show1stFile
@@ -565,7 +565,7 @@ Private Sub SendDeleteCmdAndRemoveFromGrid
 	clvFiles.RemoveAt(clvLastIndexClicked)
 	CSelections.SelectedItems.Remove(clvLastIndexClicked)
 	mMainObj.oMasterController.gMapOctoFilesList.Remove(mCurrentFileInfo.Name)
-	Starter.db.DeleteFileRec(mCurrentFileInfo.Name) 
+	Main.db.DeleteFileRec(mCurrentFileInfo.Name) 
 	Sleep(100)
 	
 	Dim ff As tOctoFileInfo
@@ -587,7 +587,7 @@ Private Sub SendDeleteCmdAndRemoveFromGrid
 	Sleep(200)
 	CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
 	Sleep(100)
-	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName2Scrn",500)
+	Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName2Scrn",500)
 	
 End Sub
 
@@ -623,8 +623,9 @@ Public Sub Update_LoadedFileName2Scrn
 End Sub
 
 Private Sub Show1stFile
-	If Starter.db.GetTotalRecs = 0 Then Return
-	rsFiles.Position = 0 : clvFiles_ItemClick(0,rsFiles.GetString("file_name"))
+	If Main.db.GetTotalRecs = 0 Then Return
+	rsFiles.Position = 0 
+	clvFiles_ItemClick(0,rsFiles.GetString("file_name"))
 	clvFiles.JumpToItem(0)
 	Sleep(100)
 End Sub
@@ -648,9 +649,9 @@ Private Sub cboSort_SelectedIndexChanged (Index As Int)
 	LastSort = cboSort.SelectedItem
 	
 	'--- save last sort
-	Starter.kvs.Put("fsort-idx",cboSort.SelectedIndex)
-	Starter.kvs.Put("fsort-lbl",LastSort)
-	Starter.kvs.Put("fsort-asc",SortAscDesc)
+	Main.kvs.Put("fsort-idx",cboSort.SelectedIndex)
+	Main.kvs.Put("fsort-lbl",LastSort)
+	Main.kvs.Put("fsort-asc",SortAscDesc)
 	
 End Sub
 

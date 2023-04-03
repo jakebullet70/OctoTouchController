@@ -42,7 +42,7 @@ End Sub
 
 Public Sub Show
 
-	If Starter.kvs.GetDefault("psuWarning",False).As(Boolean) = False Then
+	If Main.kvs.GetDefault("psuWarning",False).As(Boolean) = False Then
 		Dim mb As dlgMsgBox
 		mb.Initialize(mMainObj.root,"Information",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip),260dip,False)
 		mb.SetAsOptionalMsgBox("psuWarning")
@@ -110,10 +110,10 @@ End Sub
 
 Public Sub CreateDefaultCfg
 	
-	Starter.kvs.Put(gblConst.PWR_CTRL_ON,False)
-	Starter.kvs.Put(gblConst.PWR_PSU_PLUGIN,True)
-	Starter.kvs.Put(gblConst.PWR_SONOFF_PLUGIN,False)
-	Starter.kvs.Put(gblConst.PWR_SONOFF_IP,"")
+	Main.kvs.Put(gblConst.PWR_CTRL_ON,False)
+	Main.kvs.Put(gblConst.PWR_PSU_PLUGIN,True)
+	Main.kvs.Put(gblConst.PWR_SONOFF_PLUGIN,False)
+	Main.kvs.Put(gblConst.PWR_SONOFF_IP,"")
 	
 End Sub
 
@@ -121,10 +121,10 @@ End Sub
 Private Sub Save_settings
 	
 	guiHelpers.Show_toast("Saved",2500)
-	Starter.kvs.Put(gblConst.PWR_CTRL_ON,swPsuCtrlOnOff.Value)
-	Starter.kvs.Put(gblConst.PWR_PSU_PLUGIN,swPSUocto.Value)
-	Starter.kvs.Put(gblConst.PWR_SONOFF_PLUGIN,swSonoff.Value)
-	Starter.kvs.Put(gblConst.PWR_SONOFF_IP,txtPrinterIP.Text & "")
+	Main.kvs.Put(gblConst.PWR_CTRL_ON,swPsuCtrlOnOff.Value)
+	Main.kvs.Put(gblConst.PWR_PSU_PLUGIN,swPSUocto.Value)
+	Main.kvs.Put(gblConst.PWR_SONOFF_PLUGIN,swSonoff.Value)
+	Main.kvs.Put(gblConst.PWR_SONOFF_IP,txtPrinterIP.Text & "")
 	
 End Sub
 
@@ -147,10 +147,10 @@ End Sub
 
 Private Sub ReadSettingsFile
 
-	txtPrinterIP.Text = Starter.kvs.GetDefault(gblConst.PWR_SONOFF_IP,"")
-	swSonoff.Value = Starter.kvs.Get(gblConst.PWR_SONOFF_PLUGIN).As(Boolean)
-	swPSUocto.Value = Starter.kvs.Get(gblConst.PWR_PSU_PLUGIN).As(Boolean)
-	swPsuCtrlOnOff.Value = Starter.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
+	txtPrinterIP.Text = Main.kvs.GetDefault(gblConst.PWR_SONOFF_IP,"")
+	swSonoff.Value = Main.kvs.Get(gblConst.PWR_SONOFF_PLUGIN).As(Boolean)
+	swPSUocto.Value = Main.kvs.Get(gblConst.PWR_PSU_PLUGIN).As(Boolean)
+	swPsuCtrlOnOff.Value = Main.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
 
 End Sub
 

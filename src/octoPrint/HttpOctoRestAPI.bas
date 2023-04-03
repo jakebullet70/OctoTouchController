@@ -156,7 +156,7 @@ Public Sub PostRequest2(EndPoint As String,JsonDataMsg As String) As ResumableSu
 	
 	If EndPoint.Contains(oc.cCMD_PRINT) Or EndPoint.Contains(oc.cCMD_CANCEL) Then
 		'--- reset the power / screen on-off (diff timeout when printing)
-		Starter.tmrTimerCallSub.CallSubDelayedPlus(Main,"Set_ScreenTmr",10000)
+		Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Set_ScreenTmr",10000)
 	End If
 	
 	Return retStr

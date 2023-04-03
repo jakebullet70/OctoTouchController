@@ -33,17 +33,20 @@ End Sub
 
 Public Sub BtnPressed(b As Button)
 	Log(b.Tag)
-	
+	Dim msg As String = "Restart Command Sent. Waiting..."
+	Dim dl As Int = 9000
 	Select Case b.Tag.As(String)
 		Case "s" '--- emergency stop  
 			B4XPages.MainPage.oMasterController.cn.PostRequest("/printer/emergency_stop")
+			msg = "EMERGENCY STOP!"
+			dl = 3000
 		Case "fr" '--- restart firmware	
 			B4XPages.MainPage.oMasterController.cn.PostRequest("/printer/firmware_restart")
 		Case "r" '---  restart
 			B4XPages.MainPage.oMasterController.cn.PostRequest("/printer/firmware_restart")
 			'B4XPages.MainPage.oMasterController.cn.PostRequest("printer/restart") --- this is failing and i have no idea why
 	End Select
-	guiHelpers.Show_toast2("Command Sent",3000)
+	guiHelpers.Show_toast2(msg,dl)
 End Sub
 
 

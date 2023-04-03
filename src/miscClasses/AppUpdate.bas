@@ -28,18 +28,25 @@ Public Sub RunPrgUpdate
 	fileHelpers.DeleteFiles(xui.DefaultFolder,"sad_*.png") '--- thumbnails
 	
 	''''#if release
-	Dim PrevVer As Int = Starter.kvs.Get("version_code").As(Int)
+	Dim PrevVer As Int = Main.kvs.Get("version_code").As(Int) 'ignore
+	
+	
+	#if klipper
+	
+	'--- nothing here yet
+	
+	#else
 	
 	'=============================================================================================
 	
 	If PrevVer <= 15 Then '--- V1.2.2
 		
-		If Not (Starter.kvs.ContainsKey(gblConst.SELECTED_CLR_THEME)) Then
+		If Not (Main.kvs.ContainsKey(gblConst.SELECTED_CLR_THEME)) Then
 			
 			'--- moved theme from general options  into KVS
 			Dim m As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 			Dim k As String = m.Get(gblConst.SELECTED_CLR_THEME)
-			Starter.kvs.Put(gblConst.SELECTED_CLR_THEME,k)
+			Main.kvs.Put(gblConst.SELECTED_CLR_THEME,k)
 			
 			'--- write back out the general options file without the clr theme
 			m.Remove(gblConst.SELECTED_CLR_THEME)
@@ -69,10 +76,21 @@ Public Sub RunPrgUpdate
 		fileHelpers.SafeKill(gblConst.GENERAL_OPTIONS_FILE)
 		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,mSys2)
 	End If
+	
+	If PrevVer <= 22 Then '--- V1.3.0
+		'--- add start at boot to general dialog
+		Dim mSys2 As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+		mSys2.Put("sboot","false")
+		fileHelpers.SafeKill(gblConst.GENERAL_OPTIONS_FILE)
+		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,mSys2)
+	End If
 
+	#End If
+	
+	
 	'=============================================================================================
 	'--- update the version
-	Starter.kvs.Put("version_code",Application.VersionCode)
+	Main.kvs.Put("version_code",Application.VersionCode)
 	
 End Sub
 

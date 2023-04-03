@@ -87,7 +87,7 @@ Public Sub Show
 	
 	Wait For (RS) Complete (Result As Int)
 	
-	Starter.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
+	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
 	
 End Sub
 

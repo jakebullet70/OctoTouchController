@@ -28,8 +28,8 @@ End Sub
 
 Public Sub CleanUpApkDownload
 	
-	fileHelpers.SafeKill2(Starter.Provider.SharedFolder,gblConst.APK_NAME)
-	fileHelpers.SafeKill2(Starter.Provider.SharedFolder,gblConst.APK_FILE_INFO)
+	fileHelpers.SafeKill2(Main.Provider.SharedFolder,gblConst.APK_NAME)
+	fileHelpers.SafeKill2(Main.Provider.SharedFolder,gblConst.APK_FILE_INFO)
 	fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.APK_NAME)
 	fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.APK_FILE_INFO)
 		
@@ -40,16 +40,16 @@ Public Sub CheckIfNewDownloadAvail()As ResumableSub
 	
 	Dim inSub As String = "CheckIfNewDownloadAvail"
 	
-	Dim oldDate As Long = Starter.kvs.GetDefault(gblConst.CHECK_VERSION_DATE,0)
+	Dim oldDate As Long = Main.kvs.GetDefault(gblConst.CHECK_VERSION_DATE,0)
 	If oldDate = 0 Then
-		Starter.kvs.Put(gblConst.CHECK_VERSION_DATE,DateTime.Now) '<-- never been run so save date
+		Main.kvs.Put(gblConst.CHECK_VERSION_DATE,DateTime.Now) '<-- never been run so save date
 		Return False
 	End If
 	
 '	Dim p As Period : p.Days = -12 '--- TESTING ---
 '	Dim tdate As Long = DateUtils.AddPeriod(DateTime.Now, p)
-'	Starter.kvs.Put(gblConst.CHECK_VERSION_DATE,tdate)
-'	oldDate = Starter.kvs.GetDefault(gblConst.CHECK_VERSION_DATE,0)
+'	Main.kvs.Put(gblConst.CHECK_VERSION_DATE,tdate)
+'	oldDate = Main.kvs.GetDefault(gblConst.CHECK_VERSION_DATE,0)
 	
 	Dim days As Int = DateUtils.PeriodBetweenInDays(oldDate,DateTime.Now).As(Period).Days
 	logMe.LogIt("update check - days between: " & days,"")
@@ -69,7 +69,7 @@ Public Sub CheckIfNewDownloadAvail()As ResumableSub
 		
 	Try
 		
-		Starter.kvs.Put(gblConst.CHECK_VERSION_DATE,DateTime.Now) '--- save version check date
+		Main.kvs.Put(gblConst.CHECK_VERSION_DATE,DateTime.Now) '--- save version check date
 		Dim parts() As String = Regex.Split(CRLF,txt)
 		Dim VerCode As String = Regex.Split("=",parts(0))(1)
 		
@@ -120,7 +120,7 @@ Public Sub Show() As ResumableSub
 	dlgHelper.ThemeInputDialogBtnsResize
 	
 	'--- grab the txt file with version info
-	Starter.tmrTimerCallSub.CallSubPlus(Me,"GrabVerInfo",250)
+	Main.tmrTimerCallSub.CallSubPlus(Me,"GrabVerInfo",250)
 
 	'--- wait for dialog	
 	Wait For (rs) Complete (Result As Int)
@@ -134,7 +134,7 @@ End Sub
 Private Sub GrabVerInfo
 
 	'--- save version check date
-	Starter.kvs.Put(gblConst.CHECK_VERSION_DATE,DateTime.Now)
+	Main.kvs.Put(gblConst.CHECK_VERSION_DATE,DateTime.Now)
 	
 	Dim sm As HttpDownloadStr : sm.Initialize
 	Wait For (sm.SendRequest(gblConst.APK_FILE_INFO)) Complete(txt As String)
@@ -207,7 +207,7 @@ Private Sub btnCtrl_Click
 		j.Release
 		Sleep(200)
 		
-		Starter.tmrTimerCallSub.CallSubDelayedPlus2(Main,"Start_ApkInstall",300,Array As String(DownloadDir))
+		Main.tmrTimerCallSub.CallSubDelayedPlus2(Main,"Start_ApkInstall",300,Array As String(DownloadDir))
 		
 		mDialog.Close(-1) '<--- close me, exit dialog
 		Return
@@ -232,7 +232,7 @@ Private Sub GetDownloadDir() As String
 	Dim dl As String
 	Try
 
-		dl = Starter.Provider.SharedFolder
+		dl = Main.Provider.SharedFolder
 		File.WriteString(dl,"t.t","test")
 		File.Delete(dl,"t.t")
 		

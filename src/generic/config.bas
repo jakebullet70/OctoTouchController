@@ -68,8 +68,8 @@ End Sub
 
 Private Sub LoadCfgs()
 	
-	If Starter.kvs.ContainsKey(gblConst.SELECTED_CLR_THEME) = False Then
-		Starter.kvs.Put(gblConst.SELECTED_CLR_THEME,"Prusa")
+	If Main.kvs.ContainsKey(gblConst.SELECTED_CLR_THEME) = False Then
+		Main.kvs.Put(gblConst.SELECTED_CLR_THEME,"Prusa")
 	End If
 	
 	'======================================================================
@@ -94,7 +94,7 @@ Private Sub LoadCfgs()
 	
 	'======================================================================
 
-	If Starter.kvs.ContainsKey(gblConst.PWR_CTRL_ON) = False Then	
+	If Main.kvs.ContainsKey(gblConst.PWR_CTRL_ON) = False Then	
 		Dim o1 As dlgPsuSetup
 		o1.Initialize(Null,"")
 		o1.CreateDefaultCfg
@@ -182,7 +182,7 @@ Public Sub ReadWS281_CFG
 End Sub
 
 Public Sub ReadPwrCFG
-	ShowPwrCtrlFLAG = Starter.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
+	ShowPwrCtrlFLAG = Main.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
 End Sub
 
 Public Sub ReadGeneralCFG

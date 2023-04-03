@@ -89,7 +89,7 @@ Public Sub Show(firstRun As Boolean)
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
 
 	'--- show KB	
-	Starter.tmrTimerCallSub.CallSubDelayedPlus(Me,"Show_KB",100)
+	Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Show_KB",100)
 	
 	Wait For (rs) Complete (Result As Int)
 	

@@ -35,7 +35,7 @@ Public Sub Show
 	Wait For (oOctoCmds.GetSysCmds) Complete() 'ignore
 	
 	'--- show info about setting up octoprint permissions
-	If Starter.kvs.GetDefault("sysWarning",False).As(Boolean) = False Then
+	If Main.kvs.GetDefault("sysWarning",False).As(Boolean) = False Then
 		Dim mb As dlgMsgBox
 		mb.Initialize(mMainObj.root,"Information",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip),260dip,False)
 		mb.SetAsOptionalMsgBox("sysWarning")

@@ -31,7 +31,7 @@ public Sub CreateDefaultFile
 		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE, _
 						CreateMap( "chgBrightness": "true", "scrnoff": "true", "logall": "false", _
 						 	"logpwr": "false",  "logfiles": "false", "logoctokey": "false", "logrest": "false","syscmds": "false", _
-							"axesx": "false",  "axesy": "false", "axesz": "false"))					 
+							"axesx": "false",  "axesy": "false", "axesz": "false","sboot":"false"))					 
 	End If
 End Sub
 
@@ -70,11 +70,12 @@ Public Sub Show
 	If Result = xui.DialogResponse_Positive Then
 		guiHelpers.Show_toast("General Data Saved",1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,Data)
+		ProcessAutoBootFlag(Data.Get("sboot").As(Boolean))
 		config.ReadGeneralCFG
 		CallSub(mainObj.oPageCurrent,"Set_focus")
 	End If
 	
-	Starter.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
+	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
 	
 End Sub
 
@@ -105,4 +106,15 @@ Private Sub dlgGeneral_BeforeDialogDisplayed (Template As Object)
 End Sub
 
 
+Private Sub ProcessAutoBootFlag(Enabled As Boolean)
+	
+	Dim fname As String = "autostart.bin"
+	If Enabled Then
+		If File.Exists(xui.DefaultFolder,fname) Then Return
+		File.WriteString(xui.DefaultFolder,fname,"boot")
+	Else
+		fileHelpers.SafeKill(fname)
+	End If
+	
+End Sub
 

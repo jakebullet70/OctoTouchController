@@ -27,6 +27,12 @@
             "required": false
         },
         {
+            "title": "Start at boot",
+            "type": "Boolean",
+            "key": "sboot",
+            "required": false
+        },
+        {
             "title": "Axes",
             "type": "Separator",
             "key": "",
@@ -75,7 +81,7 @@
             "required": false
         },
         {
-            "title": "Octo Key Events",
+            "title": "Access Key Events",
             "type": "Boolean",
             "key": "logoctokey",
             "required": false

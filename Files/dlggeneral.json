@@ -27,6 +27,12 @@
             "required": false
         },
         {
+            "title": "System",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
             "title": "Start at boot",
             "type": "Boolean",
             "key": "sboot",

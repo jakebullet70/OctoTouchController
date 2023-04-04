@@ -214,8 +214,11 @@ Version=11.8
 
 #If klipper
 #CustomBuildAction:1, %WINDIR%\system32\cmd.exe,  /c copy "..\icons\klipper\klipper-icon.png" "..\build-icon.png" /y 
+#CustomBuildAction:1, %WINDIR%\system32\cmd.exe,  /c copy "..\icons\klipper\klipper-icon.png" "res\drawable\icon.png" /y 
 #else
 #CustomBuildAction:1, %WINDIR%\system32\cmd.exe,  /c copy "..\icons\octo\octo-icon.png" "..\build-icon.png" /y 
+#CustomBuildAction:1, %WINDIR%\system32\cmd.exe,  /c copy "..\icons\octo\octo-icon.png" "res\drawable\icon.png" /y 
+'D:\dev\b4x\src\OctoTouchController\Objects\res\drawable
 #End If
 #end region
 

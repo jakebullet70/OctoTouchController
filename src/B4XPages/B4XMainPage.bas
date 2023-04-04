@@ -111,6 +111,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	Drawer.RightPanelEnabled = True
 	Drawer.LeftPanelEnabled = False
 	#else
+	'--- no drawer YET for octoprint
 	Root.LoadLayout("MainPage")
 	#End If
 	

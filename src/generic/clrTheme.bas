@@ -13,8 +13,8 @@ Sub Process_Globals
 	Private xui As XUI
 	Private Const mModule As String = "clrTheme" 'ignore
 	
-	Type tThemeColors (bg, bgHeader, bgMenu, txtNormal, txtAcc,Disabled,Divider As Int)
-	Public CustomColors As tThemeColors
+	Type tthemecolors (bg, bgheader, bgmenu, txtNormal, txtacc,disabled,divider As Int)
+	Public customcolors As tthemecolors
 	
 	Public Background,BackgroundHeader,Background2 As Int
 	
@@ -30,7 +30,7 @@ End Sub
 Public Sub Init(theme As String)
 	
 	If Main.kvs.ContainsKey(gblConst.CUSTOM_THEME_COLORS) = False Then SeedCustomClrs
-	CustomColors = Main.kvs.Get(gblConst.CUSTOM_THEME_COLORS)
+	customcolors = Main.kvs.Get(gblConst.CUSTOM_THEME_COLORS)
 	InitTheme(theme)
 	
 End Sub
@@ -119,6 +119,7 @@ Public Sub InitTheme(theme As String)
 			Background = xui.Color_ARGB(255,53, 69, 85)
 			BackgroundHeader = -14932432
 			Background2 = xui.Color_ARGB(255,45, 62, 78)
+			'Background2 = xui.Color_ARGB(255,43, 43, 43)
 				
 	End Select
 	

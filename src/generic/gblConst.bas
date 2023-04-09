@@ -120,4 +120,11 @@ Sub Process_Globals
 	Public Const bedEndGCode As String = "egcode"
 	
 	
+	#if klipper
+	Public KLIPPER_FRONTEND_NONE As Int = 0
+	Public KLIPPER_FRONTEND_MAINSAIL As Int = 1
+	Public KLIPPER_FRONTEND_FLUIDD As Int = 2
+	#End If
+	
+	
 End Sub

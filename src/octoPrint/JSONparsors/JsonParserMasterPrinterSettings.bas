@@ -594,31 +594,78 @@ End Sub
 
 #if klipper
 Private Sub ParseHeaterSettings(jsonTXT As String)
+	
+	mapHeatingPresets.Initialize
 	Dim parser As JSONParser
 	parser.Initialize(jsonTXT)
 	Dim root As Map = parser.NextObject
 	Dim result As Map = root.Get("result")
-	Dim inner As Map = result.Get("value")
-	mapHeatingPresets.Initialize
-	Try
-		Dim presets As Map = inner.Get("presets")
+	
+	If B4XPages.MainPage.oMasterController.KlipperFrontEnd = gblConst.KLIPPER_FRONTEND_MAINSAIL Then
 		
-		For x = 0 To presets.Size - 1
-			Dim m1 As Map = presets.GetValueAt(x)
-			For y = 0 To m1.Size - 1
-				Add2map( m1.Get("values"),m1.Get("name"))
+		Dim inner As Map = result.Get("value")
+		
+		Try
+			Dim presets As Map = inner.Get("presets")
+		
+			For x = 0 To presets.Size - 1
+				Dim m1 As Map = presets.GetValueAt(x)
+				For y = 0 To m1.Size - 1
+					AddPreHeat2Map( m1.Get("values"),m1.Get("name"))
+				Next
 			Next
-		Next
 
-	Catch
-		logMe.LogIt2(LastException,mModule,"ParseHeaterSettings")
-	End Try
+		Catch
+			logMe.LogIt2("msail-"&LastException,mModule,"ParseHeaterSettings")
+		End Try
+		
+	Else
+
+		Try
+				
+		
+		Dim value1 As Map = result.Get("value")
+		Dim dashboard As Map = value1.Get("dashboard")
+		Dim tempPresets As List = dashboard.Get("tempPresets")
+		For Each coltempPresets As Map In tempPresets
+
+			Dim name As String = coltempPresets.Get("name")
+			Dim values As Map = coltempPresets.Get("values")
+			
+			AddPreHeat2Map2(values.Get("extruder"), values.Get("heater_bed"),name)
+			
+		Next
+		
+		Catch
+			logMe.LogIt2("fluidd-"&LastException,mModule,"ParseHeaterSettings")
+		End Try
+	End If
 	
 End Sub
 #end if
 
-Private Sub Add2map(m As Map,name As String) 'ignore
-	
+
+Private Sub AddPreHeat2Map2(mTool As Map,mBed As Map,name As String) 'ignore
+	Try
+		Log("asdfasdasd")
+		'Dim tool As Map = mTool.Get("extruder")
+		'Dim bed As Map = mBed.Get("heater_bed")
+		
+		Dim toolValue As Int = mTool.Get("value")
+		Dim bedValue As Int = mBed.Get("value")
+		Dim activeT As String = mTool.Get("active")
+		Dim activeB As String = mBed.Get("active")
+		If (toolValue = 0 And bedValue = 0)  Or (activeB = False And activeT = False) Then Return
+				
+		mapHeatingPresets.Put(name,toolValue & "!!" & bedValue)
+	Catch
+		logMe.LogIt2(LastException,mModule,"AddPreHeat2Map2")
+	End Try
+End Sub
+
+
+Private Sub AddPreHeat2Map(m As Map,name As String) 'ignore
+		
 	Try
 		Dim tool As Map = m.Get("extruder")
 		Dim bed As Map = m.Get("heater_bed")
@@ -627,9 +674,9 @@ Private Sub Add2map(m As Map,name As String) 'ignore
 		If toolValue = 0 And bedValue = 0 Then Return
 		mapHeatingPresets.Put(name,toolValue & "!!" & bedValue)
 	Catch
-		logMe.LogIt2(LastException,mModule,"Add2map")
+		logMe.LogIt2(LastException,mModule,"AddPreHeat2Map")
 	End Try
-	
+
 End Sub
 
 

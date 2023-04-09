@@ -37,6 +37,10 @@ Sub Class_Globals
 	
 	'--- maps for popup listboxes - formated!
 	Public mapBedHeatingOptions, mapToolHeatingOptions,mapAllHeatingOptions,mapToolHeatValuesOnly As Map
+
+	#if klipper	
+	Public KlipperFrontEnd As Int
+	#end if
 	
 	'--- stops calls from backing up if we have had a disconnect	
 	Private mGetTempFLAG_Busy, mJobStatusFLAG_Busy As Boolean = False
@@ -53,7 +57,8 @@ End Sub
 Public Sub Initialize
 	
 	mainObj = B4XPages.MainPage
-	parser.Initialize() '--- init the octo rest parser
+	parser.Initialize() '--- init the rest parser
+	
 	#if klipper
 	parsorConStatus.Initialize
 	#End If
@@ -64,6 +69,29 @@ End Sub
 Public Sub Start
 	GetConnectionPrinterStatus
 End Sub
+
+
+#if klipper
+Private Sub GetKlipperFrontEnd As ResumableSub
+'	#if debug
+'	Return gblConst.KLIPPER_FRONTEND_MAINSAIL
+'	#end if
+
+	KlipperFrontEnd = gblConst.KLIPPER_FRONTEND_NONE
+	
+	Dim rs As ResumableSub =  oCN.SendRequestGetInfo("/server/database/list")
+	Wait For(rs) Complete (Result As String)
+	If Result.Length <> 0 Then
+		If Result.ToLowerCase.Contains("fluidd") Then
+			Return gblConst.KLIPPER_FRONTEND_FLUIDD
+		Else if Result.ToLowerCase.Contains("mainsail") Then
+			Return gblConst.KLIPPER_FRONTEND_MAINSAIL
+		End If
+	End If
+	Return gblConst.KLIPPER_FRONTEND_NONE
+	
+End Sub
+#end if
 
 Public Sub SetCallbackTargets(CallBack As Object,EventNameTemp As String, _
 												 EventNameStatus As String, _
@@ -100,7 +128,7 @@ Public Sub tmrMain_Tick
 	
 	'--- do we have Octo main settings
 	If mGotOctoSettingFLAG = False And mGotOctoSettingFLAG_IsBusy = False Then
-		GetAllOctoSettingInfo
+		GetAllPrinterSettings
 	End If
 	
 	'--- have we grabbed all loaded files fron octoprint
@@ -120,8 +148,8 @@ End Sub
 
 '============================================================================================
 
-#Region "OCTO API CALLS"
-Private Sub GetAllOctoSettingInfo
+#Region "MAIN API CALLS"
+Private Sub GetAllPrinterSettings
 	
 	If mGotOctoSettingFLAG_IsBusy = True Then
 		logMe.logDebug2("mGotOctoSettingFLAG_IsBusy = True",mModule)
@@ -152,24 +180,48 @@ Private Sub GetAllOctoSettingInfo
 	
 	#else
 	
-	Dim rs As ResumableSub =  oCN.SendRequestGetInfo("/server/database/item?namespace=mainsail&key=presets") 'TODO --- Fluid as a front end?
+	'--- klipper!!!!!!!!!!!!!!!!
+	Do While True
+		
+		Wait For (GetKlipperFrontEnd) complete (retval As Int)
+		KlipperFrontEnd = retval
+				
+		Dim api As String = "" '--- assume no front end
+		Select Case KlipperFrontEnd
+			Case gblConst.KLIPPER_FRONTEND_MAINSAIL
+				api = "/server/database/item?namespace=mainsail&key=presets"
+			Case gblConst.KLIPPER_FRONTEND_FLUIDD
+				api = "/server/database/item?namespace=fluidd&key=uiSettings"
+		End Select
+		
+		If api <> "" Then
+			Dim rs As ResumableSub =  oCN.SendRequestGetInfo(api)
+		
+			Wait For(rs) Complete (Result As String)
+			If Result.Length <> 0 Then
+		
+				Dim o As JsonParserMasterPrinterSettings  : o.Initialize
+				mapMasterOctoTempSettings.Initialize
+				mapMasterOctoTempSettings = o.GetPresetHeaterSettings(Result)
+				mGotOctoSettingFLAG = True '--- will stop it from firing in the main loop
+				
+				Build_PresetHeaterOption(mapMasterOctoTempSettings)
+			
+			Else
+				'oc.RestPrinterProfileVars
+			End If
+		
+		Else
+			'--- no front end detected detected
+				
+		End If
+		
+		
+		#end if
+		
+		Exit 'Do
+	Loop
 	
-	Wait For(rs) Complete (Result As String)
-	If Result.Length <> 0 Then
-	
-		Dim o As JsonParserMasterPrinterSettings  : o.Initialize
-		mapMasterOctoTempSettings.Initialize
-		mapMasterOctoTempSettings = o.GetPresetHeaterSettings(Result)
-		mGotOctoSettingFLAG = True '--- will stop it from firing in the main loop
-		
-		Build_PresetHeaterOption(mapMasterOctoTempSettings)
-		
-	Else
-		
-		'oc.RestPrinterProfileVars
-		
-	End If
-	#end if
 	
 	mGotOctoSettingFLAG_IsBusy = False
 	
@@ -513,6 +565,7 @@ End Sub
 #end region
 
 
+#if not (klipper)
 Public Sub IsIncompleteFileData() As Boolean
 	For Each o As tOctoFileInfo In gMapOctoFilesList.Values
 		If o.missingData Then
@@ -524,6 +577,7 @@ Public Sub IsIncompleteFileData() As Boolean
 	'Log("incompleteData=False")
 	Return False
 End Sub
+#end if
 
 
 

@@ -45,6 +45,8 @@ End Sub
 
 Public Sub Show(firstRun As Boolean)
 	
+	mainObj.pPrinterCfgDlgShowingFLAG = True
+	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE)
 	Dim ToTop As Boolean = False
 	
@@ -87,6 +89,9 @@ Public Sub Show(firstRun As Boolean)
 		CallSubDelayed(mainObj,"PrinterSetup_Closed")
 		CallSubDelayed(mainObj.oPageCurrent,"Set_focus")
 	End If
+	
+	mainObj.pPrinterCfgDlgShowingFLAG = False
+	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 	
 End Sub
 

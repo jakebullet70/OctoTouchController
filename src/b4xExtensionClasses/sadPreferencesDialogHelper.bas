@@ -133,3 +133,19 @@ Private Sub SetWidthItemSO (Pref As PreferencesDialog, Key As String, wwidth As 
 End Sub
 
 
+'TODO
+'https://www.b4x.com/android/forum/threads/solved-how-to-hide-cancel-confirm-buttons-in-textitem-of-the-b4xpreferencesdialog.116534/
+Public Sub RemoveCancelConfirmBtnsinTextItem(p As PreferencesDialog)
+	
+	For i = 0 To p.PrefItems.Size - 1
+	    Dim pi As B4XPrefItem = p.PrefItems.Get(i)
+	    p.CustomListView1.AnimationDuration = 0
+	    If pi.ItemType = p.TYPE_TEXT Then
+	        Dim pnl As B4XView = p.CustomListView1.GetPanel(i)
+	        Dim ft As B4XFloatTextField = pnl.GetView(0).Tag
+	        ft.lblClear.Left = -100dip
+	        ft.lblV.Left = -100dip
+	    End If
+	Next
+
+End Sub

@@ -620,7 +620,8 @@ Private Sub ParseHeaterSettings(jsonTXT As String)
 		End Try
 		
 	Else
-
+		
+		'--- gblConst.KLIPPER_FRONTEND_FLUIDD
 		Try
 				
 		
@@ -642,12 +643,11 @@ Private Sub ParseHeaterSettings(jsonTXT As String)
 	End If
 	
 End Sub
-#end if
+
 
 
 Private Sub AddPreHeat2Map2(mTool As Map,mBed As Map,name As String) 'ignore
 	Try
-		Log("asdfasdasd")
 		'Dim tool As Map = mTool.Get("extruder")
 		'Dim bed As Map = mBed.Get("heater_bed")
 		
@@ -678,7 +678,7 @@ Private Sub AddPreHeat2Map(m As Map,name As String) 'ignore
 	End Try
 
 End Sub
-
+#end if
 
 
 '{"result": {"namespace": "mainsail", "key": "presets", "value": 

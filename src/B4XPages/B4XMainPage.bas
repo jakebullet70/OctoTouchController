@@ -284,7 +284,11 @@ Public Sub Update_Printer_Status
 	
 	'guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	If oc.isConnected Then
+		#if klipper
+		lblStatus.Text = oc.FormatedStatus.SubString2(0,1).ToUpperCase & oc.FormatedStatus.SubString(1)
+		#else
 		lblStatus.Text = oc.FormatedStatus
+		#End If
 	Else
 		lblStatus.Text = gblConst.NOT_CONNECTED
 	End If

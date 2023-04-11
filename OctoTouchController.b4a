@@ -267,9 +267,8 @@ End Sub
 
 Sub Activity_Create(FirstTime As Boolean) 'ignore
 	
-	FirstRun = FirstTime '--- am I using this?
-	
 	If FirstTime Then
+		FirstRun = FirstTime '--- am I using this?
 		Log("Activity_Create - FirstTime = True")
 		tmrTimerCallSub.Initialize
 		kvs.Initialize(xui.DefaultFolder, "kvs.db3")
@@ -279,6 +278,7 @@ Sub Activity_Create(FirstTime As Boolean) 'ignore
 		#else
 		tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrSplash_Tick",3500)   '--- just a splash screen
 		#End If
+		FirstRun = False
 	Else
 		Log("Activity_Create - FirstTime = False")
 	End If
@@ -289,7 +289,7 @@ Sub Activity_Create(FirstTime As Boolean) 'ignore
 	
 	Dim fcheck As Long = 8000
 	#if release
-	fcheck = 5500
+	fcheck = 3000
 	#End If
 	'--- TODO add 
 	If tmrFilesCheckChange.IsInitialized = False Then _

@@ -217,11 +217,11 @@ Private Sub GetAllPrinterSettings
 		End If
 		
 		
-		#end if
+		
 		
 		Exit 'Do
 	Loop
-	
+	#end if
 	
 	mGotOctoSettingFLAG_IsBusy = False
 	

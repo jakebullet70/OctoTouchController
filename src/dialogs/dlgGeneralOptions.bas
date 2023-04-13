@@ -28,10 +28,9 @@ End Sub
 public Sub CreateDefaultFile
 	
 	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
-		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE, _
-						CreateMap( "chgBrightness": "true", "scrnoff": "true", "logall": "false", _
-						 	"logpwr": "false",  "logfiles": "false", "logoctokey": "false", "logrest": "false","syscmds": "false", _
-							"axesx": "false",  "axesy": "false", "axesz": "false","sboot":"false"))					 
+		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,  _
+						CreateMap( "logall": "false", "logpwr": "false",  "logfiles": "false", "logoctokey": "false", "logrest": "false","syscmds": "false",  _
+							"axesx": "false",  "axesy": "false", "axesz": "false","sboot":"false","syscmds":"false", "m600":"true","g29":"true","prpwr":"false"))					 
 	End If
 End Sub
 
@@ -73,6 +72,7 @@ Public Sub Show
 		ProcessAutoBootFlag(Data.Get("sboot").As(Boolean))
 		config.ReadGeneralCFG
 		CallSub(mainObj.oPageCurrent,"Set_focus")
+		CallSubDelayed(B4XPages.MainPage,"Build_RightSideMenu")
 	End If
 	
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)

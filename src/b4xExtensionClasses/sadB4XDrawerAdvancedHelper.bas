@@ -49,7 +49,6 @@ Public Sub BtnPressed(b As Button)
 	guiHelpers.Show_toast2(msg,dl)
 End Sub
 
-
 Public Sub SkinMe(b() As Button, p As B4XView,pb As B4XView)
 	guiHelpers.SkinButton(b)
 	btnSTOP = b(0)
@@ -74,4 +73,16 @@ Public Sub Display_Btns
 	j.SpreadHorizontally2(pnlBtnsDrawer,140dip,6dip,"center")
 End Sub
 
+Public Sub CloseRightMenu
+	Drawer.setRightOpen(False)
+End Sub
+Public Sub OpenRightMenu
+	Drawer.setRightOpen(True)
+End Sub
+Public Sub OpenLeftMenu
+	Drawer.setLeftOpen(True)
+End Sub
+Public Sub CloseLeftMenu
+	Drawer.setLeftOpen(False)
+End Sub
 

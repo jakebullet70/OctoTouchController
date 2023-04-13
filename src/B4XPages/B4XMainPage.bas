@@ -37,7 +37,6 @@ Sub Class_Globals
 	
 	'--- header
 	Private pnlHeader As B4XView
-	'Private  lblTemp As Label
 	Private btnSliderMenu, btnPageAction As Button
 	Public lblStatus As Label
 	
@@ -57,12 +56,12 @@ Sub Class_Globals
 	Private mapMasterPreHeaterMenu As Map
 	
 	'--- side menu
-	Private SideMenu As sadB4XDrawerAdvancedHelper
+	Public SideMenu As sadB4XDrawerAdvancedHelper
 	Private Drawer As sadB4XDrawerAdvanced
 	Private btnSTOP,btnFRESTART,btnRESTART As Button
 	Private pnlBtnsDrawer,pnlMainDrawer As B4XView
-	Private pnlLineBreakDrawer As B4XView
-		
+	Private pnlLineBreakDrawer As Panel
+	Private clvDrawer As CustomListView
 	
 End Sub
 
@@ -213,9 +212,11 @@ Private Sub BuildGUI
 	btnSliderMenu.TextSize = 24 '* guiHelpers.gFscale
 	btnPageAction.TextSize = 24
 	
+	pnlMainDrawer.Color = clrTheme.Background2
 	SideMenu.SkinMe(Array As Button(btnSTOP,btnFRESTART,btnRESTART),pnlMainDrawer,pnlBtnsDrawer)
 	pnlLineBreakDrawer.Color = clrTheme.txtNormal
 	btnFRESTART.Visible = False : 	btnRESTART.Visible = False : btnSTOP.Visible = True '--- default these 
+	Build_RightSideMenu
 		
 	Switch_Pages(gblConst.PAGE_MENU)
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
@@ -285,7 +286,12 @@ Public Sub Update_Printer_Status
 		#End If
 		
 		If oPageCurrent Is pageMovement  Or oPageCurrent Is pageFiles Then
-			lblStatus.Text = lblStatus.Text & "  (" & oc.FormatedTemps.Replace(CRLF,"   ").Replace("C","") & ")"
+			If guiHelpers.gIsLandScape Then
+				lblStatus.Text = lblStatus.Text & "  (" & oc.FormatedTemps.Replace(CRLF,"   ").Replace("C","") & ")"
+			Else
+				lblStatus.Text = lblStatus.Text & "  --  " & oc.FormatedTemps.Replace("C","") 
+			End If
+			
 		End If
 			
 	Else
@@ -578,8 +584,6 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 	
 End Sub
 
-
-
 #end region
 
 Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
@@ -804,8 +808,6 @@ Public Sub Check4_Update
 	
 End Sub
 
-
-
 #Region HEATER_STUFF_MENU
 
 Public Sub ShowPreHeatMenu_All
@@ -858,6 +860,86 @@ End Sub
 #end if
 
 Private Sub btnSliderMenu_Click
-	SideMenu.Drawer.OpenRightMenu 
+	SideMenu.OpenRightMenu 
 	CallSubDelayed(SideMenu,"Display_Btns")
 End Sub
+
+
+Private Sub Build_RightSideMenu
+	#if not (klipper )
+	'--- hide the klipper crap!
+	clvDrawer.GetBase.Top = pnlMainDrawer.Top
+ 	pnlMainDrawer.Visible = False
+	pnlLineBreakDrawer.Visible = False
+	#End If
+	
+	clvDrawer.DefaultTextBackgroundColor = clrTheme.Background
+	clvDrawer.PressedColor = clrTheme.BackgroundHeader
+	'clvDrawer.DividerSize
+	clvDrawer.DefaultTextColor = clrTheme.txtNormal
+	clvDrawer.Clear
+	
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+	Dim cs As CSBuilder
+	If Data.GetDefault("m600",False).As(Boolean) Then
+		clvDrawer.AddTextItem(cs.Initialize.Size(22).Append("Filament Change M600").PopAll,"m600")
+	End If
+	If Data.GetDefault("g29",False).As(Boolean) Then
+		clvDrawer.AddTextItem(cs.Initialize.Size(22).Append("Bed Level G29").PopAll,"g29")
+	End If
+	If Data.GetDefault("prpwr",False).As(Boolean) Then
+		clvDrawer.AddTextItem(cs.Initialize.Size(22).Append("Printer Power Menu").PopAll,"pwr")
+	End If
+	If Data.GetDefault("syscmds",False).As(Boolean) Then
+		clvDrawer.AddTextItem(cs.Initialize.Size(22).Append("OS Systems Menu").PopAll,"sys")
+	End If
+		
+End Sub
+
+
+
+Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
+	SideMenu.CloseRightMenu
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	Select Case Value.As(String)
+		Case "sys"
+			#if klipper
+			guiHelpers.Show_toast2("System Commands Are Not Available At This Time",4000)
+			Return
+			#Else
+			Dim oa As dlgOctoSysCmds
+			oa.Initialize(Me,oMasterController.CN)
+			oa.Show
+			Return
+			#end if
+		
+		Case "pwr"
+			#if not (klipper)
+			If oc.isConnected = False And Main.kvs.GetDefault(gblConst.PWR_SONOFF_PLUGIN,False).As(Boolean) = False Then
+				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
+				Return
+			End If
+			#end if
+			Dim o1 As dlgPsuCtrl : o1.Initialize(Me)
+			o1.Show
+			
+	End Select
+			
+'		Case "lt" '--- WLED - ws281x
+'			If oc.isConnected = False Then
+'				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
+'				Return
+'			End If
+'			Dim o3 As dlgOnOffCtrl
+'			o3.Initialize(mMainObj,IIf(config.ShowZLEDCtrlFLAG,"ZLED","WS281x") & " Control")
+'			o3.Show
+
+End Sub
+
+
+
+
+
+
+
+

@@ -492,7 +492,7 @@ Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
 		
 	mapAllHeatingOptions.Put(allOff,"alloff")
 	
-	Dim cboStr As String
+	Dim s As String
 	Dim FilamentType As String
 	Dim tmp,ToolTemp As String
 	Dim BedTemp As String
@@ -505,16 +505,19 @@ Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
 			ToolTemp = Regex.Split("!!",tmp)(0)
 			BedTemp = Regex.Split("!!",tmp)(1)
 			
-			'--- build string for CBO
-			cboStr = $"Set ${FilamentType} (Tool: ${ToolTemp}${gblConst.DEGREE_SYMBOL}C )"$
-			mapToolHeatingOptions.Put(cboStr,cboStr)
+			'--- build string
+			s = $"Set ${FilamentType} (Tool: ${ToolTemp}${gblConst.DEGREE_SYMBOL}C )"$
+			mapToolHeatingOptions.Put(s,s)
 			mapToolHeatValuesOnly.Put($"${ToolTemp}${gblConst.DEGREE_SYMBOL}C"$,ToolTemp)
+
+			'--- bed only			
+			If BedTemp <> 0 Then
+				s = $"Set ${FilamentType} (Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
+				mapBedHeatingOptions.Put(s,s)
+			End If
 			
-			cboStr = $"Set ${FilamentType} (Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
-			mapBedHeatingOptions.Put(cboStr,cboStr)
-			
-			cboStr = $"Set ${FilamentType} (Tool: ${ToolTemp}${gblConst.DEGREE_SYMBOL}C  / Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
-			mapAllHeatingOptions.Put(cboStr,cboStr)
+			s = $"Set ${FilamentType} (Tool: ${ToolTemp}${gblConst.DEGREE_SYMBOL}C  / Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
+			mapAllHeatingOptions.Put(s,s)
 		
 		Next
 		

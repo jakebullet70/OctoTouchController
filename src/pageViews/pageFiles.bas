@@ -641,8 +641,7 @@ Private Sub cboSort_SelectedIndexChanged (Index As Int)
 	
 	lblSort2.Text = IIf(SortAscDesc,Chr(0xF176),Chr(0xF175)) : Sleep(0)
 	
-	'guiHelpers.Show_toast("Sorting file list - " & IIf(SortAscDesc,"Ascending","Descending") ,1800)
-	guiHelpers.Show_toast("Sorting file list" ,1800)
+	guiHelpers.Show_toast("File list sorted" ,1200)
 	Build_ListViewFileList
 	Show1stFile
 	

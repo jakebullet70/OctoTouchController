@@ -3,30 +3,6 @@
     "Theme": "Dark Theme",
     "Items": [
         {
-            "title": "Screen",
-            "type": "Separator",
-            "key": "",
-            "required": false
-        },
-        {
-            "title": "Change Brightness",
-            "type": "Boolean",
-            "key": "chgBrightness",
-            "required": false
-        },
-        {
-            "title": "Screen Off Button",
-            "type": "Boolean",
-            "key": "scrnoff",
-            "required": false
-        },
-        {
-            "title": "System Cmds Button",
-            "type": "Boolean",
-            "key": "syscmds",
-            "required": false
-        },
-        {
             "title": "System",
             "type": "Separator",
             "key": "",
@@ -36,6 +12,36 @@
             "title": "Start at boot",
             "type": "Boolean",
             "key": "sboot",
+            "required": false
+        },
+        {
+            "title": "Right Menu Options",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "OS System Commands",
+            "type": "Boolean",
+            "key": "syscmds",
+            "required": false
+        },
+        {
+            "title": "GCode - M600",
+            "type": "Boolean",
+            "key": "m600",
+            "required": false
+        },
+        {
+            "title": "GCode - G29",
+            "type": "Boolean",
+            "key": "g29",
+            "required": false
+        },
+        {
+            "title": "Printer Power Button",
+            "type": "Boolean",
+            "key": "prpwr",
             "required": false
         },
         {

@@ -262,12 +262,12 @@ Public Sub Update_Printer_Temps
 	
 	mTmpTemps = IIf(oc.Tool1Actual = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.Tool1Actual)
 	If lblToolTemp1.Text <> mTmpTemps Then
-		lblToolTemp1.Text = mTmpTemps
+		lblToolTemp1.Text = mTmpTemps.Replace("C","") '--- TODO fix C issue
 	End If
 	
 	mTmpTemps = IIf(oc.BedActual = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.BedActual)
 	If lblBedTemp1.Text <> mTmpTemps Then
-		lblBedTemp1.Text = mTmpTemps
+		lblBedTemp1.Text = mTmpTemps.Replace("C","") '--- TODO fix C issue
 	End If
 	
 End Sub

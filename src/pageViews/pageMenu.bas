@@ -207,39 +207,13 @@ Private Sub btnSubBtnAction_Click
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 	Select Case o.Tag
-		Case "sys"
-			#if klipper
-			guiHelpers.Show_toast2("System Commands Are Not Available At This Time",4000)
-			#else
-			Dim oa As dlgOctoSysCmds
-			oa.Initialize(mMainObj,mMainObj.oMasterController.CN)
-			oa.Show
-			#End If
-			
+					
 		Case "br" '--- brightness
 			DoBrightnessDlg
 			
 		Case "soff" '--- screen off
 			CallSub2(Main,"TurnOnOff_ScreenTmr",False)
 			fnc.BlankScreen
-			
-'		Case "snof" '--- Sonoff / power crap
-'			If oc.isConnected = False And Main.kvs.GetDefault(gblConst.PWR_SONOFF_PLUGIN,False).As(Boolean) = False Then
-'				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
-'				Return
-'			End If
-'			Dim o1 As dlgPsuCtrl
-'			o1.Initialize(mMainObj)
-'			o1.Show
-'			
-'		Case "lt" '--- WLED - ws281x
-'			If oc.isConnected = False Then
-'				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
-'				Return
-'			End If
-'			Dim o3 As dlgOnOffCtrl
-'			o3.Initialize(mMainObj,IIf(config.ShowZLEDCtrlFLAG,"ZLED","WS281x") & " Control")
-'			o3.Show
 			
 		Case "heat" '--- pre-heat
 			If oc.isConnected = False Then

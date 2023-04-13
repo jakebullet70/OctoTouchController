@@ -31,9 +31,9 @@ Sub Process_Globals
 	Public AndroidPrintingMinTill As Int
 	
 	'--- general dlg
-	Public ShowSysCmdsFLAG As Boolean = True
-	Public ChangeBrightnessSettingsFLAG As Boolean = True 
-	Public ShowScreenOffFLAG As Boolean = True 
+'	Public ShowSysCmdsFLAG As Boolean = True
+'	Public ChangeBrightnessSettingsFLAG As Boolean = True 
+	'Public ShowScreenOffFLAG As Boolean = True 
 	Public logPOWER_EVENTS As Boolean = False 
 	Public logFILE_EVENTS As Boolean = False
 	Public logREQUEST_OCTO_KEY As Boolean = False
@@ -189,9 +189,9 @@ Public Sub ReadGeneralCFG
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	
-	ChangeBrightnessSettingsFLAG = Data.Get("chgBrightness").As(Boolean)
-	ShowScreenOffFLAG = Data.Get("scrnoff").As(Boolean)
-	ShowSysCmdsFLAG = Data.Get("syscmds").As(Boolean)
+	'ChangeBrightnessSettingsFLAG = Data.Get("chgBrightness").As(Boolean)
+'	ShowScreenOffFLAG = Data.Get("scrnoff").As(Boolean)
+'	ShowSysCmdsFLAG = Data.Get("syscmds").As(Boolean)
 	
 	oc.PrinterProfileInvertedX = Data.Get("axesx").As(Boolean)
 	oc.PrinterProfileInvertedY = Data.Get("axesy").As(Boolean)

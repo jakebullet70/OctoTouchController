@@ -270,10 +270,6 @@ Public Sub getLeftOpen As Boolean
 End Sub
 
 
-Public Sub OpenLeftMenu
-	setLeftOpen(True)
-End Sub
-
 Public Sub setLeftOpen (b As Boolean)
 	If mLeftPanelEnabled Then
 	If b = IsOpenLeft Then Return
@@ -290,10 +286,6 @@ End Sub
 
 Public Sub getRightOpen As Boolean
 	Return IsOpenRight
-End Sub
-
-Public Sub OpenRightMenu
-	setRightOpen(True)
 End Sub
 
 Public Sub setRightOpen (b As Boolean)

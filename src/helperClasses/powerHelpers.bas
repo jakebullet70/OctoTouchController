@@ -31,7 +31,7 @@ Public Sub Init(takeOverPower As Boolean)
 	
 	
 	'TODO  brightness needs to be seperated from takeoverpower
-	If config.ChangeBrightnessSettingsFLAG = False Then Return
+	'If config.ChangeBrightnessSettingsFLAG = False Then Return
 	
 	If takeOverPower = False Then Return
 	
@@ -100,7 +100,7 @@ End Sub
 ' 0 to 1 - so 0.5 is valid
 Public Sub SetScreenBrightnessAndSave(value As Float, Save2File As Boolean)
 	
-	If config.ChangeBrightnessSettingsFLAG = False Then Return
+	'If config.ChangeBrightnessSettingsFLAG = False Then Return
 	
 	Try
 		If pScreenBrightness = AUTO_BRIGHTNESS Then
@@ -121,7 +121,7 @@ End Sub
 
 Public Sub SetScreenBrightness2
 	
-	If config.ChangeBrightnessSettingsFLAG = False Then Return
+	'If config.ChangeBrightnessSettingsFLAG = False Then Return
 	SetScreenBrightnessAndSave(pScreenBrightness,False)
 	
 End Sub

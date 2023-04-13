@@ -1,5 +1,5 @@
 ﻿B4A=true
-Group=DIALOGS_POPUPS
+Group=DIALOGS_GENERIC
 ModulesStructureVersion=1
 Type=Class
 Version=11.5

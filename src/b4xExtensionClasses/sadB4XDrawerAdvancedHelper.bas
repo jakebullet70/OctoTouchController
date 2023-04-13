@@ -12,7 +12,7 @@ Version=9.5
 
 Sub Class_Globals
 	Private mModule As String = "sadB4XDrawerAdvancedHelper" 'ignore
-	Private mDrawer As sadB4XDrawerAdvanced 'ignore
+	Public Drawer As sadB4XDrawerAdvanced 'ignore
 	Public IsOpen As Boolean 'ignore
 	Private xui As XUI
 	Private btnSTOP,btnFRESTART,btnRESTART As Button
@@ -21,7 +21,7 @@ End Sub
 
 
 Public Sub Initialize(d As sadB4XDrawerAdvanced)
-	mDrawer = d
+	Drawer = d
 End Sub
 
 

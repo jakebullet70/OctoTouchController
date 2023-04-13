@@ -15,18 +15,7 @@ Sub Class_Globals
 	Private mPnlMain As B4XView
 	Private mCallBackEvent As String
 	Private mMainObj As B4XMainPage 'ignore
-	
-'	'--- menu icons
-'	Private mnuFiles As B4XView
-'	Private mnuMovement As B4XView
-'	Private mnuPrinting As B4XView
-'	
-'	'Public Dialog As B4XDialog
-'	
-'	Private btnScrnOff,btnBrightness,btnSysCmds As Button
-'	Private btnPlugin1,btnPlugin2,btnPlugin3 As Button
-'	
-	
+
 	Private btnSubBrightness As Button
 	Private btnSubHeater As Button
 	Private btnSubPlugin1 As Button
@@ -43,11 +32,10 @@ Sub Class_Globals
 	Private pnlMnuPrinting As Panel
 	Private pnlTempBed,pnlTempTool As Panel
 	
-	Private lblTextTop,lblTextBottom As Label
+	Private lblActualTemp,lblTextTop,lblTextBottom As Label
 	Private lblBedActualV,lblBedTargetV,lblToolActualV,lblToolTargetV As Label ' <--- pointers to card objects
+	Private lblActualTempBedV, lblActualTempToolV As Label ' <--- pointers to card objects
 	
-
-	Private lblActualTemp As Label, lblActualTempBedV, lblActualTempToolV As Label
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String) 
@@ -68,11 +56,13 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	BuildStatCard(pnlTempBed,"bed.png","bed")
 	
 	lblToolActualV.Text = "Actual" : lblBedActualV.Text = "Actual"
+	lblActualTempBedV.TextColor = clrTheme.txtNormal
+	lblActualTempToolV.TextColor = clrTheme.txtNormal
 		
 	guiHelpers.SetVisible(Array As B4XView(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3),False)
 	guiHelpers.SkinButton_Pugin(Array As Button(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3,btnSubScrnOff,btnSubBrightness,btnSubHeater))
 	pnlMenuLowerBLine.Color = clrTheme.txtAccent
-	pnlMenuLowerBLine.Visible = True '--- turned off in 
+	pnlMenuLowerBLine.Visible = True '--- turned off in designer
 	
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"ShowVer",2300)
 	

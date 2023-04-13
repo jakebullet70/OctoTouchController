@@ -94,8 +94,8 @@ Private Sub BuildGUI
 	
 	guiHelpers.SkinButton(Array As Button( btnCancel,btnPause,btnPrint))
 	
-	guiHelpers.ResizeText("200  C",lblBedTemp1) '--- sets font size
-	guiHelpers.ResizeText("200  C",lblToolTemp1)'--- sets font size
+	guiHelpers.ResizeText("200  ",lblBedTemp1) '--- sets font size
+	guiHelpers.ResizeText("200  ",lblToolTemp1) '--- sets font size
 	
 	CircularProgressBar1.ColorEmpty = clrTheme.txtNormal
 	CircularProgressBar1.ColorFull  = clrTheme.Background2
@@ -121,7 +121,7 @@ Private Sub BuildGUI
 	ivPreviewLG.mBase.Visible = False : 	ivPreviewLG_Click
 	
 	#if klipper
-	lblPrintStats3.Visible = false '--- cannot figure thisa one out yet!!!!  TODO
+	lblPrintStats3.Visible = False '--- cannot figure this one out yet!!!!  TODO
 	#End If
 	
 #region "PRINTER BTNS TXT"	

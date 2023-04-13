@@ -8,6 +8,17 @@ Version=9.85
 #Region VERSIONS 
 ' V. 1.0 	Aug/4/2022 - Kherson Ukraine
 #End Region
+
+
+'============ SEARCH FOR -------- 'TODO V2
+'============ SEARCH FOR -------- 'TODO V2
+'============ SEARCH FOR -------- 'TODO V2
+'============ SEARCH FOR -------- 'TODO V2
+'============ SEARCH FOR -------- 'TODO V2
+
+
+
+
 Sub Class_Globals
 	Private Const mModule As String = "B4XMainPage" 'ignore
 	Public Root As B4XView
@@ -25,7 +36,8 @@ Sub Class_Globals
 	Private pnlMaster As B4XView 
 	
 	'--- header
-	Private pnlHeader As B4XView,  lblTemp As Label
+	Private pnlHeader As B4XView
+	'Private  lblTemp As Label
 	Private btnSliderMenu, btnPageAction As Button
 	Public lblStatus As Label
 	
@@ -97,7 +109,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	'--- sliding side menu ---------------------------
 	SideMenu.Initialize(Drawer)
 	Drawer.Initialize(SideMenu, "mnuPanel", Root, 260dip)
-	Drawer.CenterPanel.LoadLayout("MainPage")
+	Drawer.CenterPanel.LoadLayout("MainPage2")
 	Drawer.RightPanel.LoadLayout("viewSlidingWindow")
 	Drawer.RightPanelEnabled = True
 	Drawer.LeftPanelEnabled = False
@@ -183,29 +195,28 @@ Private Sub BuildGUI
 
 	'--- hide all page views
 	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlMovement))
+	guiHelpers.SetTextColor(Array As B4XView(lblStatus,btnSliderMenu,btnPageAction))
 	
-	guiHelpers.SetTextColor(Array As B4XView(lblStatus,lblTemp,btnSliderMenu,btnPageAction))
 	
-	If guiHelpers.gIsLandScape = False Then
-		Select Case True
-			Case guiHelpers.gScreenSizeAprox > 6.5 And guiHelpers.gScreenSizeAprox < 9.5
-				lblStatus.TextSize = lblStatus.TextSize + 4
-				lblTemp.TextSize   = lblTemp.TextSize + 4
-			Case guiHelpers.gScreenSizeAprox > 9.5
-				lblStatus.TextSize = lblStatus.TextSize + 2
-				lblTemp.TextSize   = lblTemp.TextSize + 4
-		End Select
-	End If
+'	If guiHelpers.gIsLandScape = False Then
+'		Select Case True
+'			Case guiHelpers.gScreenSizeAprox > 6.5 And guiHelpers.gScreenSizeAprox < 9.5
+'				lblStatus.TextSize = lblStatus.TextSize + 4
+'				'lblTemp.TextSize   = lblTemp.TextSize + 4
+'			Case guiHelpers.gScreenSizeAprox > 9.5
+'				lblStatus.TextSize = lblStatus.TextSize + 2
+'				'lblTemp.TextSize   = lblTemp.TextSize + 4
+'		End Select
+'	End If
 	
 	guiHelpers.SkinButton_Pugin(Array As Button(btnSliderMenu, btnPageAction))
-	ShowNoShow_PowerBtn
-	
+	btnSliderMenu.TextSize = 24 '* guiHelpers.gFscale
+	btnPageAction.TextSize = 24
 	
 	SideMenu.SkinMe(Array As Button(btnSTOP,btnFRESTART,btnRESTART),pnlMainDrawer,pnlBtnsDrawer)
 	pnlLineBreakDrawer.Color = clrTheme.txtNormal
 	btnFRESTART.Visible = False : 	btnRESTART.Visible = False : btnSTOP.Visible = True '--- default these 
-	
-	
+		
 	Switch_Pages(gblConst.PAGE_MENU)
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
 	
@@ -255,9 +266,6 @@ End Sub
 
 Public Sub Update_Printer_Temps
 
-	'---  update the main header
-	lblTemp.Text = oc.FormatedTemps
-	
 	'--- see if the current page has the proper event
 	If SubExists(oPageCurrent,"Update_Printer_Temps") Then
 		CallSubDelayed(oPageCurrent,"Update_Printer_Temps")
@@ -269,11 +277,17 @@ Public Sub Update_Printer_Status
 	
 	'guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	If oc.isConnected Then
+		
 		#if klipper
 		lblStatus.Text = oc.FormatedStatus.SubString2(0,1).ToUpperCase & oc.FormatedStatus.SubString(1)
 		#else
 		lblStatus.Text = oc.FormatedStatus
 		#End If
+		
+		If oPageCurrent Is pageMovement  Or oPageCurrent Is pageFiles Then
+			lblStatus.Text = lblStatus.Text & "  (" & oc.FormatedTemps.Replace(CRLF,"   ").Replace("C","") & ")"
+		End If
+			
 	Else
 		lblStatus.Text = gblConst.NOT_CONNECTED
 	End If
@@ -282,6 +296,7 @@ Public Sub Update_Printer_Status
 	If SubExists(oPageCurrent,"Update_Printer_Stats") Then
 		CallSub(oPageCurrent,"Update_Printer_Stats")
 	End If
+
 	
 	#if klipper
 	If SideMenu.IsOpen Then  CallSubDelayed(SideMenu,"Display_Btns")
@@ -463,6 +478,7 @@ Public Sub PrinterSetup_Closed
 End Sub
 
 ''--- called from PSU setup
+ 'TODO V2
 'Public Sub  ShowNoShow_PowerBtn
 '	btnPower.Visible = config.ShowPwrCtrlFLAG
 'End Sub
@@ -841,4 +857,7 @@ Public Sub btnSidePnl_Click
 End Sub
 #end if
 
-
+Private Sub btnSliderMenu_Click
+	SideMenu.Drawer.OpenRightMenu 
+	CallSubDelayed(SideMenu,"Display_Btns")
+End Sub

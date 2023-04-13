@@ -91,7 +91,7 @@ Public Sub Show
 		config.ReadPwrCFG
 		
 		'--- need to read flag so option can now be shown in side menu
-		'CallSub(B4XPages.MainPage,"ShowNoShow_PowerBtn") 'TODO!!!!!!!!!!!
+		'CallSub(B4XPages.MainPage,"ShowNoShow_PowerBtn") 'TODO V2
 		'--- need to read flag so option can now be shown in side menu
 		
 		CallSub(mMainObj.oPageCurrent,"Set_focus")

@@ -1,1 +1,0 @@
-{"sd":{"ready":false},"state":{"error":"","flags":{"cancelling":false,"closedOrError":false,"error":false,"finishing":false,"operational":true,"paused":false,"pausing":false,"printing":false,"ready":true,"resuming":false,"sdReady":false},"text":"Operational"},"temperature":{"bed":{"actual":24.84,"offset":0,"target":0.0},"tool0":{"actual":25.5,"offset":0,"target":0.0}}}

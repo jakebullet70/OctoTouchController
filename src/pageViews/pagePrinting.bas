@@ -81,7 +81,7 @@ Private Sub BuildGUI
 	End If
 	
 	
-	guiHelpers.SetTextColor(Array As B4XView(lblBedTemp1,lblToolTemp1, _
+	guiHelpers.SetTextColor2(Array As B4XView(lblBedTemp1,lblToolTemp1, _
 								lblPrintStats1.BaseLabel,lblPrintStats2,lblPrintStats3, _
 								CircularProgressBar1.MainLabel,lblFileName.BaseLabel))
 								

@@ -136,7 +136,7 @@ End Sub
 Private Sub BuildGUI
 	
 	guiHelpers.ReSkinB4XComboBox(Array As B4XComboBox(cboSort))
-	guiHelpers.SetTextColor(Array As B4XView(lblFileName.BaseLabel,lblHeaderFileName,lblSort2,lblBusy))
+	guiHelpers.SetTextColor2(Array As B4XView(lblFileName.BaseLabel,lblHeaderFileName,lblSort2,lblBusy))
 	guiHelpers.ResizeText(Chr(0xF175),lblSort2) : lblSort2.TextSize = lblSort2.TextSize - 6 '--- make text a little smaller
 	
 	cboSort.setitems(Array As String("File Name","Date Added"))

@@ -83,6 +83,7 @@ Public Sub Initialize (Callback As Object, EventName As String, Parent As B4XVie
 	Dim pR As Panel = mRightPanel
 	pR.Elevation = 4dip
 	
+	
 End Sub
 
 Private Sub LeftPanel_Click

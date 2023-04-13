@@ -3,14 +3,14 @@ Build2=klipper,sadLogic.KlipperTouchController,klipper
 File1=bed.png
 File10=dlgThemeSelect.bal
 File11=dlgViewText.bal
-File12=ftest.txt
-File13=hotend.png
-File14=LICENSE.txt
-File15=MainPage.bal
+File12=hotend.png
+File13=LICENSE.txt
+File14=MainPage.bal
+File15=mainstatcard.bal
 File16=mb_info.png
 File17=mb_question.png
 File18=mb_stop.png
-File19=menucard.bal
+File19=menucard2.bal
 File2=dlgAbout.bal
 File20=menufiles.png
 File21=menumovement.png
@@ -18,9 +18,9 @@ File22=menuprint.png
 File23=no_thumbnail.jpg
 File24=pageFiles.bal
 File25=pageMenu.bal
-File26=pageMovement.bal
-File27=pagePrinting.bal
-File28=ptest.txt
+File26=pageMenu2.bal
+File27=pageMovement.bal
+File28=pagePrinting.bal
 File29=splash.png
 File3=dlgbedlevel.json
 File30=splashklipper.png
@@ -44,14 +44,14 @@ File9=dlgSimpleApiOnOff.json
 FileGroup1=MISC
 FileGroup10=DIALOG_CUSTOM_VIEWS
 FileGroup11=DIALOG_CUSTOM_VIEWS
-FileGroup12=Default Group
-FileGroup13=MISC
-FileGroup14=Default Group
-FileGroup15=B4XPages
+FileGroup12=MISC
+FileGroup13=Default Group
+FileGroup14=B4XPages
+FileGroup15=Sub Cards
 FileGroup16=MISC
 FileGroup17=MISC
 FileGroup18=MISC
-FileGroup19=VIEWS
+FileGroup19=Sub Cards
 FileGroup2=DIALOG_CUSTOM_VIEWS
 FileGroup20=MAIN_MENU
 FileGroup21=MAIN_MENU
@@ -61,7 +61,7 @@ FileGroup24=VIEWS_PAGES
 FileGroup25=VIEWS_PAGES
 FileGroup26=VIEWS_PAGES
 FileGroup27=VIEWS_PAGES
-FileGroup28=Default Group
+FileGroup28=VIEWS_PAGES
 FileGroup29=MISC
 FileGroup3=JSON_CONFIGS
 FileGroup30=MISC
@@ -284,19 +284,23 @@ Sub Activity_Create(FirstTime As Boolean) 'ignore
 	End If
 	
 	
-	If tmrScreen.IsInitialized = False Then _
+	If tmrScreen.IsInitialized = False Then 
 		tmrScreen.Initialize("tmrScreenPower",15000)	'--- init, will be reset later
+	End If
 	
 	Dim fcheck As Long = 8000
 	#if release
 	fcheck = 3000
 	#End If
 	'--- TODO add 
-	If tmrFilesCheckChange.IsInitialized = False Then _
-		tmrFilesCheckChange.Initialize("tmrFilesCheckChange",fcheck) '--- octo files check change
+	If tmrFilesCheckChange.IsInitialized = False Then 
+		tmrFilesCheckChange.Initialize("tmrFilesCheckChange",fcheck) '--- printer files check change
+	End If
+		
 	
-	If tmrMain.IsInitialized = False Then _
+	If tmrMain.IsInitialized = False Then 
 		tmrMain.Initialize("tmrMain",2100) 	'--- main loop
+	End If
 		
 	SetupFullScrn
 	

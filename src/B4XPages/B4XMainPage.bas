@@ -26,7 +26,7 @@ Sub Class_Globals
 	
 	'--- header
 	Private pnlHeader As B4XView,  lblTemp As Label
-	Private btnPower, btnPageAction As Button
+	Private btnSliderMenu, btnPageAction As Button
 	Public lblStatus As Label
 	
 	'--- page-panel classes
@@ -42,23 +42,15 @@ Sub Class_Globals
 	Private PromptExitTwice As Boolean = False
 	Private mToastTxtSize As Int
 	
-	'--- gesture crap --------------------------------------
-'	Private GD As GestureDetector
-'	Private FilterMoveEvents As Boolean 'ignore
-'	Private DiscardOtherGestures As Boolean = True 'ignore
-	'-------------------------------------------------------
-
 	Private mapMasterPreHeaterMenu As Map
 	
-	#if klipper
 	'--- side menu
 	Private SideMenu As sadB4XDrawerAdvancedHelper
 	Private Drawer As sadB4XDrawerAdvanced
 	Private btnSTOP,btnFRESTART,btnRESTART As Button
 	Private pnlBtnsDrawer,pnlMainDrawer As B4XView
 	Private pnlLineBreakDrawer As B4XView
-	#end if
-	
+		
 	
 End Sub
 
@@ -102,7 +94,6 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	Root = Root1
 	Root.SetLayoutAnimated(0,0,0,Root.Width,Root.Height)
 	
-	#if klipper
 	'--- sliding side menu ---------------------------
 	SideMenu.Initialize(Drawer)
 	Drawer.Initialize(SideMenu, "mnuPanel", Root, 260dip)
@@ -110,10 +101,6 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	Drawer.RightPanel.LoadLayout("viewSlidingWindow")
 	Drawer.RightPanelEnabled = True
 	Drawer.LeftPanelEnabled = False
-	#else
-	'--- no drawer YET for octoprint
-	Root.LoadLayout("MainPage")
-	#End If
 	
 	toast.Initialize(Root)
 	toast.pnl.Color = clrTheme.txtNormal
@@ -137,12 +124,10 @@ End Sub
 
 Private Sub B4XPage_CloseRequest As ResumableSub
 	
-	#if klipper
 	If Drawer.RightOpen Then
 		Drawer.RightOpen = False
 		Return False
 	End If
-	#end if
 	
 	'--- catch the android BACK button
 	If oPageCurrent <> oPageMenu Then
@@ -195,11 +180,11 @@ Private Sub BuildGUI
 	
 	pnlMaster.Color  = clrTheme.Background
 	pnlHeader.Color	 = clrTheme.BackgroundHeader
-	
+
 	'--- hide all page views
 	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlMovement))
 	
-	guiHelpers.SetTextColor(Array As B4XView(lblStatus,lblTemp,btnPower,btnPageAction))
+	guiHelpers.SetTextColor(Array As B4XView(lblStatus,lblTemp,btnSliderMenu,btnPageAction))
 	
 	If guiHelpers.gIsLandScape = False Then
 		Select Case True
@@ -212,14 +197,14 @@ Private Sub BuildGUI
 		End Select
 	End If
 	
-	guiHelpers.SkinButton_Pugin(Array As Button(btnPower, btnPageAction))
+	guiHelpers.SkinButton_Pugin(Array As Button(btnSliderMenu, btnPageAction))
 	ShowNoShow_PowerBtn
 	
-	#if klipper
+	
 	SideMenu.SkinMe(Array As Button(btnSTOP,btnFRESTART,btnRESTART),pnlMainDrawer,pnlBtnsDrawer)
 	pnlLineBreakDrawer.Color = clrTheme.txtNormal
 	btnFRESTART.Visible = False : 	btnRESTART.Visible = False : btnSTOP.Visible = True '--- default these 
-	#end if
+	
 	
 	Switch_Pages(gblConst.PAGE_MENU)
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
@@ -275,7 +260,7 @@ Public Sub Update_Printer_Temps
 	
 	'--- see if the current page has the proper event
 	If SubExists(oPageCurrent,"Update_Printer_Temps") Then
-		CallSub(oPageCurrent,"Update_Printer_Temps")
+		CallSubDelayed(oPageCurrent,"Update_Printer_Temps")
 	End If
 	
 End Sub
@@ -477,10 +462,10 @@ Public Sub PrinterSetup_Closed
 	
 End Sub
 
-'--- called from PSU setup
-Public Sub  ShowNoShow_PowerBtn
-	btnPower.Visible = config.ShowPwrCtrlFLAG
-End Sub
+''--- called from PSU setup
+'Public Sub  ShowNoShow_PowerBtn
+'	btnPower.Visible = config.ShowPwrCtrlFLAG
+'End Sub
 
 '--- options plugin sub menu
 Private Sub PopupFunctionOptionsMnu
@@ -803,6 +788,10 @@ Public Sub Check4_Update
 	
 End Sub
 
+
+
+#Region HEATER_STUFF_MENU
+
 Public Sub ShowPreHeatMenu_All
 	ShowPreHeatMenu_All2("Pre-Heat")
 End Sub
@@ -841,6 +830,7 @@ Private Sub BuildPreHeatMenu
 	mapMasterPreHeaterMenu.Put("Enter Bed Value","evb")
 				
 End Sub
+#end region
 
 
 #if klipper
@@ -852,27 +842,3 @@ End Sub
 #end if
 
 
-
-
-
-'#If JAVA
-'
-'//'''https://www.b4x.com/android/forum/threads/b4x-lineutils-v1-2-get-required-height-for-multiline-textview-label-with-variable-line-spacing.138786/#content
-'//'''''Dim Label1 As Label
-'//'/''''Label1.Initialize("")
-'//'''''Label1.Text = "this is a long sentence, and we need to " _
-'//'''''& "know the height required in order To show it completely."
-'//'''''Label1.TextSize = 20
-'//'''''Activity.AddView(Label1, 10dip, 10dip, 200dip, 30dip)
-'//'''''Dim LineS As LineUtils
-'//'''''Label1.Height = LineS.getMultilineHeight(Label1, Label1.Text, 1.5)
-'
-'    Public int getMultilineHeight(TextView TextView, CharSequence Text, float multi) {
-'        StaticLayout sl = new StaticLayout(Text, TextView.getPaint(),
-'                TextView.getLayoutParams().width - TextView.getPaddingLeft() - TextView.getPaddingRight(),
-'                Alignment.ALIGN_NORMAL, multi, 0 , True);
-'        Return sl.getLineTop(sl.getLineCount());
-'    }
-'
-'
-'#End If

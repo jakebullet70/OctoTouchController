@@ -122,6 +122,11 @@ Public Sub SetTextColor(obj() As B4XView)
 		o.TextColor = clrTheme.txtNormal
 	Next
 End Sub
+Public Sub SetTextColor2(obj() As B4XView)
+	For Each o As B4XView In obj
+		o.TextColor = clrTheme.txtAccent
+	Next
+End Sub
 
 Public Sub SetTextSize(obj() As Button,size As Float)
 	For Each o As Button In obj
@@ -148,14 +153,16 @@ Public Sub SkinButton_Pugin(obj() As Button)
 End Sub
 Public Sub SkinButton(obj() As Button)
 	'--- sets the bg and frame color
-	Dim clrNormal ,clrPressed As Int
+	Dim clrAccent, clrNormal ,clrPressed As Int
 	clrNormal = clrTheme.txtNormal
+	clrAccent = clrTheme.txtAccent
+	
 	clrPressed = ChangeColorVisible(clrTheme.txtNormal)
 	For Each btn As Button In obj
 		SetColorTextStateList(btn,clrPressed,clrNormal,clrTheme.btnDisableText)
 		
 		Dim DefaultDrawable, PressedDrawable,DisabledDrawable As ColorDrawable
-		DefaultDrawable.Initialize2(xui.Color_Transparent, 8dip,2dip,clrNormal)
+		DefaultDrawable.Initialize2(xui.Color_Transparent, 8dip,2dip,clrAccent)
 		PressedDrawable.Initialize2(clrPressed,8dip,2dip,clrNormal)
 		DisabledDrawable.Initialize2(xui.Color_Transparent,8dip,2dip,clrTheme.btnDisableText)
 		

@@ -14,17 +14,40 @@ Sub Class_Globals
 	Private xui As XUI
 	Private mPnlMain As B4XView
 	Private mCallBackEvent As String
-	Private mMainObj As B4XMainPage'ignore
+	Private mMainObj As B4XMainPage 'ignore
 	
-	'--- menu icons
-	Private mnuFiles As B4XView
-	Private mnuMovement As B4XView
-	Private mnuPrinting As B4XView
+'	'--- menu icons
+'	Private mnuFiles As B4XView
+'	Private mnuMovement As B4XView
+'	Private mnuPrinting As B4XView
+'	
+'	'Public Dialog As B4XDialog
+'	
+'	Private btnScrnOff,btnBrightness,btnSysCmds As Button
+'	Private btnPlugin1,btnPlugin2,btnPlugin3 As Button
+'	
 	
-	Public Dialog As B4XDialog
+	Private btnSubBrightness As Button
+	Private btnSubHeater As Button
+	Private btnSubPlugin1 As Button
+	Private btnSubPlugin2 As Button
+	Private btnSubPlugin3 As Button
+	Private btnSubScrnOff As Button
+	Private pnlInfo As Panel
+	Private pnlMainMenu As Panel
+	Private pnlMenuBtns As Panel
+	Private pnlMenuLower As Panel
+	Private pnlMenuLowerBLine As Panel
+	Private pnlMnuFiles As Panel
+	Private pnlMnuMovement As Panel
+	Private pnlMnuPrinting As Panel
+	Private pnlTempBed,pnlTempTool As Panel
 	
-	Private btnScrnOff,btnBrightness,btnSysCmds As Button
-	Private btnPlugin1,btnPlugin2,btnPlugin3 As Button
+	Private lblTextTop,lblTextBottom As Label
+	Private lblBedActualV,lblBedTargetV,lblToolActualV,lblToolTargetV As Label ' <--- pointers to card objects
+	
+
+	Private lblActualTemp As Label, lblActualTempBedV, lblActualTempToolV As Label
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String) 
@@ -34,9 +57,23 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	mMainObj = B4XPages.MainPage
 	
 	mPnlMain.SetLayoutAnimated(0,0,masterPanel.top,masterPanel.Width,masterPanel.Height)
-	mPnlMain.LoadLayout("pageMenu")
+	mPnlMain.LoadLayout("pageMenu2")
 	
-	BuildGUI
+	'--- build the main menu screen
+	BuildMenuCard(pnlMnuMovement,"menuMovement.png","Movement",gblConst.PAGE_MOVEMENT)
+	BuildMenuCard(pnlMnuFiles,"menuFiles.png","Files",gblConst.PAGE_FILES)
+	BuildMenuCard(pnlMnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
+	
+	BuildStatCard(pnlTempTool,"hotend.png","tool")
+	BuildStatCard(pnlTempBed,"bed.png","bed")
+	
+	lblToolActualV.Text = "Actual" : lblBedActualV.Text = "Actual"
+		
+	guiHelpers.SetVisible(Array As B4XView(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3),False)
+	guiHelpers.SkinButton_Pugin(Array As Button(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3,btnSubScrnOff,btnSubBrightness,btnSubHeater))
+	pnlMenuLowerBLine.Color = clrTheme.txtAccent
+	pnlMenuLowerBLine.Visible = True '--- turned off in 
+	
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"ShowVer",2300)
 	
 End Sub
@@ -49,18 +86,7 @@ End Sub
 Public Sub Set_focus()
 	
 	mPnlMain.SetVisibleAnimated(500,True)
-	
-	'--- set bottom action btn if visible
-	btnBrightness.Visible = config.ChangeBrightnessSettingsFLAG
-	btnScrnOff.Visible   = config.ShowScreenOffFLAG
-	btnSysCmds.Visible   = config.ShowSysCmdsFLAG
-	If btnBrightness.Visible = False And btnScrnOff.Visible = True Then
-		btnScrnOff.Left = btnBrightness.Left
-	else If btnBrightness.Visible = True And btnScrnOff.Visible = True Then
-		btnScrnOff.Left = btnBrightness.Left - (btnBrightness.Width + IIf(guiHelpers.gScreenSizeAprox < 5.4,0dip,10dip))
-	End If
-	
-	btnPlugin1.Visible = config.ShowWS281CtrlFLAG Or config.ShowZLEDCtrlFLAG
+'	btnPlugin1.Visible = config.ShowWS281CtrlFLAG Or config.ShowZLEDCtrlFLAG --- move to side menu?
 		
 End Sub
 
@@ -71,22 +97,55 @@ Public Sub Lost_focus()
 End Sub
 
 
-Private Sub BuildGUI
+Private Sub BuildStatCard(viewPanel As Panel,imgFile As String, Text As String)
 	
-	'--- build the main menu screen
-	BuildMenuCard(mnuMovement,"menuMovement.png","Movement",gblConst.PAGE_MOVEMENT)
-	BuildMenuCard(mnuFiles,"menuFiles.png","Files",gblConst.PAGE_FILES)
-	BuildMenuCard(mnuPrinting,"menuPrint.png","Printing",gblConst.PAGE_PRINTING)
-	
-	guiHelpers.SetVisible(Array As B4XView(btnPlugin3,btnPlugin1),False)
-	guiHelpers.SkinButton_Pugin(Array As Button(btnPlugin3,btnPlugin2,btnPlugin1,btnScrnOff,btnBrightness,btnSysCmds))
+	viewPanel.LoadLayout("mainstatcard.bal")
 
+	For Each v As View In viewPanel.GetAllViewsRecursive
+		
+		If v.Tag <> Null Then
+			
+			If v Is ImageView Then
+				Dim b As Bitmap = LoadBitmapResize(File.DirAssets, imgFile, v.Width, v.Height,True)
+				v.As(ImageView).Bitmap = guiHelpers.ChangeColorBasedOnAlphaLevel(b,clrTheme.txtNormal)
+				
+			else if v Is Label Then
+				Dim o6 As Label = v
+				If o6.Text = "t" Then '--- top label - actual
+					guiHelpers.ResizeText("Actual .." & gblConst.DEGREE_SYMBOL,o6)
+					If Text = "bed" Then
+						lblBedActualV = o6
+					Else
+						lblToolActualV = o6
+					End If
+				Else if o6.Text = "b" Then '--- bottom label - target
+					guiHelpers.ResizeText("Target ......." & gblConst.DEGREE_SYMBOL,o6)
+					If Text = "bed" Then
+						lblBedTargetV = o6
+					Else
+						lblToolTargetV = o6
+					End If
+				Else
+					guiHelpers.ResizeText("100" & gblConst.DEGREE_SYMBOL,o6)
+					If Text = "bed" Then
+						lblActualTempBedV = o6
+					Else
+						lblActualTempToolV = o6
+					End If
+				End If
+				
+				o6.TextColor = clrTheme.txtAccent
+			End If
+			
+		End If
+		
+	Next
+	
 End Sub
 
 Private Sub BuildMenuCard(mnuPanel As Panel,imgFile As String, Text As String, mnuAction As String)
 	
-	'mnuPanel.SetLayoutAnimated(0,0,0,mnuPanel.Width,mnuPanel.Height)
-	mnuPanel.LoadLayout("menuCard")
+	mnuPanel.LoadLayout("menuCard2")
 	For Each v As View In mnuPanel.GetAllViewsRecursive
 		
 		If v.Tag <> Null Then
@@ -100,7 +159,7 @@ Private Sub BuildMenuCard(mnuPanel As Panel,imgFile As String, Text As String, m
 			else if v.Tag Is AutoTextSizeLabel Then
 				Dim o6 As AutoTextSizeLabel = v.Tag
 				o6.Text = Text
-				o6.TextColor = clrTheme.txtNormal
+				o6.TextColor = clrTheme.txtAccent
 				
 			End If
 		End If
@@ -174,25 +233,25 @@ Private Sub btnSubBtnAction_Click
 			CallSub2(Main,"TurnOnOff_ScreenTmr",False)
 			fnc.BlankScreen
 			
-		Case "snof" '--- Sonoff / power crap
-			If oc.isConnected = False And Main.kvs.GetDefault(gblConst.PWR_SONOFF_PLUGIN,False).As(Boolean) = False Then
-				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
-				Return
-			End If
-			Dim o1 As dlgPsuCtrl
-			o1.Initialize(mMainObj)
-			o1.Show
+'		Case "snof" '--- Sonoff / power crap
+'			If oc.isConnected = False And Main.kvs.GetDefault(gblConst.PWR_SONOFF_PLUGIN,False).As(Boolean) = False Then
+'				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
+'				Return
+'			End If
+'			Dim o1 As dlgPsuCtrl
+'			o1.Initialize(mMainObj)
+'			o1.Show
+'			
+'		Case "lt" '--- WLED - ws281x
+'			If oc.isConnected = False Then
+'				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
+'				Return
+'			End If
+'			Dim o3 As dlgOnOffCtrl
+'			o3.Initialize(mMainObj,IIf(config.ShowZLEDCtrlFLAG,"ZLED","WS281x") & " Control")
+'			o3.Show
 			
-		Case "lt" '--- WLED - ws281x
-			If oc.isConnected = False Then
-				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
-				Return
-			End If
-			Dim o3 As dlgOnOffCtrl
-			o3.Initialize(mMainObj,IIf(config.ShowZLEDCtrlFLAG,"ZLED","WS281x") & " Control")
-			o3.Show
-			
-		Case "phe" '--- pre-heat
+		Case "heat" '--- pre-heat
 			If oc.isConnected = False Then
 				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
 				Return
@@ -208,3 +267,16 @@ Private Sub btnSubBtnAction_Click
 End Sub
 
 
+Public Sub Update_Printer_Temps
+
+	lblActualTempToolV.Text = oc.Tool1Actual.Replace("C","")
+	lblToolTargetV.Text = ("Target: "& $"${IIf(oc.tool1Target = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.tool1Target)}"$).As(String).Replace("C","")
+
+	lblActualTempBedV.Text = oc.BedActual.Replace("C","")
+	lblBedTargetV.Text = ("Target: "& $"${IIf(oc.BedTarget = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.Tool1Actual)}"$).As(String).Replace("C","")
+	
+	'--- TODO, strip the 'C' of the temps and just use degree symbol
+	'--- TODO, strip the 'C' of the temps and just use degree symbol
+	'--- TODO, strip the 'C' of the temps and just use degree symbol
+	
+End Sub

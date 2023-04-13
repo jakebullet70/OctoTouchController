@@ -82,16 +82,14 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	Dim cs As CSBuilder 
 	Dim m As Map : 	m.Initialize
 	
-	cs.Initialize
-	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE30B)). _
+	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE30B)). _
 				 Typeface(Typeface.DEFAULT).Append("   General Settings").PopAll,"gn")				 
-	cs.Initialize
-	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE859)). _
+	
+	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE859)). _
 				 Typeface(Typeface.DEFAULT).Append("   Power Settings").PopAll,"pw")
 				 	
 	If NoOctoConnection = False Then
-		cs.Initialize
-		m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE308)). _
+		m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE308)). _
 				 	 Typeface(Typeface.DEFAULT).Append("   Printer Connection").PopAll,"oc")	
 	End If
 	
@@ -112,28 +110,29 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	#end if
 	
 	#if not (klipper)
-	cs.Initialize
-	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE8C1)). _
+	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE8C1)). _
 				 Typeface(Typeface.DEFAULT).Append("   Plugins Menu").PopAll,"plg")				 
-	cs.Initialize
+	
+	#ELSE
+	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE8C1)). _
+				 Typeface(Typeface.DEFAULT).Append("   External Control Menu").PopAll,"plg")				 
 	#end if
 	
-	cs.Initialize
-	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
+	
+	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
 				 Typeface(Typeface.DEFAULT).Append("   Internal Functions Menu").PopAll,"fn")
 	cs.Initialize
-	
-	cs.Initialize
-	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3B7)). _
+		
+	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3B7)). _
 				 Typeface(Typeface.DEFAULT).Append("   Color Themes").PopAll,"thm1")				 
-	cs.Initialize
-	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24D)). _
+	
+	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24D)). _
 				 Typeface(Typeface.DEFAULT).Append("   Read Internal Log File").PopAll,"rt")
-	cs.Initialize
-	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE864)). _
+	
+	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE864)). _
 				 Typeface(Typeface.DEFAULT).Append("   Check For Update").PopAll,"cup")
-	cs.Initialize
-	m.Put(cs.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE85A)). _
+	
+	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE85A)). _
 				 Typeface(Typeface.DEFAULT).Append("   About Me (Yes, Me!)").PopAll,"ab")
 	
 	Return m

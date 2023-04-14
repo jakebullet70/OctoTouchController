@@ -20,7 +20,7 @@ Sub Class_Globals
 	Private mDialog As B4XDialog
 	
 	Private btnOff,btnOn As B4XView
-	Public mIPaddr As String
+	Public Data As Map
 	
 End Sub
 
@@ -84,16 +84,32 @@ Private Sub btnCtrl_Click
 	
 	Dim o As B4XView : o = Sender
 	'o.SetColorAnimated(300,xui.Color_Transparent,clrTheme.txtNormal)
+	#if klipper
+	Dim cmd As String
+	If o.Tag ="on" Then
+		cmd = Data.Get("ipon")
+	Else
+		cmd = Data.Get("ipoff")
+	End If
+	Wait For (SendCmd2(cmd)) Complete(s As String)
+	#else
 	Wait For (SendCmd(o.Tag)) Complete(s As String)
-	'Sleep(300)
-	'o.SetColorAnimated(300,clrTheme.txtNormal,xui.Color_Transparent)
+	#End If
+	
 	mDialog.Close(-1) '--- close it, exit dialog
 	
 End Sub
 
+#if klipper
+Private  Sub SendCmd2(cmd As String)As ResumableSub'ignore
+	mMainObj.oMasterController.cn.PostRequest2(cmd,"")
+	guiHelpers.Show_toast2("Sending Command",1500)
+End Sub
+#end if
+
 Public Sub SendCmd(cmd As String)As ResumableSub'ignore
 	
-	Dim Data As Map
+	
 	Dim template As String = $"!ep!!!{"command":"!of!"}"$ '--- POST
 	
 	Select Case True
@@ -116,37 +132,3 @@ Public Sub SendCmd(cmd As String)As ResumableSub'ignore
 
 End Sub
 
-
-
-'Private Sub PSUcmd(cmd As String)
-'
-'	Dim msg As String = $"Sending Power '${cmd.ToUpperCase}' Command"$
-'	
-'	Select Case mPSU_Type
-'		Case "sonoff"
-'			If mIPaddr = "" Then
-'				guiHelpers.Show_toast("Missing SonOff IP address",2000)
-'				Return 'ignore
-'			End If
-'			Dim sm As HttpDownloadStr : sm.Initialize
-'			Wait For (sm.SendRequest($"http://${mIPaddr}/cm?cmnd=Power%20${cmd}"$)) Complete(s As String)
-'			
-'		Case "octo_k"
-'			mMainObj.oMasterController.cn.PostRequest( _
-'				oc.cPSU_CONTROL_K.Replace("!ONOFF!",IIf(cmd.ToLowerCase ="on","On","Off")))
-'		
-'		Case Else
-'			msg = "PSU control config problem"
-'			
-'	End Select
-'	
-'	If cmd.ToLowerCase = "off" Then
-'		'---printer off, back to main menu
-'		If mMainObj.oPageCurrent <> mMainObj.oPageMenu Then
-'			CallSub2(mMainObj,"Switch_Pages",gblConst.PAGE_MENU)
-'		End If
-'	End If
-'	
-'	guiHelpers.Show_toast(msg,1500)
-'		
-'End Sub

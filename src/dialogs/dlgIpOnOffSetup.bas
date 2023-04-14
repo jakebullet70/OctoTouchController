@@ -11,7 +11,7 @@ Version=11.5
 
 Sub Class_Globals
 	
-	Private const mModule As String = "dlgIpOnOff"' 'ignore
+	Private Const mModule As String = "dlgIpOnOffSetup"' 'ignore
 	Private xui As XUI
 	Private mPrefDlg As sadPreferencesDialog
 	Private mPrefHelper As sadPreferencesDialogHelper
@@ -27,9 +27,13 @@ End Sub
 
 Public Sub CreateDefaultDataFile(dataFileName As String)
 	
+	'Dim txt As String = IIf(IsNumber(dataFileName.SubString2(0,1)),"",)
 	fileHelpers.SafeKill(dataFileName)	
 	File.WriteMap(xui.DefaultFolder,dataFileName, _
-					CreateMap("desc": "Printer Power SonOff", "ipon": "http://192.168.1.235/cm?cmnd=Power On",  "ipoff": "http://192.168.1.235/cm?cmnd=Power Off", "active": "false"))
+					CreateMap("desc": "Printer Power SonOff", _
+										"ipon": "http://192.168.1.235/cm?cmnd=Power On", _
+										 "ipoff": "http://192.168.1.235/cm?cmnd=Power Off", _
+										  "active": "false","tgl":"false"))
 
 End Sub
 

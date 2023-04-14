@@ -29,6 +29,7 @@ End Sub
 
 Public Sub Initialize(mobj As B4XMainPage)
 	
+	If mobj = Null Then Return
 	mMainObj = mobj
 	ReadSettingsCfg
 	

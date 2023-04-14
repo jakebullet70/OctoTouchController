@@ -76,6 +76,7 @@ Sub Process_Globals
 	Public Const BED_LEVEL_FILE As String = "bed_level.map"
 	Public Const PRINTER_SETUP_FILE As String = "printer_setup.map"
 	Public Const PSU_SETUP_FILE As String = "psu_setup.map"
+	Public Const HTTP_ONOFF_SETUP_FILE As String = "onoff_setup.map"
 	'---------------------------------------------------------------------------------------------------------------------
 	
 	'--- pages

@@ -25,6 +25,12 @@
             "type": "Boolean",
             "key": "active",
             "required": false
+        },
+        {
+            "title": "1st Command Is Toggle",
+            "type": "Boolean",
+            "key": "tgl",
+            "required": false
         }
     ]
 }

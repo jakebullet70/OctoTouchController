@@ -568,7 +568,7 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 		Case "psu"  '--- sonoff / PSU control setup
 			
 			#if klipper
-			Dim oA1 As dlgIpOnOff '--- just create a new dlg
+			Dim oA1 As dlgIpOnOffSetup
 			oA1.Initialize(mPrefDlg1,Me,"Power_BtnEdit")
 			oA1.Show("Printer Power Config",gblConst.PSU_SETUP_FILE)
 			#else
@@ -869,6 +869,7 @@ End Sub
 #end if
 
 Private Sub btnSliderMenu_Click
+	'--- righty menu gear icon
 	SideMenu.OpenRightMenu 
 	CallSubDelayed(SideMenu,"Display_Btns")
 End Sub
@@ -884,26 +885,33 @@ Private Sub Build_RightSideMenu
 	
 	clvDrawer.DefaultTextBackgroundColor = clrTheme.Background
 	clvDrawer.PressedColor = clrTheme.BackgroundHeader
-	'clvDrawer.DividerSize
 	clvDrawer.DefaultTextColor = clrTheme.txtNormal
+	
 	clvDrawer.Clear
+	Dim size As Float = IIf(guiHelpers.gIsLandScape,20,22)
+	
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	Dim DataPSU As Map = File.ReadMap(xui.DefaultFolder,gblConst.PSU_SETUP_FILE)
+	
 	Dim cs As CSBuilder
 	If Data.GetDefault("m600",False).As(Boolean) Then
-		clvDrawer.AddTextItem(cs.Initialize.Size(22).Append("Filament Change M600").PopAll,"m600")
+		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Filament Change M600").PopAll,"m600")
 	End If
 	If Data.GetDefault("g29",False).As(Boolean) Then
-		clvDrawer.AddTextItem(cs.Initialize.Size(22).Append("Bed Level G29").PopAll,"g29")
+		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Bed Level G29").PopAll,"g29")
 	End If
+	
+	'clvDrawer.AddTextItem(cs.Initialize.Size(12).Alignment("ALIGN_CENTER").Append("------------ SYS CMDS -----------").PopAll,"")
+	
 	If DataPSU.GetDefault("active",False).As(Boolean) Then
 		Dim txt As Object = DataPSU.Get("desc")
 		If strHelpers.IsNullOrEmpty(txt) Then txt = "Printer Power Menu"
-		clvDrawer.AddTextItem(cs.Initialize.Size(22).Append(txt).PopAll,"prpwr")
+		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,"pwr")
 	End If
+		
 	If Data.GetDefault("syscmds",False).As(Boolean) Then
-		clvDrawer.AddTextItem(cs.Initialize.Size(22).Append("OS Systems Menu").PopAll,"sys")
+		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("OS Systems Menu").PopAll,"sys")
 	End If
 		
 End Sub
@@ -915,6 +923,8 @@ End Sub
 
 Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	SideMenu.CloseRightMenu
+	Dim Data As Map
+	Dim toggle As Boolean
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	Select Case Value.As(String)
 		Case "sys"
@@ -934,9 +944,20 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
 				Return
 			End If
-			#end if
 			Dim o1 As dlgPsuCtrl : o1.Initialize(Me)
 			o1.Show
+			#else
+			Data = File.ReadMap(xui.DefaultFolder,gblConst.PSU_SETUP_FILE)
+			toggle = Data.GetDefault("tgl",False).As(Boolean)
+			If  toggle Then
+				oMasterController.cn.PostRequest2(Data.Get("ipon"),"")
+				Return		
+			End If
+			Dim o1 As dlgOnOffCtrl
+			o1.Initialize(Me,Data.GetDefault("desc","On / Off"))
+			o1.Data = Data
+			o1.Show
+			#end if
 			
 	End Select
 			
@@ -949,6 +970,11 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 '			o3.Initialize(mMainObj,IIf(config.ShowZLEDCtrlFLAG,"ZLED","WS281x") & " Control")
 '			o3.Show
 
+End Sub
+
+
+Private Sub OnOffMenuIsToggle(fname As String) As Boolean
+	
 End Sub
 
 

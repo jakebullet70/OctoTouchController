@@ -158,11 +158,14 @@ Private Sub LoadCfgs()
 
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.PSU_SETUP_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.PSU_SETUP_FILE) = False Then
-		Dim oiw As dlgIpOnOff
+		Dim oiw As dlgIpOnOffSetup
 		oiw.Initialize(Null,Null,Null)
 		oiw.CreateDefaultDataFile(gblConst.PSU_SETUP_FILE)
+		oiw.CreateDefaultDataFile("1" & gblConst.HTTP_ONOFF_SETUP_FILE) '--- generic HTTP commands
+		oiw.CreateDefaultDataFile("2" & gblConst.HTTP_ONOFF_SETUP_FILE) '--- generic HTTP commands
+		oiw.CreateDefaultDataFile("3" & gblConst.HTTP_ONOFF_SETUP_FILE) '--- generic HTTP commands
+		oiw.CreateDefaultDataFile("4" & gblConst.HTTP_ONOFF_SETUP_FILE) '--- generic HTTP commands
 	End If
-	'ReadPSUCFG '--- this will be done on connection init
 	#end if
 	
 End Sub

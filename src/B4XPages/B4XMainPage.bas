@@ -540,7 +540,9 @@ End Sub
 Private Sub PopupPluginOptionMenu
 	
 	#if klipper
-	Dim popUpMemuItems As Map = CreateMap("Power Supply HTTP Control":"psu")
+	Dim Const gc As String = "Generic HTTP Control"
+	Dim popUpMemuItems As Map = CreateMap("Power Supply HTTP Control":"psu", _
+																	gc & " 1":"1",gc & " 2":"2",gc & " 3":"3",gc & " 4":"4")
 	Dim title As Object = "  External Control Menu"
 	#else
 	Dim popUpMemuItems As Map = CreateMap("PSU Control":"psu","ZLED Setup":"led","ws281x Setup":"ws2")
@@ -569,7 +571,7 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			
 			#if klipper
 			Dim oA1 As dlgIpOnOffSetup
-			oA1.Initialize(mPrefDlg1,Me,"Power_BtnEdit")
+			oA1.Initialize(mPrefDlg1,Me,"ExtCtrl_BtnEdit")
 			oA1.Show("Printer Power Config",gblConst.PSU_SETUP_FILE)
 			#else
 			Dim oA As dlgPsuSetup
@@ -577,7 +579,12 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			oA.Show
 			#End If
 			
-			
+		Case "1","2","3","4"
+			Dim oA1 As dlgIpOnOffSetup
+			oA1.Initialize(mPrefDlg1,Me,"ExtCtrl_BtnEdit")
+			oA1.Show("HTTP Control Config - " & value,value & gblConst.HTTP_ONOFF_SETUP_FILE)
+				
+		#if not (klipper)	
 		Case "led" '--- ZLED
 			Dim oB As dlgZLEDSetup
 			oB.Initialize(Me,"ZLED Config",gblConst.ZLED_OPTIONS_FILE)
@@ -587,6 +594,7 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			Dim o1 As dlgZLEDSetup
 			o1.Initialize(Me,"ws281x Config",gblConst.WS281_OPTIONS_FILE)
 			o1.Show
+		#end if
 		
 	End Select
 	
@@ -889,7 +897,7 @@ Private Sub Build_RightSideMenu
 	
 	clvDrawer.Clear
 	Dim size As Float = IIf(guiHelpers.gIsLandScape,20,22)
-	
+	Dim txt As Object 
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	Dim DataPSU As Map = File.ReadMap(xui.DefaultFolder,gblConst.PSU_SETUP_FILE)
@@ -904,8 +912,20 @@ Private Sub Build_RightSideMenu
 	
 	'clvDrawer.AddTextItem(cs.Initialize.Size(12).Alignment("ALIGN_CENTER").Append("------------ SYS CMDS -----------").PopAll,"")
 	
+	For ii = 1 To 4
+		Dim fn As String = ii & gblConst.HTTP_ONOFF_SETUP_FILE
+		If File.Exists(xui.DefaultFolder,fn) = True Then
+			Dim dataEX As Map  = File.ReadMap(xui.DefaultFolder,fn)
+			If dataEX.GetDefault("active",False).As(Boolean) Then
+				txt = dataEX.Get("desc")
+				If strHelpers.IsNullOrEmpty(txt) Then txt = "HTTP " & ii & "Menu"
+				clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,ii)
+			End If
+		End If
+	Next
+	
 	If DataPSU.GetDefault("active",False).As(Boolean) Then
-		Dim txt As Object = DataPSU.Get("desc")
+		txt = DataPSU.Get("desc")
 		If strHelpers.IsNullOrEmpty(txt) Then txt = "Printer Power Menu"
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,"pwr")
 	End If
@@ -916,15 +936,15 @@ Private Sub Build_RightSideMenu
 		
 End Sub
 
-Private Sub Power_BtnEdit(editdata As Map)
+Private Sub ExtCtrl_BtnEdit(editdata As Map)
 	Build_RightSideMenu
 End Sub
 
 
 Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	SideMenu.CloseRightMenu
-	Dim Data As Map
-	Dim toggle As Boolean
+	'Dim Data As Map
+	'Dim toggle As Boolean
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	Select Case Value.As(String)
 		Case "sys"
@@ -947,17 +967,11 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 			Dim o1 As dlgPsuCtrl : o1.Initialize(Me)
 			o1.Show
 			#else
-			Data = File.ReadMap(xui.DefaultFolder,gblConst.PSU_SETUP_FILE)
-			toggle = Data.GetDefault("tgl",False).As(Boolean)
-			If  toggle Then
-				oMasterController.cn.PostRequest2(Data.Get("ipon"),"")
-				Return		
-			End If
-			Dim o1 As dlgOnOffCtrl
-			o1.Initialize(Me,Data.GetDefault("desc","On / Off"))
-			o1.Data = Data
-			o1.Show
+			RunHTTPOnOffMenu(gblConst.PSU_SETUP_FILE)
 			#end if
+			
+		Case "1","2","3","4"
+			RunHTTPOnOffMenu(Value.As(String) & gblConst.HTTP_ONOFF_SETUP_FILE)
 			
 	End Select
 			
@@ -973,8 +987,16 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 End Sub
 
 
-Private Sub OnOffMenuIsToggle(fname As String) As Boolean
-	
+Private Sub RunHTTPOnOffMenu(fname As String)
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,fname)
+	If  Data.GetDefault("tgl",False).As(Boolean) Then
+		oMasterController.cn.PostRequest2(Data.Get("ipon"),"")
+		Return
+	End If
+	Dim o1 As dlgOnOffCtrl
+	o1.Initialize(Me,Data.GetDefault("desc","On / Off"))
+	o1.Data = Data
+	o1.Show
 End Sub
 
 

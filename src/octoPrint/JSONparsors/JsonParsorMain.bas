@@ -129,7 +129,7 @@ Public Sub  JobStatus(s As String)
 		'Dim is_active As String = virtual_sdcard.Get("is_active") if true does it mean its printing?
 		'Log( oc.JobPrintState.ToLowerCase)
 		Select Case oc.JobPrintState.ToLowerCase
-			Case "printing"      : oc.isPrinting = True
+			Case "printing"        : oc.isPrinting = True
 			Case "cancelling"   : oc.isKlipperCanceling = True
 			Case "paused"       : oc.isPaused2 = True
 			Case "standby"

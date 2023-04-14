@@ -690,7 +690,7 @@ End Sub
 
 Private Sub lblStatus_Click
 	'--- if not connected then popup the connection screen
-If lblStatus.Text.Contains("No C") Or oc.isConnected = False  Then
+	If lblStatus.Text.Contains("No C") Or oc.isConnected = False  Then
 		CallSetupErrorConnecting(False)
 	End If
 End Sub

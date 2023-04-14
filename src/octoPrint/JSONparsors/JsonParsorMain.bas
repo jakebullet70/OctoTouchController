@@ -133,9 +133,11 @@ Public Sub  JobStatus(s As String)
 			Case "cancelling"   : oc.isKlipperCanceling = True
 			Case "paused"       : oc.isPaused2 = True
 			Case "standby"
-				
+				If  oc.isConnected = False Then 
+					
+				End If
 			Case Else
-				
+				Log("case else: " & oc.JobPrintState)
 		End Select
 		
 		oc.JobFileName = print_stats.Get("filename")

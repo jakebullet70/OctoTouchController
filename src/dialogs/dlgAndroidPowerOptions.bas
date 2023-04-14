@@ -11,7 +11,7 @@ Version=11.5
 
 Sub Class_Globals
 	
-	Private const mModule As String = "dlgPowerOptions"' 'ignore
+	Private const mModule As String = "dlgAndroidPowerOptions"' 'ignore
 	Private mainObj As B4XMainPage
 	Private xui As XUI
 	Private mPowerDlg As sadPreferencesDialog
@@ -71,7 +71,7 @@ Public Sub Show
 		
 		guiHelpers.Show_toast("Power Data Saved",1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.ANDROID_POWER_OPTIONS_FILE,Data)
-		config.ReadPowerCFG
+		config.ReadAndroidPowerCFG
 		fnc.ProcessPowerFlags
 		
 	End If

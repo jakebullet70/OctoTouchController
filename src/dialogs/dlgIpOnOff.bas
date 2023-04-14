@@ -1,0 +1,109 @@
+﻿B4A=true
+Group=DIALOGS_GENERIC
+ModulesStructureVersion=1
+Type=Class
+Version=11.5
+@EndOfDesignText@
+' Author:  sadLogic
+#Region VERSIONS 
+' V. 1.0 	Apr/14/2023
+#End Region
+
+Sub Class_Globals
+	
+	Private const mModule As String = "dlgIpOnOff"' 'ignore
+	Private xui As XUI
+	Private mPrefDlg As sadPreferencesDialog
+	Private mPrefHelper As sadPreferencesDialogHelper
+	Private mCallBackModule As Object
+	Private mCallBackMethod As String
+End Sub
+
+Public Sub Initialize(dlg As sadPreferencesDialog,callbackMod As Object, callbackMethod As String)
+	mPrefDlg = dlg
+	mCallBackModule = callbackMod
+	mCallBackMethod = callbackMethod
+End Sub
+
+Public Sub CreateDefaultDataFile(dataFileName As String)
+	
+	fileHelpers.SafeKill(dataFileName)	
+	File.WriteMap(xui.DefaultFolder,dataFileName, _
+					CreateMap("desc": "Printer Power SonOff", "ipon": "http://192.168.1.235/cm?cmnd=Power On",  "ipoff": "http://192.168.1.235/cm?cmnd=Power Off", "active": "false"))
+
+End Sub
+
+
+Public Sub Show(title As String,dataFileName As String)
+	
+	If File.Exists(xui.DefaultFolder,dataFileName) = False Then
+		CreateDefaultDataFile(dataFileName)
+	End If
+		
+	Dim data As Map = File.ReadMap(xui.DefaultFolder,dataFileName)
+	Dim ToTop As Boolean = False
+	
+	Dim h,w As Float
+	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
+		h = 62%y
+	Else If guiHelpers.gScreenSizeAprox >= 8 Then
+		h = 52%y
+	Else '--- 4 to 5.9 inch
+		h = 60%y
+	End If
+	
+	If guiHelpers.gIsLandScape = False Then
+		w = 92%x
+	Else
+		w = 420dip
+	End If
+	
+	 ' guiHelpers.gWidth * guiHelpers.gScreenSizeDPI
+	mPrefDlg.Initialize(B4XPages.MainPage.root, title, w, h)
+	mPrefDlg.LoadFromJson(File.ReadString(File.DirAssets,"dlgonoff.json"))
+	mPrefDlg.SetEventsListener(Me,"dlgEvent")
+	
+	mPrefHelper.Initialize(mPrefDlg)
+	
+	mPrefHelper.ThemePrefDialogForm
+	mPrefDlg.PutAtTop = ToTop
+	Dim RS As ResumableSub = mPrefDlg.ShowDialog(data, "SAVE", "CLOSE")
+	mPrefHelper.dlgHelper.NoCloseOn2ndDialog
+	mPrefHelper.dlgHelper.ThemeInputDialogBtnsResize
+	
+	
+	Wait For (RS) Complete (Result As Int)
+	If Result = xui.DialogResponse_Positive Then
+		guiHelpers.Show_toast("Printer Power Config Saved",1500)
+		File.WriteMap(xui.DefaultFolder,dataFileName,data)
+		
+		If SubExists(mCallBackModule,mCallBackMethod) Then
+			CallSubDelayed2(mCallBackModule,mCallBackMethod,data)
+		End If
+		
+		CallSubDelayed(B4XPages.MainPage.oPageCurrent,"Set_focus")
+	End If
+		
+	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
+	
+	mPrefDlg.Closed = True '--- we are done with the dlg object
+	
+End Sub
+
+
+
+
+Private Sub dlgEvent_IsValid (TempData As Map) As Boolean 'ignore
+	
+	Dim retval As Boolean = True
+	Return retval '--- all is good!
+
+End Sub
+
+
+Private Sub dlgEvent_BeforeDialogDisplayed (Template As Object)
+	mPrefHelper.SkinDialog(Template)
+End Sub
+
+
+

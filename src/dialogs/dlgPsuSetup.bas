@@ -5,7 +5,8 @@ Type=Class
 Version=11.5
 @EndOfDesignText@
 ' Author:  sadLogic
-#Region VERSIONS 
+#Region VERSIONS
+' --- Octoprint ONLY 
 ' V. 1.1	Sept/16/2022
 ' 			Added suport for kantlivelong PSU octo plugin
 ' V. 1.0 	Aug/23/2022
@@ -13,7 +14,8 @@ Version=11.5
 #End Region
 
 Sub Class_Globals
-	
+	' --- Octoprint ONLY
+	' --- Octoprint ONLY
 	Private const mModule As String = "dlgPsuSetup"' 'ignore
 	Private mMainObj As B4XMainPage
 	Private xui As XUI

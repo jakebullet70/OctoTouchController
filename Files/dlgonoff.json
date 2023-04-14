@@ -1,0 +1,30 @@
+{
+    "Version": 1.66,
+    "Theme": "Dark Theme",
+    "Items": [
+        {
+            "title": "Menu Description",
+            "type": "Text",
+            "key": "desc",
+            "required": false
+        },
+        {
+            "title": "IP On",
+            "type": "Text",
+            "key": "ipon",
+            "required": false
+        },
+        {
+            "title": "IP Off",
+            "type": "Text",
+            "key": "ipoff",
+            "required": false
+        },
+        {
+            "title": "Show On Side Menu",
+            "type": "Boolean",
+            "key": "active",
+            "required": false
+        }
+    ]
+}

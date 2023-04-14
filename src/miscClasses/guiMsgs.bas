@@ -12,6 +12,7 @@ Version=5.5
 Sub Class_Globals
 	Private Const mModule As String = "guiMsgs" 'ignore
 	'--- just seldom used strings in a class
+	Dim Msg As StringBuilder 
 End Sub
 
 Public Sub Initialize
@@ -28,17 +29,17 @@ Private Sub ReplaceOcto2KlipperTxt(s As String) As String
 End Sub
 
 Public Sub GetConnectFailedMsg() As String
-	Dim msg As StringBuilder : msg.Initialize
-	msg.Append("Connection Failed.").Append(CRLF)
-	msg.Append("Is Octoprint turned on?").Append(CRLF).Append("Are Your IP And Port correct?").Append(CRLF)
-	Return ReplaceOcto2KlipperTxt(msg.ToString)
+	Msg.Initialize
+	Msg.Append("Connection Failed.").Append(CRLF)
+	Msg.Append("Is Octoprint turned on?").Append(CRLF).Append("Are Your IP And Port correct?").Append(CRLF)
+	Return ReplaceOcto2KlipperTxt(Msg.ToString)
 End Sub
 
 
 
 Public Sub GetConnectionText(connectedButError As Boolean) As String
 	
-	Dim Msg As StringBuilder : Msg.Initialize
+	Msg.Initialize
 	
 	If connectedButError Then
 		Msg.Append("Connected to Octoprint but there is an error.").Append(CRLF)
@@ -54,7 +55,7 @@ End Sub
 
 Public Sub GetOctoPluginWarningTxt() As String
 	
-	Dim Msg As StringBuilder : Msg.Initialize
+	Msg.Initialize
 	Msg.Append("When setting up a connection here to an Octoprint ")
 	Msg.Append("plugin make sure it is working in Octoprint first ")
 	Msg.Append("before you complete the setup here.").Append(CRLF)
@@ -66,7 +67,7 @@ End Sub
 
 Public Sub GetOctoSysCmdsWarningTxt() As String
 	
-	Dim Msg As StringBuilder : Msg.Initialize
+	Msg.Initialize
 	Msg.Append("To have access to Octoprint System commands ")
 	Msg.Append("you first need to grant the 'SYSTEM' permission ")
 	Msg.Append("in Octoprint to the current user.  ").Append(CRLF)
@@ -140,3 +141,13 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 End Sub
 
 
+
+'Public Sub GetIpSetupText() As String
+'	Msg.Initialize
+'	Msg.Append("SonOff With Tasmota Firmware Example").Append(CRLF)
+'	Msg.Append("http://192.168.1.XXX/cm?cmnd=Power On").Append(CRLF)
+'	Msg.Append("http://192.168.1.XXX/cm?cmnd=Power Off").Append(CRLF).Append(CRLF)
+'	Msg.Append("You can really use any HTTP capible device.").Append(CRLF)
+'	Msg.Append("Test it first in your local browser to make sure it works.").Append(CRLF)
+'	Return Msg.ToString
+'End Sub

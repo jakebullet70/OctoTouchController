@@ -63,6 +63,9 @@ Sub Class_Globals
 	Private pnlLineBreakDrawer As Panel
 	Private clvDrawer As CustomListView
 	
+	Public mPrefDlg1 As sadPreferencesDialog
+	Public mPrefDlg2 As sadPreferencesDialog
+	
 End Sub
 
 '======================================================================================
@@ -433,7 +436,7 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			#End If
 			
 		Case "pw"  '--- android power setup
-			Dim o1 As dlgPowerOptions : o1.Initialize(Me)
+			Dim o1 As dlgAndroidPowerOptions : o1.Initialize(Me)
 			o1.Show
 			
 		Case "plg"  '--- plugins menu
@@ -537,14 +540,17 @@ End Sub
 Private Sub PopupPluginOptionMenu
 	
 	#if klipper
-	Dim popUpMemuItems As Map = CreateMap("SonOff Control":"psu")
+	Dim popUpMemuItems As Map = CreateMap("Power Supply HTTP Control":"psu")
+	Dim title As Object = "  External Control Menu"
 	#else
 	Dim popUpMemuItems As Map = CreateMap("PSU Control":"psu","ZLED Setup":"led","ws281x Setup":"ws2")
+	dim title as Object = "  Plugins Menu"
 	#End If
+	
 	
 	Dim cs As CSBuilder : cs.Initialize
 	Dim title As Object = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE8C1)). _
-	        	 					   Typeface(Typeface.DEFAULT).Append("  Plugins Menu").PopAll
+	        	 					   Typeface(Typeface.DEFAULT).Append(title).PopAll
 	Dim o1 As dlgListbox
 	o1.Initialize(Me,title,Me,"PluginsMenu_Event")
 	o1.IsMenu = True
@@ -560,14 +566,17 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 	Select Case value
 			
 		Case "psu"  '--- sonoff / PSU control setup
-			Dim oA As dlgPsuSetup
+			
 			#if klipper
-			oA.Initialize(Me,"PSU SonOff Config")
+			Dim oA1 As dlgIpOnOff '--- just create a new dlg
+			oA1.Initialize(mPrefDlg1,Me,"Power_BtnEdit")
+			oA1.Show("Printer Power Config",gblConst.PSU_SETUP_FILE)
 			#else
+			Dim oA As dlgPsuSetup
 			oA.Initialize(Me,"PSU Config")
+			oA.Show
 			#End If
 			
-			oA.Show
 			
 		Case "led" '--- ZLED
 			Dim oB As dlgZLEDSetup
@@ -880,6 +889,7 @@ Private Sub Build_RightSideMenu
 	clvDrawer.Clear
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+	Dim DataPSU As Map = File.ReadMap(xui.DefaultFolder,gblConst.PSU_SETUP_FILE)
 	Dim cs As CSBuilder
 	If Data.GetDefault("m600",False).As(Boolean) Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(22).Append("Filament Change M600").PopAll,"m600")
@@ -887,8 +897,10 @@ Private Sub Build_RightSideMenu
 	If Data.GetDefault("g29",False).As(Boolean) Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(22).Append("Bed Level G29").PopAll,"g29")
 	End If
-	If Data.GetDefault("prpwr",False).As(Boolean) Then
-		clvDrawer.AddTextItem(cs.Initialize.Size(22).Append("Printer Power Menu").PopAll,"pwr")
+	If DataPSU.GetDefault("active",False).As(Boolean) Then
+		Dim txt As Object = DataPSU.Get("desc")
+		If strHelpers.IsNullOrEmpty(txt) Then txt = "Printer Power Menu"
+		clvDrawer.AddTextItem(cs.Initialize.Size(22).Append(txt).PopAll,"prpwr")
 	End If
 	If Data.GetDefault("syscmds",False).As(Boolean) Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(22).Append("OS Systems Menu").PopAll,"sys")
@@ -896,6 +908,9 @@ Private Sub Build_RightSideMenu
 		
 End Sub
 
+Private Sub Power_BtnEdit(editdata As Map)
+	Build_RightSideMenu
+End Sub
 
 
 Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)

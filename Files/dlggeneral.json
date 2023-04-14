@@ -39,12 +39,6 @@
             "required": false
         },
         {
-            "title": "Printer Power Button",
-            "type": "Boolean",
-            "key": "prpwr",
-            "required": false
-        },
-        {
             "title": "Axes",
             "type": "Separator",
             "key": "",

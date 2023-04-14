@@ -86,14 +86,15 @@ Private Sub LoadCfgs()
 	
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.ANDROID_POWER_OPTIONS_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.ANDROID_POWER_OPTIONS_FILE) = False Then
-		Dim o2 As dlgPowerOptions
+		Dim o2 As dlgAndroidPowerOptions
 		o2.Initialize(Null)  
 		o2.CreateDefaultFile
 	End If
-	ReadPowerCFG
+	ReadAndroidPowerCFG
 	
 	'======================================================================
 
+	#if not (klipper)
 	If Main.kvs.ContainsKey(gblConst.PWR_CTRL_ON) = False Then	
 		Dim o1 As dlgPsuSetup
 		o1.Initialize(Null,"")
@@ -110,7 +111,7 @@ Private Sub LoadCfgs()
 		ox.CreateDefaultFile
 	End If
 	ReadZLED_CFG
-
+	
 	'======================================================================
 
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE) '--- Dev
@@ -120,6 +121,7 @@ Private Sub LoadCfgs()
 		oi.CreateDefaultFile
 	End If
 	ReadWS281_CFG
+	#end if
 	
 	'======================================================================
 
@@ -142,7 +144,8 @@ Private Sub LoadCfgs()
 	ReadBedLevelCFG
 	
 	'======================================================================
-
+	
+	#if klipper
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE) = False Then
 		Dim oiq As dlgPrinterSetup
@@ -150,6 +153,17 @@ Private Sub LoadCfgs()
 		oiq.CreateDefaultFile
 	End If
 	'ReadPrinterCFG '--- this will be done on connection init
+	
+	'======================================================================
+
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.PSU_SETUP_FILE) '--- Dev
+	If File.Exists(xui.DefaultFolder,gblConst.PSU_SETUP_FILE) = False Then
+		Dim oiw As dlgIpOnOff
+		oiw.Initialize(Null,Null,Null)
+		oiw.CreateDefaultDataFile(gblConst.PSU_SETUP_FILE)
+	End If
+	'ReadPSUCFG '--- this will be done on connection init
+	#end if
 	
 End Sub
 
@@ -211,7 +225,7 @@ Public Sub ReadGeneralCFG
 	
 End Sub
 
-public Sub ReadPowerCFG
+Public Sub ReadAndroidPowerCFG
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.ANDROID_POWER_OPTIONS_FILE)
 	

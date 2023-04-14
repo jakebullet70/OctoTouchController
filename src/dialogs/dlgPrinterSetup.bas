@@ -62,7 +62,7 @@ Public Sub Show(firstRun As Boolean)
 	If guiHelpers.gIsLandScape = False Then
 		w = 92%x
 	Else
-		w = guiHelpers.gWidth - 92dip
+		w = 380dip
 	End If
 	
 	 ' guiHelpers.gWidth * guiHelpers.gScreenSizeDPI

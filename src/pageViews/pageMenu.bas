@@ -36,6 +36,7 @@ Sub Class_Globals
 	Private lblBedActualV,lblBedTargetV,lblToolActualV,lblToolTargetV As Label ' <--- pointers to card objects
 	Private lblActualTempBedV, lblActualTempToolV As Label ' <--- pointers to card objects
 	
+	Private pnlMenuBreak As Panel
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String) 
@@ -62,6 +63,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	guiHelpers.SetVisible(Array As B4XView(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3),False)
 	guiHelpers.SkinButton_Pugin(Array As Button(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3,btnSubScrnOff,btnSubBrightness,btnSubHeater))
 	pnlMenuLowerBLine.Color = clrTheme.txtAccent
+	pnlMenuBreak.Color = clrTheme.txtAccent
 	pnlMenuLowerBLine.Visible = True '--- turned off in designer
 	
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"ShowVer",2300)

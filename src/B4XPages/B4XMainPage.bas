@@ -17,8 +17,6 @@ Version=9.85
 '============ SEARCH FOR -------- 'TODO V2
 
 
-
-
 Sub Class_Globals
 	Private Const mModule As String = "B4XMainPage" 'ignore
 	Public Root As B4XView
@@ -211,9 +209,12 @@ Private Sub BuildGUI
 '		End Select
 '	End If
 	
+
 	guiHelpers.SkinButton_Pugin(Array As Button(btnSliderMenu, btnPageAction))
-	btnSliderMenu.TextSize = 24 '* guiHelpers.gFscale
-	btnPageAction.TextSize = 24
+	Dim bs As Float = 33
+	If guiHelpers.gIsLandScape Then bs = 24
+	btnSliderMenu.TextSize = bs
+	btnPageAction.TextSize = bs
 	
 	pnlMainDrawer.Color = clrTheme.Background2
 	SideMenu.SkinMe(Array As Button(btnSTOP,btnFRESTART,btnRESTART),pnlMainDrawer,pnlBtnsDrawer)
@@ -989,7 +990,7 @@ End Sub
 
 Private Sub RunHTTPOnOffMenu(fname As String)
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,fname)
-	If  Data.GetDefault("tgl",False).As(Boolean) Then
+	If  Data.GetDefault("tgl",False).As(Boolean) Then '--- toggle cmd
 		oMasterController.cn.PostRequest2(Data.Get("ipon"),"")
 		Return
 	End If

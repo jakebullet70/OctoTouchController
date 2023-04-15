@@ -211,7 +211,7 @@ Private Sub BuildGUI
 	
 
 	guiHelpers.SkinButton_Pugin(Array As Button(btnSliderMenu, btnPageAction))
-	Dim bs As Float = 33
+	Dim bs As Float = 35
 	If guiHelpers.gIsLandScape Then bs = 24
 	btnSliderMenu.TextSize = bs
 	btnPageAction.TextSize = bs
@@ -896,6 +896,7 @@ Private Sub Build_RightSideMenu
 	clvDrawer.PressedColor = clrTheme.BackgroundHeader
 	clvDrawer.DefaultTextColor = clrTheme.txtNormal
 	
+	
 	clvDrawer.Clear
 	Dim size As Float = IIf(guiHelpers.gIsLandScape,20,22)
 	Dim txt As Object 
@@ -944,19 +945,13 @@ End Sub
 
 Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	SideMenu.CloseRightMenu
-	'Dim Data As Map
-	'Dim toggle As Boolean
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	Select Case Value.As(String)
 		Case "sys"
 			#if klipper
-			guiHelpers.Show_toast2("System Commands Are Not Available At This Time",4000)
-			Return
+			Dim oa As dlgKlipperSysCmds : oa.Initialize(Me) : 	oa.Show
 			#Else
-			Dim oa As dlgOctoSysCmds
-			oa.Initialize(Me,oMasterController.CN)
-			oa.Show
-			Return
+			Dim oa As dlgOctoSysCmds : oa.Initialize(Me,oMasterController.CN) : oa.Show
 			#end if
 		
 		Case "pwr"

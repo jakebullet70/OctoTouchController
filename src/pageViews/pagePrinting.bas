@@ -127,17 +127,14 @@ Private Sub BuildGUI
 #region "PRINTER BTNS TXT"	
 	Dim cs As CSBuilder 
 	 
-	cs.Initialize
-	mText4PrintBtn  = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF02F)).Append(CRLF). _
+	
+	mText4PrintBtn  = cs.Initialize.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF02F)).Append(CRLF). _
 												Typeface(Typeface.DEFAULT).Append("Print").PopAll
-	cs.Initialize
-	mText4ResumeBtn = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF04B)).Append(CRLF). _
+	mText4ResumeBtn = cs.Initialize.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF04B)).Append(CRLF). _
 												Typeface(Typeface.DEFAULT).Append("Resume").PopAll
-	cs.Initialize
-	btnPause.Text = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF04C)).Append(CRLF). _
+	btnPause.Text = cs.Initialize.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF04C)).Append(CRLF). _
 												Typeface(Typeface.DEFAULT).Append("Pause").PopAll
-	cs.Initialize
-	btnCancel.Text = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF04D)).Append(CRLF). _
+	btnCancel.Text = cs.Initialize.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF04D)).Append(CRLF). _
 												Typeface(Typeface.DEFAULT).Append("Cancel").PopAll												
 '	cs.Initialize
 '	guiHelpers.ResizeText(cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF04C)).Append(CRLF). _

@@ -282,23 +282,27 @@ Public Sub Update_Printer_Status
 	
 	'guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	If oc.isConnected Then
-		
+		If guiHelpers.gIsLandScape = False Then lblStatus.TextSize = 32 Else lblStatus.TextSize = 28
 		#if klipper
 		lblStatus.Text = oc.FormatedStatus.SubString2(0,1).ToUpperCase & oc.FormatedStatus.SubString(1)
 		#else
 		lblStatus.Text = oc.FormatedStatus
 		#End If
 		
+		
 		If oPageCurrent Is pageMovement  Or oPageCurrent Is pageFiles Then
-			If guiHelpers.gIsLandScape Then
-				lblStatus.Text = lblStatus.Text & "  (" & oc.FormatedTemps.Replace(CRLF,"   ").Replace("C","") & ")"
-			Else
-				lblStatus.Text = lblStatus.Text & "  --  " & oc.FormatedTemps.Replace("C","") 
-			End If
-			
+			lblStatus.TextSize = 22
+			'If guiHelpers.gIsLandScape = False Then lblStatus.TextSize = 22 Else lblStatus.TextSize = 22
+			lblStatus.Text = lblStatus.Text & "  (" & oc.FormatedTemps.Replace(CRLF,"   ").Replace("C","") & ")"
+'			If guiHelpers.gIsLandScape  Then
+'				lblStatus.Text = lblStatus.Text & "  (" & oc.FormatedTemps.Replace(CRLF,"   ").Replace("C","") & ")"
+'			Else
+'				lblStatus.Text = lblStatus.Text & "  --  " & oc.FormatedTemps.Replace("C","") 
+'			End If
 		End If
 			
 	Else
+		lblStatus.TextSize = 30
 		lblStatus.Text = gblConst.NOT_CONNECTED
 	End If
 	
@@ -311,6 +315,8 @@ Public Sub Update_Printer_Status
 	#if klipper
 	If SideMenu.IsOpen Then  CallSubDelayed(SideMenu,"Display_Btns")
 	#end if
+	
+	'lblStatus.TextSize = oldTxtSize
 	
 End Sub
 

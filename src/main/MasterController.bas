@@ -36,7 +36,8 @@ Sub Class_Globals
 	#end region
 	
 	'--- maps for popup listboxes - formated!
-	Public mapBedHeatingOptions, mapToolHeatingOptions,mapAllHeatingOptions,mapToolHeatValuesOnly As Map
+	Public mapBedHeatingOptions, mapToolHeatingOptions,mapAllHeatingOptions As Map
+	Public mapToolHeatValuesOnly,mapBedHeatValuesOnly As Map
 
 	#if klipper	
 	Public KlipperFrontEnd As Int
@@ -480,11 +481,13 @@ Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
 	mapToolHeatingOptions.Initialize
 	mapAllHeatingOptions.Initialize
 	mapToolHeatValuesOnly.Initialize
+	mapBedHeatValuesOnly.Initialize
 		
 	Dim allOff As String = "** All Off **"
 
 	mapBedHeatingOptions.Put(allOff,"alloff")
 	mapBedHeatingOptions.Put("** Bed Off **","bedoff")
+	mapBedHeatValuesOnly.Put("Bed Off","bedoff")
 	
 	mapToolHeatingOptions.Put(allOff,"alloff")
 	mapToolHeatingOptions.Put("** Tool Off **","tooloff")
@@ -514,6 +517,7 @@ Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
 			If BedTemp <> 0 Then
 				s = $"Set ${FilamentType} (Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
 				mapBedHeatingOptions.Put(s,s)
+				mapBedHeatValuesOnly.Put(s,s)
 			End If
 			
 			s = $"Set ${FilamentType} (Tool: ${ToolTemp}${gblConst.DEGREE_SYMBOL}C  / Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
@@ -522,6 +526,7 @@ Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
 		Next
 		
 		mapToolHeatValuesOnly.Put("Enter Value","ev")
+		mapBedHeatValuesOnly.Put("Enter Value","ev")
 		
 	Catch
 		

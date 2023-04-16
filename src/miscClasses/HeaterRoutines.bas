@@ -57,6 +57,47 @@ Private Sub HeatTempChange_Tool(value As String, tag As String)
 End Sub
 
 
+'=====================
+
+
+Public Sub PopupBedHeaterMenu
+	
+	Dim o1 As dlgListbox
+	o1.Initialize(mMainObj,"Bed Presets",Me,"HeatTempChange_Bed")
+	o1.Show(250dip,220dip,mMainObj.oMasterController.mapbedHeatValuesOnly)
+	
+End Sub
+Private Sub HeatTempChange_Bed(value As String, tag As String)
+	
+	'--- callback for HeatChangeRequest
+	If value.Length = 0 Then Return
+	
+	If value = "ev" Then
+		'--- type in a value
+		ChangeTempBed
+		Return
+	End If
+	
+	If value.EndsWith("off") Then value = 0 '--- bed off
+	
+	If fnc.CheckTempRange("bed", value) = False Then
+		guiHelpers.Show_toast("Invalid Temperature",1800)
+		Return
+	End If
+
+	#if klipper
+	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M140 S" & value))
+	#else
+	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))		
+	#End If
+
+	guiHelpers.Show_toast("Bed Temperature Change",1400)
+	
+End Sub
+
+
+
+
 '--------------------------------------------------------------------
 '------------------ Enter Temp dialogs ------------------------------
 '--------------------------------------------------------------------
@@ -71,7 +112,8 @@ Private Sub TempChangePrompt(what As String)
 	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
-	If oc.isConnected = False Or oc.isPrinting Or oc.IsPaused2 Then Return
+	'If oc.isConnected = False Or oc.isPrinting Or oc.IsPaused2 Then Return
+	If oc.isConnected = False Then Return
 	
 	Dim o1 As dlgNumericInput
 	o1.Initialize(mMainObj, _

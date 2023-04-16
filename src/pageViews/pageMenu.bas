@@ -59,6 +59,11 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	lblToolActualV.Text = "Actual" : lblBedActualV.Text = "Actual"
 	lblActualTempBedV.TextColor = clrTheme.txtNormal
 	lblActualTempToolV.TextColor = clrTheme.txtNormal
+
+	If guiHelpers.gIsLandScape = False Then
+		lblToolTargetV.TextSize = 20
+		lblBedTargetV.TextSize = 20
+	End If
 		
 	guiHelpers.SetVisible(Array As B4XView(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3),False)
 	guiHelpers.SkinButton_Pugin(Array As Button(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3,btnSubScrnOff,btnSubBrightness,btnSubHeater))
@@ -100,6 +105,7 @@ Private Sub BuildStatCard(viewPanel As Panel,imgFile As String, Text As String)
 			If v Is ImageView Then
 				Dim b As Bitmap = LoadBitmapResize(File.DirAssets, imgFile, v.Width, v.Height,True)
 				v.As(ImageView).Bitmap = guiHelpers.ChangeColorBasedOnAlphaLevel(b,clrTheme.txtNormal)
+				v.As(ImageView).Tag = IIf(Text.ToLowerCase = "bed","b","t")
 				
 			else if v Is Label Then
 				Dim o6 As Label = v
@@ -160,6 +166,34 @@ Private Sub BuildMenuCard(mnuPanel As Panel,imgFile As String, Text As String, m
 	
 End Sub
 
+Private Sub mnuCardImg1_Click
+	
+	#if klipper
+	If oc.isconnected = False Or mMainObj.lblstatus.text = "no connection"  Then
+	#else
+	if oc.isconnected = false then 
+	#end if
+		guiHelpers.show_toast(gblConst.not_connected,1000)
+		Return
+	End If
+	
+	Dim oo1 As ImageView : oo1 = Sender
+	Dim oo2 As HeaterRoutines : oo2.Initialize
+	If oo1.Tag = "b" Then
+		If oc.isPrinting Or oc.IsPaused2 Then
+			oo2.ChangeTempBed
+		Else
+			oo2.PopupBedHeaterMenu
+		End If
+	Else
+		If oc.isPrinting Or oc.IsPaused2 Then
+			oo2.ChangeTempTool
+		Else
+			oo2.PopupToolHeaterMenu
+		End If
+	End If
+	
+End Sub
 
 Private Sub mnuCardImg_Click
 	
@@ -167,18 +201,22 @@ Private Sub mnuCardImg_Click
 '	Log(oc.FormatedStatus)
 	
 	#if klipper
-	If oc.isConnected = False Or mMainObj.lblStatus.Text = "No Connection"  Then
+	If oc.isconnected = False Or mMainObj.lblstatus.text = "no connection"  Then
 	#else
-	If oc.isConnected = False Then 
-	#End If
-		guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
+	if oc.isconnected = false then 
+	#end if
+		guiHelpers.show_toast(gblConst.not_connected,1000)
 		Return
 	End If
 	
-	'--- pass the menu selection back to main page
-	Dim oo As lmB4XImageViewX : oo = Sender
-	Sleep(50)
-	CallSub2(mMainObj,mCallBackEvent,oo.Tag2)
+	'--- pass the page menu selection back to main page
+	Try
+		Dim oo1 As lmB4XImageViewX : oo1 = Sender
+		Sleep(50)
+		CallSub2(mMainObj,mCallBackEvent,oo1.tag2)
+	Catch
+		Log(LastException)
+	End Try
 	
 End Sub
 

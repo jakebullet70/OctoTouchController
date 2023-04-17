@@ -361,10 +361,10 @@ Private Sub SetPoints() As Boolean
 		point3 = Array As Int(CalcRelitive(min_x  - mData.Get(gblConst.bedManualXYoffset),"L"), CalcRelitive(min_y  + mData.Get(gblConst.bedManualXYoffset),"W"))
 		point4 = Array As Int(CalcRelitive(min_x  + mData.Get(gblConst.bedManualXYoffset),"L"), CalcRelitive(min_y  - mData.Get(gblConst.bedManualXYoffset),"W"))
 		#else
-		point1 = Array As Int(min_x  + mData.Get(gblConst.bedXYoffset), min_y  + mData.Get(gblConst.bedXYoffset))
-		point2 = Array As Int(max_x - mData.Get(gblConst.bedXYoffset), max_y - mData.Get(gblConst.bedXYoffset))
-		point3 = Array As Int(max_x - mData.Get(gblConst.bedXYoffset), min_y  + mData.Get(gblConst.bedXYoffset))
-		point4 = Array As Int(min_x  + mData.Get(gblConst.bedXYoffset), max_y - mData.Get(gblConst.bedXYoffset))
+		point1 = Array As Int(min_x  + mData.Get(gblConst.bedManualXYoffset), min_y  + mData.Get(gblConst.bedManualXYoffset))
+		point2 = Array As Int(max_x - mData.Get(gblConst.bedManualXYoffset), max_y - mData.Get(gblConst.bedManualXYoffset))
+		point3 = Array As Int(max_x - mData.Get(gblConst.bedManualXYoffset), min_y  + mData.Get(gblConst.bedManualXYoffset))
+		point4 = Array As Int(min_x  + mData.Get(gblConst.bedManualXYoffset), max_y - mData.Get(gblConst.bedManualXYoffset))
 		#End If
 		Return True
 	Catch

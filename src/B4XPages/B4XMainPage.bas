@@ -501,16 +501,17 @@ End Sub
 '--- options plugin sub menu
 Private Sub PopupFunctionOptionsMnu
 	
-	Dim popUpMemuItems As Map = CreateMap("Filament Control Wizard":"fl","Bed Leveling Wizard":"bl")
-		
-	Dim cs As CSBuilder : cs.Initialize
-	Dim title As Object = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
-										Typeface(Typeface.DEFAULT).Append("  Functions Menu").PopAll
+	Dim cs As CSBuilder 
+	Dim gui As guiMsgs : gui.Initialize
+	Dim po As Map = gui.BuildFunctionSetupMenu
+			
+	Dim title As Object = cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
+										Typeface(Typeface.DEFAULT).Append("  Internal Functions Menu").PopAll
 	
 	Dim o1 As dlgListbox
 	o1.Initialize(Me,title,Me,"FncMenu_Event")
 	o1.IsMenu = True
-	o1.Show(260dip,300dip,popUpMemuItems)
+	o1.Show(260dip,300dip,po)
 	
 End Sub
 
@@ -520,6 +521,10 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 	If value.Length = 0 Then PopupMainOptionMenu
 	
 	Select Case value
+			
+		Case "g29"
+			Main.kvs.Put("g29", Not (Main.kvs.GetDefault("g29",False)))
+			Show_toast("G29 Option Saved",2000)
 			
 		Case "fl" '--- filament control
 			Dim oB As dlgFilamentSetup
@@ -552,7 +557,7 @@ Private Sub PopupPluginOptionMenu
 	Dim title As Object = "  External Control Menu"
 	#else
 	Dim popUpMemuItems As Map = CreateMap("PSU Control":"psu","ZLED Setup":"led","ws281x Setup":"ws2")
-	dim title as Object = "  Plugins Menu"
+	Dim title As Object = "  Plugins Menu"
 	#End If
 	
 	
@@ -874,13 +879,13 @@ End Sub
 #end region
 
 
-#if klipper
+'#if klipper
 '--- side drawer
 Public Sub btnSidePnl_Click
 	Dim b As Button : b = Sender
 	SideMenu.BtnPressed(b)
 End Sub
-#end if
+'#end if
 
 Private Sub btnSliderMenu_Click
 	'--- righty menu gear icon
@@ -892,9 +897,11 @@ End Sub
 Private Sub Build_RightSideMenu
 	#if not (klipper )
 	'--- hide the klipper crap!
-	clvDrawer.GetBase.Top = pnlMainDrawer.Top
- 	pnlMainDrawer.Visible = False
+	clvDrawer.GetBase.Top = 0
+	pnlBtnsDrawer.Visible = False
 	pnlLineBreakDrawer.Visible = False
+	#else
+	
 	#End If
 	
 	clvDrawer.DefaultTextBackgroundColor = clrTheme.Background
@@ -912,9 +919,6 @@ Private Sub Build_RightSideMenu
 	Dim cs As CSBuilder
 	If Data.GetDefault("m600",False).As(Boolean) Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Filament Change M600").PopAll,"m600")
-	End If
-	If Data.GetDefault("g29",False).As(Boolean) Then
-		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Bed Level G29").PopAll,"g29")
 	End If
 	
 	'clvDrawer.AddTextItem(cs.Initialize.Size(12).Alignment("ALIGN_CENTER").Append("------------ SYS CMDS -----------").PopAll,"")
@@ -973,18 +977,21 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 			
 		Case "1","2","3","4"
 			RunHTTPOnOffMenu(Value.As(String) & gblConst.HTTP_ONOFF_SETUP_FILE)
-			
+		
+		#if not (klipper)	
+		Case "lt" '--- WLED - ws281x
+			If oc.isConnected = False Then
+				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
+				Return
+			End If
+			Dim o3 As dlgOnOffCtrl
+			o3.Initialize(Me,IIf(config.ShowZLEDCtrlFLAG,"ZLED","WS281x") & " Control")
+			o3.Show
+		#end if
+		
 	End Select
 			
-'		Case "lt" '--- WLED - ws281x
-'			If oc.isConnected = False Then
-'				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
-'				Return
-'			End If
-'			Dim o3 As dlgOnOffCtrl
-'			o3.Initialize(mMainObj,IIf(config.ShowZLEDCtrlFLAG,"ZLED","WS281x") & " Control")
-'			o3.Show
-
+	
 End Sub
 
 

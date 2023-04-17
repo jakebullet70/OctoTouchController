@@ -99,6 +99,8 @@ Public Sub SkinDialog(Template As Object)
 					
 			End Select
 	
+		'Log(pit.Key)
+	
 		Next
 		
 	Catch
@@ -110,45 +112,77 @@ End Sub
 
 
 
+
+
+
+
+'==============================================================================================
+'==============================================================================================
+'==============================================================================================
+'==============================================================================================
+
+
+
 'TODO
 'https://www.b4x.com/android/forum/threads/preferencesdialog-shortoptions-width.143952/
-Private Sub SetWidthItemSO (Pref As PreferencesDialog, Key As String, wwidth As Double)
-	For i = 0 To Pref.PrefItems.Size - 1
-		Dim pi As B4XPrefItem = Pref.PrefItems.Get(i)
-		If pi.key = Key Then
-			If pi.ItemType = Pref.TYPE_SHORTOPTIONS Then
-				Dim Parent As B4XView = Pref.CustomListView1.GetPanel(i).GetView(1)
-				Parent.Left = (Parent.Left + Parent.Width) - wwidth
-				Parent.Width = wwidth
-				Dim view As B4XView = Parent.GetView( 0)
-				view.Width = Parent.Width
-			Else
-				Dim oldx As Double=Pref.CustomListView1.GetPanel(i).GetView(1).Left
-				Dim oldw As Double=Pref.CustomListView1.GetPanel(i).GetView(1).Width
-				Pref.CustomListView1.GetPanel(i).GetView(1).Left=(oldx+oldw)-wwidth
-				Pref.CustomListView1.GetPanel(i).GetView(1).Width= wwidth
-			End If
-		End If
-	Next
-End Sub
+'PreferencesDialog ShortOptions width'
+'Private Sub SetWidthItemSO (Pref As PreferencesDialog, Key As String, wwidth As Double)
+'	For i = 0 To Pref.PrefItems.Size - 1
+'		Dim pi As B4XPrefItem = Pref.PrefItems.Get(i)
+'		If pi.key = Key Then
+'			If pi.ItemType = Pref.TYPE_SHORTOPTIONS Then
+'				Dim Parent As B4XView = Pref.CustomListView1.GetPanel(i).GetView(1)
+'				Parent.Left = (Parent.Left + Parent.Width) - wwidth
+'				Parent.Width = wwidth
+'				Dim view As B4XView = Parent.GetView( 0)
+'				view.Width = Parent.Width
+'			Else
+'				Dim oldx As Double=Pref.CustomListView1.GetPanel(i).GetView(1).Left
+'				Dim oldw As Double=Pref.CustomListView1.GetPanel(i).GetView(1).Width
+'				Pref.CustomListView1.GetPanel(i).GetView(1).Left=(oldx+oldw)-wwidth
+'				Pref.CustomListView1.GetPanel(i).GetView(1).Width= wwidth
+'			End If
+'		End If
+'	Next
+'End Sub
+
 
 
 'TODO
 'https://www.b4x.com/android/forum/threads/solved-how-to-hide-cancel-confirm-buttons-in-textitem-of-the-b4xpreferencesdialog.116534/
-Public Sub RemoveCancelConfirmBtnsinTextItem(p As PreferencesDialog)
-	
-	For i = 0 To p.PrefItems.Size - 1
-	    Dim pi As B4XPrefItem = p.PrefItems.Get(i)
-	    p.CustomListView1.AnimationDuration = 0
-	    If pi.ItemType = p.TYPE_TEXT Then
-	        Dim pnl As B4XView = p.CustomListView1.GetPanel(i)
-	        Dim ft As B4XFloatTextField = pnl.GetView(0).Tag
-	        ft.lblClear.Left = -100dip
-			ft.lblV.Left = -100dip
-		End If
-	Next
+'Public Sub RemoveCancelConfirmBtnsinTextItem(p As PreferencesDialog)
+'	
+'	For i = 0 To p.PrefItems.Size - 1
+'	    Dim pi As B4XPrefItem = p.PrefItems.Get(i)
+'	    p.CustomListView1.AnimationDuration = 0
+'	    If pi.ItemType = p.TYPE_TEXT Then
+'	        Dim pnl As B4XView = p.CustomListView1.GetPanel(i)
+'	        Dim ft As B4XFloatTextField = pnl.GetView(0).Tag
+'	        ft.lblClear.Left = -100dip
+'			ft.lblV.Left = -100dip
+'		End If
+'	Next
+'
+'End Sub
 
-End Sub
+
+'TODO
+'PreferenceDialog items' height
+'https://www.b4x.com/android/forum/threads/b4x-preferencedialog-items-height.115037/#content
+'Dim sf As Object = p.ShowDialog(d, "OK", "CANCEL")
+' p.CustomListView1.AnimationDuration = 0
+'For i = 0 To p.PrefItems.Size - 1
+'    Dim pi As B4XPrefItem = p.PrefItems.Get(i)
+'    If pi.ItemType = p.TYPE_BOOLEAN Then
+'        p.CustomListView1.ResizeItem(i, 70dip)
+'        Dim pnl As B4XView = p.CustomListView1.GetPanel(i)
+'        pnl.Height = pnl.Parent.Height
+'        pnl.GetView(0).Height = pnl.Height - 20dip
+'        pnl.GetView(1).Top = 20dip
+'    End If
+'Next
+'Wait For (sf) Complete (Result As Int)
+
 
 
 'TODO

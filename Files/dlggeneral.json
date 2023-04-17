@@ -21,21 +21,15 @@
             "required": false
         },
         {
-            "title": "OS System Commands",
-            "type": "Boolean",
-            "key": "syscmds",
-            "required": false
-        },
-        {
-            "title": "GCode - M600",
+            "title": "Filament Change - M600",
             "type": "Boolean",
             "key": "m600",
             "required": false
         },
         {
-            "title": "GCode - G29",
+            "title": "OS System Commands",
             "type": "Boolean",
-            "key": "g29",
+            "key": "syscmds",
             "required": false
         },
         {

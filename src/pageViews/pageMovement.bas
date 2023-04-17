@@ -264,10 +264,10 @@ Private Sub BuildFunctionMnu() As Map
 	Dim m As Map : m.Initialize
 	m.Put("Pre-Heat Menu","prh")
 	#if not (klipper)
-	m.Put("Auto Bed Leveling (G29)","bl")  '''-----  needs to be an option in octoprint
+	If Main.kvs.GetDefault("g29",False) = true then m.Put("Auto Bed Leveling (G29)","bl") 
 	#end if
-	If config.ShowBedLevel_ManualFLAG 	Then m.Put("Manual Bed Leveling","blw")
-	If config.ShowFilamentChangeFLAG Then m.Put("Manual Change Filament","cf")
+	If config.ShowBedLevel_ManualFLAG 	Then m.Put("Manual Bed Leveling Wizard","blw")
+	If config.ShowFilamentChangeFLAG Then m.Put("Change Filament Wizard","cf")
 	Return m
 End Sub
 

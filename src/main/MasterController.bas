@@ -511,13 +511,13 @@ Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
 			'--- build string
 			s = $"Set ${FilamentType} (Tool: ${ToolTemp}${gblConst.DEGREE_SYMBOL}C )"$
 			mapToolHeatingOptions.Put(s,s)
-			mapToolHeatValuesOnly.Put($"${ToolTemp}${gblConst.DEGREE_SYMBOL}C"$,ToolTemp)
+			mapToolHeatValuesOnly.Put($"${ToolTemp}${gblConst.DEGREE_SYMBOL}"$,ToolTemp)
 
 			'--- bed only			
 			If BedTemp <> 0 Then
 				s = $"Set ${FilamentType} (Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$
 				mapBedHeatingOptions.Put(s,s)
-				mapBedHeatValuesOnly.Put(s,s)
+				mapBedHeatValuesOnly.Put($"${BedTemp}${gblConst.DEGREE_SYMBOL}"$,BedTemp)
 			End If
 			
 			s = $"Set ${FilamentType} (Tool: ${ToolTemp}${gblConst.DEGREE_SYMBOL}C  / Bed: ${BedTemp}${gblConst.DEGREE_SYMBOL}C )"$

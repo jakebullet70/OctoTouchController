@@ -32,8 +32,6 @@ Sub Process_Globals
 	
 	'--- general dlg
 '	Public ShowSysCmdsFLAG As Boolean = True
-'	Public ChangeBrightnessSettingsFLAG As Boolean = True 
-	'Public ShowScreenOffFLAG As Boolean = True 
 	Public logPOWER_EVENTS As Boolean = False 
 	Public logFILE_EVENTS As Boolean = False
 	Public logREQUEST_OCTO_KEY As Boolean = False
@@ -123,7 +121,7 @@ Private Sub LoadCfgs()
 	End If
 	ReadWS281_CFG
 
-	
+	#end if
 	'======================================================================
 
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE) '--- Dev
@@ -144,7 +142,7 @@ Private Sub LoadCfgs()
 	End If
 	ReadManualBedLevelCFG
 	
-	#end if
+	
 	
 	'======================================================================
 	
@@ -159,6 +157,8 @@ Private Sub LoadCfgs()
 	
 	'======================================================================
 
+
+	#end if
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.PSU_SETUP_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.PSU_SETUP_FILE) = False Then
 		Dim oiw As dlgIpOnOffSetup
@@ -169,7 +169,6 @@ Private Sub LoadCfgs()
 		oiw.CreateDefaultDataFile("3" & gblConst.HTTP_ONOFF_SETUP_FILE) '--- generic HTTP commands
 		oiw.CreateDefaultDataFile("4" & gblConst.HTTP_ONOFF_SETUP_FILE) '--- generic HTTP commands
 	End If
-	#end if
 	
 End Sub
 

@@ -47,6 +47,12 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	
 	mPnlMain.SetLayoutAnimated(0,0,masterPanel.top,masterPanel.Width,masterPanel.Height)
 	mPnlMain.LoadLayout("pageMenu2")
+	BuildGUI
+	Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"ShowVer",2300)
+	
+End Sub
+
+Private Sub BuildGUI
 	
 	'--- build the main menu screen
 	BuildMenuCard(pnlMnuMovement,"menuMovement.png","Movement",gblConst.PAGE_MOVEMENT)
@@ -56,10 +62,10 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	BuildStatCard(pnlTempTool,"hotend.png","tool")
 	BuildStatCard(pnlTempBed,"bed.png","bed")
 	
-	lblToolActualV.Text = "Actual" : lblBedActualV.Text = "Actual"
+	lblToolActualV.Text = "Actual" : lblBedActualV.Text = lblToolActualV.Text
 	lblActualTempBedV.TextColor = clrTheme.txtNormal
 	lblActualTempToolV.TextColor = clrTheme.txtNormal
-
+	
 	If guiHelpers.gIsLandScape = False Then
 		lblToolTargetV.TextSize = 20
 		lblBedTargetV.TextSize = 20
@@ -71,9 +77,8 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	pnlMenuUpperBL.Color = clrTheme.txtAccent
 	pnlMenuLowerBLine.Visible = True '--- turned off in designer
 	
-	Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"ShowVer",2300)
-	
 End Sub
+
 
 Public Sub ShowVer
 	guiHelpers.Show_toast("Version: V" & Application.VersionName,2200)
@@ -277,7 +282,7 @@ Public Sub Update_Printer_Temps
 	lblToolTargetV.Text = ("Target: "& $"${IIf(oc.tool1Target = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.tool1Target)}"$).As(String).Replace("C","")
 
 	lblActualTempBedV.Text = oc.BedActual.Replace("C","")
-	lblBedTargetV.Text = ("Target: "& $"${IIf(oc.BedTarget = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.Tool1Actual)}"$).As(String).Replace("C","")
+	lblBedTargetV.Text = ("Target: "& $"${IIf(oc.BedTarget = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.BedTarget)}"$).As(String).Replace("C","")
 	
 	'--- TODO, strip the 'C' of the temps and just use degree symbol
 	'--- TODO, strip the 'C' of the temps and just use degree symbol

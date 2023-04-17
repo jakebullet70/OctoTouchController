@@ -140,7 +140,35 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	
 End Sub
 
-
+Public Sub BuildFunctionSetupMenu() As Map
+	
+	Dim cs As CSBuilder
+	Dim po As Map : po.Initialize
+	
+	#if not (klipper)
+	If Main.kvs.GetDefault("g29",False) = False Then
+		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
+										Typeface(Typeface.DEFAULT).Append(" G29 Auto Bed Level").PopAll,"g29")
+	Else
+		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append("G29 Auto Bed Level").PopAll,"g29")
+	End If
+	#end if
+	
+	If config.ShowFilamentChangeFLAG  Then
+		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
+										Typeface(Typeface.DEFAULT).Append(" Change Filament Wizard").PopAll,"fl")
+	Else
+		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append("Change Filament Wizard").PopAll,"fl")
+	End If
+	If config.ShowBedLevel_ManualFLAG  Then
+		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
+										Typeface(Typeface.DEFAULT).Append(" Manual Bed Leveling Wizard").PopAll,"bl")
+	Else
+		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append("Manual Bed Leveling Wizard").PopAll,"bl")
+	End If
+	
+	Return po
+End Sub
 
 'Public Sub GetIpSetupText() As String
 '	Msg.Initialize

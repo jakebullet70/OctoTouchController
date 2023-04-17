@@ -26,8 +26,8 @@ End Sub
 
 Public Sub CreateDefaultFile
 	
-	If File.Exists(xui.DefaultFolder,gblConst.BED_LEVEL_FILE) = False Then
-		File.WriteMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE, _
+	If File.Exists(xui.DefaultFolder,gblConst.BED_MANUAL_LEVEL_FILE) = False Then
+		File.WriteMap(xui.DefaultFolder,gblConst.BED_MANUAL_LEVEL_FILE, _
 						CreateMap(gblConst.bedManualShow: "false", _
 						 gblConst.bedManualXYspeed: "80",  gblConst.bedManualZspeed: "20", _
 						 gblConst.bedManualXYoffset: "10", gblConst.bedManualLevelHeight: "0.1", _
@@ -40,7 +40,7 @@ End Sub
 
 Public Sub Show
 	
-	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE)
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_MANUAL_LEVEL_FILE)
 	Dim ToTop As Boolean = False
 	
 	Dim h,w As Float
@@ -81,9 +81,9 @@ Public Sub Show
 	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
 		guiHelpers.Show_toast("Bed Level Data Saved",1500)
-		File.WriteMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE,Data)
+		File.WriteMap(xui.DefaultFolder,gblConst.BED_MANUAL_LEVEL_FILE,Data)
 		
-		config.ReadBedLevelCFG
+		config.ReadManualBedLevelCFG
 		
 		CallSub(mainObj.oPageCurrent,"Set_focus")
 	End If

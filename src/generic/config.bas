@@ -122,7 +122,7 @@ Private Sub LoadCfgs()
 		oi.CreateDefaultFile
 	End If
 	ReadWS281_CFG
-	#end if
+
 	
 	'======================================================================
 
@@ -132,17 +132,19 @@ Private Sub LoadCfgs()
 		oiz.Initialize(Null)
 		oiz.CreateDefaultFile
 	End If
-	ReadFilamentChangeCFG
+	ReadWizardFilamentChangeCFG
 	
 	'======================================================================
 
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.BED_LEVEL_FILE) '--- Dev
-	If File.Exists(xui.DefaultFolder,gblConst.BED_LEVEL_FILE) = False Then
+	If File.Exists(xui.DefaultFolder,gblConst.BED_MANUAL_LEVEL_FILE) = False Then
 		Dim oiy As dlgBedLevelSetup
 		oiy.Initialize(Null)
 		oiy.CreateDefaultFile
 	End If
-	ReadBedLevelCFG
+	ReadManualBedLevelCFG
+	
+	#end if
 	
 	'======================================================================
 	
@@ -179,12 +181,12 @@ End Sub
 'End Sub
 
 
-Public Sub ReadBedLevelCFG
-	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE)
+Public Sub ReadManualBedLevelCFG
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_MANUAL_LEVEL_FILE)
 	ShowBedLevel_ManualFLAG = Data.Get(gblConst.bedManualShow).As(Boolean)
 End Sub
 
-Public Sub ReadFilamentChangeCFG
+Public Sub ReadWizardFilamentChangeCFG
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
 	ShowFilamentChangeFLAG = Data.Get(gblConst.filShow).As(Boolean)
 End Sub

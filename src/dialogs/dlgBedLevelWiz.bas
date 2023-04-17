@@ -49,7 +49,7 @@ End Sub
 
 Public Sub Show
 	
-	Dim prefSavedData As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE)
+	Dim prefSavedData As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_MANUAL_LEVEL_FILE)
 	endGCode   = prefSavedData.Get(gblConst.bedManualEndGCode)
 	startGCode = prefSavedData.Get(gblConst.bedManualStartGcode)
 	

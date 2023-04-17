@@ -144,8 +144,59 @@ Public Sub RemoveCancelConfirmBtnsinTextItem(p As PreferencesDialog)
 	        Dim pnl As B4XView = p.CustomListView1.GetPanel(i)
 	        Dim ft As B4XFloatTextField = pnl.GetView(0).Tag
 	        ft.lblClear.Left = -100dip
-	        ft.lblV.Left = -100dip
-	    End If
+			ft.lblV.Left = -100dip
+		End If
 	Next
 
 End Sub
+
+
+'TODO
+'B4X Preference Dialog only as view (edit disable) 
+'https://www.b4x.com/android/forum/threads/b4x-preference-dialog-only-as-view-edit-disable-in-order-to-show-only-the-value.143127/
+'Private Sub ViewDialog(Item As Map, RowId As Long)
+'	DateTime.DateFormat="dd-MM-yyyy"
+'	Dim sf As Object =PrefDialog.ShowDialog(Item, "", "CHIUDI")
+'	For i = 0 To PrefDialog.PrefItems.Size - 1
+'		Dim pi As B4XPrefItem = PrefDialog.PrefItems.Get(i)
+'		If pi.ItemType = PrefDialog.TYPE_TEXT  Then
+'			Dim txt As B4XFloatTextField = PrefDialog.CustomListView1.GetPanel(i).GetView(0).Tag
+'			txt.TextField.Enabled =False
+'		End If
+'		If pi.ItemType=PrefDialog.TYPE_BOOLEAN Then
+'			Dim bool As B4XSwitch=PrefDialog.CustomListView1.GetPanel(i).GetView(1).Tag
+'			bool.Enabled=False
+'		End If
+'	Next
+'	SetTwoLabelsItemState(PrefDialog,"Data della Verifica",False) 'date
+'	SetTwoLabelsItemState(PrefDialog,"Livello",False) 'options
+'	SetTwoLabelsItemState(PrefDialog,"Esito della Verifica",False) 'options
+'	SetTwoLabelsItemState(PrefDialog,"Prossima Verifica entro il",False) 'date
+'	SetTwoLabelsItemState(PrefDialog,"Firma",False) 'eplanation
+'        
+'	For i = 0 To PrefDialog.PrefItems.Size - 1
+'		Dim pi As B4XPrefItem = PrefDialog.PrefItems.Get(i)
+'		If pi.ItemType = PrefDialog.TYPE_BOOLEAN Then
+'			PrefDialog.CustomListView1.ResizeItem(i, 80dip)
+'			Dim pnl As B4XView = PrefDialog.CustomListView1.GetPanel(i)
+'			pnl.Height = pnl.Parent.Height
+'			pnl.GetView(0).Height = pnl.Height - 20dip
+'			pnl.GetView(0).TextSize=12
+'			pnl.GetView(1).Top = 20dip
+'		End If
+'	Next
+'    
+'	Wait For (sf) Complete (Result As Int)
+'
+'End Sub
+'
+'Private Sub SetTwoLabelsItemState (Pref As PreferencesDialog, Key As String, Enabled As Boolean)
+'	For i = 0 To Pref.CustomListView1.Size - 1
+'		Dim pi As B4XPrefItem = Pref.CustomListView1.GetValue(i)
+'		If pi.Key = Key Then
+'			Pref.CustomListView1.GetPanel(i).GetView(0).Enabled = Enabled
+'			Pref.CustomListView1.GetPanel(i).GetView(1).Enabled = Enabled
+'		End If
+'	Next
+'End Sub
+'

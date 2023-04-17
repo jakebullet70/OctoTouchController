@@ -50,8 +50,8 @@ End Sub
 Public Sub Show
 	
 	Dim prefSavedData As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE)
-	endGCode   = prefSavedData.Get(gblConst.bedEndGCode)
-	startGCode = prefSavedData.Get(gblConst.bedStartGcode)
+	endGCode   = prefSavedData.Get(gblConst.bedManualEndGCode)
+	startGCode = prefSavedData.Get(gblConst.bedManualStartGcode)
 	
 	moveText = "You are at the !P! leveling position. Adjust your bed and press Next.'"
 	
@@ -208,7 +208,7 @@ Private Sub ProcessSteps
 	Dim txtHelp As Object 
 	'Dim moveText As String = "You are at the !P! leveling position. Adjust your bed and press NEXT.'"
 	mData = mWizDlg.PeekEditedData
-	gcodeSendLevelingPoint = $"G1 Z${mData.Get(gblConst.bedLevelHeight)} F${zSpeed}"$
+	gcodeSendLevelingPoint = $"G1 Z${mData.Get(gblConst.bedManualLevelHeight)} F${zSpeed}"$
 	logMe.LogDebug2("Point: " & current_point,"ProcessSteps")
 	btnPreheat.Visible = False
 	
@@ -226,7 +226,7 @@ Private Sub ProcessSteps
 			Try
 
 				'--- set travel height and speed				
-				gcode2send = $"G1 Z${mData.Get(gblConst.bedTravelHeight)} F${zSpeed}"$
+				gcode2send = $"G1 Z${mData.Get(gblConst.bedManualTravelHeight)} F${zSpeed}"$
 				SendMGcode(gcode2send) : Sleep(100)
 				
 				'--- sending movement
@@ -339,8 +339,8 @@ Private Sub SetMinMaxAndSpeeds() As Boolean
 	End If
 	
 	Try
-		zSpeed   = mData.Get(gblConst.bedZspeed)   * 60
-		xySpeed = mData.Get(gblConst.bedXYspeed) * 60
+		zSpeed   = mData.Get(gblConst.bedManualZspeed)   * 60
+		xySpeed = mData.Get(gblConst.bedManualXYspeed) * 60
 	Catch
 		logMe.LogIt2(LastException.Message, mModule,"SetMinMaxAndSpeeds")
 		Return False
@@ -356,10 +356,10 @@ Private Sub SetPoints() As Boolean
 	Try
 		
 		#if klipper
-		point1 = Array As Int(CalcRelitive(min_x  + mData.Get(gblConst.bedXYoffset),"L"), CalcRelitive(min_y  + mData.Get(gblConst.bedXYoffset),"W"))
-		point2 = Array As Int(CalcRelitive(min_x  - mData.Get(gblConst.bedXYoffset),"L"), CalcRelitive(min_y  - mData.Get(gblConst.bedXYoffset),"W"))
-		point3 = Array As Int(CalcRelitive(min_x  - mData.Get(gblConst.bedXYoffset),"L"), CalcRelitive(min_y  + mData.Get(gblConst.bedXYoffset),"W"))
-		point4 = Array As Int(CalcRelitive(min_x  + mData.Get(gblConst.bedXYoffset),"L"), CalcRelitive(min_y  - mData.Get(gblConst.bedXYoffset),"W"))
+		point1 = Array As Int(CalcRelitive(min_x  + mData.Get(gblConst.bedManualXYoffset),"L"), CalcRelitive(min_y  + mData.Get(gblConst.bedManualXYoffset),"W"))
+		point2 = Array As Int(CalcRelitive(min_x  - mData.Get(gblConst.bedManualXYoffset),"L"), CalcRelitive(min_y  - mData.Get(gblConst.bedManualXYoffset),"W"))
+		point3 = Array As Int(CalcRelitive(min_x  - mData.Get(gblConst.bedManualXYoffset),"L"), CalcRelitive(min_y  + mData.Get(gblConst.bedManualXYoffset),"W"))
+		point4 = Array As Int(CalcRelitive(min_x  + mData.Get(gblConst.bedManualXYoffset),"L"), CalcRelitive(min_y  - mData.Get(gblConst.bedManualXYoffset),"W"))
 		#else
 		point1 = Array As Int(min_x  + mData.Get(gblConst.bedXYoffset), min_y  + mData.Get(gblConst.bedXYoffset))
 		point2 = Array As Int(max_x - mData.Get(gblConst.bedXYoffset), max_y - mData.Get(gblConst.bedXYoffset))
@@ -379,12 +379,12 @@ End Sub
 #if klipper
 Private Sub CalcRelitive(n As Int, LorW As String) As Int	
 	If n >= 0 Then
-		n = mData.Get(gblConst.bedXYoffset)
+		n = mData.Get(gblConst.bedManualXYoffset)
 	Else
 		If LorW = "L" Then
-			n = printerL - Abs(mData.Get(gblConst.bedXYoffset))
+			n = printerL - Abs(mData.Get(gblConst.bedManualXYoffset))
 		Else
-			n = printerW - Abs(mData.Get(gblConst.bedXYoffset))
+			n = printerW - Abs(mData.Get(gblConst.bedManualXYoffset))
 		End If
 	End If
 	Return n

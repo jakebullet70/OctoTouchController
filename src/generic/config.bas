@@ -50,7 +50,8 @@ Sub Process_Globals
 	Public ShowWS281CtrlFLAG As Boolean = False
 	'--- functions menu
 	Public ShowFilamentChangeFLAG As Boolean = False
-	Public ShowBedLevelFLAG As Boolean = False
+	Public ShowBedLevel_ManualFLAG As Boolean = False
+	Public ShowBedLevel_ProbeFLAG As Boolean = False
 	
 
 End Sub
@@ -180,7 +181,7 @@ End Sub
 
 Public Sub ReadBedLevelCFG
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE)
-	ShowBedLevelFLAG = Data.Get(gblConst.bedShow).As(Boolean)
+	ShowBedLevel_ManualFLAG = Data.Get(gblConst.bedManualShow).As(Boolean)
 End Sub
 
 Public Sub ReadFilamentChangeCFG

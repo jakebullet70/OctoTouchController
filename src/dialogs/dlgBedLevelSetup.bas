@@ -28,11 +28,11 @@ Public Sub CreateDefaultFile
 	
 	If File.Exists(xui.DefaultFolder,gblConst.BED_LEVEL_FILE) = False Then
 		File.WriteMap(xui.DefaultFolder,gblConst.BED_LEVEL_FILE, _
-						CreateMap(gblConst.bedShow: "false", _
-						 gblConst.bedXYspeed: "80",  gblConst.bedZspeed: "20", _
-						 gblConst.bedXYoffset: "10", gblConst.bedLevelHeight: "0.1", _
-						 gblConst.bedTravelHeight: "10", _
-						 gblConst.bedEndGCode: "G28 X0 Y0", gblConst.bedStartGcode: "G28"))
+						CreateMap(gblConst.bedManualShow: "false", _
+						 gblConst.bedManualXYspeed: "80",  gblConst.bedManualZspeed: "20", _
+						 gblConst.bedManualXYoffset: "10", gblConst.bedManualLevelHeight: "0.1", _
+						 gblConst.bedManualTravelHeight: "10", _
+						 gblConst.bedManualEndGCode: "G28 X0 Y0", gblConst.bedManualStartGcode: "G28"))
 						 
 	End If
 

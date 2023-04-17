@@ -291,8 +291,7 @@ Public Sub Update_Printer_Status
 		
 		
 		If oPageCurrent Is pageMovement  Or oPageCurrent Is pageFiles Then
-			lblStatus.TextSize = 22
-			'If guiHelpers.gIsLandScape = False Then lblStatus.TextSize = 22 Else lblStatus.TextSize = 22
+			If guiHelpers.gIsLandScape = False Then lblStatus.TextSize = 18 Else lblStatus.TextSize = 22
 			lblStatus.Text = lblStatus.Text & "  (" & oc.FormatedTemps.Replace(CRLF,"   ").Replace("C","") & ")"
 '			If guiHelpers.gIsLandScape  Then
 '				lblStatus.Text = lblStatus.Text & "  (" & oc.FormatedTemps.Replace(CRLF,"   ").Replace("C","") & ")"

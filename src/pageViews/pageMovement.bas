@@ -252,7 +252,7 @@ End Sub
 #end region
 
 #Region "FUNCTION_MENU"
-private Sub FunctionMenu
+Private Sub FunctionMenu
 	
 	Dim o1 As dlgListbox
 	o1.Initialize(mMainObj,"Function Menu",Me,"FunctionMenu_Event")
@@ -266,7 +266,7 @@ Private Sub BuildFunctionMnu() As Map
 	#if not (klipper)
 	m.Put("Auto Bed Leveling (G29)","bl")  '''-----  needs to be an option in octoprint
 	#end if
-	If config.ShowBedLevelFLAG 	Then m.Put("Manual Bed Leveling","blw")
+	If config.ShowBedLevel_ManualFLAG 	Then m.Put("Manual Bed Leveling","blw")
 	If config.ShowFilamentChangeFLAG Then m.Put("Manual Change Filament","cf")
 	Return m
 End Sub

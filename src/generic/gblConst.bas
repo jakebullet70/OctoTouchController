@@ -112,14 +112,14 @@ Sub Process_Globals
 	
 	'---------------------------------------------------------------------------------------------------------------------
 	'--- bed level wizard ---
-	Public Const bedXYspeed As String = "xyspeed"
-	Public Const bedZspeed As String = "zspeed"
-	Public Const bedXYoffset As String = "xyoffset"
-	Public Const bedLevelHeight As String = "zlheight"
-	Public Const bedTravelHeight As String = "ztheight"
-	Public Const bedShow As String = "mnu"
-	Public Const bedStartGcode As String = "sgcode"
-	Public Const bedEndGCode As String = "egcode"
+	Public Const bedManualXYspeed As String = "xyspeed"
+	Public Const bedManualZspeed As String = "zspeed"
+	Public Const bedManualXYoffset As String = "xyoffset"
+	Public Const bedManualLevelHeight As String = "zlheight"
+	Public Const bedManualTravelHeight As String = "ztheight"
+	Public Const bedManualShow As String = "mnu"
+	Public Const bedManualStartGcode As String = "sgcode"
+	Public Const bedManualEndGCode As String = "egcode"
 	
 	
 	#if klipper

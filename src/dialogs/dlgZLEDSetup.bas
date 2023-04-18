@@ -96,7 +96,7 @@ Public Sub Show
 	Wait For (RS) Complete (Result As Int)
 	
 	If Result = xui.DialogResponse_Positive Then
-		guiHelpers.Show_toast("General Data Saved",1500)
+		guiHelpers.Show_toast("Data Saved",1500)
 		File.WriteMap(xui.DefaultFolder,mDataFile,Data)
 		If mDataFile.ToLowerCase.Contains("zled") Then
 			config.ReadZLED_CFG

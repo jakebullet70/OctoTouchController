@@ -109,7 +109,6 @@ End Sub
 
 Public Sub SendCmd(cmd As String)As ResumableSub'ignore
 	
-	
 	Dim template As String = $"!ep!!!{"command":"!of!"}"$ '--- POST
 	
 	Select Case True

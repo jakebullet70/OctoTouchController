@@ -88,7 +88,7 @@ End Sub
 Public Sub Set_focus()
 	
 	mPnlMain.SetVisibleAnimated(500,True)
-'	btnPlugin1.Visible = config.ShowWS281CtrlFLAG Or config.ShowZLEDCtrlFLAG --- move to side menu?
+	CallSubDelayed(B4XPages.MainPage ,"Build_RightSideMenu")
 		
 End Sub
 

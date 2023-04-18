@@ -578,8 +578,7 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 	
 	Select Case value
 			
-		Case "psu"  '--- sonoff / PSU control setup
-			
+		Case "psu"  '--- sonoff / PSU control setup		
 			#if klipper
 			Dim oA1 As dlgIpOnOffSetup
 			oA1.Initialize(mPrefDlg1,Me,"ExtCtrl_BtnEdit")
@@ -608,8 +607,7 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 		#end if
 		
 	End Select
-	
-	
+		
 End Sub
 
 #end region
@@ -895,6 +893,7 @@ End Sub
 
 
 Private Sub Build_RightSideMenu
+	Log("Build_RightSideMenu")
 	#if not (klipper )
 	'--- hide the klipper crap!
 	clvDrawer.GetBase.Top = 0
@@ -914,7 +913,9 @@ Private Sub Build_RightSideMenu
 	Dim txt As Object 
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+	#if klipper
 	Dim DataPSU As Map = File.ReadMap(xui.DefaultFolder,gblConst.PSU_SETUP_FILE)
+	#end if
 	
 	Dim cs As CSBuilder
 	If Data.GetDefault("m600",False).As(Boolean) Then
@@ -935,14 +936,32 @@ Private Sub Build_RightSideMenu
 		End If
 	Next
 	
+	#if klipper
 	If DataPSU.GetDefault("active",False).As(Boolean) Then
 		txt = DataPSU.Get("desc")
 		If strHelpers.IsNullOrEmpty(txt) Then txt = "Printer Power Menu"
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,"pwr")
 	End If
+	#else
+	If config.ShowZLEDCtrlFLAG Then
+		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("ZLED Menu").PopAll,"zled")
+	End If
+	If config.ShowWS281CtrlFLAG Then
+		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("WS281 Menu").PopAll,"ws2")
+	End If
+	If config.ShowPwrCtrlFLAG Then
+		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Printer Power Menu").PopAll,"pwr")
+	End If
+	#End If
+	
 		
 	If Data.GetDefault("syscmds",False).As(Boolean) Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("OS Systems Menu").PopAll,"sys")
+	End If
+	
+	If clvDrawer.Size = 0 Then
+		'--- nothing in the menu so add something.
+		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("About This Program").PopAll,"ab")
 	End If
 		
 End Sub
@@ -956,6 +975,11 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	SideMenu.CloseRightMenu
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	Select Case Value.As(String)
+		
+		Case "ab"
+			Dim o2 As dlgAbout : o2.Initialize(Me)
+			o2.Show
+		
 		Case "sys"
 			#if klipper
 			Dim oa As dlgKlipperSysCmds : oa.Initialize(Me) : 	oa.Show
@@ -978,14 +1002,23 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 		Case "1","2","3","4"
 			RunHTTPOnOffMenu(Value.As(String) & gblConst.HTTP_ONOFF_SETUP_FILE)
 		
-		#if not (klipper)	
-		Case "lt" '--- WLED - ws281x
+		#if not (klipper)
+		Case "zled" '--- ZLED
 			If oc.isConnected = False Then
 				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
 				Return
 			End If
 			Dim o3 As dlgOnOffCtrl
-			o3.Initialize(Me,IIf(config.ShowZLEDCtrlFLAG,"ZLED","WS281x") & " Control")
+			o3.Initialize(Me,"ZLED Control")
+			o3.Show
+			
+		Case "ws2" '--- ws281x
+			If oc.isConnected = False Then
+				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
+				Return
+			End If
+			Dim o3 As dlgOnOffCtrl
+			o3.Initialize(Me,"WS281x Control")
 			o3.Show
 		#end if
 		

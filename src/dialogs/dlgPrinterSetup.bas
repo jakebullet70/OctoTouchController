@@ -83,7 +83,7 @@ Public Sub Show(firstRun As Boolean)
 	
 	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
-		guiHelpers.Show_toast("Printer Config Saved",1500)
+		guiHelpers.Show_toast(gblConst.DATA_SAVED,1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE,Data)
 		oc.IsConnectionValid = True
 		CallSubDelayed(mainObj,"PrinterSetup_Closed")

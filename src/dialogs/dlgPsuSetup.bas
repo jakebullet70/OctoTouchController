@@ -126,7 +126,7 @@ End Sub
 
 Private Sub Save_settings
 	
-	guiHelpers.Show_toast("Saved",2500)
+	guiHelpers.Show_toast(gblConst.DATA_SAVED,2500)
 	Main.kvs.Put(gblConst.PWR_CTRL_ON,swPsuCtrlOnOff.Value)
 	Main.kvs.Put(gblConst.PWR_PSU_PLUGIN,swPSUocto.Value)
 	Main.kvs.Put(gblConst.PWR_SONOFF_PLUGIN,swSonoff.Value)

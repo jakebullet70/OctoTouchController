@@ -150,7 +150,7 @@ private Sub Save_settings
 						gblConst.PRINTER_PORT : txtPrinterPort.Text, gblConst.PRINTER_OCTO_KEY : txtOctoKey.Text)
 
 
-	guiHelpers.Show_toast("Saved",2500)							
+	guiHelpers.Show_toast(gblConst.DATA_SAVED,2500)
 	fileHelpers.SafeKill(fname)
 	File.WriteMap(xui.DefaultFolder,fname,outMap)
 	oc.IsConnectionValid = True

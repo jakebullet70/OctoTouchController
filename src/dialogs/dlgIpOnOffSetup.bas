@@ -78,7 +78,7 @@ Public Sub Show(title As String,dataFileName As String)
 	
 	Wait For (RS) Complete (Result As Int)
 	If Result = xui.DialogResponse_Positive Then
-		guiHelpers.Show_toast("Config Saved",1500)
+		guiHelpers.Show_toast(gblConst.DATA_SAVED,1500)
 		File.WriteMap(xui.DefaultFolder,dataFileName,data)
 		
 		If SubExists(mCallBackModule,mCallBackMethod) Then

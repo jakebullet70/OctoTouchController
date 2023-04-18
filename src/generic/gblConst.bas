@@ -10,6 +10,7 @@ Version=11.5
 #End Region
 Sub Process_Globals
 	
+	Public Const DATA_SAVED as String = "Data  Saved"
 	Public Const API_ANDROID_4_0 As Int = 14
 	Public Const API_ANDROID_4_4 As Int = 19
 	

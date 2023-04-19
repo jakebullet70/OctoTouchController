@@ -16,7 +16,7 @@ Version=11.5
 Sub Class_Globals
 	' --- Octoprint ONLY
 	' --- Octoprint ONLY
-	Private const mModule As String = "dlgPsuSetup"' 'ignore
+	Private const mModule As String = "dlgOctoPsuSetup"' 'ignore
 	Private mMainObj As B4XMainPage
 	Private xui As XUI
 	Private mTitle As String
@@ -114,7 +114,7 @@ Private Sub BuildGUI
 	
 End Sub
 
-Public Sub CreateDefaultCfg
+Public Sub CreateDefaultOctoPowerCfg
 	
 	Main.kvs.Put(gblConst.PWR_CTRL_ON,False)
 	Main.kvs.Put(gblConst.PWR_PSU_PLUGIN,True)

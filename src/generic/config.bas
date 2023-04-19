@@ -95,9 +95,9 @@ Private Sub LoadCfgs()
 
 	#if not (klipper)
 	If Main.kvs.ContainsKey(gblConst.PWR_CTRL_ON) = False Then	
-		Dim o1 As dlgPsuSetup
+		Dim o1 As dlgOctoPsuSetup
 		o1.Initialize(Null,"")
-		o1.CreateDefaultCfg
+		o1.CreateDefaultOctoPowerCfg
 	End If
 	ReadPwrCFG
 	

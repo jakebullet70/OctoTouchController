@@ -584,7 +584,7 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			oA1.Initialize(mPrefDlg1,Me,"ExtCtrl_BtnEdit")
 			oA1.Show("Printer Power Config",gblConst.PSU_SETUP_FILE)
 			#else
-			Dim oA As dlgPsuSetup
+			Dim oA As dlgOctoPsuSetup
 			oA.Initialize(Me,"PSU Config")
 			oA.Show
 			#End If

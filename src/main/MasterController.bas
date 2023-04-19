@@ -140,7 +140,12 @@ Public Sub tmrMain_Tick
 	
 	'--- make API requested and update screen
 	'--- Timer is in 'Main'
+	#if klipper
+	If oc.isConnected Then GetTemps
+	#else
 	GetTemps
+	#End If
+	
 	GetJobStatus
 	
 

@@ -156,18 +156,28 @@ Private Sub LoadCfgs()
 	'ReadPrinterCFG '--- this will be done on connection init
 	
 	'======================================================================
-
-
-	#end if
-	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.PSU_SETUP_FILE) '--- Dev
-	If File.Exists(xui.DefaultFolder,gblConst.PSU_SETUP_FILE) = False Then
+	
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.PSU_KLIPPER_SETUP_FILE) '--- Dev
+	If File.Exists(xui.DefaultFolder,gblConst.PSU_KLIPPER_SETUP_FILE) = False Then
 		Dim oiw As dlgIpOnOffSetup
 		oiw.Initialize(Null,Null,Null)
-		oiw.CreateDefaultDataFile(gblConst.PSU_SETUP_FILE)
-		oiw.CreateDefaultDataFile("1" & gblConst.HTTP_ONOFF_SETUP_FILE) '--- generic HTTP commands
-		oiw.CreateDefaultDataFile("2" & gblConst.HTTP_ONOFF_SETUP_FILE) '--- generic HTTP commands
-		oiw.CreateDefaultDataFile("3" & gblConst.HTTP_ONOFF_SETUP_FILE) '--- generic HTTP commands
-		oiw.CreateDefaultDataFile("4" & gblConst.HTTP_ONOFF_SETUP_FILE) '--- generic HTTP commands
+		oiw.CreateDefaultDataFile(gblConst.PSU_KLIPPER_SETUP_FILE) 
+	End If
+
+	#end if
+	
+	'======================================================================
+	
+	'--- dev
+'	For jj = 1 To 4
+'		fileHelpers.SafeKill2(xui.DefaultFolder,jj & gblConst.HTTP_ONOFF_SETUP_FILE)
+'	Next
+	If File.Exists(xui.DefaultFolder,"1" & gblConst.HTTP_ONOFF_SETUP_FILE) = False Then
+		Dim oiw As dlgIpOnOffSetup
+		oiw.Initialize(Null,Null,Null)
+		For jj = 1 To 4
+			oiw.CreateDefaultDataFile(jj & gblConst.HTTP_ONOFF_SETUP_FILE) '--- generic HTTP commands
+		Next
 	End If
 	
 End Sub

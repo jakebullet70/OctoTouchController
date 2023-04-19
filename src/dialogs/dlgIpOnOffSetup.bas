@@ -27,10 +27,15 @@ End Sub
 
 Public Sub CreateDefaultDataFile(dataFileName As String)
 	
-	'Dim txt As String = IIf(IsNumber(dataFileName.SubString2(0,1)),"",)
 	fileHelpers.SafeKill(dataFileName)	
+	Dim descTxt As String
+	If IsNumber(dataFileName.SubString2(0,1)) Then
+		descTxt = "Generic HTTP Control: "	& dataFileName.SubString2(0,1)
+	Else
+		descTxt = "Printer Power SonOff"
+	End If
 	File.WriteMap(xui.DefaultFolder,dataFileName, _
-					CreateMap("desc": "Printer Power SonOff", _
+					CreateMap("desc": descTxt, _
 										"ipon": "http://192.168.1.235/cm?cmnd=Power On", _
 										 "ipoff": "http://192.168.1.235/cm?cmnd=Power Off", _
 										  "active": "false","tgl":"false"))

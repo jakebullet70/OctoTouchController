@@ -550,13 +550,14 @@ End Sub
 '--- options plugin sub menu
 Private Sub PopupPluginOptionMenu
 	
-	#if klipper
 	Dim Const gc As String = "Generic HTTP Control"
+	#if klipper
 	Dim popUpMemuItems As Map = CreateMap("Power Supply HTTP Control":"psu", _
 																	gc & " 1":"1",gc & " 2":"2",gc & " 3":"3",gc & " 4":"4")
 	Dim title As Object = "  External Control Menu"
 	#else
-	Dim popUpMemuItems As Map = CreateMap("PSU Control":"psu","ZLED Setup":"led","ws281x Setup":"ws2")
+	Dim popUpMemuItems As Map = CreateMap("PSU Control":"psu","ZLED Setup":"led","ws281x Setup":"ws2", _
+																			gc & " 1":"1",gc & " 2":"2",gc & " 3":"3",gc & " 4":"4")
 	Dim title As Object = "  Plugins Menu"
 	#End If
 	
@@ -582,7 +583,7 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			#if klipper
 			Dim oA1 As dlgIpOnOffSetup
 			oA1.Initialize(mPrefDlg1,Me,"ExtCtrl_BtnEdit")
-			oA1.Show("Printer Power Config",gblConst.PSU_SETUP_FILE)
+			oA1.Show("Printer Power Config",gblConst.PSU_KLIPPER_SETUP_FILE)
 			#else
 			Dim oA As dlgOctoPsuSetup
 			oA.Initialize(Me,"PSU Config")
@@ -658,7 +659,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 			OptionsMenu_Event("oc","oc")
 			
 		Case xui.DialogResponse_Negative '--- Power on 
-			Dim o As dlgPsuCtrl : o.Initialize(Null)
+			Dim o As dlgOctoPsuCtrl : o.Initialize(Null)
 			Wait For (o.SendCmd("on")) Complete(s As String)
 			Sleep(3000)
 			oMasterController.Start
@@ -714,7 +715,7 @@ End Sub
 
 Private Sub btnPower_Click
 	'--- printer on/off
-	Dim o1 As dlgPsuCtrl
+	Dim o1 As dlgOctoPsuCtrl
 	o1.Initialize(Me)
 	o1.Show
 End Sub
@@ -914,7 +915,7 @@ Private Sub Build_RightSideMenu
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	#if klipper
-	Dim DataPSU As Map = File.ReadMap(xui.DefaultFolder,gblConst.PSU_SETUP_FILE)
+	Dim DataPSU As Map = File.ReadMap(xui.DefaultFolder,gblConst.PSU_KLIPPER_SETUP_FILE)
 	#end if
 	
 	Dim cs As CSBuilder
@@ -993,10 +994,10 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
 				Return
 			End If
-			Dim o1 As dlgPsuCtrl : o1.Initialize(Me)
+			Dim o1 As dlgOctoPsuCtrl : o1.Initialize(Me)
 			o1.Show
 			#else
-			RunHTTPOnOffMenu(gblConst.PSU_SETUP_FILE)
+			RunHTTPOnOffMenu(gblConst.PSU_KLIPPER_SETUP_FILE)
 			#end if
 			
 		Case "1","2","3","4"

@@ -137,7 +137,9 @@ Public Sub  JobStatus(s As String)
 					
 				End If
 			Case Else
+				#if debug
 				Log("case else: " & oc.JobPrintState)
+				#end if
 		End Select
 		
 		oc.JobFileName = print_stats.Get("filename")

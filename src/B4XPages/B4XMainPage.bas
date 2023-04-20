@@ -64,6 +64,7 @@ Sub Class_Globals
 	Public mPrefDlg1 As sadPreferencesDialog
 	Public mPrefDlg2 As sadPreferencesDialog
 	
+	Private pnlWizards As Panel
 End Sub
 
 '======================================================================================
@@ -191,10 +192,10 @@ End Sub
 Private Sub BuildGUI
 	
 	pnlMaster.Color  = clrTheme.Background
-	pnlHeader.Color	 = clrTheme.BackgroundHeader
+	pnlHeader.Color = clrTheme.BackgroundHeader
 
 	'--- hide all page views
-	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlMovement))
+	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlMovement,pnlWizards))
 	guiHelpers.SetTextColor(Array As B4XView(lblStatus,btnSliderMenu,btnPageAction))
 	
 	
@@ -420,7 +421,7 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 	Select Case value
 		Case "thm1" '--- themes
 			Dim oo9 As dlgThemeSelect : oo9.Initialize
-			oo9.Show(Me)
+			oo9.Show(pnlWizards)
 			
 		Case "ab" '--- about
 			Dim o2 As dlgAbout : o2.Initialize(Me)

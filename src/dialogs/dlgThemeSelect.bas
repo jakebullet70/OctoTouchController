@@ -14,7 +14,6 @@ Sub Class_Globals
 	Private const mModule As String = "dlgThemeSelect"' 'ignore
 	Private pnlBG As B4XView
 	Private xui As XUI
-	Private Dialog As B4XDialog
 	Private mMain As B4XMainPage
 	
 	'--- color select stuff -----------------
@@ -29,57 +28,33 @@ Sub Class_Globals
 	Private Const CUSTOM_SELECTION As String = "Custom"
 	Private spnPicker As Spinner
 	'-----------------------------------------
+	Private parent As Panel
 	
-	
+	Private btnClose As Button
+	Private btnSave As Button
 End Sub
 
 Public Sub Initialize
 End Sub
 
-Public Sub Show(mobj As B4XMainPage)
+Public Sub Show(p As Panel)
 	
 	'--- init
-	mMain = mobj
-	Dialog.Initialize(mobj.Root)
-	Dim  dlgHelper As sadB4XDialogHelper
-	dlgHelper.Initialize(Dialog)
-		
-	Dim p As B4XView = xui.CreatePanel("")
-	Dim w, h As Float
+	p.RemoveAllViews
+	parent = p
+	mMain = B4XPages.MainPage
 	
-	If guiHelpers.gScreenSizeAprox < 8 Then
-		w = 80%x
-		h = IIf(guiHelpers.gIsLandScape,74%y,65%y)
-	Else
-		w = 74%x : h = 70%y
-	End If
-	
-	p.SetLayoutAnimated(0, 0, 0, w, h)
-	p.LoadLayout("dlgThemeSelect")
-	
-	BuildGUI 
-
-	dlgHelper.ThemeDialogForm( "Themes")
-	Dim rs As ResumableSub = Dialog.ShowCustom(p, "SAVE", "", "CLOSE")
-	Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
-	dlgHelper.ThemeInputDialogBtnsResize
-
-	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
-	Wait For (rs) Complete (Result As Int)
-	If Result = xui.DialogResponse_Positive Then
-		Main.kvs.Put(gblConst.SELECTED_CLR_THEME,Spinner1.SelectedItem)
-		If Spinner1.SelectedItem = CUSTOM_SELECTION Then
-			SaveCustomClrs
-		End If
-		guiHelpers.Show_toast2("Restart App To Change Theme",2200)
-	End If
-	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
+	parent.SetLayoutAnimated(0, 0, 0, parent.Width, parent.Height)
+	parent.LoadLayout("dlgThemeSelect")
+	BuildGUI	
+	parent.Visible = True
 	
 End Sub
 
 Private Sub BuildGUI
 
 	pnlBG.Color = clrTheme.Background
+	guiHelpers.SkinButton(Array As Button(btnClose,btnSave))
 
 	'--- theme
 	Dim DefaultColor As String = Main.kvs.Get(gblConst.SELECTED_CLR_THEME)
@@ -151,7 +126,7 @@ Private Sub SaveCustomClrs
 	clrTheme.CustomColors.Divider = clrTheme.DividerColor '--- no GUI yet
 	
 	Main.kvs.Put(gblConst.CUSTOM_THEME_COLORS,clrTheme.CustomColors)
-	Log("Saved custom colors")
+	'Log("Saved custom colors")
 	
 End Sub
 
@@ -250,6 +225,19 @@ End Sub
 
 #end region
 
+Private Sub btnClose_Click
+	parent.Visible = False
+	parent.RemoveAllViews
+End Sub
 
+
+Private Sub btnSave_Click
+	Main.kvs.Put(gblConst.SELECTED_CLR_THEME,Spinner1.SelectedItem)
+	If Spinner1.SelectedItem = CUSTOM_SELECTION Then
+		SaveCustomClrs
+	End If
+	guiHelpers.Show_toast2("Restart App To Change Theme",2200)
+	btnClose_Click
+End Sub
 
 

@@ -46,6 +46,7 @@ Sub Class_Globals
 	'--- stops calls from backing up if we have had a disconnect	
 	Private mGetTempFLAG_Busy, mJobStatusFLAG_Busy As Boolean = False
 	
+	Private lblBGround1 As Label
 End Sub
 
 
@@ -145,7 +146,6 @@ Public Sub tmrMain_Tick
 	#else
 	GetTemps
 	#End If
-	
 	GetJobStatus
 	
 
@@ -591,9 +591,4 @@ Public Sub IsIncompleteFileData() As Boolean
 	Return False
 End Sub
 #end if
-
-
-
-
-
 

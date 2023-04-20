@@ -130,6 +130,7 @@ Private Sub BuildStatCard(viewPanel As Panel,imgFile As String, Text As String)
 					End If
 				Else
 					guiHelpers.ResizeText("100" & gblConst.DEGREE_SYMBOL,o6)
+					o6.Text = "0" & gblConst.DEGREE_SYMBOL
 					If Text = "bed" Then
 						lblActualTempBedV = o6
 					Else

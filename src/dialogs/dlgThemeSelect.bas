@@ -32,6 +32,7 @@ Sub Class_Globals
 	
 	Private btnClose As Button
 	Private btnSave As Button
+	Private lblThemeBG As Label
 End Sub
 
 Public Sub Initialize
@@ -55,6 +56,7 @@ Private Sub BuildGUI
 
 	pnlBG.Color = clrTheme.Background
 	guiHelpers.SkinButton(Array As Button(btnClose,btnSave))
+	'lblThemeBG.Gravity = Bit.Or(Gravity.TOP, Gravity.CENTER_HORIZONTAL)
 
 	'--- theme
 	Dim DefaultColor As String = Main.kvs.Get(gblConst.SELECTED_CLR_THEME)
@@ -68,7 +70,9 @@ Private Sub BuildGUI
 	lblCustom.Visible = (Spinner1.SelectedItem = CUSTOM_SELECTION)
 	
 	'--- theme builder
-	pnlThemeMenu.Tag = "BGround 2" : pnlThemeBG.Tag = "BGround"
+	pnlThemeMenu.Tag = "BGround 2" : 
+	pnlThemeBG.Tag = "BGround"
+	lblThemeBG.Tag = pnlThemeBG.Tag
 	pnlThemeHeader.Tag = "BGround Header"
 	lblText1.Tag = "Text Main" : lblText.Tag = lblText1.Tag : 	lblText2.Tag = lblText1.Tag
 	lblTextAcc.Tag = "Text 2"
@@ -96,7 +100,7 @@ Private Sub ThemeMe(clr As String)
 	
 	clrTheme.InitTheme(clr) '--- one place for setting colors, so set them and restore later
 
-	guiHelpers.SetTextColor(Array As B4XView(lblText,lblText1,lblText2,lblCustom))
+	guiHelpers.SetTextColor(Array As B4XView(lblText,lblText1,lblText2,lblCustom,lblThemeBG))
 	lblTextAcc.TextColor = clrTheme.txtAccent
 	pnlThemeMenu.Color = clrTheme.Background2
 	pnlThemeHeader.Color = clrTheme.BackgroundHeader
@@ -173,7 +177,8 @@ End Sub
 
 Private Sub clrSelected_ItemClick (Position As Int, Value As Object)
 	Select Case Value
-		Case pnlThemeBG.Tag 		:	ColorTemplate.SelectedColor = pnlThemeBG.Color
+		Case pnlThemeBG.Tag , lblThemeBG.Tag
+				ColorTemplate.SelectedColor = pnlThemeBG.Color
 		Case pnlThemeMenu.Tag 	: 	ColorTemplate.SelectedColor = pnlThemeMenu.Color
 		Case pnlThemeHeader.Tag 	: 	ColorTemplate.SelectedColor = pnlThemeHeader.color
 		Case lblText.Tag		 		: 	ColorTemplate.SelectedColor = lblText1.TextColor
@@ -219,8 +224,10 @@ Private Sub pnlBGrounds_Click
 '	If (Spinner1.SelectedItem <> CUSTOM_SELECTION) Then Return
 '	#end if
 	Dim pnl As B4XView : pnl = Sender
+	If pnl = lblThemeBG Then pnl = pnlThemeBG
 	Wait For (ShowColorPicker(pnl.Color,pnl.tag)) Complete (i As Int)
-	If i <> 0 Then pnl.Color = i
+	If i <> 0 Then 	pnl.Color = i
+	
 End Sub
 
 #end region

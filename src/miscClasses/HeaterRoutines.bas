@@ -21,7 +21,7 @@ End Sub
 Public Sub PopupToolHeaterMenu
 	
 	Dim o1 As dlgListbox
-	o1.Initialize(mMainObj,"Tool Presets",Me,"HeatTempChange_Tool")
+	o1.Initialize("Tool Presets",Me,"HeatTempChange_Tool")
 	o1.Show(250dip,220dip,mMainObj.oMasterController.mapToolHeatValuesOnly)
 	
 End Sub
@@ -63,7 +63,7 @@ End Sub
 Public Sub PopupBedHeaterMenu
 	
 	Dim o1 As dlgListbox
-	o1.Initialize(mMainObj,"Bed Presets",Me,"HeatTempChange_Bed")
+	o1.Initialize("Bed Presets",Me,"HeatTempChange_Bed")
 	o1.Show(250dip,220dip,mMainObj.oMasterController.mapbedHeatValuesOnly)
 	
 End Sub
@@ -116,7 +116,7 @@ Private Sub TempChangePrompt(what As String)
 	If oc.isConnected = False Then Return
 	
 	Dim o1 As dlgNumericInput
-	o1.Initialize(mMainObj, _
+	o1.Initialize( _
 		IIf(what = "bed","Bed Temperature","Tool Temperature"), "Enter Temperature",Me, _
 		IIf(what = "bed","TempChange_Bed","TempChange_Tool1"))
 		

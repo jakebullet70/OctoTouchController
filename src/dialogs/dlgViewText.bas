@@ -22,9 +22,9 @@ End Sub
 
 
 
-Public Sub Initialize(mobj As B4XMainPage, title As String)
+Public Sub Initialize(title As String)
 	
-	mMainObj = mobj
+	mMainObj = B4XPages.MainPage
 	mTitle = title
 	
 End Sub

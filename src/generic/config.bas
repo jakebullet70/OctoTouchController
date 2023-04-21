@@ -76,7 +76,7 @@ Private Sub LoadCfgs()
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
 		Dim o3 As dlgGeneralOptions
-		o3.initialize(Null)
+		o3.initialize
 		o3.createdefaultfile
 	End If
 	ReadGeneralCFG
@@ -86,7 +86,7 @@ Private Sub LoadCfgs()
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.ANDROID_POWER_OPTIONS_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.ANDROID_POWER_OPTIONS_FILE) = False Then
 		Dim o2 As dlgAndroidPowerOptions
-		o2.Initialize(Null)  
+		o2.Initialize
 		o2.CreateDefaultFile
 	End If
 	ReadAndroidPowerCFG
@@ -96,7 +96,7 @@ Private Sub LoadCfgs()
 	#if not (klipper)
 	If Main.kvs.ContainsKey(gblConst.PWR_CTRL_ON) = False Then	
 		Dim o1 As dlgOctoPsuSetup
-		o1.Initialize(Null,"")
+		o1.Initialize("")
 		o1.CreateDefaultOctoPowerCfg
 	End If
 	ReadPwrCFG
@@ -106,7 +106,7 @@ Private Sub LoadCfgs()
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE) = False Then
 		Dim ox As dlgZLEDSetup
-		ox.Initialize(Null,"",gblConst.ZLED_OPTIONS_FILE)
+		ox.Initialize("",gblConst.ZLED_OPTIONS_FILE)
 		ox.CreateDefaultFile
 	End If
 	ReadZLED_CFG
@@ -116,7 +116,7 @@ Private Sub LoadCfgs()
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE) = False Then
 		Dim oi As dlgZLEDSetup
-		oi.Initialize(Null,"",gblConst.WS281_OPTIONS_FILE)
+		oi.Initialize("",gblConst.WS281_OPTIONS_FILE)
 		oi.CreateDefaultFile
 	End If
 	ReadWS281_CFG
@@ -127,7 +127,7 @@ Private Sub LoadCfgs()
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE) = False Then
 		Dim oiz As dlgFilamentSetup
-		oiz.Initialize(Null)
+		oiz.Initialize
 		oiz.CreateDefaultFile
 	End If
 	ReadWizardFilamentChangeCFG
@@ -137,7 +137,7 @@ Private Sub LoadCfgs()
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.BED_LEVEL_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.BED_MANUAL_LEVEL_FILE) = False Then
 		Dim oiy As dlgBedLevelSetup
-		oiy.Initialize(Null)
+		oiy.Initialize
 		oiy.CreateDefaultFile
 	End If
 	ReadManualBedLevelCFG

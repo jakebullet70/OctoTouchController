@@ -25,9 +25,9 @@ End Sub
 
 
 
-Public Sub Initialize(mobj As B4XMainPage, title As String, prompt As String, Callback As Object, EventName As String)
+Public Sub Initialize( title As String, prompt As String, Callback As Object, EventName As String)
 	
-	mMainObj = mobj
+	mMainObj = B4XPages.MainPage
 	mTitle = title
 	mPrompt = prompt
 	mCallback = Callback

@@ -255,7 +255,7 @@ Private Sub TryPrinterConnection
 		#if klipper
 		Dim o9 As dlgPrinterSetup : o9.Initialize(Me)
 		#else
-		Dim o9 As dlgOctoSetup : o9.Initialize(Me,"Printer Connection","PrinterSetup_Closed")
+		Dim o9 As dlgOctoSetup : o9.Initialize("Printer Connection","PrinterSetup_Closed")
 		#End If
 		o9.Show(True)
 	Else
@@ -403,7 +403,7 @@ Private Sub PopupMainOptionMenu
 	End If
 	
 	Dim o1 As dlgListbox
-	o1.Initialize(Me,"Options Menu",Me,"OptionsMenu_Event")
+	o1.Initialize("Options Menu",Me,"OptionsMenu_Event")
 	o1.IsMenu = True
 	If guiHelpers.gIsLandScape Then '- TODO needs refactor for sizes
 		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,320dip,280dip),340dip,popUpMemuItems)
@@ -424,11 +424,11 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			oo9.Show(pnlWizards)
 			
 		Case "ab" '--- about
-			Dim o2 As dlgAbout : o2.Initialize(Me)
+			Dim o2 As dlgAbout : o2.Initialize
 			o2.Show
 			
 		Case "gn"  '--- general settings
-			Dim o3 As dlgGeneralOptions : o3.Initialize(Me)
+			Dim o3 As dlgGeneralOptions : o3.Initialize
 			o3.Show
 			
 		Case "oc"  '--- octo / klipper setup
@@ -438,12 +438,12 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			o9.Show(False)
 			#else
 			Dim o9 As dlgOctoSetup
-			o9.Initialize(Me,"Printer Connection","PrinterSetup_Closed")
+			o9.Initialize("Printer Connection","PrinterSetup_Closed")
 			o9.Show(False)
 			#End If
 			
 		Case "pw"  '--- android power setup
-			Dim o1 As dlgAndroidPowerOptions : o1.Initialize(Me)
+			Dim o1 As dlgAndroidPowerOptions : o1.Initialize
 			o1.Show
 			
 		Case "plg"  '--- plugins menu
@@ -453,7 +453,7 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			PopupFunctionOptionsMnu
 			
 		Case "rt" '---read text file
-			Dim vt As dlgViewText : vt.Initialize(Me,"Read Text")
+			Dim vt As dlgViewText : vt.Initialize("Read Text")
 			Dim f As String = Gettxtfile
 			If f <> "" Then 
 				vt.Show(f)
@@ -510,7 +510,7 @@ Private Sub PopupFunctionOptionsMnu
 										Typeface(Typeface.DEFAULT).Append("  Internal Functions Menu").PopAll
 	
 	Dim o1 As dlgListbox
-	o1.Initialize(Me,title,Me,"FncMenu_Event")
+	o1.Initialize(title,Me,"FncMenu_Event")
 	o1.IsMenu = True
 	o1.Show(260dip,300dip,po)
 	
@@ -529,7 +529,7 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 			
 		Case "fl" '--- filament control
 			Dim oB As dlgFilamentSetup
-			oB.Initialize(Me)
+			oB.Initialize
 			oB.Show
 			
 		Case "bl" '--- bed level control
@@ -538,7 +538,7 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 				Return
 			End If
 			Dim o1 As dlgBedLevelSetup
-			o1.Initialize(Me)
+			o1.Initialize
 			o1.Show
 			
 	End Select
@@ -567,7 +567,7 @@ Private Sub PopupPluginOptionMenu
 	Dim title As Object = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE8C1)). _
 	        	 					   Typeface(Typeface.DEFAULT).Append(title).PopAll
 	Dim o1 As dlgListbox
-	o1.Initialize(Me,title,Me,"PluginsMenu_Event")
+	o1.Initialize(title,Me,"PluginsMenu_Event")
 	o1.IsMenu = True
 	o1.Show(260dip,300dip,popUpMemuItems)
 	
@@ -587,7 +587,7 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			oA1.Show("Printer Power Config",gblConst.PSU_KLIPPER_SETUP_FILE)
 			#else
 			Dim oA As dlgOctoPsuSetup
-			oA.Initialize(Me,"PSU Config")
+			oA.Initialize("PSU Config")
 			oA.Show
 			#End If
 			
@@ -599,12 +599,12 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 		#if not (klipper)	
 		Case "led" '--- ZLED
 			Dim oB As dlgZLEDSetup
-			oB.Initialize(Me,"ZLED Config",gblConst.ZLED_OPTIONS_FILE)
+			oB.Initialize("ZLED Config",gblConst.ZLED_OPTIONS_FILE)
 			oB.Show
 			
 		Case "ws2" '--- ws281x
 			Dim o1 As dlgZLEDSetup
-			o1.Initialize(Me,"ws281x Config",gblConst.WS281_OPTIONS_FILE)
+			o1.Initialize("ws281x Config",gblConst.WS281_OPTIONS_FILE)
 			o1.Show
 		#end if
 		
@@ -852,7 +852,7 @@ Public Sub ShowPreHeatMenu_All2(titleTxt As String)
 	Dim title As Object = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF2CA)). _
 		Typeface(Typeface.DEFAULT).Append("  " & titleTxt).PopAll
 		
-	ht.Initialize(Me,title,Me,"TempChange_Presets")
+	ht.Initialize(title,Me,"TempChange_Presets")
 	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,guiHelpers.gWidth - 10dip)
 	Dim h As Float = IIf(guiHelpers.gIsLandScape,guiHelpers.gHeight * .8,guiHelpers.gHeight * .7)
 	
@@ -979,14 +979,14 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	Select Case Value.As(String)
 		
 		Case "ab"
-			Dim o2 As dlgAbout : o2.Initialize(Me)
+			Dim o2 As dlgAbout : o2.Initialize
 			o2.Show
 		
 		Case "sys"
 			#if klipper
 			Dim oa As dlgKlipperSysCmds : oa.Initialize(Me) : 	oa.Show
 			#Else
-			Dim oa As dlgOctoSysCmds : oa.Initialize(Me,oMasterController.CN) : oa.Show
+			Dim oa As dlgOctoSysCmds : oa.Initialize(oMasterController.CN) : oa.Show
 			#end if
 		
 		Case "pwr"
@@ -1011,7 +1011,7 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 				Return
 			End If
 			Dim o3 As dlgOnOffCtrl
-			o3.Initialize(Me,"ZLED Control")
+			o3.Initialize("ZLED Control")
 			o3.Show
 			
 		Case "ws2" '--- ws281x
@@ -1020,7 +1020,7 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 				Return
 			End If
 			Dim o3 As dlgOnOffCtrl
-			o3.Initialize(Me,"WS281x Control")
+			o3.Initialize("WS281x Control")
 			o3.Show
 		#end if
 		
@@ -1034,10 +1034,11 @@ Private Sub RunHTTPOnOffMenu(fname As String)
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,fname)
 	If  Data.GetDefault("tgl",False).As(Boolean) Then '--- toggle cmd
 		oMasterController.cn.PostRequest2(Data.Get("ipon"),"")
+		guiHelpers.Show_toast2("Toggle Command Sent",1300)
 		Return
 	End If
 	Dim o1 As dlgOnOffCtrl
-	o1.Initialize(Me,Data.GetDefault("desc","On / Off"))
+	o1.Initialize(Data.GetDefault("desc","On / Off"))
 	o1.Data = Data
 	o1.Show
 End Sub

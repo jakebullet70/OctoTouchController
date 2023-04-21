@@ -20,8 +20,8 @@ Sub Class_Globals
 	
 End Sub
 
-Public Sub Initialize(mobj As B4XMainPage)
-	mainObj = mobj
+Public Sub Initialize
+	mainObj = B4XPages.MainPage
 End Sub
 
 Public Sub CreateDefaultFile

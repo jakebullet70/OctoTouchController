@@ -21,9 +21,9 @@ Sub Class_Globals
 	
 End Sub
 
-Public Sub Initialize(mobj As B4XMainPage,  caption As String,dataFile As String)
+Public Sub Initialize(caption As String,dataFile As String)
 	
-	mMainObj   = mobj
+	mMainObj   = B4XPages.MainPage
 	mDataFile = dataFile
 	mCaption  = caption
 	

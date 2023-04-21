@@ -39,8 +39,8 @@ Sub Class_Globals
 	Private btnBack As B4XView
 End Sub
 
-Public Sub Initialize(mobj As B4XMainPage)
-	mMainObj = mobj
+Public Sub Initialize
+	mMainObj = B4XPages.MainPage
 	mData = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
 End Sub
 
@@ -336,7 +336,7 @@ End Sub
 #region "SHOW TEMP SELECT"
 Public Sub PromptHeater
 	Dim o1 As dlgListbox
-	o1.Initialize(mMainObj,"Filament Change",Me,"HeatTempChange_Tool")
+	o1.Initialize("Filament Change",Me,"HeatTempChange_Tool")
 	'Dim mapTmp As Map = objHelpers.CopyMap(mMainObj.oMasterController.mapToolHeatValuesOnly)
 	'mapTmp.Remove("Tool Off")
 	o1.Show(250dip,270dip,mMainObj.oMasterController.mapToolHeatValuesOnly)

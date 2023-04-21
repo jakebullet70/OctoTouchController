@@ -236,7 +236,7 @@ End Sub
 Private Sub SetExtruderLength
 		
 	Dim o1 As dlgNumericInput
-	o1.Initialize(mMainObj,"Extruder Length","Enter Length",Me,"ExtruderLength_Set")
+	o1.Initialize("Extruder Length","Enter Length",Me,"ExtruderLength_Set")
 	o1.Show
 	
 End Sub
@@ -255,7 +255,7 @@ End Sub
 Private Sub FunctionMenu
 	
 	Dim o1 As dlgListbox
-	o1.Initialize(mMainObj,"Function Menu",Me,"FunctionMenu_Event")
+	o1.Initialize("Function Menu",Me,"FunctionMenu_Event")
 	o1.Show(250dip,320dip,BuildFunctionMnu)
 	
 End Sub
@@ -306,7 +306,7 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 			
 		Case "cf"'--- built in load / unload filament wiz
 			Dim o1 As dlgFilamentCtrl
-			o1.Initialize(mMainObj)
+			o1.Initialize
 			o1.Show
 			
 		Case "prh" '--- pre-heat menu

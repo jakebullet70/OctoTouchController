@@ -19,9 +19,9 @@ Sub Class_Globals
 	
 End Sub
 
-Public Sub Initialize(mobj As B4XMainPage)
+Public Sub Initialize
 	
-	mainObj = mobj
+	mainObj = B4XPages.MainPage
 	
 End Sub
 

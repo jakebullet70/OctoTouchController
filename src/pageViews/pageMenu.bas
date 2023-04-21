@@ -231,7 +231,7 @@ End Sub
 Private Sub DoBrightnessDlg
 	
 	Dim o1 As dlgBrightness
-	o1.Initialize(mMainObj,"Screen Brightness",Me,"Brightness_Change")
+	o1.Initialize("Screen Brightness",Me,"Brightness_Change")
 	o1.Show(IIf(powerHelpers.pScreenBrightness < 0.05,0.1,powerHelpers.pScreenBrightness) * 100)
 	
 End Sub

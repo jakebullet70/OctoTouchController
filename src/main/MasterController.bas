@@ -46,7 +46,6 @@ Sub Class_Globals
 	'--- stops calls from backing up if we have had a disconnect	
 	Private mGetTempFLAG_Busy, mJobStatusFLAG_Busy As Boolean = False
 	
-	Private lblBGround1 As Label
 End Sub
 
 

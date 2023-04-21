@@ -55,11 +55,9 @@ Public Sub Show
 	guiHelpers.SkinButton(Array As Button(btnOff,btnOn))
 	
 	Dim cs As CSBuilder
-	cs.Initialize
-	btnOff.Text = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A4)). _
+	btnOff.Text = cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A4)). _
 											 Typeface(Typeface.DEFAULT).Append("    Off").PopAll
-	cs.Initialize
-	btnOn.Text  = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A5)). _
+	btnOn.Text  = cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3A5)). _
 											 Typeface(Typeface.DEFAULT).Append("    On").PopAll
 	guiHelpers.SetTextSize(Array As Button(btnOff,btnOn), _
 							NumberFormat2(btnOff.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))

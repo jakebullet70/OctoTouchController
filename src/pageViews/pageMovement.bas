@@ -284,7 +284,7 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 		
 		Case "blw"
 			Dim uu As dlgBedLevelWiz
-			uu.Initialize(mMainObj)
+			uu.Initialize(mMainObj.pnlWizards)
 			uu.Show
 			
 		Case "bl" '--- firmware bed level

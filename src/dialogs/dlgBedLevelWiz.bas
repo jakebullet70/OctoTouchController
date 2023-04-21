@@ -21,7 +21,7 @@ Sub Class_Globals
 	Private prefHelper As sadPreferencesDialogHelper
 	Private lblMsgSteps As Label, btnPreheat As Button
 
-	Private btn1,btn2 As Button, mData As Map
+	Private mData As Map
 	Private current_point As Int  = 0
 	Private point1(),point2(),point3(),point4() As Int
 	Private min_x, max_x,  min_y,max_y As Int 'ignore
@@ -29,23 +29,41 @@ Sub Class_Globals
 	Private zSpeed, xySpeed As Int
 	Private gcodeSendLevelingPoint As String
 	Private gcode2send,moveText As String
+	Private parent As Panel
 	
 	#if klipper
 	Private printerW,printerL As Int
 	#end if
-
 	
+	Private pnlBG,pnlHost As Panel
+	Private lblHeader As Label
+	
+	Private btnClose As Button
+	Private btn1,btn2 As Button
+	Private pnlSteps As Panel
 End Sub
 
-Public Sub Initialize(mobj As B4XMainPage)
-	mainObj = mobj
+Public Sub Initialize(p As Panel)
+	
+	mainObj = B4XPages.MainPage
+	p.RemoveAllViews
+	parent = p
+	
 	#if klipper
 	Dim m As Map = File.ReadMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE)
 	printerW = m.Get( gblConst.psetupPRINTER_X)
 	printerL  = m.Get( gblConst.psetupPRINTER_Y)
 	#end if
+	
 End Sub
 
+Private Sub BuildGUI
+	pnlBG.Color = clrTheme.Background
+	lblHeader.TextColor = clrTheme.txtNormal
+	parent.Visible = True
+	pnlSteps.Color =clrTheme.Background
+	guiHelpers.SkinButton(Array As Button(btnClose))
+End Sub
 
 Public Sub Show
 	
@@ -55,99 +73,63 @@ Public Sub Show
 	
 	moveText = "You are at the !P! leveling position. Adjust your bed and press Next.'"
 	
-	Dim h,w As Float '--- TODO - needs refactor
-	w = 50%x
-	If guiHelpers.gIsLandScape Then
-		If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then
-			h = 62%y
-		Else If guiHelpers.gScreenSizeAprox >= 8 Then
-			h = 55%y
-		Else '--- 4 to 5.9 inch
-			h = 80%y
-		End If
-		w = 320dip
-	Else
-		h = 354dip
-		w = guiHelpers.gWidth * .8
-	End If
+	parent.SetLayoutAnimated(0, 0, 0, parent.Width, parent.Height)
+	parent.LoadLayout("wizManualBedLevel")
+	BuildGUI
 	
-	
-	mWizDlg.Initialize(mainObj.root, "Bed Level Wizard", w, h)
+	mWizDlg.Initialize(pnlHost, "",pnlHost.Width , pnlHost.Height)
 	mWizDlg.LoadFromJson(File.ReadString(File.DirAssets, "wizbedlevel.json"))
 	mWizDlg.SetEventsListener(Me,"dlgGeneral")
 	
-	
 	prefHelper.Initialize(mWizDlg)
 	prefHelper.ThemePrefDialogForm
-	mWizDlg.PutAtTop = False
-	Dim RS As ResumableSub = mWizDlg.ShowDialog(prefSavedData, "", "CLOSE")
+	Dim RS As ResumableSub = mWizDlg.ShowDialog(prefSavedData, "", "")
 	prefHelper.dlgHelper.NoCloseOn2ndDialog
-	prefHelper.dlgHelper.ThemeInputDialogBtnsResize
+	'prefHelper.dlgHelper.ThemeInputDialogBtnsResize
 	BuildWizBtns
 	
 	Wait For (RS) Complete (Result As Int)
-	
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
 	
 End Sub
 
-Private Sub dlgGeneral_IsValid (TempData As Map) As Boolean 'ignore
-	Return True '--- all is good!
-	'--- NOT USED BUT HERE IF NEEDED
-	
-'	Try
-'		Dim number As Int = TempData.GetDefault("days", 1)
-'		If number < 1 Or number > 14 Then
-'			guiHelpers.Show_toast("Days must be between 1 and 14",1200)
-'			pdlgLogging.ScrollToItemWithError("days")
-'			Return False
-'		End If
-'		Return True
-'	Catch
-'		Log(LastException)
-'	End Try
-'	Return False
 
-End Sub
 
-Private Sub dlgGeneral_BeforeDialogDisplayed (Template As Object)
-	prefHelper.SkinDialog(Template)
-End Sub
 
 Private Sub BuildWizBtns
-	btn1.Initialize("ActionBtn1") : btn1.Text = "START"
-	btn2.Initialize("ActionBtn2") : btn2.Text = "STOP"
-	btn1.TextSize = mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).TextSize
+	btn1.Text = "START"
+	btn2.Text = "STOP"
+	btn1.TextSize =  20'mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).TextSize
 	btn2.TextSize = btn1.TextSize
-	
 	
 	'--- add steps info label
 	lblMsgSteps.Initialize("")
-	lblMsgSteps.Color = xui.Color_Transparent
-	lblMsgSteps.Visible = False
+	lblMsgSteps.Color = clrTheme.Background
 	lblMsgSteps.TextColor = clrTheme.txtAccent
 	lblMsgSteps.SetTextSizeAnimated(300,22)
 	lblMsgSteps.SingleLine = False
 	lblMsgSteps.Gravity = Bit.Or(Gravity.CENTER_VERTICAL, Gravity.CENTER_HORIZONTAL)
 	lblMsgSteps.Text = "Bed Leveling Wizard"
-	mWizDlg.mBase.AddView(lblMsgSteps, 2dip,  50dip,  _
+	
+	pnlSteps.AddView(lblMsgSteps, 2dip,  50dip,  _
 				mWizDlg.CustomListView1.GetBase.GetView(0).Width-2dip,160dip)
 	
+'	mWizDlg.mBase.AddView(lblMsgSteps, 2dip,  50dip,  _
+'				mWizDlg.CustomListView1.GetBase.GetView(0).Width-2dip,160dip)
+	
 	'--- add new buttons to dialog bottom
-	Dim t,w,h As Float
-	w = mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Width
-	h = mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Height
-	t = mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Top
-	mWizDlg.Dialog.Base.AddView(btn1, 8dip, t, w,h)
-	mWizDlg.Dialog.Base.AddView(btn2,  mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Left, t, w,h)
+	Dim w,h As Float
 	btn2.Visible = False
 	
 	'--- build pre-heat button
+	w = btn1.Width
+	h = btn1.Height
 	btnPreheat.Initialize("PreHeat")
 	btnPreheat.Text = "Pre-Heat Menu"
 	btnPreheat.TextSize = btn2.TextSize 
 	Dim w2 As Int = (w * 2) - 8dip '--- make btn a little wide'eeeer!
-	mWizDlg.Dialog.Base.AddView(btnPreheat, (lblMsgSteps.Width / 2) - (w2/2) ,  lblMsgSteps.Height +lblMsgSteps.top, w2,h)
+	'mWizDlg.Dialog.Base.AddView(btnPreheat, (lblMsgSteps.Width / 2) - (w2/2) ,  lblMsgSteps.Height +lblMsgSteps.top, w2,h)
+	pnlSteps.AddView(btnPreheat, (lblMsgSteps.Width / 2) - (w2/2) ,  lblMsgSteps.Height +lblMsgSteps.top, w2,h)
 	btnPreheat.Visible = False
 	
 	guiHelpers.SkinButton(Array As Button(btn1,btn2,btnPreheat))
@@ -158,9 +140,8 @@ Private Sub PreHeat_Click
 	CallSub(B4XPages.MainPage,"ShowPreHeatMenu_All")
 End Sub
 
-Private Sub ActionBtn1_Click
+Private Sub btnStart_Click
 	Dim b As Button : b = Sender
-	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 	btn1.RequestFocus
@@ -176,9 +157,11 @@ Private Sub ActionBtn1_Click
 		current_point = 0
 		b.Text = "NEXT"
 		btn2.Visible = True
-		mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = False
-		mWizDlg.CustomListView1.GetBase.GetView(0).Visible = False
-		lblMsgSteps.Visible = True
+		btnClose.Visible = False
+		'mWizDlg.CustomListView1.GetBase.GetView(0).Visible = False
+		'mWizDlg.CustomListView1.GetBase.Visible = False
+		'mWizDlg.mBase.Visible = False
+		pnlSteps.Visible = True
 		ProcessSteps
 		Return
 		
@@ -188,19 +171,20 @@ Private Sub ActionBtn1_Click
 		current_point = current_point + 1
 		ProcessSteps
 	End If
-	'xDialog.Close(xui.DialogResponse_Positive)
+	
 End Sub
 
-Private Sub ActionBtn2_Click
+Private Sub btnStop_Click
 	'--- stop the action
 	btn2.Visible = False
 	btnPreheat.Visible = False
 	btn1.Text = "START"
-	mWizDlg.CustomListView1.GetBase.GetView(0).Visible = True
-	mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = True
-	lblMsgSteps.Visible = False
-	mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).RequestFocus '--- not working
-	'btn1.RequestFocus '--- not working
+	'mWizDlg.CustomListView1.GetBase.GetView(0).Visible = True
+	'mWizDlg.CustomListView1.GetBase.Visible = True
+	'mWizDlg.mBase.Visible = True
+	btnClose.Visible = True
+	pnlSteps.Visible = False
+	btnClose.RequestFocus 
 End Sub
 
 Private Sub ProcessSteps
@@ -268,7 +252,7 @@ Private Sub ProcessSteps
 				CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Something went wrong...", 3500)
 				logMe.LogIt2(LastException.Message, mModule,"ProcessSteps")
 				BeepMe(3)
-				ActionBtn2_Click
+				btnStop_Click
 				Return
 				
 			End Try
@@ -277,7 +261,7 @@ Private Sub ProcessSteps
 			CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Bed Leveling Complete... Sending end gcode.", 3500)
 			SendMGcode(endGCode) : Sleep(200)
 			BeepMe(1)
-			ActionBtn2_Click
+			btnStop_Click
 			Return
 			
 	End Select
@@ -417,3 +401,44 @@ Private Sub BeepMe(num As Int	)
 End Sub
 
 
+Private Sub pnlBG_Click
+	'--- needed to eat clicks when embeding a pref dialog into
+	'--- another panel. Stupid java.
+End Sub
+
+
+'Private Sub dlgGeneral_IsValid (TempData As Map) As Boolean 'ignore
+'	Return True '--- all is good!
+'	'--- NOT USED BUT HERE IF NEEDED
+'	
+''	Try
+''		Dim number As Int = TempData.GetDefault("days", 1)
+''		If number < 1 Or number > 14 Then
+''			guiHelpers.Show_toast("Days must be between 1 and 14",1200)
+''			pdlgLogging.ScrollToItemWithError("days")
+''			Return False
+''		End If
+''		Return True
+''	Catch
+''		Log(LastException)
+''	End Try
+''	Return False
+'
+'End Sub
+
+'Private Sub dlgGeneral_BeforeDialogDisplayed (Template As Object)
+'	prefHelper.SkinDialog(Template)
+'End Sub
+
+Private Sub btnClose_Click
+	parent.Visible = False
+	mWizDlg.BackKeyPressed
+	parent.RemoveAllViews
+End Sub
+
+
+	
+
+
+
+	

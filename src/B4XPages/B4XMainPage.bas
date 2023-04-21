@@ -64,7 +64,7 @@ Sub Class_Globals
 	Public mPrefDlg1 As sadPreferencesDialog
 	Public mPrefDlg2 As sadPreferencesDialog
 	
-	Private pnlWizards As Panel
+	Public pnlWizards As Panel
 End Sub
 
 '======================================================================================

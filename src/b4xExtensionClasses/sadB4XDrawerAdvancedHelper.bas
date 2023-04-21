@@ -32,8 +32,7 @@ End Sub
 
 
 Public Sub BtnPressed(b As Button)
-	Log(b.Tag)
-	Dim msg As String = "Restart Command Sent. Waiting..."
+	Dim msg As String = "Restarting... Please wait a few moments..."
 	Dim dl As Int = 9000
 	Select Case b.Tag.As(String)
 		Case "s" '--- emergency stop  
@@ -42,11 +41,18 @@ Public Sub BtnPressed(b As Button)
 			dl = 3000
 		Case "fr" '--- restart firmware	
 			B4XPages.MainPage.oMasterController.cn.PostRequest("/printer/firmware_restart")
+			Main.tmrTimerCallSub.CallSubPlus(B4XPages.MainPage.oMasterController, "Start",10000)
+			
 		Case "r" '---  restart
 			B4XPages.MainPage.oMasterController.cn.PostRequest("/printer/firmware_restart")
+			Main.tmrTimerCallSub.CallSubPlus(B4XPages.MainPage.oMasterController, "Start",10000)
 			'B4XPages.MainPage.oMasterController.cn.PostRequest("printer/restart") --- this is failing and i have no idea why
+			
 	End Select
 	guiHelpers.Show_toast2(msg,dl)
+	Sleep(200)
+	CloseRightMenu
+	
 End Sub
 
 Public Sub SkinMe(b() As Button, p As B4XView,pb As B4XView)

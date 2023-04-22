@@ -6,6 +6,10 @@ Version=11.5
 @EndOfDesignText@
 ' Author:  sadLogic
 #Region VERSIONS 
+' V. 1.2		Apr/21/2023
+'			Conveterd to full screen panel
+' V. 1.1		Apr/10/2023
+'			Refactored  for klipper
 ' V. 1.0 	Mar/11/2023
 '			BOOM! stupid Muscovy (written while listening to an artillery dual)
 ' inspired / copied / stolen / borrowed from...
@@ -36,12 +40,18 @@ Sub Class_Globals
 	#end if
 	
 	Private pnlBG,pnlHost As Panel
-	Private lblHeader As Label
 	
-	Private btnClose As Button
-	Private btn1,btn2 As Button
+	Private btnClose,btn1,btn2 As Button
 	Private pnlSteps As Panel
+	Private alblMenu As AutoTextSizeLabel
+	Private alblHeader As AutoTextSizeLabel
 End Sub
+
+
+'---
+'--- Used for both Octoprint and Klipper
+'---
+
 
 Public Sub Initialize(p As Panel)
 	
@@ -59,7 +69,10 @@ End Sub
 
 Private Sub BuildGUI
 	pnlBG.Color = clrTheme.Background
-	lblHeader.TextColor = clrTheme.txtNormal
+	alblHeader.BaseLabel.TextColor = clrTheme.txtNormal
+	alblMenu.BaseLabel.TextColor = clrTheme.txtNormal
+	If guiHelpers.gIsLandScape = False Then  alblMenu.BaseLabel.Visible = False
+	alblHeader.Text = "Manual Bed Leveling Wizard"
 	parent.Visible = True
 	pnlSteps.Color =clrTheme.Background
 	guiHelpers.SkinButton(Array As Button(btnClose))
@@ -179,9 +192,6 @@ Private Sub btnStop_Click
 	btn2.Visible = False
 	btnPreheat.Visible = False
 	btn1.Text = "START"
-	'mWizDlg.CustomListView1.GetBase.GetView(0).Visible = True
-	'mWizDlg.CustomListView1.GetBase.Visible = True
-	'mWizDlg.mBase.Visible = True
 	btnClose.Visible = True
 	pnlSteps.Visible = False
 	btnClose.RequestFocus 

@@ -253,7 +253,7 @@ Private Sub TryPrinterConnection
 	End If
 	If fnc.ReadConnectionFile(oMasterController.CN) = False Then
 		#if klipper
-		Dim o9 As dlgPrinterSetup : o9.Initialize(Me)
+		Dim o9 As dlgPrinterSetup : o9.Initialize
 		#else
 		Dim o9 As dlgOctoSetup : o9.Initialize("Printer Connection","PrinterSetup_Closed")
 		#End If
@@ -434,7 +434,7 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 		Case "oc"  '--- octo / klipper setup
 			#if klipper
 			Dim o9 As dlgPrinterSetup
-			o9.Initialize(Me)
+			o9.Initialize
 			o9.Show(False)
 			#else
 			Dim o9 As dlgOctoSetup

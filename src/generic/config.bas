@@ -150,7 +150,7 @@ Private Sub LoadCfgs()
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE) = False Then
 		Dim oiq As dlgPrinterSetup
-		oiq.Initialize(Null)
+		oiq.Initialize
 		oiq.CreateDefaultFile
 	End If
 	'ReadPrinterCFG '--- this will be done on connection init

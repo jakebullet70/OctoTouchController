@@ -251,7 +251,12 @@ Private Sub ExtruderLength_Set(value As String)
 End Sub
 #end region
 
-#Region "FUNCTION_MENU"
+
+
+
+
+
+#Region "FUNCTION - WIZ MENU IN MOVMENT PANEL"
 Private Sub FunctionMenu
 	
 	Dim o1 As dlgListbox
@@ -259,6 +264,7 @@ Private Sub FunctionMenu
 	o1.Show(250dip,320dip,BuildFunctionMnu)
 	
 End Sub
+
 
 Private Sub BuildFunctionMnu() As Map
 	Dim m As Map : m.Initialize

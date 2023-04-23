@@ -385,6 +385,12 @@ Public Sub Show_toast(msg As String, ms As Int)
 	toast.Show($"[TextSize=${mToastTxtSize}][b][FontAwesome=0xF05A/]  ${msg}[/b][/TextSize]"$)
 End Sub
 
+
+'================================================================================================
+'================================================================================================
+'================================================================================================
+
+
 #Region "POPUP_MAIN_SETUP_MENU"
 Private Sub PopupMainOptionMenu
 	
@@ -393,14 +399,14 @@ Private Sub PopupMainOptionMenu
 	Dim popUpMemuItems As Map 
 
 	Dim gui As guiMsgs : gui.Initialize		
-	If oc.isPrinting Or oc.IsPaused2 Then
+	'If oc.isPrinting Or oc.IsPaused2 Then
 		'--- do not know why i did this, does not seem to matter
 		'--- if you change when printing
-		Show_toast("Cannot Change Printer Connection Settings While Printing",2500)
-		popUpMemuItems = gui.BuildOptionsMenu(True)
-	Else
+	'	Show_toast("Cannot Change Printer Connection Settings While Printing",2500)
+	'	popUpMemuItems = gui.BuildOptionsMenu(True)
+	'Else
 		popUpMemuItems = gui.BuildOptionsMenu(False)
-	End If
+	'End If
 	
 	Dim o1 As dlgListbox
 	o1.Initialize("Options Menu",Me,"OptionsMenu_Event")
@@ -633,10 +639,12 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	
 	'--- if sonoff power is configed, show power btn - remember, if no connection to octoprint
 	'--- so cannot use any octoprint installed plugin
+	'----------------------------------------------------------------------  KLIPPER TODO ?????
 	Dim PowerCtrlAvail As String = ""
-	If Main.kvs.GetDefault(gblConst.PWR_SONOFF_PLUGIN,False).As(Boolean) = True Then
+	If Main.kvs.GetDefault(gblConst.PWR_SONOFF_PLUGIN,False).As(Boolean) = True Then 'TODO 2, how will klipper handle this
 		PowerCtrlAvail = "POWER ON"
 	End If
+	'----------------------------------------------------------------------  KLIPPER TODO ?????
 
 	Dim Const JUSTIFY_BUTTON_2_LEFT As Boolean = True
 	Dim ErrorDlg As dlgMsgBox
@@ -879,13 +887,12 @@ End Sub
 #end region
 
 
-'#if klipper
+#region "RIGHT_SDIE_DRWAER"
 '--- side drawer
 Public Sub btnSidePnl_Click
 	Dim b As Button : b = Sender
 	SideMenu.BtnPressed(b)
 End Sub
-'#end if
 
 Private Sub btnSliderMenu_Click
 	'--- righty menu gear icon
@@ -978,18 +985,21 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	Select Case Value.As(String)
 		
-		Case "ab"
+		Case "m600"
+			Log("M600")
+		
+		Case "ab" '--- about screen
 			Dim o2 As dlgAbout : o2.Initialize
 			o2.Show
 		
-		Case "sys"
+		Case "sys" '--- system menu
 			#if klipper
 			Dim oa As dlgKlipperSysCmds : oa.Initialize(Me) : 	oa.Show
 			#Else
 			Dim oa As dlgOctoSysCmds : oa.Initialize(oMasterController.CN) : oa.Show
 			#end if
 		
-		Case "pwr"
+		Case "pwr" '--- printer power
 			#if not (klipper)
 			If oc.isConnected = False And Main.kvs.GetDefault(gblConst.PWR_SONOFF_PLUGIN,False).As(Boolean) = False Then
 				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
@@ -1001,7 +1011,7 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 			RunHTTPOnOffMenu(gblConst.PSU_KLIPPER_SETUP_FILE)
 			#end if
 			
-		Case "1","2","3","4"
+		Case "1","2","3","4" '--- misc HTTP commands
 			RunHTTPOnOffMenu(Value.As(String) & gblConst.HTTP_ONOFF_SETUP_FILE)
 		
 		#if not (klipper)
@@ -1028,7 +1038,7 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 			
 	
 End Sub
-
+#end region
 
 Private Sub RunHTTPOnOffMenu(fname As String)
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,fname)

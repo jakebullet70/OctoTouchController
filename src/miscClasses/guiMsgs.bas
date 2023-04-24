@@ -89,11 +89,7 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE859)). _
 				 Typeface(Typeface.DEFAULT).Append("   Power Settings").PopAll,"pw")
 				 	
-	If NoOctoConnection = False Then
-		m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE308)). _
-				 	 Typeface(Typeface.DEFAULT).Append("   Printer Connection").PopAll,"oc")	
-	End If
-	
+
 	#if klipper
 	'------------------------------  TODO !!!!!!!!!!!!!!!!!
 '	cs.Initialize
@@ -126,6 +122,11 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 		
 	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3B7)). _
 				 Typeface(Typeface.DEFAULT).Append("   Color Themes").PopAll,"thm1")				 
+				 
+	If NoOctoConnection = False Then
+		m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE308)). _
+				 	 Typeface(Typeface.DEFAULT).Append("   Printer Connection").PopAll,"oc")	
+	End If
 	
 	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24D)). _
 				 Typeface(Typeface.DEFAULT).Append("   Read Internal Log File").PopAll,"rt")

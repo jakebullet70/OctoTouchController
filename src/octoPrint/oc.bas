@@ -17,6 +17,7 @@ Sub Process_Globals
 	Public IsConnectionValid As Boolean = False
 	
 	Public OctoKey, OctoIp ,OctoPort As String
+	Public WSocketPort As String = "" '--- klipper only
 	
 	Public FormatedTemps As String 
 	Public FormatedStatus As String = "No Connection"

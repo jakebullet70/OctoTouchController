@@ -972,6 +972,8 @@ Private Sub Build_RightSideMenu
 		'--- nothing in the menu so add something.
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("About This Program").PopAll,"ab")
 	End If
+	
+	clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Test klippy").PopAll,"test")
 		
 End Sub
 
@@ -985,8 +987,13 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	Select Case Value.As(String)
 		
-		Case "m600"
-			Log("M600")
+		Case "m600","test"
+			oMasterController.WSk.Send($"{
+    "jsonrpc": "2.0",
+    "method": "server.info",
+    "id": 9546
+}"$)
+			'Log("M600")
 		
 		Case "ab" '--- about screen
 			Dim o2 As dlgAbout : o2.Initialize

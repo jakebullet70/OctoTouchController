@@ -15,9 +15,15 @@
             "required": false
         },
         {
-            "title": "Port",
+            "title": "HTTP Port",
             "type": "Number",
             "key": "port",
+            "required": false
+        },
+        {
+            "title": "Web Socket Port",
+            "type": "Number",
+            "key": "wsport",
             "required": false
         },
         {

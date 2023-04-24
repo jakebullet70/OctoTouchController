@@ -10,7 +10,7 @@ Version=11.5
 #End Region
 Sub Process_Globals
 	
-	Public Const DATA_SAVED as String = "Data  Saved"
+	Public Const DATA_SAVED As String = "Data  Saved"
 	Public Const API_ANDROID_4_0 As Int = 14
 	Public Const API_ANDROID_4_4 As Int = 19
 	
@@ -37,6 +37,7 @@ Sub Process_Globals
 	Public Const psetupPRINTER_DESC As String = "desc"
 	Public Const psetupPRINTER_IP As String = "ip"
 	Public Const psetupPRINTER_PORT As String = "port"
+	Public Const psetupPRINTER_WSPORT As String = "wsport"
 	Public Const psetupPRINTER_X As String = "bx"
 	Public Const psetupPRINTER_Y As String = "by"
 	'#else

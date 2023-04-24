@@ -17,6 +17,8 @@ Sub Class_Globals
 	Public parser As JsonParsorMain
 	#if klipper
 	Public parsorConStatus As JsonParsorConnectionStatus
+	Private oWSk As moonrakerWebSocket
+	Public parserK As KlippySocketParser
 	#End If
 	
 	'--- populated by a REST calls, will be grabbed by their pages
@@ -49,7 +51,9 @@ Sub Class_Globals
 End Sub
 
 
-
+Public Sub getWSk() As moonrakerWebSocket
+	Return oWSk
+End Sub
 Public Sub getCN() As HttpOctoRestAPI
 	Return oCN
 End Sub
@@ -62,6 +66,7 @@ Public Sub Initialize
 	
 	#if klipper
 	parsorConStatus.Initialize
+	parserK.Initialize
 	#End If
 	
 	
@@ -370,10 +375,14 @@ Private Sub GetConnectionPrinterStatus
 	
 	'--- called once on 1st start
 	If oCN.IsInitialized = False Then
-		oCN.Initialize(oc.OctoIp ,oc.OctoPort,oc.OctoKey) 
+		oCN.Initialize(oc.OctoIp ,oc.OctoPort,oc.OctoKey)
 	End If
 	
-
+	#if klipper
+	oWSk.Initialize(parserK,"wsocket",oc.OctoIp,oc.WSocketPort)
+	oWSk.Connect
+	#End If
+	
 	#if klipper
 	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(oc.cPRINTER_MASTER_STATE)
 	'--- get some info!
@@ -384,13 +393,14 @@ Private Sub GetConnectionPrinterStatus
 		o2.Initialize
 		o2.ConnectionStatusKlipper(Result)
 		
-	'--- turn on main loop timer
+		'--- turn on main loop timer
 		CallSub2(Main,"TurnOnOff_MainTmr",True)
 		tmrMain_Tick
 		
 	Else
 		oc.ResetStateVars
 	End If
+	
 	#else	
 
 

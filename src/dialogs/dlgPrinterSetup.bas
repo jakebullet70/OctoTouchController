@@ -17,6 +17,7 @@ Sub Class_Globals
 	Private mPrefDlg As sadPreferencesDialog
 	Private prefHelper As sadPreferencesDialogHelper
 	Private btn1 As Button
+	Private ws As moonrakerWebSocket
 	
 End Sub
 
@@ -36,7 +37,7 @@ Public Sub CreateDefaultFile
 	If File.Exists(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE) = False Then
 		File.WriteMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE, _
 						CreateMap(gblConst.psetupPRINTER_DESC: "default", _
-						 gblConst.psetupPRINTER_IP: "",  gblConst.psetupPRINTER_PORT: "80", _
+						 gblConst.psetupPRINTER_IP: "",  gblConst.psetupPRINTER_PORT: "80",gblConst.psetupPRINTER_WSPORT: "7125",  _
 						 gblConst.psetupPRINTER_X: "220", gblConst.psetupPRINTER_Y: "220"))
 						 
 	End If
@@ -115,11 +116,13 @@ Private Sub ActionBtn1_Click
 
 	Dim data As Map = mPrefDlg.PeekEditedData
 	Dim ip As String = data.Get(gblConst.psetupPRINTER_IP)
+	Dim wsport As String = data.Get(gblConst.psetupPRINTER_WSPORT)
 	Dim port As String = data.Get(gblConst.psetupPRINTER_PORT)
+	Dim HTTP_OK As Boolean = False
 	
-	If  (fnc.IsValidIPv4Address(ip) = False And fnc.IsValidIPv6Address(ip) = False) Or IsNumber(port) = False   Then
+	If  (fnc.IsValidIPv4Address(ip) = False And fnc.IsValidIPv6Address(ip) = False) Or IsNumber(port) = False Or IsNumber(wsport) = False  Then
 		Dim mb As dlgMsgBox : mb.Initialize(mainObj.Root,"Problem",320dip, 160dip,False)
-		Wait For (mb.Show("Check if your IP and Port are set", gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
+		Wait For (mb.Show("Check if your IP and Ports are set", gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
 		Return
 	End If
 	
@@ -127,25 +130,49 @@ Private Sub ActionBtn1_Click
 	mPrefDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible  = False
 	btn1.Visible = False
 	
-	'--- now test connection.
+	'--- now test HTTP connection.
 	Dim sAPI As String = $"http://${ip}:${port}${oc.cSERVER}"$
 	Dim j As HttpJob: j.Initialize("", Me)
 	j.Download(sAPI)
 	Wait For (j) JobDone(j As HttpJob)
 	If j.Success Then
-		If j.GetString.Contains("server") Then
+		If j.GetString.Contains("server") Then HTTP_OK = True
+	Else
+		Dim mb As dlgMsgBox : mb.Initialize(mainObj.Root,"Problem",320dip, 160dip,False)
+		Wait For (mb.Show("HTTP Connection failure.", gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
+	End If
+	j.Release '--- free up resources
+	
+	If HTTP_OK = True Then 
+		'--- WS check
+		
+		ws.Initialize(Me,"wsocket",ip,wsport)
+		'--- SSL / Android 4.x crap / cleanup
+		Wait For (ws.ProviderInstall) Complete (b As Boolean)
+		'--- connect to socket
+		Wait For (ws.Connect) Complete (msg As String)
+		If msg = "" Then
+			'--- if error we never get here, this needs a refatctor but as this will only happen 1 in a million times...
+			'Dim mb As dlgMsgBox : mb.Initialize(mainObj.Root,"Problem",320dip, 160dip,False)
+			'Wait For (mb.Show("Web Socket Connection failure.", gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
+		Else
 			mPrefDlg.Dialog.GetButton(xui.DialogResponse_Positive).Visible = True
 			guiHelpers.Show_toast2("Connection OK!",2000)
 		End If
-	Else
-		Dim mb As dlgMsgBox : mb.Initialize(mainObj.Root,"Problem",320dip, 160dip,False)
-		Wait For (mb.Show("Connection failure.", gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
 	End If
-	
-	j.Release '--- free up resources
+		
 	mPrefDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = True
 	btn1.Visible = True
+	ws.wSocket.Close
 	
+End Sub
+Private Sub wsocket_Closed(msg As String)
+	If strHelpers.IsNullOrEmpty(msg) Then Return
+	'--- if this fires we had an connection error
+	Dim mb As dlgMsgBox : mb.Initialize(mainObj.Root,"Problem",320dip, 160dip,False)
+	Wait For (mb.Show("Web Socket Connection failure.", gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
+	mPrefDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = True
+	btn1.Visible = True
 End Sub
 
 

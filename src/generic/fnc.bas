@@ -47,6 +47,7 @@ Public Sub ReadConnectionFile(cn As HttpOctoRestAPI) As Boolean
 	If m.IsInitialized = False Then Return False
 	oc.OctoIp     = m.Get( gblConst.psetupPRINTER_IP)
 	oc.OctoPort = m.Get( gblConst.psetupPRINTER_PORT)
+	oc.WSocketPort = m.Get( gblConst.psetupPRINTER_WSPORT)
 	#else
 	Dim m As Map = LoadPrinterConnectionSettings
 	If m.IsInitialized = False Then Return False

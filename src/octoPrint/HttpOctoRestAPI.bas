@@ -17,6 +17,7 @@ Sub Class_Globals
 	Public mAPIkey As String
 	Public gPort As String
 	Public gIP As String
+	Public gWSocketPort As String
 	
 End Sub
 

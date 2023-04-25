@@ -91,7 +91,7 @@ Public Sub TempStatus(s As String)
 				End If
 			End If
 		Catch
-			logMe.LogIt2("temp 3:"$ & LastException,mModule,CallingSub)
+			logMe.LogIt2("temp 33:"$ & LastException,mModule,CallingSub)
 		End Try
 			
 	Catch

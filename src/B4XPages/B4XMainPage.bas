@@ -886,8 +886,7 @@ Private Sub BuildPreHeatMenu
 End Sub
 #end region
 
-
-#region "RIGHT_SDIE_DRWAER"
+#region "RIGHT_SDIE_DRAWER"
 '--- side drawer
 Public Sub btnSidePnl_Click
 	Dim b As Button : b = Sender
@@ -986,14 +985,9 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	SideMenu.CloseRightMenu
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	Select Case Value.As(String)
-		
+		'BED_MESH_CALIBRATE
 		Case "m600","test"
-			oMasterController.WSk.Send($"{
-    "jsonrpc": "2.0",
-    "method": "server.info",
-    "id": 9546
-}"$)
-			'Log("M600")
+			oMasterController.WSk.Send(oc.cPOST_GCODE_WS.Replace("!!!","BED_MESH_CALIBRATE  METHOD=manual"))
 		
 		Case "ab" '--- about screen
 			Dim o2 As dlgAbout : o2.Initialize

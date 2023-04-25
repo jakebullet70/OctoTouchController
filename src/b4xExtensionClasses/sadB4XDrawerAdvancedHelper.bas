@@ -33,20 +33,24 @@ End Sub
 
 Public Sub BtnPressed(b As Button)
 	Dim msg As String = "Restarting... Please wait a few moments..."
-	Dim dl As Int = 9000
+	Dim dl As Int = 8000
 	Select Case b.Tag.As(String)
 		Case "s" '--- emergency stop  
-			B4XPages.MainPage.oMasterController.cn.PostRequest("/printer/emergency_stop")
+			B4XPages.MainPage.oMasterController.WSk.Send($"{"jsonrpc": "2.0",	"method": "printer.emergency_stop",	"id": 4564}"$)
+			'B4XPages.MainPage.oMasterController.cn.PostRequest("/printer/emergency_stop")
 			msg = "EMERGENCY STOP!"
 			dl = 3000
 		Case "fr" '--- restart firmware	
 			B4XPages.MainPage.oMasterController.cn.PostRequest("/printer/firmware_restart")
-			Main.tmrTimerCallSub.CallSubPlus(B4XPages.MainPage.oMasterController, "Start",10000)
+			'B4XPages.MainPage.oMasterController.WSk.Send($"{  "jsonrpc": "2.0",   "method": "printer.firmware_restart",   "id": 8463}"$)
+			'Main.tmrTimerCallSub.CallSubPlus(B4XPages.MainPage.oMasterController, "Start",10000)
 			
 		Case "r" '---  restart
 			B4XPages.MainPage.oMasterController.cn.PostRequest("/printer/firmware_restart")
-			Main.tmrTimerCallSub.CallSubPlus(B4XPages.MainPage.oMasterController, "Start",10000)
-			'B4XPages.MainPage.oMasterController.cn.PostRequest("printer/restart") --- this is failing and i have no idea why
+			'--- this is failing and i have no idea why ------ printer.restart
+			'B4XPages.MainPage.oMasterController.cn.PostRequest("printer/restart")
+			'B4XPages.MainPage.oMasterController.WSk.Send($"{ "jsonrpc": "2.0", "method": "printer.restart",  "id": 4894}"$)
+			'Main.tmrTimerCallSub.CallSubPlus(B4XPages.MainPage.oMasterController, "Start",10000)
 			
 	End Select
 	guiHelpers.Show_toast2(msg,dl)

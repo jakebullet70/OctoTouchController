@@ -17,7 +17,7 @@ Sub Class_Globals
 	Public parser As JsonParsorMain
 	#if klipper
 	Public parsorConStatus As JsonParsorConnectionStatus
-	Private oWSk As moonrakerWebSocket
+	Private oWSk As KlippyWebSocket
 	Public parserK As KlippySocketParser
 	#End If
 	
@@ -51,7 +51,7 @@ Sub Class_Globals
 End Sub
 
 
-Public Sub getWSk() As moonrakerWebSocket
+Public Sub getWSk() As KlippyWebSocket
 	Return oWSk
 End Sub
 Public Sub getCN() As HttpOctoRestAPI
@@ -371,6 +371,12 @@ Private Sub GetJobStatus
 	
 End Sub
 
+Private Sub InitWebSocket
+	oWSk.Initialize(parserK,"wsocket",oc.OctoIp,oc.WSocketPort)
+	oWSk.Connect
+End Sub
+
+
 Private Sub GetConnectionPrinterStatus
 	
 	'--- called once on 1st start
@@ -379,8 +385,11 @@ Private Sub GetConnectionPrinterStatus
 	End If
 	
 	#if klipper
-	oWSk.Initialize(parserK,"wsocket",oc.OctoIp,oc.WSocketPort)
-	oWSk.Connect
+	Try
+		If oWSk.IsInit = False Then InitWebSocket
+	Catch
+		InitWebSocket
+	End Try
 	#End If
 	
 	#if klipper

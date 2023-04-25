@@ -18,10 +18,9 @@ End Sub
 Public Sub Initialize
 End Sub
 
-
-
 Private Sub wsocket_RecievedText(msg As String)
-	Log(msg)
+	'--- generic socket rec text
+	Log("wsocket_RecievedText: " & msg)
 End Sub
 
 
@@ -31,5 +30,21 @@ End Sub
 
 
 Private Sub server_info(s As String)
-	Log(s)
+	Log("server_info:" & s)
 End Sub
+
+Private Sub notify_klippy_ready(s As String)
+	Log("notify_klippy_ready")
+	B4XPages.MainPage.oMasterController.Start
+End Sub
+
+Private Sub notify_klippy_disconnected(s As String)
+	Log("notify_klippy_disconnected")
+End Sub
+
+Private Sub notify_klippy_shutdown(s As String)
+	Log("notify_klippy_shutdown")
+End Sub
+
+
+

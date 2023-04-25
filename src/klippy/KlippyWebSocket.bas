@@ -5,6 +5,7 @@ Type=Class
 Version=11.8
 @EndOfDesignText@
 Sub Class_Globals
+	Private Const mModule As String = "KlippyWebSocket" 'ignore
 	Private mCallbackModule As Object 'ignore
 	Private mCallbackBase As String 'ignore
 	Private mCallBackRecTxt As String
@@ -31,6 +32,7 @@ Public Sub Initialize(callbackModule As Object, callbackBase As String,ip As Str
 	mPort = port
 	mIP = ip
 	mCallBackRecTxt = mCallbackBase & "_RecievedText"
+	IsInit = True
 End Sub
 
 #if klipper
@@ -89,10 +91,18 @@ End Sub
 
 
 Public Sub Connect() As ResumableSub
+	Dim Const thisSub As String	= "Connect"
+	Try
+		If wSocket.Connected Then Return ""
+	Catch
+		'Log(LastException)
+	End Try'ignore
 
+	logMe.LogIt2("WS connecting...",mModule,thisSub)
 	wSocket.Initialize("ws")
 	wSocket.Connect($"ws://${mIP}:${mPort}/websocket"$)
 	Wait For ws_Connected
+	logMe.LogIt2("WS connected...",mModule,thisSub)
 	mConnected = True
 	'If mRaiseMsgEvent = False Then
 	Wait For ws_TextMessage (Message As String)
@@ -144,9 +154,8 @@ End Sub
 
 Public	 Sub Send(cmd As String) 
 	If mConnected = False Then
-		Log("no web socket connection - reconnecting")
+		logMe.LogIt2("no web socket connection - reconnecting",mModule,"Send")
 		Wait For (Connect) Complete (msg As String)
-		'Return
 	End If
 	wSocket.SendText(cmd)
 	Log("klippy send!")
@@ -155,7 +164,7 @@ End Sub
 
 Public	 Sub SendAndWait(cmd As String) As ResumableSub
 	If mConnected = False Then
-		Log("no web socket connection - reconnecting")
+		logMe.LogIt2("no web socket connection - reconnecting",mModule,"SendAndWait")
 		Wait For (Connect) Complete (msg As String)
 	End If
 	wSocket.SendText(cmd)
@@ -163,9 +172,9 @@ Public	 Sub SendAndWait(cmd As String) As ResumableSub
 	Return Message
 End Sub
 
-
-'======================================================================================================
-'======================================================================================================
-'======================================================================================================
-
 #End If
+
+'======================================================================================================
+'======================================================================================================
+'======================================================================================================
+

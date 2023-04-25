@@ -17,7 +17,7 @@ Sub Class_Globals
 	Private mPrefDlg As sadPreferencesDialog
 	Private prefHelper As sadPreferencesDialogHelper
 	Private btn1 As Button
-	Private ws As moonrakerWebSocket
+	Private ws As KlippyWebSocket
 	
 End Sub
 

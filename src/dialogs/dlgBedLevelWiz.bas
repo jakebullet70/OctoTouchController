@@ -39,12 +39,14 @@ Sub Class_Globals
 	Private printerW,printerL As Int
 	#end if
 	
-	Private pnlBG,pnlHost As Panel
+	Private pnlSteps,pnlBG,pnlHost As Panel
 	
 	Private btnClose,btn1,btn2 As Button
-	Private pnlSteps As Panel
-	Private alblMenu As AutoTextSizeLabel
-	Private alblHeader As AutoTextSizeLabel
+	Private alblHeader,alblMenu As AutoTextSizeLabel
+	Private lblHeaterBed,lblHeaterTool As Label
+	
+	Private tmrHeaterOnOff As Timer
+	
 End Sub
 
 
@@ -69,13 +71,12 @@ End Sub
 
 Private Sub BuildGUI
 	pnlBG.Color = clrTheme.Background
-	alblHeader.BaseLabel.TextColor = clrTheme.txtNormal
-	alblMenu.BaseLabel.TextColor = clrTheme.txtNormal
+	guiHelpers.SetTextColor(Array As B4XView(alblHeader.BaseLabel,alblMenu.BaseLabel,lblHeaterBed,lblHeaterTool))
 	If guiHelpers.gIsLandScape = False Then  alblMenu.BaseLabel.Visible = False
 	alblHeader.Text = "Manual Bed Leveling Wizard"
 	parent.Visible = True
 	pnlSteps.Color =clrTheme.Background
-	guiHelpers.SkinButton(Array As Button(btnClose))
+	guiHelpers.SkinButton(Array As Button(btnClose,btnPreheat,btn1,btn2))
 End Sub
 
 Public Sub Show
@@ -99,17 +100,29 @@ Public Sub Show
 	Dim RS As ResumableSub = mWizDlg.ShowDialog(prefSavedData, "", "")
 	prefHelper.dlgHelper.NoCloseOn2ndDialog
 	'prefHelper.dlgHelper.ThemeInputDialogBtnsResize
+	
 	BuildWizBtns
+
+	tmrHeaterOnOff.Initialize("tmrHeater",1500)
+	tmrHeater_Tick
+	tmrHeaterOnOff.Enabled = True
 	
 	Wait For (RS) Complete (Result As Int)
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
+	tmrHeaterOnOff.Enabled = False
+	tmrHeaterOnOff = Null
 	
 End Sub
 
-
+Private Sub tmrHeater_Tick
+	lblHeaterTool.Text ="Tool: " & CRLF & oc.Tool1Actual.Replace("C","")
+	lblHeaterBed.Text = "Bed: " & CRLF & oc.BedActual.Replace("C","")
+End Sub
 
 
 Private Sub BuildWizBtns
+	guiHelpers.ResizeText("Tool: " & CRLF & "200",lblHeaterTool)
+	guiHelpers.ResizeText("Bed: " &CRLF & "100",	lblHeaterBed)
 	btn1.Text = "START"
 	btn2.Text = "STOP"
 	btn1.TextSize =  20'mWizDlg.Dialog.GetButton(xui.DialogResponse_Cancel).TextSize
@@ -127,30 +140,11 @@ Private Sub BuildWizBtns
 	pnlSteps.AddView(lblMsgSteps, 2dip,  50dip,  _
 				mWizDlg.CustomListView1.GetBase.GetView(0).Width-2dip,160dip)
 	
-'	mWizDlg.mBase.AddView(lblMsgSteps, 2dip,  50dip,  _
-'				mWizDlg.CustomListView1.GetBase.GetView(0).Width-2dip,160dip)
 	
 	'--- add new buttons to dialog bottom
-	Dim w,h As Float
 	btn2.Visible = False
-	
-	'--- build pre-heat button
-	w = btn1.Width
-	h = btn1.Height
-	btnPreheat.Initialize("PreHeat")
-	btnPreheat.Text = "Pre-Heat Menu"
-	btnPreheat.TextSize = btn2.TextSize 
-	Dim w2 As Int = (w * 2) - 8dip '--- make btn a little wide'eeeer!
-	'mWizDlg.Dialog.Base.AddView(btnPreheat, (lblMsgSteps.Width / 2) - (w2/2) ,  lblMsgSteps.Height +lblMsgSteps.top, w2,h)
-	pnlSteps.AddView(btnPreheat, (lblMsgSteps.Width / 2) - (w2/2) ,  lblMsgSteps.Height +lblMsgSteps.top, w2,h)
-	btnPreheat.Visible = False
-	
-	guiHelpers.SkinButton(Array As Button(btn1,btn2,btnPreheat))
-	
-End Sub
 
-Private Sub PreHeat_Click
-	CallSub(B4XPages.MainPage,"ShowPreHeatMenu_All")
+	
 End Sub
 
 Private Sub btnStart_Click
@@ -158,6 +152,8 @@ Private Sub btnStart_Click
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
 	btn1.RequestFocus
+	'btnPreheat.Visible = False
+	
 	If b.Text = "START" Then
 		
 		'--- read data used to move head
@@ -180,6 +176,8 @@ Private Sub btnStart_Click
 		
 	End If
 	
+	'----------------------------
+	
 	If b.Text = "NEXT" Then
 		current_point = current_point + 1
 		ProcessSteps
@@ -190,7 +188,7 @@ End Sub
 Private Sub btnStop_Click
 	'--- stop the action
 	btn2.Visible = False
-	btnPreheat.Visible = False
+	'btnPreheat.Visible = True
 	btn1.Text = "START"
 	btnClose.Visible = True
 	pnlSteps.Visible = False
@@ -204,13 +202,13 @@ Private Sub ProcessSteps
 	mData = mWizDlg.PeekEditedData
 	gcodeSendLevelingPoint = $"G1 Z${mData.Get(gblConst.bedManualLevelHeight)} F${zSpeed}"$
 	logMe.LogDebug2("Point: " & current_point,"ProcessSteps")
-	btnPreheat.Visible = False
+	'btnPreheat.Visible = False
 	
 	
 	Select Case current_point
 		Case 0
 			BeepMe(1)
-			btnPreheat.Visible = True
+			'btnPreheat.Visible = True
 			lblMsgSteps.Text = "Starting GCode sent... Touch NEXT when complete to start the leveling sequence."
 			SendMGcode(startGCode) : Wait For SendMGcode
 			
@@ -446,9 +444,6 @@ Private Sub btnClose_Click
 	parent.RemoveAllViews
 End Sub
 
-
-	
-
-
-
-	
+Private Sub btnPreHeat_Click
+	CallSub(B4XPages.MainPage,"ShowPreHeatMenu_All")
+End Sub

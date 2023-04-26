@@ -14,12 +14,9 @@ Sub Class_Globals
 	Private mainObj As B4XMainPage
 	Private xui As XUI
 	
-	
-	
-	'	Private current_point As Int  = 0
-	'	Private endGCode, startGCode As String
-	'	Private gcodeSendLevelingPoint As String
-	'	Private gcode2send,moveText As String
+	Private zAct As String = "?"
+	Private zSaved As String = "?"
+	Private zNew As String = "?"
 	
 	Private parent As Panel
 	
@@ -37,11 +34,12 @@ Sub Class_Globals
 	
 End Sub
 
-Public Sub Initialize(p As Panel)
+Public Sub Initialize(p As Panel) As Object
 	
 	mainObj = B4XPages.MainPage
 	p.RemoveAllViews
 	parent = p
+	Return Me
 
 End Sub
 
@@ -67,6 +65,7 @@ Public Sub Show(headerTxt As String)
 	parent.SetLayoutAnimated(0, 0, 0, parent.Width, parent.Height)
 	parent.LoadLayout("wizManualMeshBedLevel")
 	BuildGUI(headerTxt)
+	btn2.Visible = False
 
 	tmrHeaterOnOff.Initialize("tmrHeater",1500)
 	tmrHeater_Tick
@@ -107,11 +106,13 @@ Private Sub btnStart_Click
 		#else
 		
 		#End If
-	End If
+		btn1.Text = "ACCEPT"
+		btn2.Visible = True
+		btnClose.Visible = False
+		btnPreheat.Visible = False
+		
 	
-	'----------------------------
-	
-	If b.Text = "NEXT" Then
+	else If b.Text = "ACCEPT" Then
 		#if klipper
 		
 		#else
@@ -124,10 +125,9 @@ End Sub
 Private Sub btnStop_Click
 	'--- stop the action
 	btn2.Visible = False
-	'btnPreheat.Visible = True
+	btnPreheat.Visible = True
 	btn1.Text = "START"
 	btnClose.Visible = True
-	pnlSteps.Visible = False
 	btnClose.RequestFocus
 	guiHelpers.Show_toast2("Canceling... Disabling Steppers...",2500)
 	mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","M18"))
@@ -147,8 +147,12 @@ Private Sub BeepMe(num As Int	)'ignore
 End Sub
 
 Private Sub btnClose_Click
+	Close_Me
+End Sub
+
+Public Sub Close_Me
 	'--- out of here!
-	parent.Visible = False
+	parent.SetVisibleAnimated(500,False)
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
 	tmrHeaterOnOff.Enabled = False
 	tmrHeaterOnOff = Null
@@ -167,19 +171,46 @@ Private Sub BuildGUI(headerTxt As String)
 	If guiHelpers.gIsLandScape = False Then  alblMenu.BaseLabel.Visible = False
 	alblHeader.Text = headerTxt
 	pnlSteps.Color =clrTheme.Background
-	guiHelpers.SkinButton(Array As Button(btnClose,btnPreheat,btn1,btn2))
+	guiHelpers.SkinButton(Array As Button(btnClose,btnPreheat,btn1,btn2,btnDn,btnUp))
+	DistanceBtnsReset
 	guiHelpers.ResizeText("Tool: " & CRLF & "200",lblHeaterTool)
 	guiHelpers.ResizeText("Bed: " &CRLF & "100",	lblHeaterBed)
 	btn1.Text = "START" : btn2.Text = "STOP"
 	btn1.TextSize =  20   : btn2.TextSize = btn1.TextSize
-	guiHelpers.SkinButton_Pugin(Array As Button(btnDn,btnUp))
+	btnDistance_Highlight(Button1)
+	ShowZinfo
 	parent.Visible = True
 End Sub
 
 
 Private Sub btnUpDown_Click
 	Dim btn As Button = Sender
+	If btn1.Text = "START" Then Return
 	If btn.Text.ToUpperCase.Contains("UP") Then
 	Else
 	End If
+	ShowZinfo
+End Sub
+
+Private Sub DistanceBtnsReset
+	guiHelpers.SkinButton(Array As Button(Button5,Button4 ,Button3,Button2,Button1))
+End Sub
+
+Private Sub btnDistance_Click
+	btnDistance_Highlight(Sender)
+End Sub
+
+Private Sub btnDistance_Highlight(b As B4XView)
+	DistanceBtnsReset
+	b.SetColorAndBorder(xui.Color_Transparent, 8dip,clrTheme.txtAccent,8dip)
+End Sub
+
+Private Sub ShowZinfo
+	Dim s As StringBuilder
+	s.Initialize
+	s.Append($"Z:${zAct}"$).Append(CRLF)
+	s.Append($"Probe Offset"$).Append(CRLF)
+	s.Append($"Saved: ${zSaved}"$).Append(CRLF)
+	s.Append($"New: ${zNew}"$).Append(CRLF)
+	guiHelpers.ResizeText(s.ToString,	lblZinfo)
 End Sub

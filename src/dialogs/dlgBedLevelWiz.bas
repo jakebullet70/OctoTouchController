@@ -55,7 +55,7 @@ End Sub
 '---
 
 
-Public Sub Initialize(p As Panel)
+Public Sub Initialize(p As Panel) As Object
 	
 	mainObj = B4XPages.MainPage
 	p.RemoveAllViews
@@ -66,6 +66,8 @@ Public Sub Initialize(p As Panel)
 	printerW = m.Get( gblConst.psetupPRINTER_X)
 	printerL  = m.Get( gblConst.psetupPRINTER_Y)
 	#end if
+	
+	Return Me
 	
 End Sub
 
@@ -439,7 +441,11 @@ End Sub
 'End Sub
 
 Private Sub btnClose_Click
-	parent.Visible = False
+	Close_Me
+End Sub
+
+Public Sub Close_Me
+	parent.SetVisibleAnimated(500,False)
 	mWizDlg.BackKeyPressed
 	parent.RemoveAllViews
 End Sub

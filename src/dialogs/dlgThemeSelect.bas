@@ -38,7 +38,7 @@ End Sub
 Public Sub Initialize
 End Sub
 
-Public Sub Show(p As Panel)
+Public Sub Show(p As Panel) As Object
 	
 	'--- init
 	p.RemoveAllViews
@@ -49,6 +49,7 @@ Public Sub Show(p As Panel)
 	parent.LoadLayout("dlgThemeSelect")
 	BuildGUI	
 	parent.Visible = True
+	Return Me
 	
 End Sub
 
@@ -233,7 +234,11 @@ End Sub
 #end region
 
 Private Sub btnClose_Click
-	parent.Visible = False
+	Close_Me
+End Sub
+
+Public Sub Close_Me
+	parent.SetVisibleAnimated(500,False)
 	parent.RemoveAllViews
 End Sub
 

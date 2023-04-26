@@ -294,12 +294,12 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 			
 		Case "mblw"
 			Dim bm As dlgBedLevelMeshWiz2
-			bm.Initialize(mMainObj.pnlWizards)
+			mMainObj.objWizards = bm.Initialize(mMainObj.pnlWizards)
 			bm.Show("Mesh Bed Leveling Wizard")
 		
 		Case "blw"
 			Dim uu As dlgBedLevelWiz
-			uu.Initialize(mMainObj.pnlWizards)
+			mMainObj.objWizards = uu.Initialize(mMainObj.pnlWizards)
 			uu.Show
 			
 		Case "bl" '--- firmware bed level

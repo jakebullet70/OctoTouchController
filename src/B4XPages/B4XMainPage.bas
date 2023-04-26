@@ -65,6 +65,7 @@ Sub Class_Globals
 	Public mPrefDlg2 As sadPreferencesDialog
 	
 	Public pnlWizards As Panel
+	Public objWizards As Object
 End Sub
 
 '======================================================================================
@@ -140,6 +141,12 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	If Drawer.RightOpen Then
 		Drawer.RightOpen = False
 		Return False
+	End If
+		
+	If pnlWizards.Visible = True And (objWizards <> Null) And SubExists(objWizards,"Close_Me") Then
+		CallSubDelayed(objWizards,"Close_Me") 'ignore
+		objWizards = Null
+		Return False '--- cancel close request
 	End If
 	
 	'--- catch the android BACK button
@@ -426,7 +433,8 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 	
 	Select Case value
 		Case "thm1" '--- themes
-			Dim oo9 As dlgThemeSelect : oo9.Initialize
+			Dim oo9 As dlgThemeSelect : 
+			objWizards = oo9.Initialize
 			oo9.Show(pnlWizards)
 			
 		Case "ab" '--- about

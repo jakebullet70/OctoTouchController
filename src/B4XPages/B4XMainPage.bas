@@ -987,7 +987,7 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	Select Case Value.As(String)
 		'BED_MESH_CALIBRATE
 		Case "m600","test"
-			oMasterController.WSk.Send(oc.cPOST_GCODE_WS.Replace("!!!","BED_MESH_CALIBRATE  METHOD=manual"))
+			oMasterController.WSk.Send(krpc.GCODE.Replace("!!!","BED_MESH_CALIBRATE  METHOD=manual"))
 		
 		Case "ab" '--- about screen
 			Dim o2 As dlgAbout : o2.Initialize

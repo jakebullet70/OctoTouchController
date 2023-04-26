@@ -272,8 +272,10 @@ Private Sub BuildFunctionMnu() As Map
 	#if not (klipper)
 	If Main.kvs.GetDefault("g29",False) = true then m.Put("Auto Bed Leveling (G29)","bl") 
 	#end if
-	If config.ShowBedLevel_ManualFLAG 	Then m.Put("Manual Bed Leveling Wizard","blw")
 	If config.ShowFilamentChangeFLAG Then m.Put("Change Filament Wizard","cf")
+	If config.ShowBedLevel_ManualFLAG 	Then m.Put("Manual Bed Leveling Wizard","blw")
+	If config.ShowBedLevel_MeshFLAG 	Then m.Put("Mesh Bed Leveling Wizard","mblw")
+	If config.ShowZ_Offset_WizFLAG 	Then m.Put("Set Z Offset","zo")
 	Return m
 End Sub
 
@@ -287,6 +289,13 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 	Dim Ask As String = "Touch OK to continue"
 	
 	Select Case value
+		
+		Case "zo" '--- Z offset
+			
+		Case "mblw"
+			Dim bm As dlgBedLevelMeshWiz2
+			bm.Initialize(mMainObj.pnlWizards)
+			bm.Show("Mesh Bed Leveling Wizard")
 		
 		Case "blw"
 			Dim uu As dlgBedLevelWiz

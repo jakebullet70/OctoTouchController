@@ -97,7 +97,6 @@ Sub Process_Globals
 	
 	#if klipper
 	Public const cPOST_GCODE As String = "/printer/gcode/script?script=!G!"
-	Public Const cPOST_GCODE_WS As String = $"{"jsonrpc": "2.0","method": "printer.gcode.script","params": { "script": "!!!" },"id": 7466}"$
 	#else
 	'--- has a split char for the API and the JSON payload, char is '!!'
 	Private const cPOST_GCODE As String = "/api/printer/command"

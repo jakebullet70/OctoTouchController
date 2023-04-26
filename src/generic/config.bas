@@ -49,7 +49,8 @@ Sub Process_Globals
 	'--- functions menu
 	Public ShowFilamentChangeFLAG As Boolean = False
 	Public ShowBedLevel_ManualFLAG As Boolean = False
-	Public ShowBedLevel_ProbeFLAG As Boolean = False
+	Public ShowBedLevel_MeshFLAG As Boolean = True
+	Public ShowZ_Offset_WizFLAG As Boolean = True
 	
 
 End Sub

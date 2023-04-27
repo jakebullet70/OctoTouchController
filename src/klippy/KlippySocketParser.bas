@@ -20,7 +20,7 @@ End Sub
 
 Private Sub wsocket_RecievedText(msg As String)
 	'--- generic socket rec text
-	Log("wsocket_RecievedText: " & msg)
+	'Log("Generic wsocket_RecievedText: " & msg)
 End Sub
 
 

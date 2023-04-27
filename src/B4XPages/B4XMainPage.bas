@@ -433,8 +433,7 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 	
 	Select Case value
 		Case "thm1" '--- themes
-			Dim oo9 As dlgThemeSelect : 
-			objWizards = oo9.Initialize
+			Dim oo9 As dlgThemeSelect : objWizards = oo9.Initialize
 			oo9.Show(pnlWizards)
 			
 		Case "ab" '--- about

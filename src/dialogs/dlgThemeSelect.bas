@@ -233,7 +233,7 @@ End Sub
 
 #end region
 
-Private Sub btnClose_Click
+Private Sub btnClose_Click '--- class method
 	Close_Me
 End Sub
 

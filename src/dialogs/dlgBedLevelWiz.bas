@@ -444,7 +444,7 @@ Private Sub btnClose_Click
 	Close_Me
 End Sub
 
-Public Sub Close_Me
+Public Sub Close_Me '--- class method
 	parent.SetVisibleAnimated(500,False)
 	mWizDlg.BackKeyPressed
 	parent.RemoveAllViews

@@ -9,6 +9,10 @@ Sub Class_Globals
 	Private mCallbackModule As Object 'ignore
 	Private mCallbackBase As String 'ignore
 	Private mCallBackRecTxt As String
+	
+	Public pCallbackModule2 As Object = Null'ignore
+	Public pCallbackSub2 As String = ""  'ignore
+	
 	Private mIP As String 'ignore
 	Private mPort As String 'ignore
 	Public wSocket As WebSocket
@@ -115,7 +119,7 @@ End Sub
 '--- master msg event method
 Private Sub ws_TextMessage(Message As String)
 	
-	If mIgnoreMasterKlippyEvent And Message.Contains("notify_proc_stat_update") Then
+	If  (mIgnoreMasterKlippyEvent And Message.Contains("notify_proc_stat_update")) Then
 		'--- {"jsonrpc": "2.0", "method": "notify_proc_stat_update", "params": [{"moonraker_stats": {"time": 1682259505.1849313, "cpu_usage": 1.93, "memory": 42916, "mem_units": "kB"}, "cpu_temp": 39.545, "network": {"lo": {"rx_bytes": 1013712283, "tx_bytes": 1013712283, "rx_packets": 785249, "tx_packets": 785249, "rx_errs": 0, "tx_errs": 0, "rx_drop": 0, "tx_drop": 0, "bandwidth": 0.0}, "eth0": {"rx_bytes": 108377478, "tx_bytes": 1008089809, "rx_packets": 1501935, "tx_packets": 915902, "rx_errs": 0, "tx_errs": 3, "rx_drop": 0, "tx_drop": 0, "bandwidth": 1127.61}}, "system_cpu_usage": {"cpu": 0.51, "cpu0": 0.0, "cpu1": 0.0, "cpu2": 0.0, "cpu3": 1.0}, "system_memory": {"total": 999584, "available": 742260, "used": 257324}, "websocket_connections": 1}]}
 		Return
 	End If
@@ -123,8 +127,12 @@ Private Sub ws_TextMessage(Message As String)
 	Dim klippyMethod As String = GetKlippyMethod(Message)
 	If Not (strHelpers.IsNullOrEmpty(klippyMethod)) And SubExists(mCallbackModule,klippyMethod) Then
 		CallSubDelayed2(mCallbackModule,klippyMethod,Message)
-	Else If SubExists(mCallbackModule,mCallBackRecTxt) Then
+	Else if SubExists(mCallbackModule,mCallBackRecTxt) Then
 		CallSubDelayed2(mCallbackModule,mCallBackRecTxt,Message)
+	End If
+	
+	If SubExists(pCallbackModule2,pCallbackSub2) Then
+		CallSubDelayed2(pCallbackModule2,pCallbackSub2,Message)
 	End If
 	
 End Sub
@@ -158,7 +166,7 @@ Public	 Sub Send(cmd As String)
 		Wait For (Connect) Complete (msg As String)
 	End If
 	wSocket.SendText(cmd)
-	Log("klippy send!")
+'	Log("klippy send!")
 End Sub
 
 
@@ -167,8 +175,10 @@ Public	 Sub SendAndWait(cmd As String) As ResumableSub
 		logMe.LogIt2("no web socket connection - reconnecting",mModule,"SendAndWait")
 		Wait For (Connect) Complete (msg As String)
 	End If
+	
 	wSocket.SendText(cmd)
-	Wait For ws_TextMessage (Message As String)
+ 	Wait For ws_TextMessage (Message As String)
+	
 	Return Message
 End Sub
 

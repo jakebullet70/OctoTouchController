@@ -8,7 +8,7 @@ Sub Class_Globals
 	Private Const mModule As String = "KlippyWebSocket" 'ignore
 	Private mCallbackModule As Object 'ignore
 	Private mCallbackBase As String 'ignore
-	Private mCallBackRecTxt As String
+	Private mCallBackRecTxt As String'ignore
 	
 	Public pCallbackModule2 As Object = Null'ignore
 	Public pCallbackSub2 As String = ""  'ignore

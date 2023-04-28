@@ -11,7 +11,7 @@ Version=11.8
 Sub Class_Globals
 	
 	Private Const mModule As String = "dlgBedLevelMeshWiz"' 'ignore
-	Private mainObj As B4XMainPage
+	Private mainObj As B4XMainPage'ignore
 	Private xui As XUI
 	
 '	Private zAct As String = "?"
@@ -107,7 +107,7 @@ Private Sub btnClose_Click
 	Close_Me
 End Sub
 
-Public Sub Close_Me '--- class method
+Public Sub Close_Me  '--- class method, called from android back btn
 	'--- out of here!
 	#if klipper
 	mainObj.oMasterController.WSk.pCallbackModule2 = Null
@@ -189,7 +189,7 @@ Private Sub ShowZinfo(info As String)
 	info = info.Replace("Z position: ","Z pos: ")
 	guiHelpers.ResizeText(info,	lblZinfo)
 End Sub
-Private Sub ParseZInfo(s As String)
+Private Sub ParseZInfo(s As String)'ignore
 	If s.IndexOf("Z pos") = -1 Then Return
 	Try
 		Dim StartNdx As Int = s.IndexOf("Z pos")
@@ -311,7 +311,8 @@ End Sub
 'End Sub
 
 
-Private Sub ProcessMeshComplete
+Private Sub ProcessMeshComplete'ignore
+	
 	#if klipper
 	Dim m As StringBuilder : 	m.Initialize
 	m.Append("Bed Mesh state has been saved to profile [default] for the ")

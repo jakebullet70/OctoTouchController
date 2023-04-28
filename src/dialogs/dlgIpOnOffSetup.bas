@@ -19,8 +19,7 @@ Sub Class_Globals
 	Private mCallBackMethod As String
 End Sub
 
-Public Sub Initialize(dlg As sadPreferencesDialog,callbackMod As Object, callbackMethod As String)
-	mPrefDlg = dlg
+Public Sub Initialize(callbackMod As Object, callbackMethod As String)
 	mCallBackModule = callbackMod
 	mCallBackMethod = callbackMethod
 End Sub

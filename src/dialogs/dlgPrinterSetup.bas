@@ -17,7 +17,10 @@ Sub Class_Globals
 	Private mPrefDlg As sadPreferencesDialog
 	Private prefHelper As sadPreferencesDialogHelper
 	Private btn1 As Button
+	#if klipper
 	Private ws As KlippyWebSocket
+	#end if
+	
 	
 End Sub
 
@@ -164,7 +167,9 @@ Private Sub ActionBtn1_Click
 		
 	mPrefDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = True
 	btn1.Visible = True
+	#if kliper
 	ws.wSocket.Close
+	#end if
 	
 End Sub
 Private Sub wsocket_Closed(msg As String)

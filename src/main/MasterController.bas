@@ -372,7 +372,7 @@ Private Sub GetJobStatus
 	
 End Sub
 
-Private Sub InitWebSocket
+Private Sub InitWebSocket'ignore
 	#if klipper
 	oWSk.Initialize(parserK,"wsocket",oc.OctoIp,oc.WSocketPort)
 	oWSk.Connect

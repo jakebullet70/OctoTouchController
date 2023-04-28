@@ -260,7 +260,7 @@ End Sub
 Private Sub FunctionMenu
 	
 	Dim o1 As dlgListbox
-	o1.Initialize("Function Menu",Me,"FunctionMenu_Event")
+	mMainObj.pObjCurrentDlg1 = o1.Initialize("Function Menu",Me,"FunctionMenu_Event")
 	o1.Show(250dip,320dip,BuildFunctionMnu)
 	
 End Sub
@@ -270,7 +270,7 @@ Private Sub BuildFunctionMnu() As Map
 	Dim m As Map : m.Initialize
 	m.Put("Pre-Heat Menu","prh")
 	#if not (klipper)
-	If Main.kvs.GetDefault("g29",False) = true then m.Put("Auto Bed Leveling (G29)","bl") 
+	If Main.kvs.GetDefault("g29",False) = True Then m.Put("Auto Bed Leveling (G29)","bl") 
 	#end if
 	If config.ShowFilamentChangeFLAG Then m.Put("Change Filament Wizard","cf")
 	If config.ShowBedLevel_ManualFLAG 	Then m.Put("Manual Bed Leveling Wizard","blw")
@@ -294,12 +294,12 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 			
 		Case "mblw"
 			Dim bm As dlgBedLevelMeshWiz2
-			mMainObj.objWizards = bm.Initialize(mMainObj.pnlWizards)
+			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards)
 			bm.Show("Mesh Bed Leveling Wizard")
 		
 		Case "blw"
 			Dim uu As dlgBedLevelWiz
-			mMainObj.objWizards = uu.Initialize(mMainObj.pnlWizards)
+			mMainObj.pobjWizards = uu.Initialize(mMainObj.pnlWizards)
 			uu.Show
 			
 		Case "bl" '--- firmware bed level

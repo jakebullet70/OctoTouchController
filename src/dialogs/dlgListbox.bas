@@ -25,16 +25,22 @@ Sub Class_Globals
 	
 End Sub
 
+Public Sub Close_Me '--- class method, called from android back btn
+	mDialog.Close(xui.DialogResponse_Cancel)
+	mMainObj.pObjCurrentDlg1 = Null
+End Sub
+
 Public Sub setTag(v As Object)
 	mTag = v
 End Sub
 
-Public Sub Initialize( title As Object, Callback As Object, EventName As String)
+Public Sub Initialize( title As Object, Callback As Object, EventName As String) As Object
 	
 	mMainObj = B4XPages.MainPage
 	mTitle = title
 	mCallback = Callback
 	mEventName = EventName
+	Return Me
 	
 End Sub
 
@@ -79,7 +85,9 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	Else
 		CallSub3(mCallback,mEventName,"","")
 	End If
-
+	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
+	mMainObj.pObjCurrentDlg1 = Null
+	
 End Sub
 
 

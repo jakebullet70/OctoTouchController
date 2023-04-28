@@ -175,7 +175,7 @@ Private Sub LoadCfgs()
 '	Next
 	If File.Exists(xui.DefaultFolder,"1" & gblConst.HTTP_ONOFF_SETUP_FILE) = False Then
 		Dim oiw As dlgIpOnOffSetup
-		oiw.Initialize(Null,Null,Null)
+		oiw.Initialize(Null,Null)
 		For jj = 1 To 4
 			oiw.CreateDefaultDataFile(jj & gblConst.HTTP_ONOFF_SETUP_FILE) '--- generic HTTP commands
 		Next

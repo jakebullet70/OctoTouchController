@@ -61,11 +61,13 @@ Sub Class_Globals
 	Private pnlLineBreakDrawer As Panel
 	Private clvDrawer As CustomListView
 	
-	Public mPrefDlg1 As sadPreferencesDialog
-	Public mPrefDlg2 As sadPreferencesDialog
+	'Public pPopupDlg1 As B4XDialog
+	'Public pPopupDlg2 As B4XDialog
+	Public pObjCurrentDlg1 As Object = Null
+	Public pObjCurrentDlg2 As Object = Null
 	
 	Public pnlWizards As Panel
-	Public objWizards As Object
+	Public pObjWizards As Object = Null
 End Sub
 
 '======================================================================================
@@ -143,9 +145,21 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 		Return False
 	End If
 		
-	If pnlWizards.Visible = True And (objWizards <> Null) And SubExists(objWizards,"Close_Me") Then
-		CallSubDelayed(objWizards,"Close_Me") 'ignore
-		objWizards = Null
+	If pnlWizards.Visible = True And (pObjWizards <> Null) And SubExists(pObjWizards,"Close_Me") Then
+		CallSubDelayed(pObjWizards,"Close_Me") 'ignore
+		pObjWizards = Null
+		Return False '--- cancel close request
+	End If
+	
+	If pObjCurrentDlg2 <> Null And SubExists(pObjCurrentDlg2,"Close_Me") Then
+		CallSubDelayed(pObjCurrentDlg2,"Close_Me") 'ignore
+		pObjCurrentDlg2 = Null
+		Return False '--- cancel close request
+	End If
+	
+	If pObjCurrentDlg1 <> Null And SubExists(pObjCurrentDlg1,"Close_Me") Then
+		CallSubDelayed(pObjCurrentDlg1,"Close_Me") 'ignore
+		pObjCurrentDlg1 = Null
 		Return False '--- cancel close request
 	End If
 	
@@ -406,17 +420,10 @@ Private Sub PopupMainOptionMenu
 	Dim popUpMemuItems As Map 
 
 	Dim gui As guiMsgs : gui.Initialize		
-	'If oc.isPrinting Or oc.IsPaused2 Then
-		'--- do not know why i did this, does not seem to matter
-		'--- if you change when printing
-	'	Show_toast("Cannot Change Printer Connection Settings While Printing",2500)
-	'	popUpMemuItems = gui.BuildOptionsMenu(True)
-	'Else
-		popUpMemuItems = gui.BuildOptionsMenu(False)
-	'End If
+	popUpMemuItems = gui.BuildOptionsMenu(False)
 	
 	Dim o1 As dlgListbox
-	o1.Initialize("Options Menu",Me,"OptionsMenu_Event")
+	pObjCurrentDlg1 = o1.Initialize("Options Menu",Me,"OptionsMenu_Event")
 	o1.IsMenu = True
 	If guiHelpers.gIsLandScape Then '- TODO needs refactor for sizes
 		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,320dip,280dip),340dip,popUpMemuItems)
@@ -433,7 +440,7 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 	
 	Select Case value
 		Case "thm1" '--- themes
-			Dim oo9 As dlgThemeSelect : objWizards = oo9.Initialize
+			Dim oo9 As dlgThemeSelect : pObjWizards = oo9.Initialize
 			oo9.Show(pnlWizards)
 			
 		Case "ab" '--- about
@@ -523,7 +530,7 @@ Private Sub PopupFunctionOptionsMnu
 										Typeface(Typeface.DEFAULT).Append("  Internal Functions Menu").PopAll
 	
 	Dim o1 As dlgListbox
-	o1.Initialize(title,Me,"FncMenu_Event")
+	pObjCurrentDlg1 = o1.Initialize(title,Me,"FncMenu_Event")
 	o1.IsMenu = True
 	o1.Show(260dip,300dip,po)
 	
@@ -580,7 +587,7 @@ Private Sub PopupPluginOptionMenu
 	Dim title As Object = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE8C1)). _
 	        	 					   Typeface(Typeface.DEFAULT).Append(title).PopAll
 	Dim o1 As dlgListbox
-	o1.Initialize(title,Me,"PluginsMenu_Event")
+	pObjCurrentDlg1 = o1.Initialize(title,Me,"PluginsMenu_Event")
 	o1.IsMenu = True
 	o1.Show(260dip,300dip,popUpMemuItems)
 	
@@ -606,7 +613,7 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			
 		Case "1","2","3","4"
 			Dim oA1 As dlgIpOnOffSetup
-			oA1.Initialize(mPrefDlg1,Me,"ExtCtrl_BtnEdit")
+			oA1.Initialize(Me,"ExtCtrl_BtnEdit")
 			oA1.Show("HTTP Control Config - " & value,value & gblConst.HTTP_ONOFF_SETUP_FILE)
 				
 		#if not (klipper)	
@@ -867,7 +874,7 @@ Public Sub ShowPreHeatMenu_All2(titleTxt As String)
 	Dim title As Object = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF2CA)). _
 		Typeface(Typeface.DEFAULT).Append("  " & titleTxt).PopAll
 		
-	ht.Initialize(title,Me,"TempChange_Presets")
+	pObjCurrentDlg1 = ht.Initialize(title,Me,"TempChange_Presets")
 	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,guiHelpers.gWidth - 10dip)
 	Dim h As Float = IIf(guiHelpers.gIsLandScape,guiHelpers.gHeight * .8,guiHelpers.gHeight * .7)
 	

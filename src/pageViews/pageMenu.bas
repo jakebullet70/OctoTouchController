@@ -177,7 +177,7 @@ Private Sub mnuCardImg1_Click
 	#if klipper
 	If oc.isconnected = False Or mMainObj.lblstatus.text = "no connection"  Then
 	#else
-	if oc.isconnected = false then 
+	If oc.isconnected = False Then 
 	#end if
 		guiHelpers.show_toast(gblConst.not_connected,1000)
 		Return
@@ -209,7 +209,7 @@ Private Sub mnuCardImg_Click
 	#if klipper
 	If oc.isconnected = False Or mMainObj.lblstatus.text = "no connection"  Then
 	#else
-	if oc.isconnected = false then 
+	If oc.isconnected = False Then 
 	#end if
 		guiHelpers.show_toast(gblConst.not_connected,1000)
 		Return

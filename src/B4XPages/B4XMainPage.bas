@@ -994,8 +994,10 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	Select Case Value.As(String)
 		'BED_MESH_CALIBRATE
 		Case "m600","test"
+			#if klipper
 			oMasterController.WSk.Send(krpc.GCODE.Replace("!!!","BED_MESH_CALIBRATE  METHOD=manual"))
-		
+			#end if
+			
 		Case "ab" '--- about screen
 			Dim o2 As dlgAbout : o2.Initialize
 			o2.Show

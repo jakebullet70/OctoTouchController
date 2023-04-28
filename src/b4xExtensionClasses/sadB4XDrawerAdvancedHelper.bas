@@ -35,6 +35,7 @@ Public Sub BtnPressed(b As Button)
 	Dim msg As String = "Restarting... Please wait a few moments..."
 	Dim dl As Int = 8000
 	Select Case b.Tag.As(String)
+		#if klipper
 		Case "s" '--- emergency stop  
 			B4XPages.MainPage.oMasterController.WSk.Send($"{"jsonrpc": "2.0",	"method": "printer.emergency_stop",	"id": 4564}"$)
 			'B4XPages.MainPage.oMasterController.cn.PostRequest("/printer/emergency_stop")
@@ -51,7 +52,7 @@ Public Sub BtnPressed(b As Button)
 			'B4XPages.MainPage.oMasterController.cn.PostRequest("printer/restart")
 			'B4XPages.MainPage.oMasterController.WSk.Send($"{ "jsonrpc": "2.0", "method": "printer.restart",  "id": 4894}"$)
 			'Main.tmrTimerCallSub.CallSubPlus(B4XPages.MainPage.oMasterController, "Start",10000)
-			
+		#end if
 	End Select
 	guiHelpers.Show_toast2(msg,dl)
 	Sleep(200)

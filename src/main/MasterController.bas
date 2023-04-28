@@ -50,10 +50,11 @@ Sub Class_Globals
 	
 End Sub
 
-
+#if klipper
 Public Sub getWSk() As KlippyWebSocket
 	Return oWSk
 End Sub
+#end if
 Public Sub getCN() As HttpOctoRestAPI
 	Return oCN
 End Sub
@@ -372,8 +373,11 @@ Private Sub GetJobStatus
 End Sub
 
 Private Sub InitWebSocket
+	#if klipper
 	oWSk.Initialize(parserK,"wsocket",oc.OctoIp,oc.WSocketPort)
 	oWSk.Connect
+	#else
+	#end if
 End Sub
 
 

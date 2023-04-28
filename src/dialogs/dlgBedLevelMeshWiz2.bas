@@ -42,8 +42,12 @@ Public Sub Initialize(p As Panel) As Object
 	mainObj = B4XPages.MainPage
 	p.RemoveAllViews
 	parent = p
+	#if klipper
 	mainObj.oMasterController.WSk.pCallbackModule2 = Me
 	mainObj.oMasterController.WSk.pCallbackSub2 = "Rec_Text"
+	#else
+	
+	#end if
 	Return Me
 
 End Sub
@@ -105,7 +109,9 @@ End Sub
 
 Public Sub Close_Me '--- class method
 	'--- out of here!
+	#if klipper
 	mainObj.oMasterController.WSk.pCallbackModule2 = Null
+	#end if
 	parent.SetVisibleAnimated(500,False)
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
 	tmrHeaterOnOff.Enabled = False
@@ -153,8 +159,13 @@ Private Sub btnUpDown_Click
 	If btn.Text.ToUpperCase.Contains("LO") Then
 		nVal = "-" & nVal 
 	End If
+	#if klipper
 	Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","TESTZ Z=" & nVal))) Complete (msg As String)
 	ParseZInfo(msg)
+	#else
+	
+	#end if
+	
 	'Log("btnUP-DN: " & msg)
 End Sub
 
@@ -194,8 +205,11 @@ Private Sub btnStop_Click
 	'--- stop the action
 	ProcessStop_GUI
 	guiHelpers.Show_toast2("Canceling... Disabling Steppers...",2500)
+	#if klipper
 	Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","ABORT"))) Complete (msg As String)
 	mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","M18"))
+	#else
+	#end if
 	ShowZinfo("Just hanging out and waiting...")
 End Sub
 
@@ -204,7 +218,7 @@ Private Sub btnStart_Click
 
 	Dim b As Button : b = Sender
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
-	mInProbeMode = False
+	'mInProbeMode = False
 	
 	btn1.RequestFocus
 	'btnPreheat.Visible = False
@@ -215,7 +229,9 @@ Private Sub btnStart_Click
 		ShowZinfo("Preparing bed and tool...")
 		Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","G28"))) Complete (msg As String)
 		Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","BED_MESH_CALIBRATE  METHOD=manual"))) Complete (msg As String)
+		#if debug
 		Log("WT: " & msg)
+		#end if
 		#else
 		
 		#End If
@@ -238,7 +254,7 @@ Private Sub btnStart_Click
 End Sub
 
 Public Sub Rec_Text(txt As String)
-	
+	#if klipper
 	If txt.Contains("y in a manual Z probe") Then
 		'--- just started probe mode but are already in it so cancel and restart
 		'mInProbeMode = False
@@ -273,6 +289,8 @@ Public Sub Rec_Text(txt As String)
 		ProcessMeshComplete
 		Return
 	End If
+	#else
+	#end if
 	
 	#if debug
 	Log("RT: Not processed: " & txt)
@@ -294,6 +312,7 @@ End Sub
 
 
 Private Sub ProcessMeshComplete
+	#if klipper
 	Dim m As StringBuilder : 	m.Initialize
 	m.Append("Bed Mesh state has been saved to profile [default] for the ")
 	m.Append("current session. Touch SAVE to update the printer config ")
@@ -310,10 +329,12 @@ Private Sub ProcessMeshComplete
 	If res = xui.DialogResponse_Positive Then
 		mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","SAVE_CONFIG"))
 		guiHelpers.Show_toast2("Saving CONFIG and restarting printer",5200)
+		Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage.oMasterController,"tmrMain_Tick",800)
 	Else
 		guiHelpers.Show_toast2("Using Mesh for current session, homing printer",3000)
 		mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","G28"))
 	End If
+	#end if
 	Close_Me
 	Return
 End Sub

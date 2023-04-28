@@ -145,7 +145,7 @@ Private Sub ActionBtn1_Click
 	
 	If HTTP_OK = True Then 
 		'--- WS check
-		
+		#if klipper
 		ws.Initialize(Me,"wsocket",ip,wsport)
 		'--- SSL / Android 4.x crap / cleanup
 		Wait For (ws.ProviderInstall) Complete (b As Boolean)
@@ -159,6 +159,7 @@ Private Sub ActionBtn1_Click
 			mPrefDlg.Dialog.GetButton(xui.DialogResponse_Positive).Visible = True
 			guiHelpers.Show_toast2("Connection OK!",2000)
 		End If
+		#end if
 	End If
 		
 	mPrefDlg.Dialog.GetButton(xui.DialogResponse_Cancel).Visible = True

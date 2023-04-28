@@ -40,6 +40,7 @@ End Sub
 
 Private Sub notify_klippy_disconnected(s As String)
 	Log("notify_klippy_disconnected")
+	B4XPages.MainPage.Switch_Pages(gblConst.PAGE_MENU)
 End Sub
 
 Private Sub notify_klippy_shutdown(s As String)

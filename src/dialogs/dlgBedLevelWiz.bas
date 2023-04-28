@@ -99,6 +99,7 @@ Public Sub Show
 	
 	prefHelper.Initialize(mWizDlg)
 	prefHelper.ThemePrefDialogForm
+	
 	Dim RS As ResumableSub = mWizDlg.ShowDialog(prefSavedData, "", "")
 	prefHelper.dlgHelper.NoCloseOn2ndDialog
 	'prefHelper.dlgHelper.ThemeInputDialogBtnsResize

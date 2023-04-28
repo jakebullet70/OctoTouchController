@@ -14,9 +14,9 @@ Sub Class_Globals
 	Private mainObj As B4XMainPage
 	Private xui As XUI
 	
-	Private zAct As String = "?"
-	Private zSaved As String = "?"
-	Private zNew As String = "?"
+'	Private zAct As String = "?"
+'	Private zSaved As String = "?"
+'	Private zNew As String = "?"
 	
 	Private parent As Panel
 	
@@ -28,7 +28,7 @@ Sub Class_Globals
 	
 	Private tmrHeaterOnOff As Timer
 	Private mDIstance As Double = .01
-	Private mInProbeMode As Boolean = False
+	'Private mInProbeMode As Boolean = False
 	
 	Private Button5,Button4 ,Button3,Button2,Button1 As Button
 	Private lblZinfo As Label
@@ -117,8 +117,6 @@ Private Sub btnPreHeat_Click
 	CallSub(B4XPages.MainPage,"ShowPreHeatMenu_All")
 End Sub
 
-
-
 Private Sub BuildGUI(headerTxt As String)
 	pnlBG.Color = clrTheme.Background
 	pnlSpacer1.SetColorAndBorder(clrTheme.txtNormal,2dip,clrTheme.txtNormal,8dip)
@@ -134,8 +132,17 @@ Private Sub BuildGUI(headerTxt As String)
 	btn1.Text = "START" : btn2.Text = "STOP"
 	btn1.TextSize =  20   : btn2.TextSize = btn1.TextSize
 	btnDistance_Highlight(Button1)
-	ShowZinfo
+	ShowZinfo("Touch START to begin")
 	parent.Visible = True
+End Sub
+
+Private Sub ProcessStop_GUI
+	'mInProbeMode = False
+	btn2.Visible = False
+	btnPreheat.Visible = True
+	btn1.Text = "START"
+	btnClose.Visible = True
+	btnClose.RequestFocus
 End Sub
 
 
@@ -147,7 +154,8 @@ Private Sub btnUpDown_Click
 		nVal = "-" & nVal 
 	End If
 	Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","TESTZ Z=" & nVal))) Complete (msg As String)
-	ShowZinfo
+	ParseZInfo(msg)
+	'Log("btnUP-DN: " & msg)
 End Sub
 
 Private Sub DistanceBtnsLookReset
@@ -165,28 +173,30 @@ Private Sub btnDistance_Highlight(b As B4XView)
 	b.SetColorAndBorder(xui.Color_Transparent, 8dip,clrTheme.txtAccent,8dip)
 End Sub
 
-Private Sub ShowZinfo
-	Dim s As StringBuilder
-	s.Initialize
-	s.Append($"Z:${zAct}"$).Append(CRLF)
-	s.Append($"Probe Offset"$).Append(CRLF)
-	s.Append($"Saved: ${zSaved}"$).Append(CRLF)
-	s.Append($"New: ${zNew}"$).Append(CRLF)
-	guiHelpers.ResizeText(s.ToString,	lblZinfo)
+Private Sub ShowZinfo(info As String)
+	If info = "" Then info = "Z Location ???"
+	info = info.Replace("Z position: ","Z pos: ")
+	guiHelpers.ResizeText(info,	lblZinfo)
 End Sub
-
+Private Sub ParseZInfo(s As String)
+	If s.IndexOf("Z pos") = -1 Then Return
+	Try
+		Dim StartNdx As Int = s.IndexOf("Z pos")
+		ShowZinfo(s.SubString2(StartNdx,s.IndexOf2("]}",StartNdx)))
+	Catch
+		Log(LastException)
+		Log("ParseZInfo ERR2: " & s)
+		ShowZinfo("Parse Error:")
+	End Try
+End Sub
 
 Private Sub btnStop_Click
 	'--- stop the action
-	mInProbeMode = False
-	btn2.Visible = False
-	btnPreheat.Visible = True
-	btn1.Text = "START"
-	btnClose.Visible = True
-	btnClose.RequestFocus
+	ProcessStop_GUI
 	guiHelpers.Show_toast2("Canceling... Disabling Steppers...",2500)
 	Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","ABORT"))) Complete (msg As String)
 	mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","M18"))
+	ShowZinfo("Just hanging out and waiting...")
 End Sub
 
 
@@ -199,30 +209,27 @@ Private Sub btnStart_Click
 	btn1.RequestFocus
 	'btnPreheat.Visible = False
 	
-	If b.Text = "START" And mInProbeMode = False Then
+	If b.Text = "START" Then
 		#if klipper
 		guiHelpers.Show_toast2("Starting manual mesh Z probe...",1500)
+		ShowZinfo("Preparing bed and tool...")
 		Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","G28"))) Complete (msg As String)
 		Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","BED_MESH_CALIBRATE  METHOD=manual"))) Complete (msg As String)
 		Log("WT: " & msg)
-		
-'		If msg.Contains("level bed") Then
-'			Dim mb2 As dlgMsgBox2 : 	mb2.Initialize(mainObj.Root,"Question",280dip, 150dip,False)
-'			mb2.NewTextSize = 32
-'			Wait For (mb2.Show("Start print job?",gblConst.MB_ICON_QUESTION, "PRINT","","CANCEL")) Complete (res As Int)
-'			If res = xui.DialogResponse_Cancel Then Return
-'		Else if 1 =1  Then
-'			
-'		Else
-'			Return
-'		End If
 		#else
 		
 		#End If
 	
-	else If b.Text = "ACCEPT" And mInProbeMode = True Then
+	else If b.Text = "ACCEPT" Then
 		#if klipper
-		Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","ACCEPT"))) Complete (msg As String)
+		Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","ACCEPT"))) Complete (msg As String)		
+		If msg.Contains("Manual probe failed") Then ''--- mostly happens when just hitting ACCEPT and not moving nozzle 1st
+			Probe_failed
+		Else
+			#if debug
+			Log("accept msg: " & msg)
+			#end if
+		End If
 		#else
 		
 		#End If
@@ -231,11 +238,10 @@ Private Sub btnStart_Click
 End Sub
 
 Public Sub Rec_Text(txt As String)
-	Log("RT: " & txt)
 	
 	If txt.Contains("y in a manual Z probe") Then
 		'--- just started probe mode but are already in it so cancel and restart
-		mInProbeMode = False
+		'mInProbeMode = False
 		guiHelpers.Show_toast2("Already in a manual Z probe: Restarting...",6500)
 		Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","ABORT"))) Complete (msg As String)
 		Sleep(1000)
@@ -246,7 +252,7 @@ Public Sub Rec_Text(txt As String)
 	End If
 	
 	If txt.Contains("g manual Z probe") Then
-		mInProbeMode = True
+		'mInProbeMode = True
 		btn1.Text = "ACCEPT"
 		btn2.Visible = True
 		btnClose.Visible = False
@@ -254,14 +260,61 @@ Public Sub Rec_Text(txt As String)
 		Return
 	End If
 	
+	If txt.Contains("Z pos") Then 
+		ParseZInfo(txt) : Return
+	End If
+	
+	If txt.Contains("Manual probe failed") Then '--- mostly happens when just hitting ACCEPT and not moving nozzle 1st
+		Probe_failed : Return
+	End If
+	
+	If txt.Contains("has been saved") Then
+		ShowZinfo("Mesh build complete")
+		ProcessMeshComplete
+		Return
+	End If
+	
+	#if debug
+	Log("RT: Not processed: " & txt)
+	#end if
+	
 End Sub
 
-Private Sub InCalMode() As ResumableSub
-	'# This is only here because klipper doesn't provide a method to detect if it's calibrating
-	Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","TESTZ Z=0.001"))) Complete (msg As String)
+Private Sub Probe_failed
+	ShowZinfo("Manual probe failed...")
+	ProcessStop_GUI
 End Sub
 
 
 
+'Private Sub InCalMode() As ResumableSub
+'	'# This is only here because klipper doesn't provide a method to detect if it's calibrating
+'	Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","TESTZ Z=0.001"))) Complete (msg As String)
+'End Sub
 
+
+Private Sub ProcessMeshComplete
+	Dim m As StringBuilder : 	m.Initialize
+	m.Append("Bed Mesh state has been saved to profile [default] for the ")
+	m.Append("current session. Touch SAVE to update the printer config ")
+	m.Append("File And restart the printer or CLOSE to just use the current mesh")
+	Dim w,h As Float
+	If guiHelpers.gIsLandScape Then
+		w = guiHelpers.gWidth * .7 : h = 220dip
+	Else
+		w = guiHelpers.gWidth * .8 : h = 310dip
+	End If
+	Dim mb2 As dlgMsgBox2 : 	mb2.Initialize(mainObj.Root,"Question", w, h,False)
+	mb2.NewTextSize = 24
+	Wait For (mb2.Show(m.ToString,gblConst.MB_ICON_QUESTION, "SAVE","","CLOSE")) Complete (res As Int)
+	If res = xui.DialogResponse_Positive Then
+		mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","SAVE_CONFIG"))
+		guiHelpers.Show_toast2("Saving CONFIG and restarting printer",5200)
+	Else
+		guiHelpers.Show_toast2("Using Mesh for current session, homing printer",3000)
+		mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","G28"))
+	End If
+	Close_Me
+	Return
+End Sub
 

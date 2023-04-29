@@ -26,10 +26,16 @@ End Sub
 
 '--- Dual class, GUI and command
 
-Public Sub Initialize( title As String)
+Public Sub Initialize( title As String) As Object
 	
 	mMainObj = B4XPages.MainPage
 	mTitle = title
+	Return Me
+	
+End Sub
+
+Public Sub Close_Me
+	mDialog.Close(-1)
 End Sub
 
 
@@ -71,6 +77,7 @@ Public Sub Show
 	
 	'--- timer might be off, make sure it is on
 	'CallSub2(Main,"TurnOnOff_MainTmr",True)
+	mMainObj.pObjCurrentDlg1 = Null
 	
 	
 End Sub

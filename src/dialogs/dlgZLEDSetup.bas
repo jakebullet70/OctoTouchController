@@ -30,6 +30,10 @@ Public Sub Initialize(caption As String,dataFile As String) As Object
 	
 End Sub
 
+Public Sub Close_Me
+	mDlg.Dialog.Close(-1)
+End Sub
+
 Public Sub CreateDefaultFile
 	
 	If File.Exists(xui.DefaultFolder,mDataFile) = False Then
@@ -107,6 +111,7 @@ Public Sub Show
 		CallSub(mMainObj.oPageCurrent,"Set_focus")
 	End If
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
+	mMainObj.pObjCurrentDlg1 = Null
 	
 End Sub
 

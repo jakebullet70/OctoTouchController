@@ -627,7 +627,7 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 		#if not (klipper)	
 		Case "led" '--- ZLED
 			Dim oB As dlgZLEDSetup
-			oB.Initialize("ZLED Config",gblConst.ZLED_OPTIONS_FILE)
+			pObjCurrentDlg1 = oB.Initialize("ZLED Config",gblConst.ZLED_OPTIONS_FILE)
 			oB.Show
 			
 		Case "ws2" '--- ws281x
@@ -1046,7 +1046,7 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 				Return
 			End If
 			Dim o3 As dlgOnOffCtrl
-			o3.Initialize("ZLED Control")
+			pObjCurrentDlg1 = o3.Initialize("ZLED Control")
 			o3.Show
 			
 		Case "ws2" '--- ws281x
@@ -1055,7 +1055,7 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 				Return
 			End If
 			Dim o3 As dlgOnOffCtrl
-			o3.Initialize("WS281x Control")
+			pObjCurrentDlg1 = o3.Initialize("WS281x Control")
 			o3.Show
 		#end if
 		
@@ -1073,7 +1073,7 @@ Private Sub RunHTTPOnOffMenu(fname As String)
 		Return
 	End If
 	Dim o1 As dlgOnOffCtrl
-	o1.Initialize(Data.GetDefault("desc","On / Off"))
+	pObjCurrentDlg1 = o1.Initialize(Data.GetDefault("desc","On / Off"))
 	o1.Data = Data
 	o1.Show
 End Sub

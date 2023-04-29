@@ -260,7 +260,7 @@ End Sub
 Private Sub FunctionMenu
 	
 	Dim o1 As dlgListbox
-	mMainObj.pObjCurrentDlg1 = o1.Initialize("Function Menu",Me,"FunctionMenu_Event")
+	mMainObj.pObjCurrentDlg1 = o1.Initialize("Function Menu",Me,"FunctionMenu_Event",mMainObj.pObjCurrentDlg1)
 	o1.Show(250dip,320dip,BuildFunctionMnu)
 	
 End Sub
@@ -270,11 +270,11 @@ Private Sub BuildFunctionMnu() As Map
 	Dim m As Map : m.Initialize
 	m.Put("Pre-Heat Menu","prh")
 	#if not (klipper)
-	If Main.kvs.GetDefault("g29",False) = True Then m.Put("Auto Bed Leveling (G29)","bl") 
+	If Main.kvs.GetDefault("g29",False)       Then m.Put("Auto Bed Leveling (G29)","bl") 
 	#end if
-	If config.ShowFilamentChangeFLAG Then m.Put("Change Filament Wizard","cf")
 	If config.ShowBedLevel_ManualFLAG 	Then m.Put("Manual Bed Leveling Wizard","blw")
-	#if not (klipper)
+	If config.ShowFilamentChangeFLAG     Then m.Put("Change Filament Wizard","cf")
+	#if klipper
 	If config.ShowBedLevel_MeshFLAG 	Then m.Put("Mesh Bed Leveling Wizard","mblw")
 	#end if
 	If config.ShowZ_Offset_WizFLAG 	Then m.Put("Set Z Offset","zo")

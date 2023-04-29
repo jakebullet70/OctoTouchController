@@ -64,6 +64,7 @@ Sub Class_Globals
 	'--- popups and wiz screens
 	Public pObjCurrentDlg1 As Object = Null
 	Public pObjCurrentDlg2 As Object = Null
+	Public pObjPreHeatDlg1 As Object = Null
 	Public pnlWizards As Panel
 	Public pObjWizards As Object = Null
 	
@@ -145,6 +146,12 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	If Drawer.RightOpen Then
 		Drawer.RightOpen = False
 		Return False
+	End If
+	
+	If pObjPreHeatDlg1 <> Null And SubExists(pObjPreHeatDlg1,"Close_Me") Then
+		CallSubDelayed(pObjPreHeatDlg1,"Close_Me") 'ignore
+		pObjPreHeatDlg1 = Null
+		Return False '--- cancel close request
 	End If
 		
 	If pnlWizards.Visible = True And (pObjWizards <> Null) And SubExists(pObjWizards,"Close_Me") Then
@@ -424,7 +431,7 @@ Private Sub PopupMainOptionMenu
 	popUpMemuItems = gui.BuildOptionsMenu(False)
 	
 	Dim o1 As dlgListbox
-	pObjCurrentDlg1 = o1.Initialize("Options Menu",Me,"OptionsMenu_Event")
+	pObjCurrentDlg1 = o1.Initialize("Options Menu",Me,"OptionsMenu_Event",pObjCurrentDlg1)
 	o1.IsMenu = True
 	If guiHelpers.gIsLandScape Then '- TODO needs refactor for sizes
 		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,320dip,280dip),340dip,popUpMemuItems)
@@ -531,7 +538,7 @@ Private Sub PopupFunctionOptionsMnu
 										Typeface(Typeface.DEFAULT).Append("  Internal Functions Menu").PopAll
 	
 	Dim o1 As dlgListbox
-	pObjCurrentDlg1 = o1.Initialize(title,Me,"FncMenu_Event")
+	pObjCurrentDlg1 = o1.Initialize(title,Me,"FncMenu_Event",pObjCurrentDlg1)
 	o1.IsMenu = True
 	o1.Show(260dip,300dip,po)
 	
@@ -588,7 +595,7 @@ Private Sub PopupPluginOptionMenu
 	Dim title As Object = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE8C1)). _
 	        	 					   Typeface(Typeface.DEFAULT).Append(title).PopAll
 	Dim o1 As dlgListbox
-	pObjCurrentDlg1 = o1.Initialize(title,Me,"PluginsMenu_Event")
+	pObjCurrentDlg1 = o1.Initialize(title,Me,"PluginsMenu_Event",pObjCurrentDlg1)
 	o1.IsMenu = True
 	o1.Show(260dip,300dip,popUpMemuItems)
 	
@@ -875,11 +882,10 @@ Public Sub ShowPreHeatMenu_All2(titleTxt As String)
 	Dim title As Object = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF2CA)). _
 		Typeface(Typeface.DEFAULT).Append("  " & titleTxt).PopAll
 		
-	pObjCurrentDlg1 = ht.Initialize(title,Me,"TempChange_Presets")
+	pObjPreHeatDlg1 = ht.Initialize(title,Me,"TempChange_Presets",pObjPreHeatDlg1)
 	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,guiHelpers.gWidth - 10dip)
 	Dim h As Float = IIf(guiHelpers.gIsLandScape,guiHelpers.gHeight * .8,guiHelpers.gHeight * .7)
-	
-	
+		
 	BuildPreHeatMenu
 	ht.Show(h,w,mapMasterPreHeaterMenu)
 End Sub
@@ -901,7 +907,7 @@ Private Sub BuildPreHeatMenu
 End Sub
 #end region
 
-#region "RIGHT_SDIE_DRAWER"
+#region "RIGHT_SIDE_DRAWER"
 '--- side drawer
 Public Sub btnSidePnl_Click
 	Dim b As Button : b = Sender
@@ -1023,7 +1029,8 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
 				Return
 			End If
-			Dim o1 As dlgOctoPsuCtrl : o1.Initialize(Me)
+			Dim o1 As dlgOctoPsuCtrl : 
+			pObjCurrentDlg1 = o1.Initialize(Me)
 			o1.Show
 			#else
 			RunHTTPOnOffMenu(gblConst.PSU_KLIPPER_SETUP_FILE)

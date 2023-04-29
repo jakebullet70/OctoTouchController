@@ -20,9 +20,10 @@ Sub Class_Globals
 	
 End Sub
 
-Public Sub Initialize
+Public Sub Initialize() As Object
 	
 	mainObj = B4XPages.MainPage
+	Return Me
 	
 End Sub
 

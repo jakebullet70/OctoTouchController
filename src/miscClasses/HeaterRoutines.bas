@@ -21,7 +21,7 @@ End Sub
 Public Sub PopupToolHeaterMenu
 	
 	Dim o1 As dlgListbox
-	mMainObj.pObjCurrentDlg1 = o1.Initialize("Tool Presets",Me,"HeatTempChange_Tool")
+	mMainObj.pObjCurrentDlg1 = o1.Initialize("Tool Presets",Me,"HeatTempChange_Tool",mMainObj.pObjCurrentDlg1)
 	o1.Show(250dip,220dip,mMainObj.oMasterController.mapToolHeatValuesOnly)
 	
 End Sub
@@ -63,7 +63,7 @@ End Sub
 Public Sub PopupBedHeaterMenu
 	
 	Dim o1 As dlgListbox
-	mMainObj.pObjCurrentDlg1 = o1.Initialize("Bed Presets",Me,"HeatTempChange_Bed")
+	mMainObj.pObjCurrentDlg1 = o1.Initialize("Bed Presets",Me,"HeatTempChange_Bed",mMainObj.pObjCurrentDlg1)
 	o1.Show(250dip,220dip,mMainObj.oMasterController.mapbedHeatValuesOnly)
 	
 End Sub

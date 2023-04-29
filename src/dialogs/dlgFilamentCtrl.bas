@@ -89,7 +89,6 @@ Public Sub Show
 	dlgHelper.Initialize(mDialog)
 	
 	Dim p As B4XView = xui.CreatePanel("")
-	Log(mMainObj.pObjCurrentDlg1)
 	
 	'--- TODO - needs cleanup
 	If guiHelpers.gIsLandScape Then
@@ -343,9 +342,7 @@ End Sub
 #region "SHOW TEMP SELECT"
 Public Sub PromptHeater
 	Dim o1 As dlgListbox
-	o1.Initialize("Filament Change",Me,"HeatTempChange_Tool")
-	'Dim mapTmp As Map = objHelpers.CopyMap(mMainObj.oMasterController.mapToolHeatValuesOnly)
-	'mapTmp.Remove("Tool Off")
+	mMainObj.pObjCurrentDlg2 = o1.Initialize("Filament Change",Me,"HeatTempChange_Tool",mMainObj.pObjCurrentDlg2)
 	o1.Show(250dip,270dip,mMainObj.oMasterController.mapToolHeatValuesOnly)
 	Wait For HeatTempChange_Tool(value As String, tag As Object)
 	ProcessHeatTempChange(value,tag)

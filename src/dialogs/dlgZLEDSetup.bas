@@ -21,11 +21,12 @@ Sub Class_Globals
 	
 End Sub
 
-Public Sub Initialize(caption As String,dataFile As String)
+Public Sub Initialize(caption As String,dataFile As String) As Object
 	
 	mMainObj   = B4XPages.MainPage
 	mDataFile = dataFile
 	mCaption  = caption
+	Return Me
 	
 End Sub
 

@@ -34,10 +34,11 @@ End Sub
 
 
 
-Public Sub Initialize( title As String)
+Public Sub Initialize( title As String) As Object
 	
 	mMainObj = B4XPages.MainPage
 	mTitle = title
+	Return Me
 	
 End Sub
 

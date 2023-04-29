@@ -24,14 +24,17 @@ Sub Class_Globals
 	
 End Sub
 
+Public Sub Close_Me
+	mDialog.Close(-1)
+End Sub
 
-
-Public Sub Initialize( title As String, Callback As Object, EventName As String)
+Public Sub Initialize( title As String, Callback As Object, EventName As String) As Object
 	
 	mMainObj = B4XPages.MainPage
 	mTitle = title
 	mCallback = Callback
 	mEventName = EventName
+	Return Me
 	
 End Sub
 
@@ -65,6 +68,7 @@ Public Sub Show(defaultValue As Int)
 	If Result = xui.DialogResponse_Positive Then
 		CallSub2(mCallback,mEventName,sadRoundSlider1.Value.As(Float))
 	End If
+	mMainObj.pObjCurrentDlg1 = Null
 	
 End Sub
 

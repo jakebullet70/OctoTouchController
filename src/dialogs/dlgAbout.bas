@@ -25,8 +25,9 @@ Sub Class_Globals
 	Private lblOctoKlipper As Label
 End Sub
 
-Public Sub Initialize
+Public Sub Initialize() As Object
 	mMainObj = B4XPages.MainPage
+	Return Me
 End Sub
 
 

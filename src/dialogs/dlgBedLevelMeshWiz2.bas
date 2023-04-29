@@ -52,17 +52,17 @@ Public Sub Initialize(p As Panel) As Object
 
 End Sub
 
-Private Sub Check4MeshSupport() As ResumableSub
-	
-	Dim ns As String = "Mesh bed leveling is not supported in the firmware."
-	#if klipper
-	
-	#else
-	
-	#End If
-	
-	Return True
-End Sub
+'Private Sub Check4MeshSupport() As ResumableSub
+'	
+'	Dim ns As String = "Mesh bed leveling is not supported in the firmware."
+'	#if klipper
+'	
+'	#else
+'	
+'	#End If
+'	
+'	Return True
+'End Sub
 
 
 
@@ -93,15 +93,15 @@ End Sub
 
 ''=================================================================
 
-Private Sub BeepMe(num As Int	)'ignore
-	
-	Dim b As Beeper :
-	b.Initialize(120,500)
-	For xx = 1 To num
-		b.Beep : Sleep(200)
-	Next
-	
-End Sub
+'Private Sub BeepMe(num As Int	)'ignore
+'	
+'	Dim b As Beeper :
+'	b.Initialize(120,500)
+'	For xx = 1 To num
+'		b.Beep : Sleep(200)
+'	Next
+'	
+'End Sub
 
 Private Sub btnClose_Click
 	Close_Me
@@ -236,7 +236,7 @@ Private Sub btnStart_Click
 		
 		#End If
 	
-	else If b.Text = "ACCEPT" Then
+	else If b.Text = "ACCEPT" Or  b.Text = "NEXT" Then
 		#if klipper
 		Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","ACCEPT"))) Complete (msg As String)		
 		If msg.Contains("Manual probe failed") Then ''--- mostly happens when just hitting ACCEPT and not moving nozzle 1st

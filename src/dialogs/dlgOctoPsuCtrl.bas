@@ -27,14 +27,18 @@ End Sub
 
 '--- Dual class, GUI and command
 
-Public Sub Initialize(mobj As B4XMainPage)
+Public Sub Initialize(mobj As B4XMainPage) As Object
 	
 	If mobj = Null Then Return
 	mMainObj = mobj
 	ReadSettingsCfg
+	Return Me
 	
 End Sub
 
+Public Sub Close_Me
+	mDialog.Close(-1)
+End Sub
 
 Public Sub Show
 	
@@ -53,6 +57,7 @@ Public Sub Show
 	
 	BuildGUI
 
+
 	Dim dlgHelper As sadB4XDialogHelper
 	dlgHelper.Initialize(mDialog)
 	dlgHelper.ThemeDialogForm("Power Control")
@@ -68,7 +73,7 @@ Public Sub Show
 	
 	'--- timer might be off, make sure it is on
 	'CallSub2(Main,"TurnOnOff_MainTmr",True)
-	
+	mMainObj.pObjCurrentDlg1 = Null
 	
 End Sub
 

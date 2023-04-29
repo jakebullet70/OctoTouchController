@@ -85,9 +85,10 @@ Public Sub CheckIfNewDownloadAvail()As ResumableSub
 End Sub
 
 
-Public Sub Initialize(parentObj As B4XView)
+Public Sub Initialize(parentObj As B4XView) As Object
 	
 	mMainObj = parentObj
+	Return Me
 	
 End Sub
 

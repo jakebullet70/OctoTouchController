@@ -45,12 +45,13 @@ End Sub
 
 
 
-Public Sub Initialize( title As String, EventName As String)
+Public Sub Initialize( title As String, EventName As String) As Object
 	#if not (klipper)
 	mMainObj = B4XPages.MainPage
 	mTitle = title
 	mEventName = EventName
 	#end if
+	Return Me
 End Sub
 
 

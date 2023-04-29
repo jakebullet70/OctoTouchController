@@ -21,9 +21,10 @@ Sub Class_Globals
 End Sub
 
 
-Public Sub Initialize(cn As HttpOctoRestAPI)
+Public Sub Initialize(cn As HttpOctoRestAPI) As Object
 	mMainObj = B4XPages.MainPage
 	oOctoCmds.Initialize(cn)
+	Return Me
 End Sub
 
 
@@ -61,7 +62,7 @@ Public Sub Show
 	End If
 	
 	Dim o1 As dlgListbox
-	o1.Initialize("System Menu",Me,"SysMenu_Event")
+	mMainObj.pObjCurrentDlg1 = o1.Initialize("System Menu",Me,"SysMenu_Event",mMainObj.pObjCurrentDlg1)
 	o1.IsMenu = True
 	If guiHelpers.gIsLandScape Then '- TODO needs refactor for sizes
 		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,320dip,280dip),280dip,popUpMnu)

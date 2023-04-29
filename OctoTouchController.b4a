@@ -705,3 +705,7 @@ Public Sub InitLog_Cleanup
 	tmrTimerCallSub.CallSubDelayedPlus(Me,"Clean_OldCrash",60000 * 17)
 End Sub
 #end region
+
+Public Sub SetObjNull(obj As Object)
+	obj = Null
+End Sub

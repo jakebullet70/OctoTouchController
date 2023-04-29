@@ -23,10 +23,11 @@ Sub Class_Globals
 	
 End Sub
 
-Public Sub Initialize(mobj As B4XMainPage)
+Public Sub Initialize(mobj As B4XMainPage) As Object
 	
 	If mobj = Null Then Return
 	mMainObj = mobj
+	Return Me
 	
 End Sub
 

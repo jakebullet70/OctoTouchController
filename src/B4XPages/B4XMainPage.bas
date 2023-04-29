@@ -61,13 +61,12 @@ Sub Class_Globals
 	Private pnlLineBreakDrawer As Panel
 	Private clvDrawer As CustomListView
 	
-	'Public pPopupDlg1 As B4XDialog
-	'Public pPopupDlg2 As B4XDialog
+	'--- popups and wiz screens
 	Public pObjCurrentDlg1 As Object = Null
 	Public pObjCurrentDlg2 As Object = Null
-	
 	Public pnlWizards As Panel
 	Public pObjWizards As Object = Null
+	
 End Sub
 
 '======================================================================================
@@ -140,6 +139,9 @@ End Sub
 
 Private Sub B4XPage_CloseRequest As ResumableSub
 	
+	'--- catch the android BACK button
+	'--- catch the android BACK button
+	
 	If Drawer.RightOpen Then
 		Drawer.RightOpen = False
 		Return False
@@ -163,7 +165,6 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 		Return False '--- cancel close request
 	End If
 	
-	'--- catch the android BACK button
 	If oPageCurrent <> oPageMenu Then
 		Switch_Pages(gblConst.PAGE_MENU)		
 		Return False '--- cancel close request

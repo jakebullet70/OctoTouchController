@@ -39,10 +39,16 @@ Sub Class_Globals
 	Private btnBack As B4XView
 End Sub
 
-Public Sub Initialize
+Public Sub Initialize() As Object
 	mMainObj = B4XPages.MainPage
 	mData = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
+	Return Me
 End Sub
+
+Public Sub Close_Me  '--- class method, called from android back btn
+	mDialog.Close(xui.DialogResponse_Cancel)
+End Sub
+
 
 Private Sub BuildGUI
 	pnlMain.Color = clrTheme.Background : pnlWorking.Color = clrTheme.Background
@@ -83,6 +89,7 @@ Public Sub Show
 	dlgHelper.Initialize(mDialog)
 	
 	Dim p As B4XView = xui.CreatePanel("")
+	Log(mMainObj.pObjCurrentDlg1)
 	
 	'--- TODO - needs cleanup
 	If guiHelpers.gIsLandScape Then
@@ -112,12 +119,12 @@ Public Sub Show
 		#else
 		mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
 		#End If
-		
 	End If
 	
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF) '--- turn it off if its on
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	mTmrOff = True '--- if temp tmr is running will turn it off
+	mMainObj.pObjCurrentDlg2 = Null
 	
 End Sub
 

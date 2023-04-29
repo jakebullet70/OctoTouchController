@@ -107,7 +107,7 @@ Private Sub btnClose_Click
 	Close_Me
 End Sub
 
-Public Sub Close_Me  '--- class method, called from android back btn
+Public Sub Close_Me  '--- class method, also called from android back btn
 	'--- out of here!
 	#if klipper
 	mainObj.oMasterController.WSk.pCallbackModule2 = Null

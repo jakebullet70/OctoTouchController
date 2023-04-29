@@ -274,7 +274,9 @@ Private Sub BuildFunctionMnu() As Map
 	#end if
 	If config.ShowFilamentChangeFLAG Then m.Put("Change Filament Wizard","cf")
 	If config.ShowBedLevel_ManualFLAG 	Then m.Put("Manual Bed Leveling Wizard","blw")
+	#if not (klipper)
 	If config.ShowBedLevel_MeshFLAG 	Then m.Put("Mesh Bed Leveling Wizard","mblw")
+	#end if
 	If config.ShowZ_Offset_WizFLAG 	Then m.Put("Set Z Offset","zo")
 	Return m
 End Sub
@@ -321,7 +323,7 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 			
 		Case "cf"'--- built in load / unload filament wiz
 			Dim o1 As dlgFilamentCtrl
-			o1.Initialize
+			B4XPages.MainPage.pObjCurrentDlg2 = o1.Initialize()
 			o1.Show
 			
 		Case "prh" '--- pre-heat menu

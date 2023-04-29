@@ -28,8 +28,6 @@ Public Sub Initialize(cn As HttpOctoRestAPI) As Object
 End Sub
 
 
-
-
 Public Sub Show
 	
 	'--- grab avail the octo sys commands
@@ -62,7 +60,7 @@ Public Sub Show
 	End If
 	
 	Dim o1 As dlgListbox
-	mMainObj.pObjCurrentDlg1 = o1.Initialize("System Menu",Me,"SysMenu_Event",mMainObj.pObjCurrentDlg1)
+	mMainObj.pObjCurrentDlg2 = o1.Initialize("System Menu",Me,"SysMenu_Event",mMainObj.pObjCurrentDlg2)
 	o1.IsMenu = True
 	If guiHelpers.gIsLandScape Then '- TODO needs refactor for sizes
 		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,320dip,280dip),280dip,popUpMnu)

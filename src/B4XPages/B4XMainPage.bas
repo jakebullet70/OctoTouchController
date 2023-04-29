@@ -1013,14 +1013,21 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 			#end if
 			
 		Case "ab" '--- about screen
-			Dim o2 As dlgAbout : o2.Initialize
+			Dim o2 As dlgAbout 
+			pObjCurrentDlg1 = o2.Initialize
 			o2.Show
 		
 		Case "sys" '--- system menu
 			#if klipper
-			Dim oa As dlgKlipperSysCmds : oa.Initialize(Me) : 	oa.Show
+			Dim oa As dlgKlipperSysCmds 
+			oa.Initialize(Me) 
+			'pObjCurrentDlg1 = oa.Initialize(Me) 
+			oa.Show
 			#Else
-			Dim oa As dlgOctoSysCmds : oa.Initialize(oMasterController.CN) : oa.Show
+			Dim oa As dlgOctoSysCmds 
+			'pObjCurrentDlg1 = oa.Initialize(oMasterController.CN) 
+			oa.Initialize(oMasterController.CN)
+			oa.Show
 			#end if
 		
 		Case "pwr" '--- printer power
@@ -1029,7 +1036,7 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
 				Return
 			End If
-			Dim o1 As dlgOctoPsuCtrl : 
+			Dim o1 As dlgOctoPsuCtrl 
 			pObjCurrentDlg1 = o1.Initialize(Me)
 			o1.Show
 			#else

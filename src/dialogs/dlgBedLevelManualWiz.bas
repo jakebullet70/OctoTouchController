@@ -18,7 +18,7 @@ Version=11.5
 
 Sub Class_Globals
 	
-	Private Const mModule As String = "dlgBedLevelWiz"' 'ignore
+	Private Const mModule As String = "dlgBedLevelManualWiz"' 'ignore
 	Private mainObj As B4XMainPage
 	Private xui As XUI
 	Private mWizDlg As sadPreferencesDialog

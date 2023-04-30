@@ -488,15 +488,14 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			PopupFunctionOptionsMnu
 			
 		Case "rt" '---read text file
+			Dim f As String = fnc.GetTxtLogFile
+			If f = "" Then
+				Show_toast("no log file found",6000)
+				Return
+			End If
 			Dim vt As dlgViewText 
 			pObjCurrentDlg1 = vt.Initialize("Read Text")
-			Dim f As String = fnc.GetTxtLogFile
-			If f <> "" Then 
-				vt.Show(f)
-			Else
-				pObjCurrentDlg1 = Null
-				Show_toast("no log file found",6000)
-			End If
+			vt.Show(f)
 			
 		Case "cup" '--- check for update
 			Dim up As dlgAppUpdate 

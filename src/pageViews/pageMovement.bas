@@ -293,22 +293,31 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 	Select Case value
 		
 		Case "zo" '--- Z offset
+			#if klipper
+			Dim bm As dlgBedLevelMeshWiz2
+			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,"ZO")
+			bm.Show("Set Z Offset")
+			#else
+			#end if
 			
 		Case "mblw"
+			#if klipper
 			Dim bm As dlgBedLevelMeshWiz2
-			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards)
+			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,"MDL")
 			bm.Show("Mesh Bed Leveling Wizard")
+			#else
+			#end if
 		
 		Case "blw"
-			Dim uu As dlgBedLevelWiz
+			Dim uu As dlgBedLevelManualWiz
 			mMainObj.pobjWizards = uu.Initialize(mMainObj.pnlWizards)
 			uu.Show
 			
-		Case "bl" '--- firmware bed level
+		Case "bl" '--- Auto firmware bed level
 			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)
 			If ret = xui.DialogResponse_Cancel Then Return
 			#if klipper
-			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G29"))
+			''''''''''mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G29"))
 			#else
 			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","G29"))
 			#End If

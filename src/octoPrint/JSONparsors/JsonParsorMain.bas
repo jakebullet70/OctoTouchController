@@ -138,7 +138,7 @@ Public Sub  JobStatus(s As String)
 				End If
 			Case Else
 				#if debug
-				Log("case else: " & oc.JobPrintState)
+				'Log("case else: " & oc.JobPrintState)
 				#end if
 		End Select
 		

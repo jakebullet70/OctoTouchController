@@ -25,6 +25,10 @@ Public Sub Initialize() As Object
 	Return Me
 End Sub
 
+Public Sub Close_Me
+	mPowerDlg.Dialog.Close(-1)
+End Sub
+
 
 public Sub CreateDefaultFile
 
@@ -78,6 +82,7 @@ Public Sub Show
 	End If
 	
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
+	mainObj.pObjCurrentDlg1 = Null
 	
 End Sub
 

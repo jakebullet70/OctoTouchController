@@ -444,19 +444,25 @@ End Sub
 Private Sub OptionsMenu_Event(value As String, tag As Object)
 	
 	'--- callback for options Menu
-	If value = Null Or value.Length = 0 Then Return
+	pObjCurrentDlg1 = Null
+	If value = Null Or value.Length = 0 Then 
+		Return
+	End If
 	
 	Select Case value
 		Case "thm1" '--- themes
-			Dim oo9 As dlgThemeSelect : pObjWizards = oo9.Initialize
+			Dim oo9 As dlgThemeSelect 
+			pObjWizards = oo9.Initialize
 			oo9.Show(pnlWizards)
 			
 		Case "ab" '--- about
-			Dim o2 As dlgAbout : o2.Initialize
+			Dim o2 As dlgAbout 
+			pObjCurrentDlg1 = o2.Initialize
 			o2.Show
 			
 		Case "gn"  '--- general settings
-			Dim o3 As dlgGeneralOptions : o3.Initialize
+			Dim o3 As dlgGeneralOptions 
+			pObjCurrentDlg1 = o3.Initialize
 			o3.Show
 			
 		Case "oc"  '--- octo / klipper setup
@@ -471,7 +477,8 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			#End If
 			
 		Case "pw"  '--- android power setup
-			Dim o1 As dlgAndroidPowerOptions : o1.Initialize
+			Dim o1 As dlgAndroidPowerOptions 
+			pObjCurrentDlg1 = o1.Initialize
 			o1.Show
 			
 		Case "plg"  '--- plugins menu
@@ -481,16 +488,19 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			PopupFunctionOptionsMnu
 			
 		Case "rt" '---read text file
-			Dim vt As dlgViewText : vt.Initialize("Read Text")
-			Dim f As String = Gettxtfile
+			Dim vt As dlgViewText 
+			pObjCurrentDlg1 = vt.Initialize("Read Text")
+			Dim f As String = fnc.GetTxtLogFile
 			If f <> "" Then 
 				vt.Show(f)
 			Else
+				pObjCurrentDlg1 = Null
 				Show_toast("no log file found",6000)
 			End If
 			
 		Case "cup" '--- check for update
-			Dim up As dlgAppUpdate : up.Initialize(B4XPages.MainPage.Root)
+			Dim up As dlgAppUpdate 
+			pObjCurrentDlg1 = up.Initialize(B4XPages.MainPage.Root)
 			up.Show
 			
 	End Select
@@ -498,16 +508,6 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 	
 End Sub
 
-Private Sub Gettxtfile() As String
-
-	Dim o1 As WildCardFilesList : o1.Initialize
-	Dim lstFolder As List = o1.GetFiles(xui.DefaultFolder,"*.log",False,False)
-	If lstFolder.Size > 0 Then
-		Return lstFolder.Get(0)
-	End If
-	Return ""
-	
-End Sub
 
 '--- called from dlgOctoSetup on exit
 Public Sub PrinterSetup_Closed
@@ -604,35 +604,39 @@ End Sub
 '--- callback for plugins options Menu
 Private Sub PluginsMenu_Event(value As String, tag As Object)
 	
-	If value.Length = 0 Then PopupMainOptionMenu
+	pObjCurrentDlg1 = Null
+	If value.Length = 0 Then 
+		PopupMainOptionMenu
+		Return
+	End If
 	
 	Select Case value
 			
 		Case "psu"  '--- sonoff / PSU control setup		
 			#if klipper
 			Dim oA1 As dlgIpOnOffSetup
-			oA1.Initialize(mPrefDlg1,Me,"ExtCtrl_BtnEdit")
+			pObjCurrentDlg2 = oA1.Initialize(Me,"ExtCtrl_BtnEdit")
 			oA1.Show("Printer Power Config",gblConst.PSU_KLIPPER_SETUP_FILE)
 			#else
 			Dim oA As dlgOctoPsuSetup
-			oA.Initialize("PSU Config")
+			pObjCurrentDlg2 = oA.Initialize("PSU Config")
 			oA.Show
 			#End If
 			
 		Case "1","2","3","4"
 			Dim oA1 As dlgIpOnOffSetup
-			oA1.Initialize(Me,"ExtCtrl_BtnEdit")
+			pObjCurrentDlg2 = oA1.Initialize(Me,"ExtCtrl_BtnEdit")
 			oA1.Show("HTTP Control Config - " & value,value & gblConst.HTTP_ONOFF_SETUP_FILE)
 				
 		#if not (klipper)	
 		Case "led" '--- ZLED
 			Dim oB As dlgZLEDSetup
-			pObjCurrentDlg1 = oB.Initialize("ZLED Config",gblConst.ZLED_OPTIONS_FILE)
+			pObjCurrentDlg2 = oB.Initialize("ZLED Config",gblConst.ZLED_OPTIONS_FILE)
 			oB.Show
 			
 		Case "ws2" '--- ws281x
 			Dim o1 As dlgZLEDSetup
-			o1.Initialize("ws281x Config",gblConst.WS281_OPTIONS_FILE)
+			pObjCurrentDlg2 = o1.Initialize("ws281x Config",gblConst.WS281_OPTIONS_FILE)
 			o1.Show
 		#end if
 		

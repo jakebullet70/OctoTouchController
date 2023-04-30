@@ -54,7 +54,7 @@ Sub Class_Globals
 	Public DefaultHintLargeSize As Int
 	'--- TWEAKS
 	Public PutAtTop As Object = Null
-	Public Closed As Boolean = False
+	'Public Closed As Boolean = False
 	'---
 End Sub
 

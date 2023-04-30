@@ -18,6 +18,17 @@ End Sub
 '	misc support methods - functions and assorted crap
 '-------------------------------------------------------------------------------------------
 
+Public Sub GetTxtLogFile() As String
+
+	Dim o1 As WildCardFilesList : o1.Initialize
+	Dim lstFolder As List = o1.GetFiles(xui.DefaultFolder,"*.log",False,False)
+	If lstFolder.Size > 0 Then
+		Return lstFolder.Get(0)
+	End If
+	Return ""
+	
+End Sub
+
 Public Sub BlankScreen
 	B4XPages.MainPage.pnlScreenOff.Elevation = 5dip '--- sort of like ZOrder, puts it above aby pref-dialog showing
 	B4XPages.MainPage.pnlScreenOff.Visible = True

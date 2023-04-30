@@ -25,7 +25,7 @@ End Sub
 
 Public Sub Initialize(mobj As B4XMainPage) As Object
 	
-	If mobj = Null Then Return
+	If mobj = Null Then Return Null
 	mMainObj = mobj
 	Return Me
 	

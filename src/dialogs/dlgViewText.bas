@@ -29,6 +29,9 @@ Public Sub Initialize(title As String)
 	
 End Sub
 
+Public Sub Close_Me
+	mDialog.Close(-1)
+End Sub
 
 Public Sub Show(fname As String)
 	
@@ -49,6 +52,7 @@ Public Sub Show(fname As String)
 	EditText1.Text = File.ReadString(xui.DefaultFolder,fname)
 	
 	Wait For (rs) Complete (Result As Int)
+	mMainObj.pObjCurrentDlg1 = Null
 	
 End Sub
 

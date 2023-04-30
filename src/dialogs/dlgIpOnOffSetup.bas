@@ -19,10 +19,16 @@ Sub Class_Globals
 	Private mCallBackMethod As String
 End Sub
 
-Public Sub Initialize(callbackMod As Object, callbackMethod As String)
+Public Sub Initialize(callbackMod As Object, callbackMethod As String) As Object
 	mCallBackModule = callbackMod
 	mCallBackMethod = callbackMethod
+	Return Me
 End Sub
+
+Public Sub Close_Me
+	mPrefDlg.Dialog.Close(-1)
+End Sub
+
 
 Public Sub CreateDefaultDataFile(dataFileName As String)
 	
@@ -93,9 +99,7 @@ Public Sub Show(title As String,dataFileName As String)
 	End If
 		
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
-	
-	mPrefDlg.Closed = True '--- we are done with the dlg object
-	
+		
 End Sub
 
 

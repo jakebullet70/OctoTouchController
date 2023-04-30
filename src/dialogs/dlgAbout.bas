@@ -30,6 +30,10 @@ Public Sub Initialize() As Object
 	Return Me
 End Sub
 
+Public Sub Close_Me
+	mDialog.Close(-1)
+End Sub
+
 
 Public Sub Show
 	
@@ -71,6 +75,7 @@ Public Sub Show
 	Wait For (rs) Complete (Result As Int)
 	
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
+	mMainObj.pObjCurrentDlg1 = Null
 	
 	
 End Sub

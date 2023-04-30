@@ -161,7 +161,7 @@ Private Sub LoadCfgs()
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.PSU_KLIPPER_SETUP_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.PSU_KLIPPER_SETUP_FILE) = False Then
 		Dim oiw As dlgIpOnOffSetup
-		oiw.Initialize(Null,Null,Null)
+		oiw.Initialize(Null,Null)
 		oiw.CreateDefaultDataFile(gblConst.PSU_KLIPPER_SETUP_FILE) 
 	End If
 

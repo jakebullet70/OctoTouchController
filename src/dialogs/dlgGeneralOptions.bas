@@ -26,6 +26,10 @@ Public Sub Initialize() As Object
 	
 End Sub
 
+Public Sub Close_Me
+	mGeneralDlg.Dialog.Close(-1)
+End Sub
+
 public Sub CreateDefaultFile
 	
 	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
@@ -77,6 +81,7 @@ Public Sub Show
 	End If
 	
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
+	mainObj.pObjCurrentDlg1 = Null
 	
 End Sub
 

@@ -92,6 +92,9 @@ Public Sub Initialize(parentObj As B4XView) As Object
 	
 End Sub
 
+Public Sub Close_Me
+	mDialog.Close(-1)
+End Sub
 
 Public Sub Show() As ResumableSub
 	
@@ -125,6 +128,7 @@ Public Sub Show() As ResumableSub
 
 	'--- wait for dialog	
 	Wait For (rs) Complete (Result As Int)
+	B4XPages.MainPage.pObjCurrentDlg1 = Null
 	
 	'oFTP.ftp.Close '--- make sure it is closed
 	Return Result

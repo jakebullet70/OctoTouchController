@@ -243,8 +243,8 @@ Version=11.8
 #Region  Activity Attributes 
 	#FullScreen: True
 	#IncludeTitle: False
-	'#DebuggerForceFullDeployment: true
-	'#DebuggerForceStandardAssets: true
+	#DebuggerForceFullDeployment: true
+	#DebuggerForceStandardAssets: true
 	
 	'---  ALWAYS SET FALSE IN DEBUG MODE
 	#BridgeLogger: True 

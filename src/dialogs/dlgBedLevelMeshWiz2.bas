@@ -35,6 +35,9 @@ Sub Class_Globals
 	Private btnDn,btnUp As Button
 	
 	Public pMode As String 
+	Public Const ppMANUAL_MESH As String = "mblw"
+	
+	
 	
 End Sub
 
@@ -231,7 +234,7 @@ Private Sub btnStart_Click
 		#if klipper
 		ShowZinfo("Preparing bed and tool...")
 		Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","G28"))) Complete (msg As String)
-		If pMode = "mblw" Then
+		If pMode = ppMANUAL_MESH Then
 			guiHelpers.Show_toast2("Starting manual mesh Z probe...",1500)
 			Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","BED_MESH_CALIBRATE  METHOD=manual"))) Complete (msg As String)
 		Else
@@ -266,7 +269,7 @@ End Sub
 Public Sub Rec_Text(txt As String)
 	#if klipper
 	
-	If pMode = "mblw" Then '--- manual bed level wiz
+	If pMode = ppMANUAL_MESH Then '--- manual bed level wiz
 			
 		If txt.Contains("y in a manual Z probe") Then
 			'--- just started probe mode but are already in it so cancel and restart
@@ -282,7 +285,7 @@ Public Sub Rec_Text(txt As String)
 		
 		If txt.Contains("g manual Z probe") Then
 			'mInProbeMode = True
-			If pMode = "mblw" Then '--- manual bed level wiz
+			If pMode = ppMANUAL_MESH Then '--- manual bed level wiz
 				btn1.Text = "ACCEPT"
 			Else
 				btn1.Text = "DONE"
@@ -302,7 +305,7 @@ Public Sub Rec_Text(txt As String)
 		End If
 		
 		If txt.Contains("has been saved") Then
-			ShowZinfo("Mesh build complete")
+			ShowZinfo("Process complete")
 			ProcessMeshComplete
 			Return
 		End If

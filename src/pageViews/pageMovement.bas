@@ -18,7 +18,7 @@ Sub Class_Globals
 	Private mCallBackEvent As String 'ignore
 	Private mMainObj As B4XMainPage
 	
-	Private cboMovementSize As B4XComboBox
+	Private cboMovementSize As Spinner
 	Private MoveJogSize As String
 	Private ExtruderLengthSize As Int = 10
 	
@@ -32,6 +32,8 @@ Sub Class_Globals
 	Private lblGeneral,lblHeaderZ,lblHeaderXY As B4XView
 	Private mPageEnableDisable As Boolean
 	
+	Private pnlGeneral2,pnlGeneral1 As Panel
+	Private pnlJogMovement1 As Panel
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
@@ -65,14 +67,22 @@ Private Sub Build_GUI
 																btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback, _
 																btnZup,btnZhome,btnZdown))
 	
+	guiHelpers.SetTextColor(Array As B4XView(lblGeneral,lblHeaderZ,lblHeaderXY))
+	guiHelpers.ResizeText("General",lblGeneral)
+	guiHelpers.ResizeText("Z",lblHeaderZ)
+	guiHelpers.ResizeText("X/Y",lblHeaderXY)
+	Sleep(0)
+	
+	btnXYleft.Top = btnXYhome.Top : btnXYright.Top = btnXYhome.Top : btnZhome.Top = btnXYhome.Top
+	btnZdown.Top = btnXYforward.Top : btnZup.Top = btnXYback.Top
+	
 	'--- movement / jog sizes
-	cboMovementSize.setitems(Array As String("0.1mm","1.0mm","10mm","100mm"))
+	cboMovementSize.AddAll(Array As String("0.1mm","1.0mm","10mm","100mm"))
 	cboMovementSize.SelectedIndex = 1
-	guiHelpers.ReSkinB4XComboBox(Array As B4XComboBox(cboMovementSize))
-
+	cboMovementSize.Top = btnXYforward.Top + 20dip
+	'guiHelpers.ReSkinB4XComboBox(Array As B4XComboBox(cboMovementSize))
 	MoveJogSize = "1.0"
 	
-	guiHelpers.SetTextColor(Array As B4XView(lblGeneral,lblHeaderZ,lblHeaderXY))
 	
 End Sub
 
@@ -95,7 +105,7 @@ public Sub Update_Printer_Btns
 				btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback, _
 				btnZup,btnZhome,btnZdown), mPageEnableDisable)
 				
-	cboMovementSize.cmbBox.Enabled = mPageEnableDisable
+	'cboMovementSize.cmbBox.Enabled = mPageEnableDisable
 	mPnlMain.Enabled = oc.isConnected
 	
 End Sub

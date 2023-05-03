@@ -18,7 +18,7 @@ Sub Class_Globals
 	Private mCallBackEvent As String 'ignore
 	Private mMainObj As B4XMainPage
 	
-	Private cboMovementSize As Spinner
+	Private cboMovementSize As B4XComboBox
 	Private MoveJogSize As String
 	Private ExtruderLengthSize As Int = 10
 	
@@ -73,16 +73,17 @@ Private Sub Build_GUI
 	guiHelpers.ResizeText("X/Y",lblHeaderXY)
 	Sleep(0)
 	
+	'--- sync btns with already adusted btns
 	btnXYleft.Top = btnXYhome.Top : btnXYright.Top = btnXYhome.Top : btnZhome.Top = btnXYhome.Top
 	btnZdown.Top = btnXYforward.Top : btnZup.Top = btnXYback.Top
 	
 	'--- movement / jog sizes
-	cboMovementSize.AddAll(Array As String("0.1mm","1.0mm","10mm","100mm"))
+	cboMovementSize.cmbBox.TextSize = 12 '* guiHelpers.gFscale
+	cboMovementSize.SetItems(Array As String("0.1mm","1.0mm","10mm","50mm"))
 	cboMovementSize.SelectedIndex = 1
-	cboMovementSize.Top = btnXYforward.Top + 20dip
-	'guiHelpers.ReSkinB4XComboBox(Array As B4XComboBox(cboMovementSize))
+	cboMovementSize.mBase.Top = btnXYforward.Top + 15dip
+	guiHelpers.ReSkinB4XComboBox(Array As B4XComboBox(cboMovementSize))
 	MoveJogSize = "1.0"
-	
 	
 End Sub
 
@@ -305,7 +306,7 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 		Case "zo" '--- Z offset
 			#if klipper
 			Dim bm As dlgBedLevelMeshWiz2
-			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,"ZO")
+			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,value)
 			bm.Show("Set Z Offset")
 			#else
 			#end if
@@ -313,7 +314,7 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 		Case "mblw"
 			#if klipper
 			Dim bm As dlgBedLevelMeshWiz2
-			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,"MDL")
+			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,value)
 			bm.Show("Mesh Bed Leveling Wizard")
 			#else
 			#end if

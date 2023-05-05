@@ -71,10 +71,9 @@ Private Sub Build_GUI
 	fp.Initialize(Me,"fp",B4XPages.MainPage.Root)
 	fp.PreSize(260dip, 210dip)
 	fp.Panel.LoadLayout("viewMovementMM")
-	fp.OpenOrientation = fp.OpenOrientation_LeftRight
-	fp.ArrowVisible = True
-	fp.ArrowProperties.Left = lblMovePopup.Height/2
-	fp.ArrowProperties.ArrowOrientation = fp.ArrowOrientation_Left
+	fp.ArrowVisible = False
+	'fp.ArrowProperties.Left = lblMovePopup.Height/2
+	'fp.ArrowProperties.ArrowOrientation = fp.ArrowOrientation_Left
 	
 	
 	guiHelpers.SkinButton(Array As Button(btnRetract,btnMOff,btnHeat,btnFN,btnExtrude,btnLength, _
@@ -88,12 +87,16 @@ Private Sub Build_GUI
 	Sleep(0)
 	
 	'--- sync btns with already adusted btns
+	For Each btn As Button In Array As B4XView(btnXYleft,btnXYright,btnZhome,btnZup,btnZdown)
+		btn.Height = btnXYhome.Height
+	Next
 	btnXYleft.Top = btnXYhome.Top : btnXYright.Top = btnXYhome.Top : btnZhome.Top = btnXYhome.Top
 	btnZdown.Top = btnXYforward.Top : btnZup.Top = btnXYback.Top
+	btnZdown.Top = btnXYforward.Top : btnZup.Top = btnXYback.Top
+	
 	
 	lblMovePopup.Top = btnXYforward.Top +btnXYforward.Height / 2
 	pnlMoveMM.SetColorAndBorder(clrTheme.BackgroundHeader,1dip,clrTheme.txtNormal,8dip)
-	
 	MoveJogSize = "1.0"
 	
 End Sub

@@ -17,8 +17,8 @@ Sub Class_Globals
 	Private mPnlMain As B4XView
 	Private mCallBackEvent As String 'ignore
 	Private mMainObj As B4XMainPage
+	Private fp As sadAS_FloatingPanel
 	
-	Private cboMovementSize As B4XComboBox
 	Private MoveJogSize As String
 	Private ExtruderLengthSize As Int = 10
 	
@@ -34,6 +34,12 @@ Sub Class_Globals
 	
 	Private pnlGeneral2,pnlGeneral1 As Panel
 	Private pnlJogMovement1 As Panel
+	Private btnMoveMM0 As Button
+	Private btnMoveMM1 As Button
+	Private btnMoveMM2 As Button
+	Private btnMoveMM3 As Button
+	Private lblMovePopup As Label
+	Private pnlMoveMM As B4XView
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
@@ -60,14 +66,22 @@ public Sub Lost_focus()
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 End Sub
 
-
 Private Sub Build_GUI
+	
+	fp.Initialize(Me,"fp",B4XPages.MainPage.Root)
+	fp.PreSize(260dip, 210dip)
+	fp.Panel.LoadLayout("viewMovementMM")
+	fp.OpenOrientation = fp.OpenOrientation_LeftRight
+	fp.ArrowVisible = True
+	fp.ArrowProperties.Left = lblMovePopup.Height/2
+	fp.ArrowProperties.ArrowOrientation = fp.ArrowOrientation_Left
+	
 	
 	guiHelpers.SkinButton(Array As Button(btnRetract,btnMOff,btnHeat,btnFN,btnExtrude,btnLength, _
 																btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback, _
-																btnZup,btnZhome,btnZdown))
+																btnZup,btnZhome,btnZdown,btnMoveMM0,btnMoveMM1,btnMoveMM2,btnMoveMM3))
 	
-	guiHelpers.SetTextColor(Array As B4XView(lblGeneral,lblHeaderZ,lblHeaderXY))
+	guiHelpers.SetTextColor(Array As B4XView(lblGeneral,lblHeaderZ,lblHeaderXY,lblMovePopup))
 	guiHelpers.ResizeText("General",lblGeneral)
 	guiHelpers.ResizeText("Z",lblHeaderZ)
 	guiHelpers.ResizeText("X/Y",lblHeaderXY)
@@ -77,17 +91,12 @@ Private Sub Build_GUI
 	btnXYleft.Top = btnXYhome.Top : btnXYright.Top = btnXYhome.Top : btnZhome.Top = btnXYhome.Top
 	btnZdown.Top = btnXYforward.Top : btnZup.Top = btnXYback.Top
 	
-	'--- movement / jog sizes
-	cboMovementSize.cmbBox.TextSize = 12 '* guiHelpers.gFscale
-	cboMovementSize.SetItems(Array As String("0.1mm","1.0mm","10mm","50mm"))
-	cboMovementSize.SelectedIndex = 1
-	cboMovementSize.mBase.Top = btnXYforward.Top + 15dip
-	guiHelpers.ReSkinB4XComboBox(Array As B4XComboBox(cboMovementSize))
+	lblMovePopup.Top = btnXYforward.Top +btnXYforward.Height / 2
+	pnlMoveMM.SetColorAndBorder(clrTheme.BackgroundHeader,1dip,clrTheme.txtNormal,8dip)
+	
 	MoveJogSize = "1.0"
 	
 End Sub
-
-
 
 
 public Sub Update_Printer_Btns
@@ -149,8 +158,6 @@ Private Sub btnGeneral_Click
 	End Select
 	
 End Sub
-
-
 
 Private Sub btnXYZ_Click
 	
@@ -229,13 +236,6 @@ Private Sub SendRelPosCmd
 End Sub
 #End If
 
-Private Sub cboMovementSize_SelectedIndexChanged (Index As Int)
-	
-	MoveJogSize = cboMovementSize.SelectedItem.Replace("mm","")
-	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
-	
-End Sub
-
 Private Sub ToolHeatChangeRequest
 	
 	Dim oo As HeaterRoutines : oo.Initialize
@@ -261,10 +261,6 @@ Private Sub ExtruderLength_Set(value As String)
 		
 End Sub
 #end region
-
-
-
-
 
 
 #Region "FUNCTION - WIZ MENU IN MOVMENT PANEL"
@@ -358,8 +354,6 @@ End Sub
 
 #end region
 
-
-
 #Region "GCODE"
 Private Sub ExtrudeRetract(Extrude As Boolean)
 	
@@ -391,3 +385,23 @@ Private Sub MotorsOff
 	guiHelpers.Show_toast("Command sent: Motors Off",1800)
 End Sub
 #end region
+
+Private Sub lblMovePopup_Click
+	Dim Top As Float
+	If guiHelpers.gIsLandScape Then
+		Top = lblMovePopup.Top - (pnlMoveMM.Height/2)
+		fp.OpenOrientation = fp.OpenOrientation_BottomTop
+	Else
+		Top = lblMovePopup.Top + lblMovePopup.Height + 10dip
+		fp.OpenOrientation = fp.OpenOrientation_LeftTop
+	End If
+	fp.Show(lblMovePopup.Left,Top, pnlMoveMM.Width,pnlMoveMM.Height)
+End Sub
+
+Private Sub btnJogMoveMM_Click
+	Dim o As Button = Sender
+	MoveJogSize = o.Text.Replace("mm","")
+	lblMovePopup.Text = o.Text
+	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
+	fp.Close
+End Sub

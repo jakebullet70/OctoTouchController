@@ -985,7 +985,6 @@ Private Sub Build_RightSideMenu
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Printer Power Menu").PopAll,"pwr")
 	End If
 	#End If
-	
 		
 	If Data.GetDefault("syscmds",False).As(Boolean) Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("OS Systems Menu").PopAll,"sys")
@@ -996,7 +995,7 @@ Private Sub Build_RightSideMenu
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("About This Program").PopAll,"ab")
 	End If
 	
-	clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Test klippy").PopAll,"test")
+	'clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Test klippy").PopAll,"test")
 		
 End Sub
 
@@ -1010,7 +1009,7 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	Select Case Value.As(String)
 		'BED_MESH_CALIBRATE
-		Case "m600","test"
+		Case "m600"
 			#if klipper
 			oMasterController.WSk.Send(krpc.GCODE.Replace("!!!","BED_MESH_CALIBRATE  METHOD=manual"))
 			#end if

@@ -287,7 +287,7 @@ Private Sub BuildFunctionMnu() As Map
 	#if klipper
 	If config.ShowBedLevel_MeshFLAG 	Then m.Put("Mesh Bed Leveling Wizard","mblw")
 	#end if
-	If config.ShowZ_Offset_WizFLAG 	Then m.Put("Set Z Offset","zo")
+	'If config.ShowZ_Offset_WizFLAG 	Then m.Put("Set Z Offset","zo")   TODO 
 	Return m
 End Sub
 

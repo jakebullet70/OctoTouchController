@@ -550,9 +550,9 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 	
 	Select Case value
 			
-		Case "g29"
-			Main.kvs.Put("g29", Not (Main.kvs.GetDefault("g29",False)))
-			Show_toast("G29 Option Saved",2000)
+'		Case "g29"
+'			Main.kvs.Put("g29", Not (Main.kvs.GetDefault("g29",False)))
+'			Show_toast("G29 Option Saved",2000)
 			
 		Case "fl" '--- filament control
 			Dim oB As dlgFilamentSetup
@@ -943,24 +943,34 @@ Private Sub Build_RightSideMenu
 	clvDrawer.Clear
 	Dim size As Float = IIf(guiHelpers.gIsLandScape,20,22)
 	Dim txt As Object 
+	Dim cs As CSBuilder
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	#if klipper
 	Dim DataPSU As Map = File.ReadMap(xui.DefaultFolder,gblConst.PSU_KLIPPER_SETUP_FILE)
-	#end if
-	
-	Dim cs As CSBuilder
+
 	If Data.GetDefault("m600",False).As(Boolean) Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Filament Change M600").PopAll,"m600")
 	End If
+	#end if
 	
 	'clvDrawer.AddTextItem(cs.Initialize.Size(12).Alignment("ALIGN_CENTER").Append("------------ SYS CMDS -----------").PopAll,"")
+	Dim fn As String
+	For jj =0 To 7
+		fn = jj & gblConst.GCODE_CUSTOM_SETUP_FILE
+		Dim da As Map = File.ReadMap(xui.DefaultFolder,fn)
+		If da.GetDefault("rmenu",False).As(Boolean) = True Then
+			txt = da.Get("desc")
+			If strHelpers.IsNullOrEmpty(txt) Then txt = "GCode " & jj & "Menu"
+			clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,"f" & jj)
+		End If
+	Next
 	
 	For ii = 1 To 4
-		Dim fn As String = ii & gblConst.HTTP_ONOFF_SETUP_FILE
+		fn = ii & gblConst.HTTP_ONOFF_SETUP_FILE
 		If File.Exists(xui.DefaultFolder,fn) = True Then
 			Dim dataEX As Map  = File.ReadMap(xui.DefaultFolder,fn)
-			If dataEX.GetDefault("active",False).As(Boolean) Then
+			If dataEX.GetDefault("active",False).As(Boolean) = True Then
 				txt = dataEX.Get("desc")
 				If strHelpers.IsNullOrEmpty(txt) Then txt = "HTTP " & ii & "Menu"
 				clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,ii)
@@ -990,12 +1000,9 @@ Private Sub Build_RightSideMenu
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("OS Systems Menu").PopAll,"sys")
 	End If
 	
-	If clvDrawer.Size = 0 Then
-		'--- nothing in the menu so add something.
+	If clvDrawer.Size = 0 Then '--- nothing in the menu so add something.
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("About This Program").PopAll,"ab")
 	End If
-	
-	'clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Test klippy").PopAll,"test")
 		
 End Sub
 
@@ -1047,7 +1054,10 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 			
 		Case "1","2","3","4" '--- misc HTTP commands
 			RunHTTPOnOffMenu(Value.As(String) & gblConst.HTTP_ONOFF_SETUP_FILE)
-		
+			
+		Case "f0","f1","f2","f3","f4","f5","f6","f7" '--- misc GCode commands
+			RunGCodeOnOffMenu(Value.As(String).Replace("f","") & gblConst.GCODE_CUSTOM_SETUP_FILE)
+			
 		#if not (klipper)
 		Case "zled" '--- ZLED
 			If oc.isConnected = False Then
@@ -1088,6 +1098,18 @@ Private Sub RunHTTPOnOffMenu(fname As String)
 End Sub
 
 
+Private Sub RunGCodeOnOffMenu(fname As String)
+'	Dim Data As Map = File.ReadMap(xui.DefaultFolder,fname)
+'	If  Data.GetDefault("tgl",False).As(Boolean) Then '--- toggle cmd
+'		oMasterController.cn.PostRequest2(Data.Get("ipon"),"")
+'		guiHelpers.Show_toast2("Toggle Command Sent",1300)
+'		Return
+'	End If
+'	Dim o1 As dlgOnOffCtrl
+'	pObjCurrentDlg1 = o1.Initialize(Data.GetDefault("desc","On / Off"))
+'	o1.Data = Data
+'	o1.Show
+End Sub
 
 
 

@@ -1,0 +1,36 @@
+{
+    "Version": 1.66,
+    "Theme": "Dark Theme",
+    "Items": [
+        {
+            "title": "Description",
+            "type": "Text",
+            "key": "desc",
+            "required": false
+        },
+        {
+            "title": "GCode",
+            "type": "Multiline Text",
+            "key": "gcode",
+            "required": false
+        },
+        {
+            "title": "Active",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "Show on wizard menu",
+            "type": "Boolean",
+            "key": "wmenu",
+            "required": false
+        },
+        {
+            "title": "Show on right menu",
+            "type": "Boolean",
+            "key": "rmenu",
+            "required": false
+        }
+    ]
+}

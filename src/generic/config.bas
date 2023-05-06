@@ -181,6 +181,18 @@ Private Sub LoadCfgs()
 		Next
 	End If
 	
+	'--- dev
+'	For jj = 0 To 7
+'		fileHelpers.SafeKill2(xui.DefaultFolder,jj & gblConst.GCODE_CUSTOM_SETUP_FILE)
+'	Next
+	If File.Exists(xui.DefaultFolder,"0" & gblConst.GCODE_CUSTOM_SETUP_FILE) = False Then
+		Dim oi7 As dlgGCodeCustSetup
+		oi7.Initialize(Null,Null)
+		For jj = 0 To 7
+			oi7.CreateDefaultDataFile(jj & gblConst.GCODE_CUSTOM_SETUP_FILE) '--- generic GCODE commands
+		Next
+	End If
+	
 End Sub
 
 '=========================================================================

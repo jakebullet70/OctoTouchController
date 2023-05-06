@@ -279,15 +279,22 @@ End Sub
 Private Sub BuildFunctionMnu() As Map
 	Dim m As Map : m.Initialize
 	m.Put("Pre-Heat Menu","prh")
-	#if not (klipper)
-	If Main.kvs.GetDefault("g29",False)       Then m.Put("Auto Bed Leveling (G29)","bl") 
-	#end if
+'	#if not (klipper)
+'	If Main.kvs.GetDefault("g29",False)       Then m.Put("Auto Bed Leveling (G29)","bl") 
+'	#end if
 	If config.ShowBedLevel_ManualFLAG 	Then m.Put("Manual Bed Leveling Wizard","blw")
 	If config.ShowFilamentChangeFLAG     Then m.Put("Change Filament Wizard","cf")
 	#if klipper
 	If config.ShowBedLevel_MeshFLAG 	Then m.Put("Mesh Bed Leveling Wizard","mblw")
 	#end if
 	'If config.ShowZ_Offset_WizFLAG 	Then m.Put("Set Z Offset","zo")   TODO 
+	For jj =0 To 7
+		Dim f As String = jj & gblConst.GCODE_CUSTOM_SETUP_FILE
+		Dim da As Map = File.ReadMap(xui.DefaultFolder,f)
+		If da.Get("wmenu").As(Boolean) = True Then
+			m.Put(da.Get("desc"),"fn" & jj)
+		End If
+	Next
 	Return m
 End Sub
 
@@ -295,13 +302,14 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 	
 	'--- callback for Function Menu
 	If value.Length = 0 Then Return
-	Dim msg As String = "Command sent: "
+	Dim msg As String = "Command sent: " 'ignore
 	Dim mb As dlgMsgBox 
 	mb.Initialize(mMainObj.root,"Continue",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip), 200dip,False)
-	Dim Ask As String = "Touch OK to continue"
+	Dim Ask As String = "Touch OK to continue" 'ignore
 	
 	Select Case value
-		
+		Case "fn0","fn1","fn2","fn3","fn4","fn5","fn6","fn7"
+			
 		Case "zo" '--- Z offset
 			#if klipper
 			Dim bm As dlgBedLevelMeshWiz2
@@ -323,16 +331,16 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 			mMainObj.pobjWizards = uu.Initialize(mMainObj.pnlWizards)
 			uu.Show
 			
-		Case "bl" '--- Auto firmware bed level
-			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)
-			If ret = xui.DialogResponse_Cancel Then Return
-			#if klipper
-			''''''''''mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G29"))
-			#else
-			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","G29"))
-			#End If
-			
-			guiHelpers.Show_toast(msg & "Start Bed Leveling",3200)
+'		Case "bl" '--- Auto firmware bed level
+'			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)
+'			If ret = xui.DialogResponse_Cancel Then Return
+'			#if klipper
+'			''''''''''mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G29"))
+'			#else
+'			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","G29"))
+'			#End If
+'			
+'			guiHelpers.Show_toast(msg & "Start Bed Leveling",3200)
 			
 '		Case "cfl" '--- Change filament through firmware
 '			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)

@@ -292,7 +292,7 @@ Private Sub BuildFunctionMnu() As Map
 		Dim f As String = jj & gblConst.GCODE_CUSTOM_SETUP_FILE
 		Dim da As Map = File.ReadMap(xui.DefaultFolder,f)
 		If da.Get("wmenu").As(Boolean) = True Then
-			m.Put(da.Get("desc"),"fn" & jj)
+			m.Put(da.Get("desc"),"f" & jj)
 		End If
 	Next
 	Return m
@@ -308,7 +308,8 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 	Dim Ask As String = "Touch OK to continue" 'ignore
 	
 	Select Case value
-		Case "fn0","fn1","fn2","fn3","fn4","fn5","fn6","fn7"
+		Case "f0","f1","f2","f3","f4","f5","f6","f7"
+			CallSubDelayed2(mMainObj,"RunGCodeOnOff_Menu",value.As(String).Replace("f","") & gblConst.GCODE_CUSTOM_SETUP_FILE)
 			
 		Case "zo" '--- Z offset
 			#if klipper

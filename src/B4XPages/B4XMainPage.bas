@@ -581,22 +581,18 @@ End Sub
 
 '--- options plugin sub menu
 Private Sub PopupPluginOptionMenu
-	
-	Dim Const gc As String = "Generic HTTP Control"
+
+	Dim o As guiMsgs : 	o.Initialize
+	Dim popUpMemuItems As Map = o.BuildPluginOptionsMenu
 	#if klipper
-	Dim popUpMemuItems As Map = CreateMap("Power Supply HTTP Control":"psu", _
-																	gc & " 1":"1",gc & " 2":"2",gc & " 3":"3",gc & " 4":"4")
 	Dim title As Object = "  External Control Menu"
 	#else
-	Dim popUpMemuItems As Map = CreateMap("PSU Control":"psu","ZLED Setup":"led","ws281x Setup":"ws2", _
-																			gc & " 1":"1",gc & " 2":"2",gc & " 3":"3",gc & " 4":"4")
 	Dim title As Object = "  Plugins Menu"
 	#End If
 	
-	
-	Dim cs As CSBuilder : cs.Initialize
-	Dim title As Object = cs.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE8C1)). _
-	        	 					   Typeface(Typeface.DEFAULT).Append(title).PopAll
+	Dim cs As CSBuilder 
+	Dim title As Object = cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip). _
+										Append(Chr(0xE8C1)).Typeface(Typeface.DEFAULT).Append(title).PopAll
 	Dim o1 As dlgListbox
 	pObjCurrentDlg1 = o1.Initialize(title,Me,"PluginsMenu_Event",pObjCurrentDlg1)
 	o1.IsMenu = True
@@ -1052,14 +1048,14 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 			pObjCurrentDlg1 = o1.Initialize(Me)
 			o1.Show
 			#else
-			RunHTTPOnOffMenu(gblConst.PSU_KLIPPER_SETUP_FILE)
+			RunHTTPOnOff_Menu(gblConst.PSU_KLIPPER_SETUP_FILE)
 			#end if
 			
 		Case "1","2","3","4" '--- misc HTTP commands
-			RunHTTPOnOffMenu(Value.As(String) & gblConst.HTTP_ONOFF_SETUP_FILE)
+			RunHTTPOnOff_Menu(Value.As(String) & gblConst.HTTP_ONOFF_SETUP_FILE)
 			
 		Case "g0","g1","g2","g3","g4","g5","g6","g7" '--- misc GCode commands
-			RunGCodeOnOffMenu(Value.As(String).Replace("g","") & gblConst.GCODE_CUSTOM_SETUP_FILE)
+			RunGCodeOnOff_Menu(Value.As(String).Replace("g","") & gblConst.GCODE_CUSTOM_SETUP_FILE)
 			
 		#if not (klipper)
 		Case "zled" '--- ZLED
@@ -1087,7 +1083,7 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 End Sub
 #end region
 
-Private Sub RunHTTPOnOffMenu(fname As String)
+Private Sub RunHTTPOnOff_Menu(fname As String)
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,fname)
 	If  Data.GetDefault("tgl",False).As(Boolean) Then '--- toggle cmd
 		oMasterController.cn.PostRequest2(Data.Get("ipon"),"")
@@ -1101,18 +1097,64 @@ Private Sub RunHTTPOnOffMenu(fname As String)
 End Sub
 
 
-Private Sub RunGCodeOnOffMenu(fname As String)
-'	Dim Data As Map = File.ReadMap(xui.DefaultFolder,fname)
-'	If  Data.GetDefault("tgl",False).As(Boolean) Then '--- toggle cmd
-'		oMasterController.cn.PostRequest2(Data.Get("ipon"),"")
-'		guiHelpers.Show_toast2("Toggle Command Sent",1300)
-'		Return
-'	End If
-'	Dim o1 As dlgOnOffCtrl
-'	pObjCurrentDlg1 = o1.Initialize(Data.GetDefault("desc","On / Off"))
-'	o1.Data = Data
-'	o1.Show
+Public Sub RunGCodeOnOff_Menu(fname As String)
+	
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,fname)
+	Dim gc As String = Data.GetDefault("gcode","")
+	Dim desc As String = Data.GetDefault("desc","")
+	
+	If gc.Trim = "" Then
+		guiHelpers.Show_toast2("No GCODE found",2600)
+		Return
+	End If
+	
+	If Data.GetDefault("prompt",False).As(Boolean) = True Then
+		Dim mb2 As dlgMsgBox2 
+		Dim w As Float = 400dip
+		If guiHelpers.gIsLandScape = False Then w = 90%x
+		mb2.Initialize(B4XPages.MainPage.Root,"Question", w, 150dip,False)
+		mb2.NewTextSize = 24
+		Wait For (mb2.Show("Touch RUN to start:" & CRLF & desc,gblConst.MB_ICON_QUESTION, "RUN","","CANCEL")) Complete (res As Int)
+		If res = xui.DialogResponse_Cancel Then Return
+	End If
+	
+	guiHelpers.Show_toast2("Runnning..." & CRLF & desc,3500)
+	SendMGcode(gc)
+	Wait For SendMGcode
+	
 End Sub
+
+
+Private Sub SendMGcode(code As String)
+	If code.Trim = "" Then Return
+	'  TODO ----  this function is like in 3 places - needs to be put in 1
+'	#if debug
+	'Log(code)
+'	Return
+'	#End If
+	
+	If code.Contains(CRLF) Then
+		Dim cd() As String = Regex.Split(CRLF, code)
+		For Each s As String In cd
+			#if klipper
+			B4XPages.MainPage.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",s))
+			#else
+			B4XPages.MainPage.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",s))
+			#End If
+			Sleep(50)
+		Next
+	Else
+		#if klipper
+		B4XPages.MainPage.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",code))
+		#else
+		B4XPages.MainPage.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",code))
+		#end if
+	End If
+	
+	Return
+	
+End Sub
+
 
 
 

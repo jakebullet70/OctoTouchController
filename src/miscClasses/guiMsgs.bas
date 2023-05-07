@@ -173,10 +173,12 @@ Public Sub BuildFunctionSetupMenu() As Map
 	Dim data As Map, fname As String
 	For xx = 0 To 7
 		fname = xx & gblConst.GCODE_CUSTOM_SETUP_FILE
-		If File.Exists(xui.DefaultFolder,fname) = True Then
+		If File.Exists(xui.DefaultFolder,fname) Then
 			data = File.ReadMap(xui.DefaultFolder,fname)
 			txt = " " & data.Get("desc")
-			If data.GetDefault("rmenu",False) = True Or data.GetDefault("wmenu",False) = True  Then
+			Dim rOn As Boolean = data.GetDefault("rmenu",False)
+			Dim wOn As Boolean = data.GetDefault("wmenu",False)
+			If  rOn Or wOn  Then
 				po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
 											Typeface(Typeface.DEFAULT).Append(txt).PopAll,"g" & xx)
 			Else
@@ -200,3 +202,20 @@ End Sub
 
 
 
+Public Sub BuildPluginOptionsMenu() As Map
+	#if klipper
+	Dim popUpMemuItems As Map = CreateMap("Power Supply HTTP Control":"psu")
+	#else
+	Dim popUpMemuItems As Map = CreateMap("PSU Control":"psu","ZLED Setup":"led","ws281x Setup":"ws2")
+	#End If
+	
+	For xx = 1 To 4
+		Dim fname As String = xx & gblConst.HTTP_ONOFF_SETUP_FILE
+		Dim Data As Map = File.ReadMap(xui.DefaultFolder,fname)
+		Dim desc As String = Data.GetDefault("desc","Generic HTTP Control " & xx)
+		popUpMemuItems.Put(desc,xx)
+	Next
+	
+	Return popUpMemuItems
+	
+End Sub

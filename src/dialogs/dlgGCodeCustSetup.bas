@@ -37,7 +37,7 @@ Public Sub CreateDefaultDataFile(dataFileName As String)
 	fileHelpers.SafeKill(dataFileName)	
 	Dim descTxt As String = "Generic GCode Control: " & dataFileName.SubString2(0,1)
 	File.WriteMap(xui.DefaultFolder,dataFileName, _
-					CreateMap("desc": descTxt, _
+					CreateMap("desc": descTxt, "prompt":"false", _
 										"gcode": "",  "wmenu": "false",  "rmenu":"false"))
 
 End Sub

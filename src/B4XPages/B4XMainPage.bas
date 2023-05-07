@@ -556,8 +556,7 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 			
 		Case "fl" '--- filament control
 			Dim oB As dlgFilamentSetup
-			oB.Initialize
-			oB.Show
+			oB.Initialize : oB.Show
 			
 		Case "bl" '--- bed level control
 			If oc.PrinterCustomBoundingBox = True Then
@@ -565,8 +564,13 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 				Return
 			End If
 			Dim o1 As dlgBedLevelSetup
-			o1.Initialize
-			o1.Show
+			o1.Initialize : o1.Show
+			
+		Case "g0","g1","g2","g3","g4","g5","g6","g7"
+			Dim v1 As String = value.Replace("g","")
+			Dim o23 As dlgGCodeCustSetup
+			pObjCurrentDlg2 = o23.Initialize(Me,"Rebuild_RightMnu")
+			o23.Show("GCode Control Config - " & v1,v1 & gblConst.GCODE_CUSTOM_SETUP_FILE)
 			
 	End Select
 	
@@ -614,7 +618,7 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 		Case "psu"  '--- sonoff / PSU control setup		
 			#if klipper
 			Dim oA1 As dlgIpOnOffSetup
-			pObjCurrentDlg2 = oA1.Initialize(Me,"ExtCtrl_BtnEdit")
+			pObjCurrentDlg2 = oA1.Initialize(Me,"Rebuild_RightMnu")
 			oA1.Show("Printer Power Config",gblConst.PSU_KLIPPER_SETUP_FILE)
 			#else
 			Dim oA As dlgOctoPsuSetup
@@ -624,7 +628,7 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			
 		Case "1","2","3","4"
 			Dim oA1 As dlgIpOnOffSetup
-			pObjCurrentDlg2 = oA1.Initialize(Me,"ExtCtrl_BtnEdit")
+			pObjCurrentDlg2 = oA1.Initialize(Me,"Rebuild_RightMnu")
 			oA1.Show("HTTP Control Config - " & value,value & gblConst.HTTP_ONOFF_SETUP_FILE)
 				
 		#if not (klipper)	
@@ -638,7 +642,7 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			pObjCurrentDlg2 = o1.Initialize("ws281x Config",gblConst.WS281_OPTIONS_FILE)
 			o1.Show
 		#end if
-		
+
 	End Select
 		
 End Sub
@@ -939,7 +943,6 @@ Private Sub Build_RightSideMenu
 	clvDrawer.PressedColor = clrTheme.BackgroundHeader
 	clvDrawer.DefaultTextColor = clrTheme.txtNormal
 	
-	
 	clvDrawer.Clear
 	Dim size As Float = IIf(guiHelpers.gIsLandScape,20,22)
 	Dim txt As Object 
@@ -962,7 +965,7 @@ Private Sub Build_RightSideMenu
 		If da.GetDefault("rmenu",False).As(Boolean) = True Then
 			txt = da.Get("desc")
 			If strHelpers.IsNullOrEmpty(txt) Then txt = "GCode " & jj & "Menu"
-			clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,"f" & jj)
+			clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,"g" & jj)
 		End If
 	Next
 	
@@ -1006,7 +1009,7 @@ Private Sub Build_RightSideMenu
 		
 End Sub
 
-Private Sub ExtCtrl_BtnEdit(editdata As Map)
+Private Sub Rebuild_RightMnu(editdata As Map)
 	Build_RightSideMenu
 End Sub
 
@@ -1055,8 +1058,8 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 		Case "1","2","3","4" '--- misc HTTP commands
 			RunHTTPOnOffMenu(Value.As(String) & gblConst.HTTP_ONOFF_SETUP_FILE)
 			
-		Case "f0","f1","f2","f3","f4","f5","f6","f7" '--- misc GCode commands
-			RunGCodeOnOffMenu(Value.As(String).Replace("f","") & gblConst.GCODE_CUSTOM_SETUP_FILE)
+		Case "g0","g1","g2","g3","g4","g5","g6","g7" '--- misc GCode commands
+			RunGCodeOnOffMenu(Value.As(String).Replace("g","") & gblConst.GCODE_CUSTOM_SETUP_FILE)
 			
 		#if not (klipper)
 		Case "zled" '--- ZLED

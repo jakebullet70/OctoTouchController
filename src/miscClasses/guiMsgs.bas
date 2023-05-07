@@ -13,6 +13,7 @@ Sub Class_Globals
 	Private Const mModule As String = "guiMsgs" 'ignore
 	'--- just seldom used strings in a class
 	Dim Msg As StringBuilder 
+	Dim xui As XUI
 End Sub
 
 Public Sub Initialize
@@ -81,14 +82,13 @@ End Sub
 Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	
 	Dim cs As CSBuilder 
-	Dim m As Map : 	m.Initialize
+	Dim m As Map : m.Initialize
 	
 	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE30B)). _
 				 Typeface(Typeface.DEFAULT).Append("   General Settings").PopAll,"gn")				 
 	
 	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE859)). _
 				 Typeface(Typeface.DEFAULT).Append("   Power Settings").PopAll,"pw")
-				 	
 
 	#if klipper
 	'------------------------------  TODO !!!!!!!!!!!!!!!!!
@@ -118,7 +118,6 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	
 	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
 				 Typeface(Typeface.DEFAULT).Append("   Internal Functions Menu").PopAll,"fn")
-	cs.Initialize
 		
 	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3B7)). _
 				 Typeface(Typeface.DEFAULT).Append("   Color Themes").PopAll,"thm1")				 
@@ -143,6 +142,7 @@ End Sub
 
 Public Sub BuildFunctionSetupMenu() As Map
 	
+	Dim txt As String
 	Dim cs As CSBuilder
 	Dim po As Map : po.Initialize
 	
@@ -154,19 +154,36 @@ Public Sub BuildFunctionSetupMenu() As Map
 '		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append("G29 Auto Bed Level").PopAll,"g29")
 '	End If
 '	#end if
-	
+
+	txt = " Change Filament Wizard"
 	If config.ShowFilamentChangeFLAG  Then
 		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
-										Typeface(Typeface.DEFAULT).Append(" Change Filament Wizard").PopAll,"fl")
+										Typeface(Typeface.DEFAULT).Append(txt).PopAll,"fl")
 	Else
-		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append("Change Filament Wizard").PopAll,"fl")
+		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"fl")
 	End If
+	txt = " Manual Bed Leveling Wizard"
 	If config.ShowBedLevel_ManualFLAG  Then
 		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
-										Typeface(Typeface.DEFAULT).Append(" Manual Bed Leveling Wizard").PopAll,"bl")
+										Typeface(Typeface.DEFAULT).Append(txt).PopAll,"bl")
 	Else
-		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append("Manual Bed Leveling Wizard").PopAll,"bl")
+		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"bl")
 	End If
+	
+	Dim data As Map, fname As String
+	For xx = 0 To 7
+		fname = xx & gblConst.GCODE_CUSTOM_SETUP_FILE
+		If File.Exists(xui.DefaultFolder,fname) = True Then
+			data = File.ReadMap(xui.DefaultFolder,fname)
+			txt = " " & data.Get("desc")
+			If data.GetDefault("rmenu",False) = True Or data.GetDefault("wmenu",False) = True  Then
+				po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
+											Typeface(Typeface.DEFAULT).Append(txt).PopAll,"g" & xx)
+			Else
+				po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"g" & xx)
+			End If
+		End If
+	Next
 	
 	Return po
 End Sub
@@ -180,3 +197,6 @@ End Sub
 '	Msg.Append("Test it first in your local browser to make sure it works.").Append(CRLF)
 '	Return Msg.ToString
 'End Sub
+
+
+

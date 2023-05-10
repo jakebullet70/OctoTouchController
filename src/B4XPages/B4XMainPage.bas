@@ -227,19 +227,6 @@ Private Sub BuildGUI
 	guiHelpers.HidePageParentObjs(Array As B4XView(pnlMenu,pnlFiles,pnlMovement,pnlWizards))
 	guiHelpers.SetTextColor(Array As B4XView(lblStatus,btnSliderMenu,btnPageAction))
 	
-	
-'	If guiHelpers.gIsLandScape = False Then
-'		Select Case True
-'			Case guiHelpers.gScreenSizeAprox > 6.5 And guiHelpers.gScreenSizeAprox < 9.5
-'				lblStatus.TextSize = lblStatus.TextSize + 4
-'				'lblTemp.TextSize   = lblTemp.TextSize + 4
-'			Case guiHelpers.gScreenSizeAprox > 9.5
-'				lblStatus.TextSize = lblStatus.TextSize + 2
-'				'lblTemp.TextSize   = lblTemp.TextSize + 4
-'		End Select
-'	End If
-	
-
 	guiHelpers.SkinButton_Pugin(Array As Button(btnSliderMenu, btnPageAction))
 	Dim bs As Float = 35
 	If guiHelpers.gIsLandScape Then bs = 24
@@ -881,8 +868,8 @@ Public Sub ShowPreHeatMenu_All2(titleTxt As String)
 		Return
 	End If
 	Dim ht As dlgListbox
-	Dim cs As CSBuilder : cs.Initialize
-	Dim title As Object = cs.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF2CA)). _
+	Dim cs As CSBuilder 
+	Dim title As Object = cs.Initialize.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF2CA)). _
 		Typeface(Typeface.DEFAULT).Append("  " & titleTxt).PopAll
 		
 	pObjPreHeatDlg1 = ht.Initialize(title,Me,"TempChange_Presets",pObjPreHeatDlg1)
@@ -928,9 +915,9 @@ Private Sub Build_RightSideMenu
 	Log("Build_RightSideMenu")
 	#if not (klipper )
 	'--- hide the klipper crap!
-	clvDrawer.GetBase.Top = 0
-	pnlBtnsDrawer.Visible = False
-	pnlLineBreakDrawer.Visible = False
+	'clvDrawer.GetBase.Top = 0
+	'pnlBtnsDrawer.Visible = False
+	'pnlLineBreakDrawer.Visible = False
 	#else
 	
 	#End If
@@ -1083,6 +1070,8 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 End Sub
 #end region
 
+#region "FUCTIONS / METHODS FRM MENUS"
+
 Private Sub RunHTTPOnOff_Menu(fname As String)
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,fname)
 	If  Data.GetDefault("tgl",False).As(Boolean) Then '--- toggle cmd
@@ -1154,7 +1143,7 @@ Private Sub SendMGcode(code As String)
 	Return
 	
 End Sub
-
+#end region
 
 
 

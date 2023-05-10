@@ -227,24 +227,6 @@ Private Sub mnuCardImg_Click
 End Sub
 
 
-#Region "BRIGHTNESS BTN SUPPORT"
-Private Sub DoBrightnessDlg
-	
-	Dim o1 As dlgBrightness
-	mMainObj.pObjCurrentDlg1 = o1.Initialize("Screen Brightness",Me,"Brightness_Change")
-	o1.Show(IIf(powerHelpers.pScreenBrightness < 0.05,0.1,powerHelpers.pScreenBrightness) * 100)
-	
-End Sub
-Private Sub Brightness_Change(value As Float)
-	
-	'--- callback for btnBrightness_Click
-	Dim v As Float = value / 100
-	powerHelpers.SetScreenBrightnessAndSave(v,True) 
-	powerHelpers.pScreenBrightness = v
-	
-End Sub
-
-#end region
 
 '---  small action buttons on main menu
 Private Sub btnSubBtnAction_Click
@@ -254,12 +236,12 @@ Private Sub btnSubBtnAction_Click
 	
 	Select Case o.Tag
 					
-		Case "br" '--- brightness
-			DoBrightnessDlg
+		'Case "br" '--- brightness
+		'	DoBrightnessDlg
 			
-		Case "soff" '--- screen off
-			CallSub2(Main,"TurnOnOff_ScreenTmr",False)
-			fnc.BlankScreen
+'		Case "soff" '--- screen off
+'			CallSub2(Main,"TurnOnOff_ScreenTmr",False)
+'			fnc.BlankScreen
 			
 		Case "heat" '--- pre-heat
 			If oc.isConnected = False Then

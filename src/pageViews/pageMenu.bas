@@ -16,12 +16,14 @@ Sub Class_Globals
 	Private mCallBackEvent As String
 	Private mMainObj As B4XMainPage 'ignore
 
-	Private btnSubBrightness As Button
+	'Private btnSubBrightness As Button
 	Private btnSubHeater As Button
 	Private btnSubPlugin1 As Button
 	Private btnSubPlugin2 As Button
 	Private btnSubPlugin3 As Button
-	Private btnSubScrnOff As Button
+	Private btnSubPlugin4 As Button
+	Private btnSubPlugin5 As Button
+	'Private btnSubScrnOff As Button
 	Private pnlInfo As Panel
 	Private pnlMainMenu As Panel
 	Private pnlMenuBtns As Panel
@@ -37,6 +39,7 @@ Sub Class_Globals
 	Private lblActualTempBedV, lblActualTempToolV As Label ' <--- pointers to card objects
 	
 	Private pnlMenuUpperBL As Panel
+
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String) 
@@ -71,8 +74,8 @@ Private Sub BuildGUI
 		lblBedTargetV.TextSize = 20
 	End If
 		
-	guiHelpers.SetVisible(Array As B4XView(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3),False)
-	guiHelpers.SkinButton_Pugin(Array As Button(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3,btnSubScrnOff,btnSubBrightness,btnSubHeater))
+	guiHelpers.SetVisible(Array As B4XView(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3,btnSubPlugin4,btnSubPlugin5),False)
+	guiHelpers.SkinButton_Pugin(Array As Button(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3,btnSubPlugin4,btnSubPlugin5,btnSubHeater))
 	pnlMenuLowerBLine.Color = clrTheme.txtAccent
 	pnlMenuUpperBL.Color = clrTheme.txtAccent
 	pnlMenuLowerBLine.Visible = True '--- turned off in designer

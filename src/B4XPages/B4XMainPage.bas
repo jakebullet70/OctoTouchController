@@ -913,14 +913,6 @@ End Sub
 
 Private Sub Build_RightSideMenu
 	Log("Build_RightSideMenu")
-	#if not (klipper )
-	'--- hide the klipper crap!
-	'clvDrawer.GetBase.Top = 0
-	'pnlBtnsDrawer.Visible = False
-	'pnlLineBreakDrawer.Visible = False
-	#else
-	
-	#End If
 	
 	clvDrawer.DefaultTextBackgroundColor = clrTheme.Background
 	clvDrawer.PressedColor = clrTheme.BackgroundHeader

@@ -102,7 +102,7 @@ Public Sub Show
 	
 	Dim RS As ResumableSub = mWizDlg.ShowDialog(prefSavedData, "", "")
 	prefHelper.dlgHelper.NoCloseOn2ndDialog
-	'prefHelper.dlgHelper.ThemeInputDialogBtnsResize
+	prefHelper.dlgHelper.ThemeInputDialogBtnsResize
 	
 	BuildWizBtns
 
@@ -437,9 +437,9 @@ End Sub
 '
 'End Sub
 
-'Private Sub dlgGeneral_BeforeDialogDisplayed (Template As Object)
-'	prefHelper.SkinDialog(Template)
-'End Sub
+Private Sub dlgGeneral_BeforeDialogDisplayed (Template As Object)
+	prefHelper.SkinDialog(Template)
+End Sub
 
 Private Sub btnClose_Click
 	Close_Me

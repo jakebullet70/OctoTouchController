@@ -395,8 +395,8 @@ Private Sub BuildHelpTextHighlight(txt2hiLight As String, maintxt As String) As 
 	Dim m1 As String = Regex.Split("!P!",maintxt)(0)
 	Dim m2 As String = Regex.Split("!P!",maintxt)(1)
 	
-	Dim cs As CSBuilder : cs.Initialize
-	Return cs.Color(clrTheme.txtAccent).Append(m1).Color(clrTheme.txtNormal).Append(txt2hiLight). _
+	Dim cs As CSBuilder 
+	Return cs.Initialize.Color(clrTheme.txtAccent).Append(m1).Color(clrTheme.txtNormal).Append(txt2hiLight). _
 					Color(clrTheme.txtAccent).Append(m2).PopAll
 	
 End Sub

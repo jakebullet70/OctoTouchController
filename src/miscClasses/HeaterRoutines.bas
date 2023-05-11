@@ -88,7 +88,7 @@ Private Sub HeatTempChange_Bed(value As String, tag As String)
 	#if klipper
 	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M140 S" & value))
 	#else
-	mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL0!",value).Replace("!VAL1!",0))		
+	mMainObj.oMasterController.CN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",value.As(Int)))
 	#End If
 
 	guiHelpers.Show_toast("Bed Temperature Change",1400)

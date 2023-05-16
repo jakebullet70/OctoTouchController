@@ -40,8 +40,9 @@ File42=viewPsuSetupSonOff.bal
 File43=viewRoundSlider.bal
 File44=viewSlidingWindow.bal
 File45=wizbedlevel.json
-File46=wizManualBedLevel.bal
-File47=wizManualMeshBedLevel.bal
+File46=wizFilamentCtrl.bal
+File47=wizManualBedLevel.bal
+File48=wizManualMeshBedLevel.bal
 File5=dlggcodebuilder.json
 File6=dlggeneral.json
 File7=dlgLogging.json
@@ -87,8 +88,9 @@ FileGroup42=DIALOG_CUSTOM_VIEWS
 FileGroup43=DIALOG_CUSTOM_VIEWS
 FileGroup44=VIEWS
 FileGroup45=JSON_CONFIGS
-FileGroup46=DIALOG_CUSTOM_VIEWS
+FileGroup46=Default Group
 FileGroup47=DIALOG_CUSTOM_VIEWS
+FileGroup48=DIALOG_CUSTOM_VIEWS
 FileGroup5=JSON_CONFIGS
 FileGroup6=JSON_CONFIGS
 FileGroup7=JSON_CONFIGS
@@ -201,7 +203,7 @@ Module80=|relative|src\helperClasses\strHelpers
 Module81=|relative|src\miscClasses\SysInfo
 Module82=|relative|src\miscClasses\WildCardFilesList
 Module9=|relative|src\generic\config
-NumberOfFiles=47
+NumberOfFiles=48
 NumberOfLibraries=23
 NumberOfModules=82
 Version=11.8
@@ -215,8 +217,8 @@ Version=11.8
  	#SignKeyPassword: !!yt43k98!!  
 	#Else
 	#ApplicationLabel: OctoTC
-	#VersionCode: 22
-	#VersionName: 1.3.0
+	#VersionCode: 23
+	#VersionName: 1.4.0
 	#SignKeyFile: ..\keystore\octo\release.keystore
  	#SignKeyPassword: yt43k98!  
 	#end if

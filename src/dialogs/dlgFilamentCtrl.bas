@@ -95,8 +95,8 @@ Public Sub Show
 		p.SetLayoutAnimated(0, 0, 0, _
 					IIf(guiHelpers.gScreenSizeAprox < 6,460dip,560dip),IIf(guiHelpers.gScreenSizeAprox < 6,224dip,280dip))
 	Else
-		p.SetLayoutAnimated(0, 0, 0, _
-					IIf(guiHelpers.gScreenSizeAprox < 5,guiHelpers.gWidth-20dip,560dip),IIf(guiHelpers.gScreenSizeAprox < 5,280dip,320dip))
+		p.SetLayoutAnimated(0, 0, 0, 90%x, _
+							IIf(guiHelpers.gScreenSizeAprox < 5,280dip,320dip))
 	End If
 	'---
 		
@@ -124,6 +124,7 @@ Public Sub Show
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	mTmrOff = True '--- if temp tmr is running will turn it off
 	mMainObj.pObjCurrentDlg2 = Null
+	mMainObj.pObjCurrentDlg1 = Null
 	
 End Sub
 

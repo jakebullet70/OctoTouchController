@@ -139,7 +139,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 End Sub
 
 Private Sub B4XPage_CloseRequest As ResumableSub
-	
+	logMe.LogDebug2("B4XPage_CloseRequest",mModule)
 	'--- catch the android BACK button
 	'--- catch the android BACK button
 	
@@ -151,6 +151,7 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	If pObjPreHeatDlg1 <> Null And SubExists(pObjPreHeatDlg1,"Close_Me") Then
 		CallSubDelayed(pObjPreHeatDlg1,"Close_Me") 'ignore
 		pObjPreHeatDlg1 = Null
+		If oPageCurrent = oPageMovement Then pObjCurrentDlg1 = Null
 		Return False '--- cancel close request
 	End If
 		

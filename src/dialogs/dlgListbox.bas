@@ -29,7 +29,7 @@ End Sub
 
 Public Sub Close_Me '--- class method, called from android back btn
 	mDialog.Close(xui.DialogResponse_Cancel)
-	CallSubDelayed2(Main,"SetObjNull",backBtnRef)
+	CallSubDelayed2(Main,"SetObj_Null",backBtnRef)
 End Sub
 
 Public Sub setTag(v As Object)
@@ -89,7 +89,8 @@ Public Sub Show(height As Float, width As Float, data As Map)
 		CallSub3(mCallback,mEventName,"","")
 	End If
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
-	CallSubDelayed2(Main,"SetObjNull",backBtnRef)
+	CallSubDelayed2(Main,"SetObj_Null",backBtnRef)
+	
 	
 End Sub
 

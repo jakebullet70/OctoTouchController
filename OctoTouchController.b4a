@@ -218,7 +218,7 @@ Version=11.8
 	#Else
 	#ApplicationLabel: OctoTC
 	#VersionCode: 23
-	#VersionName: 1.4.0
+	#VersionName: 2.0.0
 	#SignKeyFile: ..\keystore\octo\release.keystore
  	#SignKeyPassword: yt43k98!  
 	#end if
@@ -715,6 +715,6 @@ Public Sub InitLog_Cleanup
 End Sub
 #end region
 
-Public Sub SetObjNull(obj As Object)
+Public Sub SetObj_Null(obj As Object)
 	obj = Null
 End Sub

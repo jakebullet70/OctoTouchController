@@ -415,5 +415,5 @@ Private Sub btnJogMoveMM_Click
 	MoveJogSize = o.Text.Replace("mm","")
 	lblMovePopup.Text = o.Text
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
-	fp.Close
+	fp.Close '--- close floating panel
 End Sub

@@ -10,34 +10,40 @@ Version=11.5
 #End Region
 Sub Process_Globals
 	
+	Private DEBUG_TEST_INSTALL As Boolean = False
+	
 	Public Const DATA_SAVED As String = "Data  Saved"
 	Public Const API_ANDROID_4_0 As Int = 14
 	Public Const API_ANDROID_4_4 As Int = 19
-	
 	Public Const DEGREE_SYMBOL As String = "°" 
-		
-	#if klipper
-	Public const APP_TITLE As String = "MoonrakerTC ™"
-	Private Const WEB_ADDR As String = "http://sadlogic.com/moonrakertouchcontroller/"
-	#if debug
-		Public Const APK_NAME As String         = WEB_ADDR & "MoonrakerTouchController.apk"
-		Public Const APK_FILE_INFO As String = WEB_ADDR & "MoonrakerTouchController.txt"
-	#else
-		Public Const APK_NAME As String         = WEB_ADDR & "MoonrakerTouchController_testing.apk"
-		Public Const APK_FILE_INFO As String = WEB_ADDR & "MoonrakerTouchController_testing.txt"
-	#End If
-	#else
-	Public const APP_TITLE As String = "OctoTC ™"
-	Private Const WEB_ADDR As String = "http://sadlogic.com/octotouchcontroller/"
-	#if debug
-		Public Const APK_NAME As String         = WEB_ADDR & "OctoTouchController_testing.apk"
-		Public Const APK_FILE_INFO As String = WEB_ADDR & "OctoTouchController_testing.txt"
-	#else
-		Public Const APK_NAME As String         = WEB_ADDR & "OctoTouchController.apk"
-		Public Const APK_FILE_INFO As String = WEB_ADDR & "OctoTouchController.txt"
-	#End If
 	
+	Public APK_FILE_INFO, APK_NAME As String
+	
+	'===============================================================
+	#if klipper
+	Public Const APP_TITLE As String = "MoonrakerTC ™"
+	Private Const WEB_ADDR As String = "http://sadlogic.com/moonrakertouchcontroller/"
+	If DEBUG_TEST_INSTALL Then
+		APK_NAME         = WEB_ADDR & "MoonrakerTouchController.apk"
+		APK_FILE_INFO = WEB_ADDR & "MoonrakerTouchController.txt"
+	Else
+		APK_NAME         = WEB_ADDR & "MoonrakerTouchController_testing.apk"
+		APK_FILE_INFO = WEB_ADDR & "MoonrakerTouchController_testing.txt"
+	End If
+	
+	#else
+	
+	Public Const APP_TITLE As String = "OctoTC ™"
+	Private Const WEB_ADDR As String = "http://sadlogic.com/octotouchcontroller/"
+	If DEBUG_TEST_INSTALL Then
+		APK_NAME         = WEB_ADDR & "OctoTouchController_testing.apk"
+		APK_FILE_INFO = WEB_ADDR & "OctoTouchController_testing.txt"
+	Else
+		APK_NAME         = WEB_ADDR & "OctoTouchController.apk"
+		APK_FILE_INFO = WEB_ADDR & "OctoTouchController.txt"
+	End If
 	#End If
+	'===============================================================
 
 	
 	Public Const NO_THUMBNAIL As String = "no_thumbnail.jpg"

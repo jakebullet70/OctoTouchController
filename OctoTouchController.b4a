@@ -281,6 +281,7 @@ Sub Process_Globals
 End Sub
 
 Sub Globals
+	'Public DEBUG_TEST_INSTALL As Boolean = True  ---> See gblConst
 	Private Const mModule As String = "Main"
 	Private ph As Phone	
 	Private xui As XUI

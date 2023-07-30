@@ -14,6 +14,7 @@ Sub Process_Globals
 	Public Const API_ANDROID_4_4 As Int = 19
 	
 	Public Const DEGREE_SYMBOL As String = "°" 
+	Public Const THUMBNAIL_LOADING As String = "Getting Thumbnail..."
 		
 	#if klipper
 	Public const APP_TITLE As String = "MoonrakerTC ™"

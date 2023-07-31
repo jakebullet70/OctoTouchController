@@ -48,7 +48,7 @@ ws281z LED			https://plugins.octoprint.org/plugins/ws281x_led_status/
 
 ### Project Status
 Initialze release Aug/26/2022  
-Latest release V1.3.0: Mar/16/2023  
+Latest release V1.3.1: Jul/30/2023  
 
 ### Installing  
 See https://github.com/jakebullet70/OctoTouchController/wiki/Installing  

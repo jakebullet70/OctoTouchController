@@ -6,7 +6,8 @@ Taken from B4A V11.2 ----> (c)Anywhere Software
 
 I did this.
 
-Copy these original files from the 'internal' libs folder to a backup folder
+Copy these original files from the 'internal' libs folder to a backup folder and then delete 
+them from the 'internal' libs folder
 OkHttp.jar
 OkHttp.xml
 okhttp-4.9.0.jar

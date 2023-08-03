@@ -217,7 +217,7 @@ Version=11.8
  	#SignKeyPassword: !!yt43k98!!  
 	#Else
 	#ApplicationLabel: OctoTC
-	#VersionCode: 23
+	#VersionCode: 50
 	#VersionName: 2.0.0
 	#SignKeyFile: ..\keystore\octo\release.keystore
  	#SignKeyPassword: yt43k98!  
@@ -285,7 +285,7 @@ Sub Globals
 	Private Const mModule As String = "Main"
 	Private ph As Phone	
 	Private xui As XUI
-	Private FirstRun As Boolean
+	'Private FirstRun As Boolean
 End Sub
 
 
@@ -294,7 +294,7 @@ End Sub
 Sub Activity_Create(FirstTime As Boolean) 'ignore
 	
 	If FirstTime Then
-		FirstRun = FirstTime '--- am I using this?
+		'FirstRun = FirstTime '--- am I using this?
 		Log("Activity_Create - FirstTime = True")
 		tmrTimerCallSub.Initialize
 		kvs.Initialize(xui.DefaultFolder, "kvs.db3")
@@ -304,7 +304,7 @@ Sub Activity_Create(FirstTime As Boolean) 'ignore
 		#else
 		tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrSplash_Tick",3500)   '--- just a splash screen
 		#End If
-		FirstRun = False
+		'FirstRun = False
 	Else
 		Log("Activity_Create - FirstTime = False")
 	End If

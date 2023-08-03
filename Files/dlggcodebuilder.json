@@ -27,7 +27,7 @@
             "required": false
         },
         {
-            "title": "Show on wizard menu",
+            "title": "Show on movement wizard menu",
             "type": "Boolean",
             "key": "wmenu",
             "required": false

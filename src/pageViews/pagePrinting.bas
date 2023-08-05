@@ -349,15 +349,17 @@ End Sub
 
 Public Sub LoadThumbNail
 	
-	Dim Const THUMBNAIL_ISSUE As String = "Getting Thumbnail..."
 	If oc.JobFileName = "" Then Return
 	#if klipper
 	If oc.isConnected = False Then Return
+	
 	#End If
 		
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized = False Then
-		'--- sometimes happens on 1st startup
-		guiHelpers.Show_toast(THUMBNAIL_ISSUE,1500)
+		'--- sometimes happens on 1st startup on the main menu page, why? no idea
+		If mMainObj.oPageCurrent = mMainObj.oPagePrinting Then
+			guiHelpers.Show_toast(gblConst.THUMBNAIL_LOADING,1500)
+		End If
 		Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"LoadThumbNail",6200)
 		Return
 	End If
@@ -372,7 +374,12 @@ Public Sub LoadThumbNail
 		If currentFileInfo = Null Then 
 			CallSubDelayed(mMainObj.oMasterController, "GetAllOctoFilesInfo")
 			Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"LoadThumbNail",3000)
-			guiHelpers.Show_toast(THUMBNAIL_ISSUE,1500)
+			
+			'--- sometimes happens on 1st startup on the main menu page, why? no idea
+			If mMainObj.oPageCurrent = mMainObj.oPagePrinting Then
+				guiHelpers.Show_toast(gblConst.THUMBNAIL_LOADING,1500)
+			End If
+			
 		End If
 		ivPreviewLG.Load(File.DirAssets,gblConst.NO_THUMBNAIL)
 		Return
@@ -381,8 +388,13 @@ Public Sub LoadThumbNail
 	Try
 		'--- Same code as in pageFiles so...   TODO, make method and share code
 		If File.Exists(xui.DefaultFolder,currentFileInfo.myThumbnail_filename_disk) = False Then
-	
-			guiHelpers.Show_toast("Getting Thumbnail",1000)
+			
+			If mMainObj.oPageCurrent = mMainObj.oPagePrinting Then
+				'--- sometimes happens on 1st startup on the main menu page, why? no idea
+				guiHelpers.Show_toast(gblConst.THUMBNAIL_LOADING,1000)
+			End If
+			'Log("LoadThumbNail sub")
+			
 			If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
 		
 			Wait For (mMainObj.oMasterController.cn.Download_AndSaveFile( _

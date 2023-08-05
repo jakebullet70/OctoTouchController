@@ -235,9 +235,9 @@ Public Sub ReadGeneralCFG
 '	ShowScreenOffFLAG = Data.Get("scrnoff").As(Boolean)
 '	ShowSysCmdsFLAG = Data.Get("syscmds").As(Boolean)
 	
-	oc.PrinterProfileInvertedX = Data.Get("axesx").As(Boolean)
-	oc.PrinterProfileInvertedY = Data.Get("axesy").As(Boolean)
-	oc.PrinterProfileInvertedZ = Data.Get("axesz").As(Boolean)
+	oc.PrinterProfileInvertedX = Data.GetDefault("axesx",False)
+	oc.PrinterProfileInvertedY = Data.GetDefault("axesy",False)
+	oc.PrinterProfileInvertedZ = Data.GetDefault("axesz",False)
 		
 	If Data.Get("logall").As(Boolean) Then
 		logPOWER_EVENTS = True

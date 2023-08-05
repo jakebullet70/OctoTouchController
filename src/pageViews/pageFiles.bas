@@ -354,7 +354,11 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	If File.Exists(xui.DefaultFolder,mCurrentFileInfo.myThumbnail_filename_disk) = False Then
 	
 		SetThumbnail2Nothing
-		guiHelpers.Show_toast("Getting Thumbnail...",1000)
+		'--- sometimes happens on 1st startup on the main menu page, why? no idea
+		If mMainObj.oPageCurrent = mMainObj.oPageFiles Then
+			guiHelpers.Show_toast(gblConst.THUMBNAIL_LOADING,1000)
+		End If
+		'Log("clvFiles_ItemClick sub")
 		
 		If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & mCurrentFileInfo.myThumbnail_filename_disk,mModule)
 		

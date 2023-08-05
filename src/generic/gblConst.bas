@@ -20,6 +20,8 @@ Sub Process_Globals
 	Public APK_FILE_INFO, APK_NAME As String
 	
 	'===============================================================
+	Public Const THUMBNAIL_LOADING As String = "Getting Thumbnail..."
+		
 	#if klipper
 	Public Const APP_TITLE As String = "MoonrakerTC ™"
 	Private Const WEB_ADDR As String = "http://sadlogic.com/moonrakertouchcontroller/"

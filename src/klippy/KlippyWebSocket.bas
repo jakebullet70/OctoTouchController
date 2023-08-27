@@ -33,7 +33,7 @@ End Sub
 Public Sub Initialize(callbackModule As Object, callbackBase As String,ip As String, port As String)
 	mCallbackModule = callbackModule
 	mCallbackBase = callbackBase
-	mPort = port
+	mPort = IIf(strHelpers.IsNullOrEmpty(port),"80",port) '--- TODO if port is null then should popup connect dialog, should never happen but did! LOL
 	mIP = ip
 	mCallBackRecTxt = mCallbackBase & "_RecievedText"
 	IsInit = True

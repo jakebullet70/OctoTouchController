@@ -389,10 +389,22 @@ Private Sub PopupMainOptionMenu
 	Dim o1 As dlgListbox
 	o1.Initialize(Me,"Options Menu",Me,"OptionsMenu_Event")
 	o1.IsMenu = True
+	
+'	If guiHelpers.gIsLandScape Then '- TODO needs refactor for sizes
+'		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,320dip,280dip),340dip,popUpMemuItems)
+'	Else
+'		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,436dip,340dip),354dip,popUpMemuItems)
+'	End If
+
 	If guiHelpers.gIsLandScape Then '- TODO needs refactor for sizes
 		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,320dip,280dip),340dip,popUpMemuItems)
 	Else
-		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,436dip,340dip),354dip,popUpMemuItems)
+		If guiHelpers.gScreenSizeAprox < 5 Then
+			o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,436dip,340dip),guiHelpers.gWidth - 10dip,popUpMemuItems)
+		Else
+			o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,436dip,340dip),354dip,popUpMemuItems)
+		End If
+		
 	End If
 	
 End Sub

@@ -421,7 +421,7 @@ Private Sub PopupMainOptionMenu
 	Dim o1 As dlgListbox
 	pObjCurrentDlg1 = o1.Initialize("Options Menu",Me,"OptionsMenu_Event",pObjCurrentDlg1)
 	o1.IsMenu = True
-	Log(guiHelpers.gScreenSizeAprox)
+	'Log(guiHelpers.gScreenSizeAprox)
 	
 	If guiHelpers.gIsLandScape Then '- TODO needs refactor for sizes
 		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,320dip,280dip),340dip,popUpMemuItems)

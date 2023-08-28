@@ -1,4 +1,4 @@
-d:
+c:
 cd dev\b4x\src\OctoTouchController
 del *.apk < y
 "C:\Program Files\Anywhere Software\B4A\B4ABuilder.exe" -task=build -Configuration=Default -Optimize=true -Output=OctoTouchController

@@ -6,7 +6,7 @@
 </p>
 
 # OctoTouchController (OctoTC)
-A dedicated touch screen controller for Octoprint supporting older Android phones / tablets (Android 4.X) 
+A dedicated touch screen controller for Octoprint supporting **older Android phones / tablets** (Android 4.X) 
 Device specs: Android **4.x or above**, 4inch screen with a minimum resolution of 680x340. It is Free Software and released under the [GNU Affero General Public License V3](https://www.gnu.org/licenses/agpl-3.0.html).  
 ** Works with OctoKlipper **  
 ** Direct support comming for Klipper **  

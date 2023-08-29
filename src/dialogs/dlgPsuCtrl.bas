@@ -117,6 +117,7 @@ End Sub
 Public Sub SendCmd(cmd As String)As ResumableSub'ignore
 
 	Dim msg As String = $"Sending Power '${cmd.ToUpperCase}' Command"$
+	If strHelpers.IsNullOrEmpty(mPSU_Type) Then ReadSettingsCfg
 	
 	Select Case mPSU_Type
 		Case "sonoff"

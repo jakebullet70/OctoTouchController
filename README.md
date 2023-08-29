@@ -12,7 +12,7 @@ Device specs: Android **4.x or above**, 4inch screen with a minimum resolution o
 ** Direct support comming for Klipper **  
 
 
-Add a dedicated touch screen to your 3D printer with a *LOW/NO COST* Android device you probibly already have!  
+Add a dedicated touch screen to your 3D printer with a *LOW/NO COST* Android device you probibly already have! No need for access to the Google Play Store.  
 
 
 ### Project Purpose

@@ -154,7 +154,7 @@ Public Sub SendCmd(cmd As String)As ResumableSub'ignore
 		End If
 	End If
 	
-	guiHelpers.Show_toast(msg,1500)
+	guiHelpers.Show_toast(msg,2500)
 	
 End Sub
 

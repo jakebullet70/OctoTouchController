@@ -17,7 +17,7 @@ Add a dedicated touch screen to your 3D printer with a *LOW/NO COST* Android dev
 
 ### Project Purpose
 **Reclaim** those old Phones / Tablets that are sitting around that **DO NOT** have access to the Google store anymore. 
-This in *not a replacement* for Octoprint but a way to add a dedicated touch screen to your printer using old - unused Android hardware.
+This in *not a replacement* for Octoprint but a way to add a dedicated touch screen to your printer using **old - unused** Android hardware.
 
 
 ### Features

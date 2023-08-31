@@ -685,6 +685,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 			oMasterController.Start
 			
 		Case xui.DialogResponse_Cancel	 '--- this runs printer setup
+			mConnectionErrDlgShowingFLAG = False
 			OptionsMenu_Event("oc","oc")
 			
 		Case xui.DialogResponse_Negative '--- Power on 
@@ -737,7 +738,7 @@ End Sub
 
 Private Sub lblStatus_Click
 	'--- if not connected then popup the connection screen
-	If lblStatus.Text.Contains("No C") Or oc.isConnected = False  Then
+	If lblStatus.Text.ToLowerCase.Contains("no c") Or oc.isConnected = False  Then
 		CallSetupErrorConnecting(False)
 	End If
 End Sub

@@ -46,12 +46,12 @@ Public Sub Show
 	If BuildMenu = 0 Then
 		Dim mb As dlgMsgBox
 		Dim h,w As Float
-		Dim txt As String = "System commands are not configured."
+		Dim txt As String = "System commands are not configured " & CRLF & "or system is turned off."
 		h = 200dip
 		If guiHelpers.gIsLandScape Then
 			w = 500dip
 		Else
-			txt = strHelpers.WordWrap(txt,24)
+			txt = strHelpers.WordWrap(txt,24) ' TODO - this word wrap seesm to have an issue and needs revisiting
 			w = guiHelpers.gWidth-40dip
 		End If
 		mb.Initialize(mMainObj.root,"Warning",w,h,False)

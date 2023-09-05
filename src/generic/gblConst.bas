@@ -99,6 +99,7 @@ Sub Process_Globals
 	Public Const PSU_KLIPPER_SETUP_FILE As String = "psu_setup.map"
 	Public Const HTTP_ONOFF_SETUP_FILE As String = "onoff_setup.map"
 	Public Const GCODE_CUSTOM_SETUP_FILE As String = "gcode_setup.map"
+	Public Const BLCR_TOUCH_FILE As String = "blcr_touch_setup.map"
 	'---------------------------------------------------------------------------------------------------------------------
 	
 	'--- pages
@@ -142,6 +143,16 @@ Sub Process_Globals
 	Public Const bedManualShow As String = "mnu"
 	Public Const bedManualStartGcode As String = "sgcode"
 	Public Const bedManualEndGCode As String = "egcode"
+	
+	'---------------------------------------------------------------------------------------------------------------------
+	'--- bl/cr touch crap ---
+	Public Const probeShow As String = "mnu"
+	Public Const probeUP As String = "prup"
+	Public Const probeDN As String = "prdn"
+	Public Const probeTest As String = "ptest"
+	Public Const probeRelAlarm As String = "ralarm"
+	Public Const probeBed As String = "pbed"
+	Public Const probeSave As String = "save"
 	
 	
 	#if klipper

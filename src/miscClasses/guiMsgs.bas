@@ -169,6 +169,14 @@ Public Sub BuildFunctionSetupMenu() As Map
 	Else
 		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"bl")
 	End If
+	txt = " BL/CR Touch Test Settings"
+	If config.ShowBedLevel_ManualFLAG  Then
+		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE869)). _
+										Typeface(Typeface.DEFAULT).Append(txt).PopAll,"blcr")
+	Else
+		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"blcr")
+	End If
+	
 	
 	Dim data As Map, fname As String
 	For xx = 0 To 7
@@ -178,7 +186,7 @@ Public Sub BuildFunctionSetupMenu() As Map
 			txt = " " & data.Get("desc")
 			Dim rOn As Boolean = data.GetDefault("rmenu",False)
 			Dim wOn As Boolean = data.GetDefault("wmenu",False)
-			If  rOn Or wOn  Then
+			If rOn Or wOn Then
 				po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
 											Typeface(Typeface.DEFAULT).Append(txt).PopAll,"g" & xx)
 			Else

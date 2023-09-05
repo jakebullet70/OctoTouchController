@@ -548,6 +548,10 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 '		Case "g29"
 '			Main.kvs.Put("g29", Not (Main.kvs.GetDefault("g29",False)))
 '			Show_toast("G29 Option Saved",2000)
+
+		Case "blcr" '--- filament control
+			Dim oB7 As dlgBLTouchSetup
+			oB7.Initialize : oB7.Show
 			
 		Case "fl" '--- filament control
 			Dim oB As dlgFilamentSetup
@@ -1105,7 +1109,9 @@ Public Sub RunGCodeOnOff_Menu(fname As String)
 		mb2.Initialize(B4XPages.MainPage.Root,"Question", w, 150dip,False)
 		mb2.NewTextSize = 24
 		Wait For (mb2.Show("Touch RUN to start:" & CRLF & desc,gblConst.MB_ICON_QUESTION, "RUN","","CANCEL")) Complete (res As Int)
-		If res = xui.DialogResponse_Cancel Then Return
+		If res = xui.DialogResponse_Cancel Then 
+			Return
+		End If
 	End If
 	
 	guiHelpers.Show_toast2("Runnning..." & CRLF & desc,3500)
@@ -1126,12 +1132,13 @@ Private Sub SendMGcode(code As String)
 	If code.Contains(CRLF) Then
 		Dim cd() As String = Regex.Split(CRLF, code)
 		For Each s As String In cd
+			If strHelpers.IsNullOrEmpty(s) Then Continue
 			#if klipper
 			B4XPages.MainPage.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",s))
 			#else
-			B4XPages.MainPage.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",s))
+			B4XPages.MainPage.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",s.ToUpperCase))
 			#End If
-			Sleep(50)
+			Sleep(250) '--- 1/4 second between
 		Next
 	Else
 		#if klipper

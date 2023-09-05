@@ -49,6 +49,7 @@ Sub Process_Globals
 	'--- functions menu
 	Public ShowFilamentChangeFLAG As Boolean = False
 	Public ShowBedLevel_ManualFLAG As Boolean = False
+	Public ShowBLCRtouchMenuFLAG As Boolean = False
 	Public ShowBedLevel_MeshFLAG As Boolean = True
 	Public ShowZ_Offset_WizFLAG As Boolean = True
 	
@@ -135,7 +136,7 @@ Private Sub LoadCfgs()
 	
 	'======================================================================
 
-	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.BED_LEVEL_FILE) '--- Dev
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.BED_MANUAL_LEVEL_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.BED_MANUAL_LEVEL_FILE) = False Then
 		Dim oiy As dlgBedLevelSetup
 		oiy.Initialize
@@ -193,6 +194,16 @@ Private Sub LoadCfgs()
 		Next
 	End If
 	
+	'======================================================================
+
+	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.BLCR_TOUCH_FILE) '--- Dev
+	If File.Exists(xui.DefaultFolder,gblConst.BLCR_TOUCH_FILE) = False Then
+		Dim oid As dlgBLTouchSetup
+		oid.Initialize
+		oid.CreateDefaultFile
+	End If
+	ReadBLCRtouchCFG
+	
 End Sub
 
 '=========================================================================
@@ -202,6 +213,10 @@ End Sub
 '	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE)
 'End Sub
 
+Public Sub ReadBLCRtouchCFG
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BLCR_TOUCH_FILE)
+	ShowBLCRtouchMenuFLAG = Data.Get(gblConst.probeShow).As(Boolean)
+End Sub
 
 Public Sub ReadManualBedLevelCFG
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_MANUAL_LEVEL_FILE)

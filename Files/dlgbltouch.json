@@ -3,7 +3,13 @@
     "Theme": "Dark Theme",
     "Items": [
         {
-            "title": "GCODE \/ Commands",
+            "title": "Add To Function Menu",
+            "type": "Boolean",
+            "key": "mnu",
+            "required": false
+        },
+        {
+            "title": "** GCODE \/ Commands **",
             "type": "Separator",
             "key": "",
             "required": false
@@ -15,7 +21,7 @@
             "required": false
         },
         {
-            "title": "Probe Doiwn",
+            "title": "Probe Down",
             "type": "Text",
             "key": "prdn",
             "required": false

@@ -271,7 +271,9 @@ Private Sub FunctionMenu
 	
 	Dim o1 As dlgListbox
 	mMainObj.pObjCurrentDlg1 = o1.Initialize("Function Menu",Me,"FunctionMenu_Event",mMainObj.pObjCurrentDlg1)
-	o1.Show(250dip,320dip,BuildFunctionMnu)
+	Dim w As Float = 320dip
+	If guiHelpers.gIsLandScape = False And guiHelpers.gScreenSizeAprox < 4.5 Then w = guiHelpers.gWidth * .9
+	o1.Show(250dip,w,BuildFunctionMnu)
 	
 End Sub
 
@@ -283,7 +285,8 @@ Private Sub BuildFunctionMnu() As Map
 '	If Main.kvs.GetDefault("g29",False)       Then m.Put("Auto Bed Leveling (G29)","bl") 
 '	#end if
 	If config.ShowBedLevel_ManualFLAG 	Then m.Put("Manual Bed Leveling Wizard","blw")
-	If config.ShowFilamentChangeFLAG     Then m.Put("Change Filament Wizard","cf")
+	If config.ShowFilamentChangeFLAG    Then m.Put("Change Filament Wizard","cf")
+	If config.ShowBLCRtouchMenuFLAG     Then m.Put("BL/CR Touch Probe Testing","blcr")
 	#if klipper
 	If config.ShowBedLevel_MeshFLAG 	Then m.Put("Mesh Bed Leveling Wizard","mblw")
 	#end if

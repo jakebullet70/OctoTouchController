@@ -1,0 +1,48 @@
+{
+    "Version": 1.66,
+    "Theme": "Dark Theme",
+    "Items": [
+        {
+            "title": "GCODE \/ Commands",
+            "type": "Separator",
+            "key": "",
+            "required": false
+        },
+        {
+            "title": "Probe Up",
+            "type": "Text",
+            "key": "prup",
+            "required": false
+        },
+        {
+            "title": "Probe Doiwn",
+            "type": "Text",
+            "key": "prdn",
+            "required": false
+        },
+        {
+            "title": "Self Test",
+            "type": "Text",
+            "key": "ptest",
+            "required": false
+        },
+        {
+            "title": "Release Alarm",
+            "type": "Text",
+            "key": "ralarm",
+            "required": false
+        },
+        {
+            "title": "Probe Bed",
+            "type": "Multiline Text",
+            "key": "pbed",
+            "required": false
+        },
+        {
+            "title": "Save",
+            "type": "Text",
+            "key": "save",
+            "required": false
+        }
+    ]
+}

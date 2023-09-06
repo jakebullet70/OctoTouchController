@@ -205,7 +205,7 @@ Private Sub LoadCfgs()
 	
 	If Main.kvs.GetDefault(key,False) = False Then
 		Dim oSeed As OptionsCfgSeed : oSeed.Initialize
-		fileHelpers.SafeKill("0" & gblConst.GCODE_CUSTOM_SETUP_FILE) '--- 1st GCode slot, make sure its gone
+		'fileHelpers.SafeKill("0" & gblConst.GCODE_CUSTOM_SETUP_FILE) '--- 1st GCode slot, make sure its gone
 		#if klipper
 		'--- need to do a klipper version?
 		'--- if GCODE starts with @ its a macro?

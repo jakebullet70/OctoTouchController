@@ -146,32 +146,23 @@ Public Sub BuildFunctionSetupMenu() As Map
 	Dim cs As CSBuilder
 	Dim po As Map : po.Initialize
 	
-'	#if not (klipper)
-'	If Main.kvs.GetDefault("g29",False) = False Then
-'		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
-'										Typeface(Typeface.DEFAULT).Append(" G29 Auto Bed Level").PopAll,"g29")
-'	Else
-'		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append("G29 Auto Bed Level").PopAll,"g29")
-'	End If
-'	#end if
-
 	txt = " Change Filament Wizard"
-	If config.ShowFilamentChangeFLAG  Then
+	If config.ReadWizardFilamentChangeFLAG  Then
 		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
 										Typeface(Typeface.DEFAULT).Append(txt).PopAll,"fl")
 	Else
 		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"fl")
 	End If
 	txt = " Manual Bed Leveling Wizard"
-	If config.ShowBedLevel_ManualFLAG  Then
+	If config.ReadManualBedLevelFLAG  Then
 		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
 										Typeface(Typeface.DEFAULT).Append(txt).PopAll,"bl")
 	Else
 		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"bl")
 	End If
 	txt = " BL/CR Touch Test Settings"
-	If config.ShowBedLevel_ManualFLAG  Then
-		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE869)). _
+	If config.ReadBLCRtouchFLAG  Then
+		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
 										Typeface(Typeface.DEFAULT).Append(txt).PopAll,"blcr")
 	Else
 		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"blcr")

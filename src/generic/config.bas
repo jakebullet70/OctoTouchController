@@ -43,21 +43,34 @@ Sub Process_Globals
 	
 	'--- Printer power - sonoff
 	Public ShowPwrCtrlFLAG As Boolean = False
+	
 	'--- Printer zled or ws281z  flag
 	Public ShowZLEDCtrlFLAG As Boolean = False
 	Public ShowWS281CtrlFLAG As Boolean = False
+	
 	'--- functions menu
-	Public ShowFilamentChangeFLAG As Boolean = False
-	Public ShowBedLevel_ManualFLAG As Boolean = False
-	Public ShowBLCRtouchMenuFLAG As Boolean = False
+	'Public ShowFilamentChangeFLAG As Boolean = False
+	'Public ShowBedLevel_ManualFLAG As Boolean = False
+	'Public ShowBLCRtouchMenuFLAG As Boolean = False
+	
 	Public ShowBedLevel_MeshFLAG As Boolean = True
 	Public ShowZ_Offset_WizFLAG As Boolean = True
+	
+	'Public ExternalSharedDir As String = ""
 	
 
 End Sub
 
 Public Sub Init
 	
+'	Dim rp As RuntimePermissions
+'	ExternalSharedDir = rp.GetSafeDirDefaultExternal("") 
+'	'--- we should get an external shared folder that can be seen by the desktop
+'	If strHelpers.IsNullOrEmpty(ExternalSharedDir) Then 
+'		logMe.LogIt("Getting external shared folder failed!","Init")
+'		ExternalSharedDir = xui.DefaultFolder
+'	End If
+		
 	LoadCfgs
 	IsInit = True
 	
@@ -132,7 +145,6 @@ Private Sub LoadCfgs()
 		oiz.Initialize
 		oiz.CreateDefaultFile
 	End If
-	ReadWizardFilamentChangeCFG
 	
 	'======================================================================
 
@@ -142,8 +154,6 @@ Private Sub LoadCfgs()
 		oiy.Initialize
 		oiy.CreateDefaultFile
 	End If
-	ReadManualBedLevelCFG
-	
 	
 	
 	'======================================================================
@@ -181,20 +191,44 @@ Private Sub LoadCfgs()
 			oiw.CreateDefaultDataFile(jj & gblConst.HTTP_ONOFF_SETUP_FILE) '--- generic HTTP commands
 		Next
 	End If
+
+
+	'======================================================================
+	Dim key As String = "1stRunCopyDefGCode"
 	
-	'--- dev
+	'--- dev -----------
 '	For jj = 0 To 7
 '		fileHelpers.SafeKill2(xui.DefaultFolder,jj & gblConst.GCODE_CUSTOM_SETUP_FILE)
 '	Next
-	If File.Exists(xui.DefaultFolder,"0" & gblConst.GCODE_CUSTOM_SETUP_FILE) = False Then
+'	Main.kvs.Put(key,False)
+	'-------------------
+	
+	If Main.kvs.GetDefault(key,False) = False Then
+		Dim oSeed As OptionsCfgSeed : oSeed.Initialize
+		fileHelpers.SafeKill("0" & gblConst.GCODE_CUSTOM_SETUP_FILE) '--- 1st GCode slot, make sure its gone
+		#if klipper
+		'--- need to do a klipper version?
+		'--- if GCODE starts with @ its a macro?
+		File.WriteMap(xui.DefaultFolder,"0" & gblConst.GCODE_CUSTOM_SETUP_FILE,oSeed.SeedBedLevelKlipper) '--- V2, needs testing!!!!!!!!!!!!
+		#else
+		'--- 1 default custom gcode included
+		File.WriteMap(xui.DefaultFolder,"0" & gblConst.GCODE_CUSTOM_SETUP_FILE,oSeed.SeedBedLevelMarlin) '--- G29 Heated
+		#end if
+		Main.kvs.Put(key,True) '--- lets never do this again!
+	End If
+	
+	If File.Exists(xui.DefaultFolder,"7" & gblConst.GCODE_CUSTOM_SETUP_FILE) = False Then
 		Dim oi7 As dlgGCodeCustSetup
 		oi7.Initialize(Null,Null)
 		For jj = 0 To 7
+			If File.Exists(xui.DefaultFolder,jj & gblConst.GCODE_CUSTOM_SETUP_FILE) = True Then
+				Continue
+			End If
 			oi7.CreateDefaultDataFile(jj & gblConst.GCODE_CUSTOM_SETUP_FILE) '--- generic GCODE commands
 		Next
 	End If
-	
 	'======================================================================
+	
 
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.BLCR_TOUCH_FILE) '--- Dev
 	If File.Exists(xui.DefaultFolder,gblConst.BLCR_TOUCH_FILE) = False Then
@@ -202,7 +236,6 @@ Private Sub LoadCfgs()
 		oid.Initialize
 		oid.CreateDefaultFile
 	End If
-	ReadBLCRtouchCFG
 	
 End Sub
 
@@ -213,33 +246,36 @@ End Sub
 '	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE)
 'End Sub
 
-Public Sub ReadBLCRtouchCFG
+Public Sub ReadBLCRtouchFLAG() As Boolean
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BLCR_TOUCH_FILE)
-	ShowBLCRtouchMenuFLAG = Data.Get(gblConst.probeShow).As(Boolean)
+	Return Data.Get(gblConst.probeShow).As(Boolean)
 End Sub
 
-Public Sub ReadManualBedLevelCFG
+Public Sub ReadManualBedLevelFLAG As Boolean
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_MANUAL_LEVEL_FILE)
-	ShowBedLevel_ManualFLAG = Data.Get(gblConst.bedManualShow).As(Boolean)
+	Return Data.Get(gblConst.bedManualShow).As(Boolean)
 End Sub
 
-Public Sub ReadWizardFilamentChangeCFG
+Public Sub ReadWizardFilamentChangeFLAG As Boolean
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
-	ShowFilamentChangeFLAG = Data.Get(gblConst.filShow).As(Boolean)
+	Return Data.Get(gblConst.filShow).As(Boolean)
 End Sub
 
-Public Sub ReadZLED_CFG
+Public Sub ReadZLED_CFG As Boolean
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE)
 	ShowZLEDCtrlFLAG = Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean)
+	Return Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean)
 End Sub
 
-Public Sub ReadWS281_CFG
+Public Sub ReadWS281_CFG As Boolean
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE)
 	ShowWS281CtrlFLAG = Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean) '--- this is correct
+	Return Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean) '--- this is correct
 End Sub
 
-Public Sub ReadPwrCFG
+Public Sub ReadPwrCFG As Boolean
 	ShowPwrCtrlFLAG = Main.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
+	Return Main.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
 End Sub
 
 Public Sub ReadGeneralCFG

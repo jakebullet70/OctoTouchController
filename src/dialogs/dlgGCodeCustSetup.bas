@@ -51,6 +51,9 @@ Public Sub Show(title As String,dataFileName As String)
 		
 	Dim data As Map = File.ReadMap(xui.DefaultFolder,dataFileName)
 	Dim ToTop As Boolean = False
+	'fileHelpers.SafeKill2(File.DirDefaultExternal ,dataFileName)
+	'File.Copy(xui.DefaultFolder,dataFileName,File.DirDefaultExternal ,"8888.map")
+	'File.WriteMap(File.DirDefaultExternal ,"ffff",data)
 	
 	Dim h,w As Float
 	If guiHelpers.gScreenSizeAprox >= 6 And guiHelpers.gScreenSizeAprox <= 8 Then

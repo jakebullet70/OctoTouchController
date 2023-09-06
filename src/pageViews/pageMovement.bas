@@ -281,16 +281,17 @@ End Sub
 Private Sub BuildFunctionMnu() As Map
 	Dim m As Map : m.Initialize
 	m.Put("Pre-Heat Menu","prh")
-'	#if not (klipper)
-'	If Main.kvs.GetDefault("g29",False)       Then m.Put("Auto Bed Leveling (G29)","bl") 
-'	#end if
-	If config.ShowBedLevel_ManualFLAG 	Then m.Put("Manual Bed Leveling Wizard","blw")
-	If config.ShowFilamentChangeFLAG    Then m.Put("Change Filament Wizard","cf")
-	If config.ShowBLCRtouchMenuFLAG     Then m.Put("BL/CR Touch Probe Testing","blcr")
+	
+	If config.ReadManualBedLevelFLAG 		Then m.Put("Manual Bed Leveling Wizard","blw")
+	If config.ReadWizardFilamentChangeFLAG  Then m.Put("Change Filament Wizard","cf")
+	If config.ReadBLCRtouchFLAG     		Then m.Put("BL/CR Touch Probe Testing","blcr")
+	
 	#if klipper
-	If config.ShowBedLevel_MeshFLAG 	Then m.Put("Mesh Bed Leveling Wizard","mblw")
+	If config.ShowBedLevel_MeshFLAG	Then m.Put("Mesh Bed Leveling Wizard","mblw")
 	#end if
+	
 	'If config.ShowZ_Offset_WizFLAG 	Then m.Put("Set Z Offset","zo")   TODO 
+	
 	For jj =0 To 7
 		Dim f As String = jj & gblConst.GCODE_CUSTOM_SETUP_FILE
 		Dim da As Map = File.ReadMap(xui.DefaultFolder,f)

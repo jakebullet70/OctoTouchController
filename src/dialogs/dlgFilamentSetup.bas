@@ -90,7 +90,6 @@ Public Sub Show
 	If Result = xui.DialogResponse_Positive Then
 		guiHelpers.Show_toast(gblConst.DATA_SAVED,1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE,Data)
-		config.ReadWizardFilamentChangeCFG
 		CallSub(mainObj.oPageCurrent,"Set_focus")
 	End If
 	

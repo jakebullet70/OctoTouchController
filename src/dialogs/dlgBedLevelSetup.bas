@@ -84,8 +84,6 @@ Public Sub Show
 		guiHelpers.Show_toast(gblConst.DATA_SAVED,1500)
 		File.WriteMap(xui.DefaultFolder,gblConst.BED_MANUAL_LEVEL_FILE,Data)
 		
-		config.ReadManualBedLevelCFG
-		
 		CallSub(mainObj.oPageCurrent,"Set_focus")
 	End If
 	

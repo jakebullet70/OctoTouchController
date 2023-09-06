@@ -82,8 +82,8 @@ Public Sub Show(height As Float, width As Float, data As Map)
 	dlgHelper.ThemeInputDialogBtnsResize
 	
 	'--- display dialog
-	Wait For(rs) complete(intResult As Int)
-	If intResult = xui.DialogResponse_Positive Then
+	Wait For(rs) complete(i As Int)
+	If i = xui.DialogResponse_Positive Then
 		CallSub3(mCallback,mEventName,GetTagFromMap(ListTemplate.SelectedItem,data),mTag)
 	Else
 		CallSub3(mCallback,mEventName,"","")

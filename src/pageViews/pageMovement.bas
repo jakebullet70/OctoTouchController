@@ -273,6 +273,7 @@ Private Sub FunctionMenu
 	mMainObj.pObjCurrentDlg1 = o1.Initialize("Function Menu",Me,"FunctionMenu_Event",mMainObj.pObjCurrentDlg1)
 	Dim w As Float = 320dip
 	If guiHelpers.gIsLandScape = False And guiHelpers.gScreenSizeAprox < 4.5 Then w = guiHelpers.gWidth * .9
+	o1.IsMenu = True
 	o1.Show(250dip,w,BuildFunctionMnu)
 	
 End Sub
@@ -336,16 +337,6 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 			mMainObj.pobjWizards = uu.Initialize(mMainObj.pnlWizards)
 			uu.Show
 			
-'		Case "bl" '--- Auto firmware bed level
-'			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)
-'			If ret = xui.DialogResponse_Cancel Then Return
-'			#if klipper
-'			''''''''''mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G29"))
-'			#else
-'			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","G29"))
-'			#End If
-'			
-'			guiHelpers.Show_toast(msg & "Start Bed Leveling",3200)
 			
 '		Case "cfl" '--- Change filament through firmware
 '			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)
@@ -360,6 +351,9 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 			
 		Case "prh" '--- pre-heat menu
 			CallSub(B4XPages.MainPage,"ShowPreHeatMenu_All")
+			
+		Case "blcr"
+			BLCR_TouchMenu
 			
 		Case Else
 			msg = " ...TODO... "
@@ -421,3 +415,53 @@ Private Sub btnJogMoveMM_Click
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 	fp.Close '--- close floating panel
 End Sub
+
+
+
+#Region BLCRtouchMenu/CR Touch MENU"
+Private Sub BLCR_TouchMenu
+	
+	Dim o1 As dlgListbox
+	mMainObj.pObjCurrentDlg1 = o1.Initialize("BL/CR Touch Menu",Me,"BLCRMenu_Event",mMainObj.pObjCurrentDlg1)
+	Dim w As Float = 320dip
+	If guiHelpers.gIsLandScape = False And guiHelpers.gScreenSizeAprox < 4.5 Then w = guiHelpers.gWidth * .9
+	
+	Dim m As Map : m.Initialize
+	m.Put("Probe Up","bl1")
+	m.Put("Probe Down","bl2")
+	m.Put("Self Test","bl3")
+	m.Put("Release Alarm","bl4")
+	m.Put("Probe Bed","bl5")
+	m.Put("Save to eprom","bl6")
+	
+	o1.IsMenu = True
+	o1.Show(250dip,w,m)
+	
+End Sub
+
+Private Sub BLCRMenu_Event(value As String, tag As Object)
+	
+	'--- callback for BLtouch Menu
+	If value.Length = 0 Then Return
+	Dim msg As String = "Command sent: " 'ignore
+	Dim gcode As String
+	Dim mf As Map = File.ReadMap(xui.DefaultFolder,gblConst.BLCR_TOUCH_FILE)
+	'Dim mb As dlgMsgBox 
+	'mb.Initialize(mMainObj.root,"Continue",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip), 200dip,False)
+	'Dim Ask As String = "Touch OK to continue" 'ignore
+	
+	Select Case value
+		Case "bl1" : gcode = mf.Get(gblConst.probeUP)
+		Case "bl2" : gcode = mf.Get(gblConst.probeDN)
+		Case "bl3" : gcode = mf.Get(gblConst.probeTest)
+		Case "bl4" : gcode = mf.Get(gblConst.probeRelAlarm)
+		Case "bl5" : gcode = mf.Get(gblConst.probeBed)
+		Case "bl6" : gcode = mf.Get(gblConst.probeSave)
+			
+	End Select
+	
+	CallSubDelayed2(mMainObj,"Send_Gcode",gcode)
+	
+End Sub
+
+#end region

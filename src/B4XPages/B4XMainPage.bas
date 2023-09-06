@@ -1115,13 +1115,13 @@ Public Sub RunGCodeOnOff_Menu(fname As String)
 	End If
 	
 	guiHelpers.Show_toast2("Runnning..." & CRLF & desc,3500)
-	SendMGcode(gc)
-	Wait For SendMGcode
+	Send_Gcode(gc)
+	Wait For Send_Gcode
 	
 End Sub
 
 
-Private Sub SendMGcode(code As String)
+Public Sub Send_Gcode(code As String)
 	If code.Trim = "" Then Return
 	'  TODO ----  this function is like in 3 places - needs to be put in 1
 '	#if debug

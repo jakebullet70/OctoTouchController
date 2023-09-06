@@ -674,7 +674,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	Dim ErrorDlg As dlgMsgBox
 	Dim h,w As Float
 	If guiHelpers.gIsLandScape Then
-		h = 180dip : w = 560dip
+		h = 180dip : w = 500dip
 	Else
 		h = 310dip : w = 88%x
 	End If
@@ -702,7 +702,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	
 	CfgAndroidPowerOptions
 	mConnectionErrDlgShowingFLAG = False
-	Log("exiting error setup cfg")
+	Log("exiting error connecting setup cfg")
 
 End Sub
 

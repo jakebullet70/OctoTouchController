@@ -6,6 +6,10 @@ Version=9.85
 @EndOfDesignText@
 ' Author:  sadLogic
 #Region VERSIONS 
+' V. 2.0	Aug/2023
+' V. 1.1-3	Mar-Jul/2023	
+' V. Rocket artillery attack while in bed, almost killed, lost home. Dec 1st 2022
+' V. 1.x	Oct/2022 - Nov/2022
 ' V. 1.0 	Aug/4/2022 - Kherson Ukraine
 #End Region
 
@@ -64,7 +68,7 @@ Sub Class_Globals
 	'--- popups and wiz screens
 	Public pObjCurrentDlg1 As Object = Null
 	Public pObjCurrentDlg2 As Object = Null
-	Public pObjPreHeatDlg1 As Object = Null
+	Public pObjPreHeatDlg1 As dlgListbox = Null
 	Public pnlWizards As Panel
 	Public pObjWizards As Object = Null
 	
@@ -148,11 +152,13 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 		Return False
 	End If
 	
-	If pObjPreHeatDlg1 <> Null And SubExists(pObjPreHeatDlg1,"Close_Me") Then
-		CallSubDelayed(pObjPreHeatDlg1,"Close_Me") 'ignore
-		pObjPreHeatDlg1 = Null
-		If oPageCurrent = oPageMovement Then pObjCurrentDlg1 = Null
-		Return False '--- cancel close request
+	If pObjPreHeatDlg1 <> Null Then
+		If SubExists(pObjPreHeatDlg1,"Close_Me") Then
+			CallSubDelayed(pObjPreHeatDlg1,"Close_Me") 'ignore
+			pObjPreHeatDlg1 = Null
+			If oPageCurrent = oPageMovement Then pObjCurrentDlg1 = Null
+			Return False '--- cancel close request
+		End If
 	End If
 		
 	If pnlWizards.Visible = True And (pObjWizards <> Null) And SubExists(pObjWizards,"Close_Me") Then

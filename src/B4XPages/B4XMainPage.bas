@@ -247,6 +247,11 @@ Private Sub BuildGUI
 	SideMenu.SkinMe(Array As Button(btnSTOP,btnFRESTART,btnRESTART),pnlMainDrawer,pnlBtnsDrawer)
 	pnlLineBreakDrawer.Color = clrTheme.txtNormal
 	btnFRESTART.Visible = False : 	btnRESTART.Visible = False : btnSTOP.Visible = True '--- default these 
+	
+	
+	clvDrawer.DefaultTextBackgroundColor = clrTheme.Background
+	clvDrawer.PressedColor = clrTheme.BackgroundHeader
+	clvDrawer.DefaultTextColor = clrTheme.txtNormal
 	Build_RightSideMenu
 		
 	Switch_Pages(gblConst.PAGE_MENU)
@@ -935,10 +940,10 @@ End Sub
 
 Private Sub Build_RightSideMenu
 	Log("Build_RightSideMenu")
-	
-	clvDrawer.DefaultTextBackgroundColor = clrTheme.Background
-	clvDrawer.PressedColor = clrTheme.BackgroundHeader
-	clvDrawer.DefaultTextColor = clrTheme.txtNormal
+'	
+'	clvDrawer.DefaultTextBackgroundColor = clrTheme.Background
+'	clvDrawer.PressedColor = clrTheme.BackgroundHeader
+'	clvDrawer.DefaultTextColor = clrTheme.txtNormal
 	
 	clvDrawer.Clear
 	Dim size As Float = IIf(guiHelpers.gIsLandScape,20,22)
@@ -948,7 +953,10 @@ Private Sub Build_RightSideMenu
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	#if klipper
 	Dim DataPSU As Map = File.ReadMap(xui.DefaultFolder,gblConst.PSU_KLIPPER_SETUP_FILE)
-
+	If Data.GetDefault("m600",False).As(Boolean) Then
+		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Filament Change M600").PopAll,"m600")
+	End If
+	#Else
 	If Data.GetDefault("m600",False).As(Boolean) Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Filament Change M600").PopAll,"m600")
 	End If
@@ -1131,7 +1139,7 @@ End Sub
 
 
 Public Sub Send_Gcode(code As String)
-	If code.Trim = "" Then Return
+	If strHelpers.IsNullOrEmpty(code.Trim) = "" Then Return
 	'  TODO ----  this function is like in 3 places - needs to be put in 1
 '	#if debug
 	'Log(code)
@@ -1140,7 +1148,9 @@ Public Sub Send_Gcode(code As String)
 	
 	If code.Contains(CRLF) Then
 		Dim cd() As String = Regex.Split(CRLF, code)
+		
 		For Each s As String In cd
+			s = CleanGcodeString(s)
 			If strHelpers.IsNullOrEmpty(s) Then Continue
 			#if klipper
 			B4XPages.MainPage.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",s))
@@ -1150,6 +1160,8 @@ Public Sub Send_Gcode(code As String)
 			Sleep(250) '--- 1/4 second between
 		Next
 	Else
+		code = CleanGcodeString(code)
+		If strHelpers.IsNullOrEmpty(code) Then Return
 		#if klipper
 		B4XPages.MainPage.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",code))
 		#else
@@ -1160,6 +1172,17 @@ Public Sub Send_Gcode(code As String)
 	Return
 	
 End Sub
+
+Private Sub CleanGcodeString(s As String) As String
+	s = s.Trim
+	If s.StartsWith(";") Or s.StartsWith("#") Then
+		Return ""		
+	Else
+		Return s
+	End If
+End Sub
+
+
 #end region
 
 

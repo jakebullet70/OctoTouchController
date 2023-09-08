@@ -11,7 +11,7 @@ Device specs: Android **4.x and above**, 4inch screen with a minimum resolution 
 ** Works with OctoKlipper **  
 ** Direct support comming for Klipper **  
 
-NOTE: Newer Android phones WILL NOT WORK. I now know Android 13 fails and I have tested up to Android 7 myself. Google is very famous for breaking software with newer releases.   
+NOTE: Newer Android phones WILL NOT WORK. I know now Android 13 fails and I have tested Android 4,5,6 and 7 myself. Google is **very** famous for breaking software with newer releases.   
 
 Add a dedicated touch screen to your 3D printer with a *LOW/NO COST* Android device you probibly already have! No need for access to the Google Play Store.  
 

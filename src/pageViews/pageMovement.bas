@@ -364,7 +364,7 @@ End Sub
 
 #end region
 
-#Region "GCODE"
+#Region "Send Btn GCODE"
 Private Sub ExtrudeRetract(Extrude As Boolean)
 	
 	If oc.Tool1ActualReal < 150 Then
@@ -421,47 +421,12 @@ End Sub
 #Region BLCRtouchMenu/CR Touch MENU"
 Private Sub BLCR_TouchMenu
 	
-	Dim o1 As dlgListbox
-	mMainObj.pObjCurrentDlg1 = o1.Initialize("BL/CR Touch Menu",Me,"BLCRMenu_Event",mMainObj.pObjCurrentDlg1)
-	Dim w As Float = 320dip
-	If guiHelpers.gIsLandScape = False And guiHelpers.gScreenSizeAprox < 4.5 Then w = guiHelpers.gWidth * .9
-	
-	Dim m As Map : m.Initialize
-	m.Put("Probe Up","bl1")
-	m.Put("Probe Down","bl2")
-	m.Put("Self Test","bl3")
-	m.Put("Release Alarm","bl4")
-	m.Put("Probe Bed","bl5")
-	m.Put("Save to eprom","bl6")
-	
-	o1.IsMenu = True
-	o1.Show(250dip,w,m)
+	Dim o2 As dlgBLTouchActions
+	mMainObj.pObjCurrentDlg1 = o2.Initialize
+	o2.Show
 	
 End Sub
 
-Private Sub BLCRMenu_Event(value As String, tag As Object)
-	
-	'--- callback for BLtouch Menu
-	If value.Length = 0 Then Return
-	Dim msg As String = "Command sent: " 'ignore
-	Dim gcode As String
-	Dim mf As Map = File.ReadMap(xui.DefaultFolder,gblConst.BLCR_TOUCH_FILE)
-	'Dim mb As dlgMsgBox 
-	'mb.Initialize(mMainObj.root,"Continue",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip), 200dip,False)
-	'Dim Ask As String = "Touch OK to continue" 'ignore
-	
-	Select Case value
-		Case "bl1" : gcode = mf.Get(gblConst.probeUP)
-		Case "bl2" : gcode = mf.Get(gblConst.probeDN)
-		Case "bl3" : gcode = mf.Get(gblConst.probeTest)
-		Case "bl4" : gcode = mf.Get(gblConst.probeRelAlarm)
-		Case "bl5" : gcode = mf.Get(gblConst.probeBed)
-		Case "bl6" : gcode = mf.Get(gblConst.probeSave)
-			
-	End Select
-	
-	CallSubDelayed2(mMainObj,"Send_Gcode",gcode)
-	
-End Sub
+
 
 #end region

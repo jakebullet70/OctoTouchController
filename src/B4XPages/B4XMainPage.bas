@@ -152,13 +152,11 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 		Return False
 	End If
 	
-	If pObjPreHeatDlg1 <> Null Then
-		If SubExists(pObjPreHeatDlg1,"Close_Me") Then
-			CallSubDelayed(pObjPreHeatDlg1,"Close_Me") 'ignore
-			pObjPreHeatDlg1 = Null
-			If oPageCurrent = oPageMovement Then pObjCurrentDlg1 = Null
-			Return False '--- cancel close request
-		End If
+	If pObjPreHeatDlg1 <> Null And SubExists(pObjPreHeatDlg1,"Close_Me") Then
+		CallSubDelayed(pObjPreHeatDlg1,"Close_Me") 'ignore
+		pObjPreHeatDlg1 = Null
+		If oPageCurrent = oPageMovement Then pObjCurrentDlg1 = Null
+		Return False '--- cancel close request
 	End If
 		
 	If pnlWizards.Visible = True And (pObjWizards <> Null) And SubExists(pObjWizards,"Close_Me") Then
@@ -167,17 +165,22 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 		Return False '--- cancel close request
 	End If
 	
+	
+	
+	'--- NEED 2 BE CHECKED !!!!!!!!!!!!!!!!!!  v2 SEEMS 2 WORK ONLY IN RELEASE MODE
 	If pObjCurrentDlg2 <> Null And SubExists(pObjCurrentDlg2,"Close_Me") Then
 		CallSubDelayed(pObjCurrentDlg2,"Close_Me") 'ignore
 		pObjCurrentDlg2 = Null
 		Return False '--- cancel close request
 	End If
-	
 	If pObjCurrentDlg1 <> Null And SubExists(pObjCurrentDlg1,"Close_Me") Then
 		CallSubDelayed(pObjCurrentDlg1,"Close_Me") 'ignore
 		pObjCurrentDlg1 = Null
 		Return False '--- cancel close request
 	End If
+	'--- NEED 2 BE CHECKED !!!!!!!!!!!!!!!!!!  v2 SEEMS 2 WORK ONLY IN RELEASE MODE ----   Above
+	
+	
 	
 	If oPageCurrent <> oPageMenu Then
 		Switch_Pages(gblConst.PAGE_MENU)		

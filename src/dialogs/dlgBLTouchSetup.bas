@@ -37,7 +37,7 @@ public Sub CreateDefaultFile
 	
 	If File.Exists(xui.DefaultFolder,gblConst.BLCR_TOUCH_FILE) = False Then
 		File.WriteMap(xui.DefaultFolder,gblConst.BLCR_TOUCH_FILE,  _
-						CreateMap( gblConst.probeShow: "false", gblConst.probeBed: "G29", _
+						CreateMap( gblConst.probeShow: "false", gblConst.probeBed: "G28" & CRLF & "M420 S0" & "G29 T", _
 						  gblConst.probeDN : "M280 P0 S10", gblConst.probeRelAlarm: "M280 P0 S160", _
 						  gblConst.probeSave: "M500",gblConst.probeTest: "M280 P0 S120",  _
 						  gblConst.probeUP: "M280 S0 S90"))					 

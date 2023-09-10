@@ -6,12 +6,6 @@ Version=5.5
 @EndOfDesignText@
 ' Author:  epiCode
 #Region VERSIONS 
-'
-'
-' V. 1.1	Aug 9, 2023
-'			SetLabelTextOverrun behaviour
-'			https://www.b4x.com/android/forum/threads/dse-setlabeltextoverrun-behaviour.143082/#content
-'
 ' V. 1.0	Nov 27, 2022
 '			Spread controls
 '			https://www.b4x.com/android/forum/threads/b4x-dse_layout-align-and-spread-controls.144438/
@@ -221,21 +215,5 @@ Public Sub SpreadVertically2 (pnl As B4XView, Maxsize As Int,MinGap  As Int,alig
 		End If
 		i = i + 1
 	Next
-End Sub
-
-
-'=================================================================================
-
-'Parameters: Type As String, 1 or more Labels (Comma delimited)
-'Type : One Of - CENTER_ELLIPSIS, CENTER_WORD_ELLIPSIS, CLIP, ELLIPSIS, LEADING_ELLIPSIS, LEADING_WORD_ELLIPSIS, WORD_ELLIPSIS
-'Designer Script : {Class}.SetLabelTextOverrun("CENTER_ELLIPSIS",Label2)
-Public Sub SetLabelTextOverrun(DesignerArgs As DesignerArgs)
-	If DesignerArgs.FirstRun Then
-		Dim TType As String = DesignerArgs.Arguments.Get(0)
-		For i = 1 To DesignerArgs.Arguments.Size - 1
-			Dim JO As JavaObject = DesignerArgs.GetViewFromArgs(i)
-			JO.Runmethod("setTextOverrun",Array(TType))
-		Next
-	End If
 End Sub
 

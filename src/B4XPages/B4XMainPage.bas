@@ -680,7 +680,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	'----------------------------------------------------------------------  KLIPPER TODO ?????
 	Dim PowerCtrlAvail As String = ""
 	If Main.kvs.GetDefault(gblConst.PWR_SONOFF_PLUGIN,False).As(Boolean) = True Then 'TODO 2, how will klipper handle this
-		PowerCtrlAvail = "POWER ON"
+		PowerCtrlAvail = "POWER"
 	End If
 	'----------------------------------------------------------------------  KLIPPER TODO ?????
 
@@ -707,10 +707,13 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 			OptionsMenu_Event("oc","oc")
 			
 		Case xui.DialogResponse_Negative '--- Power on 
-			Dim o As dlgOctoPsuCtrl : o.Initialize(Null)
-			Wait For (o.SendCmd("on")) Complete(s As String)
-			Sleep(3000)
-			oMasterController.Start
+			Dim o As dlgOctoPsuCtrl : o.Initialize(Me)
+			o.mRunMasterCtrlrStart = True
+			o.Show
+'			Dim o As dlgOctoPsuCtrl : o.Initialize(Null)
+'			Wait For (o.SendCmd("on")) Complete(s As String)
+'			Sleep(3000)
+'			oMasterController.Start
 			
 	End Select
 	

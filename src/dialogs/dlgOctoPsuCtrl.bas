@@ -22,6 +22,7 @@ Sub Class_Globals
 	
 	Private btnOff,btnOn As Button
 	Public mIPaddr As String
+	Public mRunMasterCtrlrStart As Boolean = False
 	
 End Sub
 
@@ -114,7 +115,11 @@ End Sub
 Private Sub btnCtrl_Click
 	
 	Dim o As B4XView : o = Sender
+	guiHelpers.Show_toast("Working...",2800)
 	Wait For (SendCmd(o.Tag)) Complete(s As String)
+	If mRunMasterCtrlrStart = True And o.Tag = "on" Then
+		Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage.oMasterController,"Start",3000)
+	End If
 	mDialog.Close(-1) '--- close it, exit dialog
 	
 End Sub

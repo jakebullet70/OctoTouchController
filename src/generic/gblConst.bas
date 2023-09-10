@@ -10,6 +10,8 @@ Version=11.5
 #End Region
 Sub Process_Globals
 	
+	Public empw As String = "b4x!sadLogic512" '--- mailjet password for the moment
+	
 	Private DEBUG_TEST_INSTALL As Boolean = False
 	
 	Public Const DATA_SAVED As String = "Data  Saved"

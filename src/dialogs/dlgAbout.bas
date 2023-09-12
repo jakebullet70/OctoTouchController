@@ -12,7 +12,7 @@ Version=11.5
 Sub Class_Globals
 	
 	Private const mModule As String = "dlgAbout"' 'ignore
-	Private mMainObj As B4XMainPage
+	
 	Private xui As XUI
 	
 	Private pnlMain As B4XView
@@ -26,7 +26,7 @@ Sub Class_Globals
 End Sub
 
 Public Sub Initialize() As Object
-	mMainObj = B4XPages.MainPage
+	
 	Return Me
 End Sub
 
@@ -37,10 +37,8 @@ End Sub
 
 Public Sub Show
 	
-	#if not (klipper)
-	Check4OctoKlipper
-	#end if
-	mDialog.Initialize(mMainObj.Root)
+	
+	mDialog.Initialize(B4XPages.MainPage.Root)
 	Dim dlgHelper As sadB4XDialogHelper
 	dlgHelper.Initialize(mDialog)
 	
@@ -50,7 +48,7 @@ Public Sub Show
 	Dim w,h As Float 
 	If guiHelpers.gIsLandScape Then
 		w = IIf(guiHelpers.gScreenSizeAprox < 6,460dip,640dip)
-		h = 290dip
+		h = guiHelpers.gHeight * .8
 	Else
 	 	w = IIf(guiHelpers.gScreenSizeAprox < 6,guiHelpers.gWidth - 40dip,520dip)
 		h = 310dip
@@ -64,6 +62,8 @@ Public Sub Show
 	p.LoadLayout("dlgAbout")
 	BuildGUI
 	
+	If gblConst.Klippy = True Then lblOctoKlipper.Visible = True '--- checked in config.init class
+	
 	dlgHelper.ThemeDialogForm("About - " & Application.LabelName)
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "OK")
 	BuildAboutLabel
@@ -75,7 +75,7 @@ Public Sub Show
 	Wait For (rs) Complete (Result As Int)
 	
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
-	mMainObj.pObjCurrentDlg1 = Null
+	B4XPages.MainPage.pObjCurrentDlg1 = Null
 	
 	
 End Sub
@@ -112,7 +112,7 @@ Private Sub Check4NewVer_Click
 	mDialog.Close(-1) '--- close it, exit class dialog	
 	
 	Dim oo As dlgAppUpdate
-	oo.Initialize(mMainObj.Root)
+	oo.Initialize(B4XPages.MainPage.Root)
 	oo.Show
 	
 End Sub
@@ -139,24 +139,33 @@ Private Sub GetAboutText() As String
 End Sub
 
 
-#if not (klipper)
+
+
 Public Sub Check4OctoKlipper
 	
-	Dim rs As ResumableSub =  mMainObj.oMasterController.CN.SendRequestGetInfo("/plugin/pluginmanager/plugins")
-	
+'	Dim oldKlippyKey As Boolean = False
+'	If Main.kvs.ContainsKey("OctoKlippy") = False Then 
+'		gblConst.Klippy1stRunOrChange = True
+'	Else
+'		oldKlippyKey = Main.kvs.Get("OctoKlippy")
+'	End If
+
+	'--- check if OctoKlipper plug in is installed	
+	Dim rs As ResumableSub =  B4XPages.MainPage.oMasterController.CN.SendRequestGetInfo("/plugin/pluginmanager/plugins")
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
 
-		Dim o As JsonParsorPlugins  : o.Initialize 
+		Dim o As JsonParsorPlugins  : o.Initialize
 		If o.IsOctoKlipperRunning(Result) = True Then
-			lblOctoKlipper.Visible = True
+			gblConst.Klippy = True
 		End If
 		
 	End If
+	'---------------------------------------
 	
+'	If oldKlippyKey <> gblConst.Klippy Then
+'		gblConst.Klippy1stRunOrChange = True
+'	End If
+	Main.kvs.Put("OctoKlippy",gblConst.Klippy)
 	
 End Sub
-#end if
-#end region
-
-

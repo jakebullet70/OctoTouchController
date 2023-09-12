@@ -105,6 +105,13 @@ Public Sub Show(firstRun As Boolean)
 	
 End Sub
 
+Private Sub IsOctoKlipper
+	Dim oo As dlgAbout
+	oo.Initialize
+	oo.Check4OctoKlipper
+End Sub
+
+
 
 Private Sub Show_KB
 	txtPrinterDesc.RequestFocusAndShowKeyboard
@@ -152,6 +159,8 @@ private Sub Save_settings
 
 
 	guiHelpers.Show_toast(gblConst.DATA_SAVED,2500)
+	IsOctoKlipper
+	Wait For IsOctoKlipper
 	fileHelpers.SafeKill(fname)
 	File.WriteMap(xui.DefaultFolder,fname,outMap)
 	oc.IsConnectionValid = True

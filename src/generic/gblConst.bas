@@ -6,11 +6,14 @@ Version=11.5
 @EndOfDesignText@
 ' Author:  sadLogic
 #Region VERSIONS 
+' V. 1.Whatever		Its now Aug/2023 
 ' V. 1.Whatever 	June-Nov/2022
 #End Region
 Sub Process_Globals
 	
 	Public empw As String = "b4x!sadLogic512" '--- mailjet password for the moment
+	
+	Public Klippy As Boolean = False '--- if we are OctoKlipper
 	
 	Private DEBUG_TEST_INSTALL As Boolean = False
 	

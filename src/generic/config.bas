@@ -66,11 +66,13 @@ Public Sub Init
 '	Dim rp As RuntimePermissions
 '	ExternalSharedDir = rp.GetSafeDirDefaultExternal("") 
 '	'--- we should get an external shared folder that can be seen by the desktop
+'   UNLESS you are on newer Android ver the Google thinks you are stupid and will not let you do it
 '	If strHelpers.IsNullOrEmpty(ExternalSharedDir) Then 
 '		logMe.LogIt("Getting external shared folder failed!","Init")
 '		ExternalSharedDir = xui.DefaultFolder
 '	End If
-		
+
+	gblConst.Klippy = Main.kvs.GetDefault("OctoKlippy",False)
 	LoadCfgs
 	IsInit = True
 	

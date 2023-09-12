@@ -942,12 +942,11 @@ End Sub
 
 
 Private Sub Build_RightSideMenu
+	If gblConst.Klippy Then
+		
+	End If
 	Log("Build_RightSideMenu")
-'	
-'	clvDrawer.DefaultTextBackgroundColor = clrTheme.Background
-'	clvDrawer.PressedColor = clrTheme.BackgroundHeader
-'	clvDrawer.DefaultTextColor = clrTheme.txtNormal
-	
+
 	clvDrawer.Clear
 	Dim size As Float = IIf(guiHelpers.gIsLandScape,20,22)
 	Dim txt As Object 

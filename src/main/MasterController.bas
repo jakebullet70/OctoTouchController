@@ -15,11 +15,11 @@ Sub Class_Globals
 	
 	Private oCN As HttpOctoRestAPI
 	Public parser As JsonParsorMain
-	#if klipper
-	Public parsorConStatus As JsonParsorConnectionStatus
-	Private oWSk As KlippyWebSocket
-	Public parserK As KlippySocketParser
-	#End If
+'	#if klipper
+'	Public parsorConStatus As JsonParsorConnectionStatus
+'	Private oWSk As KlippyWebSocket
+'	Public parserK As KlippySocketParser
+'	#End If
 	
 	'--- populated by a REST calls, will be grabbed by their pages
 	Public gMapOctoFilesList As Map
@@ -41,20 +41,17 @@ Sub Class_Globals
 	Public mapBedHeatingOptions, mapToolHeatingOptions,mapAllHeatingOptions As Map
 	Public mapToolHeatValuesOnly,mapBedHeatValuesOnly As Map
 
-	#if klipper	
-	Public KlipperFrontEnd As Int
-	#end if
-	
+
 	'--- stops calls from backing up if we have had a disconnect	
 	Private mGetTempFLAG_Busy, mJobStatusFLAG_Busy As Boolean = False
 	
 End Sub
 
-#if klipper
-Public Sub getWSk() As KlippyWebSocket
-	Return oWSk
-End Sub
-#end if
+'#if klipper
+'Public Sub getWSk() As KlippyWebSocket
+'	Return oWSk
+'End Sub
+'#end if
 Public Sub getCN() As HttpOctoRestAPI
 	Return oCN
 End Sub
@@ -65,10 +62,10 @@ Public Sub Initialize
 	mainObj = B4XPages.MainPage
 	parser.Initialize() '--- init the rest parser
 	
-	#if klipper
-	parsorConStatus.Initialize
-	parserK.Initialize
-	#End If
+'	#if klipper
+'	parsorConStatus.Initialize
+'	parserK.Initialize
+'	#End If
 	
 	
 End Sub
@@ -77,28 +74,6 @@ Public Sub Start
 	GetConnectionPrinterStatus
 End Sub
 
-
-#if klipper
-Private Sub GetKlipperFrontEnd As ResumableSub
-'	#if debug
-'	Return gblConst.KLIPPER_FRONTEND_MAINSAIL
-'	#end if
-
-	KlipperFrontEnd = gblConst.KLIPPER_FRONTEND_NONE
-	
-	Dim rs As ResumableSub =  oCN.SendRequestGetInfo("/server/database/list")
-	Wait For(rs) Complete (Result As String)
-	If Result.Length <> 0 Then
-		If Result.ToLowerCase.Contains("fluidd") Then
-			Return gblConst.KLIPPER_FRONTEND_FLUIDD
-		Else if Result.ToLowerCase.Contains("mainsail") Then
-			Return gblConst.KLIPPER_FRONTEND_MAINSAIL
-		End If
-	End If
-	Return gblConst.KLIPPER_FRONTEND_NONE
-	
-End Sub
-#end if
 
 Public Sub SetCallbackTargets(CallBack As Object,EventNameTemp As String, _
 												 EventNameStatus As String, _
@@ -146,11 +121,7 @@ Public Sub tmrMain_Tick
 	
 	'--- make API requested and update screen
 	'--- Timer is in 'Main'
-	#if klipper
-	If oc.isConnected Then GetTemps
-	#else
 	GetTemps
-	#End If
 	GetJobStatus
 	
 
@@ -169,7 +140,7 @@ Private Sub GetAllPrinterSettings
 	
 	mGotOctoSettingFLAG_IsBusy = True ' TODO KLIPPER
 	
-	#if not (klipper)
+	
 	Dim rs As ResumableSub =  oCN.SendRequestGetInfo("/api/settings")
 	
 	Wait For(rs) Complete (Result As String)
@@ -189,50 +160,6 @@ Private Sub GetAllPrinterSettings
 		
 	End If
 	
-	#else
-	
-	'--- klipper!!!!!!!!!!!!!!!!
-	Do While True
-		
-		Wait For (GetKlipperFrontEnd) complete (retval As Int)
-		KlipperFrontEnd = retval
-				
-		Dim api As String = "" '--- assume no front end
-		Select Case KlipperFrontEnd
-			Case gblConst.KLIPPER_FRONTEND_MAINSAIL
-				api = "/server/database/item?namespace=mainsail&key=presets"
-			Case gblConst.KLIPPER_FRONTEND_FLUIDD
-				api = "/server/database/item?namespace=fluidd&key=uiSettings"
-		End Select
-		
-		If api <> "" Then
-			Dim rs As ResumableSub =  oCN.SendRequestGetInfo(api)
-		
-			Wait For(rs) Complete (Result As String)
-			If Result.Length <> 0 Then
-		
-				Dim o As JsonParserMasterPrinterSettings  : o.Initialize
-				mapMasterOctoTempSettings.Initialize
-				mapMasterOctoTempSettings = o.GetPresetHeaterSettings(Result)
-				mGotOctoSettingFLAG = True '--- will stop it from firing in the main loop
-				
-				Build_PresetHeaterOption(mapMasterOctoTempSettings)
-			
-			Else
-				'oc.RestPrinterProfileVars
-			End If
-		
-		Else
-			'--- no front end detected detected
-				
-		End If
-		
-		
-		
-		
-		Exit 'Do
-	Loop
-	#end if
 	
 	mGotOctoSettingFLAG_IsBusy = False
 	
@@ -287,10 +214,6 @@ Private Sub GetTemps
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
 		parser.TempStatus(Result)
-		#if klipper
-		'--- moonraker can still be running even though it is not connected to klipper
-		parsorConStatus.ConnectionStatusKlipper(Result)
-		#End If
 	Else
 		oc.ResetTempVars
 	End If
@@ -309,22 +232,18 @@ End Sub
 
 Private Sub GetJobStatus
 	
-	#if klipper
-	If oc.isConnected = False Then
-		mJobStatusFLAG_Busy = False
-		Return
-	End If
-	#End If
+'	#if klipper
+'	If oc.isConnected = False Then
+'		mJobStatusFLAG_Busy = False
+'		Return
+'	End If
+'	#End If
 	
 	If mJobStatusFLAG_Busy = True Then Return '--- stop calls from backing up if we have had a disconnect
 	mJobStatusFLAG_Busy = True
 	
 	
-	#if klipper
-	Dim jobInfo As String = "/printer/objects/query?webhooks&virtual_sdcard&print_stats"
-	#else
 	Dim jobInfo As String =  "/api/job"
-	#End If
 	
 	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(jobInfo)
 	Wait For(rs) Complete (Result As String)
@@ -337,34 +256,13 @@ Private Sub GetJobStatus
 	'--- Update printer btns (enable, disabled)
 	CallSub(mCallBack,mEventNameBtns)
 	
-	#if klipper
-	oc.FormatedJobPct = IIf(oc.isPrinting = True And oc.isHeating = False,fnc.RoundJobPctNoDecimals(oc.JobCompletion),"")
-	Dim Const OP As String = "operational"
-	If oc.JobPrintState = "cancelled" Then
-		oc.isKlipperCanceling = False
-		oc.JobPrintState = OP
-		oc.FormatedStatus = oc.JobPrintState
-	else If oc.isKlipperCanceling Then
-		oc.FormatedStatus = "--> canceling <--"
-	Else If oc.JobPrintState = "printing" Then
-		oc.FormatedStatus = oc.JobPrintState & " " & oc.FormatedJobPct
-	Else
-		If oc.JobPrintState = "complete" Then
-			oc.JobPrintState = OP
-			oc.FormatedStatus = OP
-		Else
-			oc.FormatedStatus = oc.JobPrintState
-		End If
-		
-	End If
-	#else
 	oc.FormatedJobPct = IIf(oc.isPrinting = True And oc.isHeating = False,fnc.RoundJobPctNoDecimals(oc.JobCompletion),"")
 	If oc.JobPrintState = "Printing" Then
 		oc.FormatedStatus = oc.JobPrintState & " " & oc.FormatedJobPct
 	Else
 		oc.FormatedStatus = oc.JobPrintState
 	End If
-	#End If
+
 	'Log(oc.JobPrintState)
 	CallSub(mCallBack,mEventNameStatus)
 	
@@ -395,27 +293,6 @@ Private Sub GetConnectionPrinterStatus
 		InitWebSocket
 	End Try
 	#End If
-	
-	#if klipper
-	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(oc.cPRINTER_MASTER_STATE)
-	'--- get some info!
-	Wait For(rs) Complete (Result As String)
-	If Result.Length <> 0 Then
-		
-		Dim o2 As JsonParsorConnectionStatus
-		o2.Initialize
-		o2.ConnectionStatusKlipper(Result)
-		
-		'--- turn on main loop timer
-		CallSub2(Main,"TurnOnOff_MainTmr",True)
-		tmrMain_Tick
-		
-	Else
-		oc.ResetStateVars
-	End If
-	
-	#else	
-
 
 	'---force a connection if its not there
 	Dim rs As ResumableSub = oCN.PostRequest(oc.cCMD_AUTO_CONNECT_STARTUP)
@@ -438,9 +315,6 @@ Private Sub GetConnectionPrinterStatus
 		oc.ResetStateVars
 	End If
 	
-	
-
-	#End If
 
 	
 End Sub
@@ -448,12 +322,12 @@ End Sub
 
 Public Sub GetAllOctoFilesInfo
 	
-	#if klipper
-	If oc.isConnected = False Then 
-		mGotFilesListFLAG_IsBusy = False
-		Return
-	End If
-	#End If
+'	#if klipper
+'	If oc.isConnected = False Then 
+'		mGotFilesListFLAG_IsBusy = False
+'		Return
+'	End If
+'	#End If
 	
 	If mGotFilesListFLAG_IsBusy = True Then
 		If config.logFILE_EVENTS Then logMe.Logit("mGotFilesListFLAG_IsBusy = True",mModule)
@@ -470,20 +344,7 @@ Public Sub GetAllOctoFilesInfo
 		
 		Dim o As JsonParserFiles  
 		o.Initialize(True) '--- download thumbnails
-		
-		#if klipper
-		If oc.KlipperFileSrcPath.Length <> 0 Then
-			Wait For (o.GetKlipperFilePath) Complete (retval As String)
-			'--- TODO, if supporting paths --- https://moonraker.readthedocs.io/en/latest/web_api/#list-available-files
-			oc.KlipperFileSrcPath = retval
-		End If
-		Wait For (o.StartParseAllFilesKlipper(Result)) Complete (m As Map)
-		gMapOctoFilesList = m
-		#else
 		gMapOctoFilesList = o.StartParseAllFilesOcto(Result)
-		#End If
-		
-		
 		mGotFilesListFLAG = True '--- will stop it from firing in the main loop
 		
 	Else
@@ -600,7 +461,7 @@ End Sub
 #end region
 
 
-#if not (klipper)
+
 Public Sub IsIncompleteFileData() As Boolean
 	For Each o As tOctoFileInfo In gMapOctoFilesList.Values
 		If o.missingData Then
@@ -612,5 +473,5 @@ Public Sub IsIncompleteFileData() As Boolean
 	'Log("incompleteData=False")
 	Return False
 End Sub
-#end if
+
 

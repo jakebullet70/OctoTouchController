@@ -74,7 +74,7 @@ Private Sub BuildGUI
 		lblBedTargetV.TextSize = 20
 	End If
 		
-	guiHelpers.SetVisible(Array As B4XView(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3,btnSubPlugin4,btnSubPlugin5),False)
+	guiHelpers.SetVisible(Array As B4XView(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3),False)
 	guiHelpers.SkinButton_Pugin(Array As Button(btnSubPlugin1,btnSubPlugin2,btnSubPlugin3,btnSubPlugin4,btnSubPlugin5,btnSubHeater))
 	pnlMenuLowerBLine.Color = clrTheme.txtAccent
 	pnlMenuUpperBL.Color = clrTheme.txtAccent
@@ -238,12 +238,12 @@ Private Sub btnSubBtnAction_Click
 	
 	Select Case o.Tag
 					
-		'Case "br" '--- brightness
-		'	DoBrightnessDlg
+		Case "br" '--- brightness
+			B4XPages.MainPage.SideMenu.DoBrightnessDlg
 			
-'		Case "soff" '--- screen off
-'			CallSub2(Main,"TurnOnOff_ScreenTmr",False)
-'			fnc.BlankScreen
+		Case "soff" '--- screen off
+			CallSub2(Main,"TurnOnOff_ScreenTmr",False)
+			fnc.BlankScreen
 			
 		Case "heat" '--- pre-heat
 			If oc.isConnected = False Then

@@ -72,7 +72,7 @@ Public Sub Init
 '		ExternalSharedDir = xui.DefaultFolder
 '	End If
 
-	gblConst.Klippy = Main.kvs.GetDefault("OctoKlippy",False)
+	oc.Klippy = Main.kvs.GetDefault("OctoKlippy",False)
 	LoadCfgs
 	IsInit = True
 	

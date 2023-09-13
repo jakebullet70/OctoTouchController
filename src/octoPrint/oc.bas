@@ -15,6 +15,7 @@ Sub Process_Globals
 	Public cPRINTER_BUSY_MSG As String = "Problem, Printer is busy"
 	
 	Public IsConnectionValid As Boolean = False
+	Public Klippy As Boolean = False
 	
 	Public OctoKey, OctoIp ,OctoPort As String
 	Public WSocketPort As String = "" '--- klipper only

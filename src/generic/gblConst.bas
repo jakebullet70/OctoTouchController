@@ -58,10 +58,10 @@ Sub Process_Globals
 	Public Const CUSTOM_THEME_COLORS As String = "customClrs" '--- users custom colors
 	
 	'#if klipper
-	Public Const psetupPRINTER_DESC As String = "desc"
-	Public Const psetupPRINTER_IP As String = "ip"
-	Public Const psetupPRINTER_PORT As String = "port"
-	Public Const psetupPRINTER_WSPORT As String = "wsport"
+'	Public Const psetupPRINTER_DESC As String = "desc"
+'	Public Const psetupPRINTER_IP As String = "ip"
+'	Public Const psetupPRINTER_PORT As String = "port"
+'	Public Const psetupPRINTER_WSPORT As String = "wsport"
 	Public Const psetupPRINTER_X As String = "bx"
 	Public Const psetupPRINTER_Y As String = "by"
 	'#else

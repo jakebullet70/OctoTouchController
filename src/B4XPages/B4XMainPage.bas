@@ -71,6 +71,7 @@ Sub Class_Globals
 	Public pObjPreHeatDlg1 As dlgListbox = Null
 	Public pnlWizards As Panel
 	Public pObjWizards As Object = Null
+	Private mErrorDlg As dlgMsgBox
 	
 End Sub
 
@@ -152,6 +153,10 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 		Return False
 	End If
 	
+	If mConnectionErrDlgShowingFLAG Or pPrinterCfgDlgShowingFLAG Then
+		mErrorDlg.Close_Me
+		Return False
+	End If
 	If pObjPreHeatDlg1 <> Null And SubExists(pObjPreHeatDlg1,"Close_Me") Then
 		CallSubDelayed(pObjPreHeatDlg1,"Close_Me") 'ignore
 		pObjPreHeatDlg1 = Null
@@ -685,16 +690,15 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	'----------------------------------------------------------------------  KLIPPER TODO ?????
 
 	Dim Const JUSTIFY_BUTTON_2_LEFT As Boolean = True
-	Dim ErrorDlg As dlgMsgBox
 	Dim h,w As Float
 	If guiHelpers.gIsLandScape Then
 		h = 180dip : w = 500dip
 	Else
 		h = 310dip : w = 88%x
 	End If
-	ErrorDlg.Initialize(Root,"Connetion Problem",w, h,JUSTIFY_BUTTON_2_LEFT)
+	mErrorDlg.Initialize(Root,"Connetion Problem",w, h,JUSTIFY_BUTTON_2_LEFT)
 	Dim gui As guiMsgs : gui.Initialize
-	Wait For (ErrorDlg.Show(gui.GetConnectionText(connectedButError),gblConst.MB_ICON_WARNING, _
+	Wait For (mErrorDlg.Show(gui.GetConnectionText(connectedButError),gblConst.MB_ICON_WARNING, _
 					"RETRY",PowerCtrlAvail,"SETUP")) Complete (res As Int)
 	
 	Select Case res
@@ -1025,32 +1029,30 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	SideMenu.CloseRightMenu
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	Select Case Value.As(String)
-		'BED_MESH_CALIBRATE
 		Case "m600"
-			#if klipper
-			oMasterController.WSk.Send(krpc.GCODE.Replace("!!!","BED_MESH_CALIBRATE  METHOD=manual"))
-			#end if
+			Dim mb2 As dlgMsgBox2
+			Dim w As Float = 400dip
+			If guiHelpers.gIsLandScape = False Then w = 90%x
+			mb2.Initialize(B4XPages.MainPage.Root,"Question", w, 150dip,False)
+			mb2.NewTextSize = 24
+			Wait For (mb2.Show("Touch RUN to start M600" & CRLF & "Filament change",gblConst.MB_ICON_QUESTION, "RUN","","CANCEL")) Complete (res As Int)
+			If res = xui.DialogResponse_Cancel Then
+				Return
+			End If
+			Send_Gcode("M600")
+
 			
 		Case "ab" '--- about screen
-			Dim o2 As dlgAbout 
-			pObjCurrentDlg1 = o2.Initialize
+			Dim o2 As dlgAbout : pObjCurrentDlg1 = o2.Initialize
 			o2.Show
 		
 		Case "sys" '--- system menu
-			#if klipper
-			Dim oa As dlgKlipperSysCmds 
-			oa.Initialize(Me) 
-			'pObjCurrentDlg1 = oa.Initialize(Me) 
-			oa.Show
-			#Else
 			Dim oa As dlgOctoSysCmds 
-			'pObjCurrentDlg1 = oa.Initialize(oMasterController.CN) 
+			pObjCurrentDlg1 = oa.Initialize(oMasterController.CN) 
 			oa.Initialize(oMasterController.CN)
 			oa.Show
-			#end if
 		
 		Case "pwr" '--- printer power
-			#if not (klipper)
 			If oc.isConnected = False And Main.kvs.GetDefault(gblConst.PWR_SONOFF_PLUGIN,False).As(Boolean) = False Then
 				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
 				Return
@@ -1058,9 +1060,6 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 			Dim o1 As dlgOctoPsuCtrl 
 			pObjCurrentDlg1 = o1.Initialize(Me)
 			o1.Show
-			#else
-			RunHTTPOnOff_Menu(gblConst.PSU_KLIPPER_SETUP_FILE)
-			#end if
 			
 		Case "1","2","3","4" '--- misc HTTP commands
 			RunHTTPOnOff_Menu(Value.As(String) & gblConst.HTTP_ONOFF_SETUP_FILE)
@@ -1068,7 +1067,6 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 		Case "g0","g1","g2","g3","g4","g5","g6","g7" '--- misc GCode commands
 			RunGCodeOnOff_Menu(Value.As(String).Replace("g","") & gblConst.GCODE_CUSTOM_SETUP_FILE)
 			
-		#if not (klipper)
 		Case "zled" '--- ZLED
 			If oc.isConnected = False Then
 				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
@@ -1086,7 +1084,6 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 			Dim o3 As dlgOnOffCtrl
 			pObjCurrentDlg1 = o3.Initialize("WS281x Control")
 			o3.Show
-		#end if
 		
 	End Select
 			

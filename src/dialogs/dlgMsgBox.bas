@@ -81,6 +81,10 @@ Public Sub Show(txt  As String, icon_file As String, _
 	
 End Sub
 
+Public Sub Close_Me
+	mDialog.Close(-1)
+End Sub
+
 Private Sub CreateDoNotShowCheckbox
 	Dim chk As CheckBox : chk.Initialize("DoNotShow")
 	chk.Text = " Do not show again"

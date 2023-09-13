@@ -69,7 +69,7 @@ Public Sub Show(firstRun As Boolean)
 	Dim w, h As Float
 	
 	If guiHelpers.gScreenSizeAprox < 8 Then
-		w = 80%x
+		w = 92%x
 		h = IIf(guiHelpers.gIsLandScape,74%y,62%y)
 	Else
 		w = 74%x : h = 70%y
@@ -138,10 +138,6 @@ private Sub Build_GUI
 	
 	btnCheckConnection.TextSize = NumberFormat2(btnCheckConnection.TextSize / guiHelpers.gFscale,1,0,0,False)
 	btnGetOctoKey.TextSize = NumberFormat2(btnGetOctoKey.TextSize / guiHelpers.gFscale,1,0,0,False)
-	
-	#if klipper
-	btnGetOctoKey.Visible = False
-	#End If
 	
 End Sub
 

@@ -1,5 +1,4 @@
 ﻿Build1=Default,sadLogic.OctoTouchController
-Build2=klipper,sadLogic.KlipperTouchController,klipper
 File1=bed.png
 File10=dlgonoff.json
 File11=dlgPower.json
@@ -77,13 +76,13 @@ FileGroup30=VIEWS_PAGES
 FileGroup31=VIEWS_PAGES
 FileGroup32=MISC
 FileGroup33=MISC
-FileGroup34=Default Group
+FileGroup34=DIALOG_CUSTOM_VIEWS
 FileGroup35=DIALOG_CUSTOM_VIEWS
 FileGroup36=DIALOG_CUSTOM_VIEWS
 FileGroup37=VIEWS
-FileGroup38=Default Group
+FileGroup38=DIALOG_CUSTOM_VIEWS
 FileGroup39=DIALOG_CUSTOM_VIEWS
-FileGroup4=Default Group
+FileGroup4=DIALOG_CUSTOM_VIEWS
 FileGroup40=DIALOG_CUSTOM_VIEWS
 FileGroup41=DIALOG_CUSTOM_VIEWS
 FileGroup42=DIALOG_CUSTOM_VIEWS
@@ -92,7 +91,7 @@ FileGroup44=DIALOG_CUSTOM_VIEWS
 FileGroup45=DIALOG_CUSTOM_VIEWS
 FileGroup46=VIEWS
 FileGroup47=JSON_CONFIGS
-FileGroup48=Default Group
+FileGroup48=DIALOG_CUSTOM_VIEWS
 FileGroup49=DIALOG_CUSTOM_VIEWS
 FileGroup5=JSON_CONFIGS
 FileGroup50=DIALOG_CUSTOM_VIEWS
@@ -153,83 +152,76 @@ Module30=|relative|src\dialogs\dlgOctoPsuSetup
 Module31=|relative|src\dialogs\dlgOctoSetup
 Module32=|relative|src\dialogs\dlgOctoSysCmds
 Module33=|relative|src\dialogs\dlgOnOffCtrl
-Module34=|relative|src\dialogs\dlgPrinterSetup
-Module35=|relative|src\dialogs\dlgThemeSelect
-Module36=|relative|src\dialogs\dlgViewText
-Module37=|relative|src\dialogs\dlgZLEDSetup
-Module38=|relative|src\miscClasses\DSE_Layout
-Module39=|relative|src\helperClasses\fileHelpers
+Module34=|relative|src\dialogs\dlgThemeSelect
+Module35=|relative|src\dialogs\dlgViewText
+Module36=|relative|src\dialogs\dlgZLEDSetup
+Module37=|relative|src\miscClasses\DSE_Layout
+Module38=|relative|src\helperClasses\fileHelpers
+Module39=|relative|src\generic\fnc
 Module4=|relative|src\miscClasses\Beeper
-Module40=|relative|src\generic\fnc
-Module41=|relative|src\generic\gblConst
-Module42=|relative|src\helperClasses\guiHelpers
-Module43=|relative|src\miscClasses\guiMsgs
-Module44=|relative|src\miscClasses\HeaterRoutines
-Module45=|relative|src\miscClasses\HttpDownloadStr
-Module46=|relative|src\octoPrint\HttpOctoRestAPI
-Module47=|relative|src\miscClasses\InMemDB
-Module48=|relative|src\octoPrint\JSONparsors\JsonParserFiles
-Module49=|relative|src\octoPrint\JSONparsors\JsonParserMasterPrinterSettings
+Module40=|relative|src\generic\gblConst
+Module41=|relative|src\helperClasses\guiHelpers
+Module42=|relative|src\miscClasses\guiMsgs
+Module43=|relative|src\miscClasses\HeaterRoutines
+Module44=|relative|src\miscClasses\HttpDownloadStr
+Module45=|relative|src\octoPrint\HttpOctoRestAPI
+Module46=|relative|src\miscClasses\InMemDB
+Module47=|relative|src\octoPrint\JSONparsors\JsonParserFiles
+Module48=|relative|src\octoPrint\JSONparsors\JsonParserMasterPrinterSettings
+Module49=|relative|src\octoPrint\JSONparsors\JsonParsorConnectionStatus
 Module5=|relative|src\miscClasses\CallSubUtils
-Module50=|relative|src\octoPrint\JSONparsors\JsonParsorConnectionStatus
-Module51=|relative|src\octoPrint\JSONparsors\JsonParsorMain
-Module52=|relative|src\octoPrint\JSONparsors\JsonParsorOctoVersion
-Module53=|relative|src\octoPrint\JSONparsors\JsonParsorPlugins
-Module54=|relative|src\klippy\KlippySocketParser
-Module55=|relative|src\klippy\KlippyWebSocket
-Module56=|relative|src\klippy\krpc
-Module57=|relative|src\custom_controls\lmB4XImageViewX
-Module58=|relative|src\generic\logMe
-Module59=|relative|src\main\MasterController
+Module50=|relative|src\octoPrint\JSONparsors\JsonParsorMain
+Module51=|relative|src\octoPrint\JSONparsors\JsonParsorOctoVersion
+Module52=|relative|src\octoPrint\JSONparsors\JsonParsorPlugins
+Module53=|relative|src\klippy\KlippySocketParser
+Module54=|relative|src\klippy\KlippyWebSocket
+Module55=|relative|src\klippy\krpc
+Module56=|relative|src\custom_controls\lmB4XImageViewX
+Module57=|relative|src\generic\logMe
+Module58=|relative|src\main\MasterController
+Module59=|relative|src\helperClasses\objHelpers
 Module6=|relative|src\octoPrint\CheckOctoConnection
-Module60=|relative|src\helperClasses\objHelpers
-Module61=|relative|src\octoPrint\oc
+Module60=|relative|src\octoPrint\oc
+Module61=|relative|src\octoPrint\OctoKlippyMisc
 Module62=|relative|src\octoPrint\OctoSysCmds
-Module63=|relative|src\generic\OptionsCfgSeed
-Module64=|relative|src\pageViews\pageFiles
-Module65=|relative|src\pageViews\pageMenu
-Module66=|relative|src\pageViews\pageMovement
-Module67=|relative|src\pageViews\pagePrinting
-Module68=|relative|src\helperClasses\powerHelpers
-Module69=|relative|src\octoPrint\RequestApiKey
+Module63=OctoWebSocket
+Module64=|relative|src\generic\OptionsCfgSeed
+Module65=|relative|src\pageViews\pageFiles
+Module66=|relative|src\pageViews\pageMenu
+Module67=|relative|src\pageViews\pageMovement
+Module68=|relative|src\pageViews\pagePrinting
+Module69=|relative|src\helperClasses\powerHelpers
 Module7=|relative|src\custom_controls\CircularProgressBar
-Module70=|relative|src\b4xCustomizedClasses\sadAS_FloatingPanel
-Module71=|relative|src\b4xCustomizedClasses\sadB4XColorTemplate
-Module72=|relative|src\b4xExtensionClasses\sadB4XDialogHelper
-Module73=|relative|src\b4xCustomizedClasses\sadB4XDrawerAdvanced
-Module74=|relative|src\b4xExtensionClasses\sadB4XDrawerAdvancedHelper
-Module75=|relative|src\b4xCustomizedClasses\sadB4XInputTemplate
-Module76=|relative|src\b4xCustomizedClasses\sadClvSelections
-Module77=|relative|src\b4xCustomizedClasses\sadPreferencesDialog
-Module78=|relative|src\b4xExtensionClasses\sadPreferencesDialogHelper
-Module79=|relative|src\custom_controls\sadRoundSlider
+Module70=|relative|src\octoPrint\RequestApiKey
+Module71=|relative|src\b4xCustomizedClasses\sadAS_FloatingPanel
+Module72=|relative|src\b4xCustomizedClasses\sadB4XColorTemplate
+Module73=|relative|src\b4xExtensionClasses\sadB4XDialogHelper
+Module74=|relative|src\b4xCustomizedClasses\sadB4XDrawerAdvanced
+Module75=|relative|src\b4xExtensionClasses\sadB4XDrawerAdvancedHelper
+Module76=|relative|src\b4xCustomizedClasses\sadB4XInputTemplate
+Module77=|relative|src\b4xCustomizedClasses\sadClvSelections
+Module78=|relative|src\b4xCustomizedClasses\sadPreferencesDialog
+Module79=|relative|src\b4xExtensionClasses\sadPreferencesDialogHelper
 Module8=|relative|src\generic\clrTheme
-Module80=|relative|src\miscClasses\Stack
-Module81=|relative|src\main\startAtBoot
-Module82=|relative|src\main\Starter
-Module83=|relative|src\helperClasses\strHelpers
-Module84=|relative|src\miscClasses\SysInfo
-Module85=|relative|src\miscClasses\WildCardFilesList
+Module80=|relative|src\custom_controls\sadRoundSlider
+Module81=|relative|src\miscClasses\Stack
+Module82=|relative|src\main\startAtBoot
+Module83=|relative|src\main\Starter
+Module84=|relative|src\helperClasses\strHelpers
+Module85=|relative|src\miscClasses\SysInfo
+Module86=|relative|src\miscClasses\WildCardFilesList
 Module9=|relative|src\generic\config
 NumberOfFiles=50
 NumberOfLibraries=24
-NumberOfModules=85
+NumberOfModules=86
 Version=11.8
 @EndOfDesignText@
 #Region  Project Attributes 
-	#if klipper
-	#ApplicationLabel: KlipperTC
-	#VersionCode: 1
-	#VersionName: 0.8.0
-	#SignKeyFile: ..\keystore\klipper\release.keystore
- 	#SignKeyPassword: !!yt43k98!!  
-	#Else
 	#ApplicationLabel: OctoTC
 	#VersionCode: 50
-	#VersionName: 2.0.0
-	#SignKeyFile: ..\keystore\octo\release.keystore
- 	#SignKeyPassword: yt43k98!  
-	#end if
+	#VersionName: 23.09.0
+	#SignKeyFile: ..\keystore\release.keystore
+ 	#SignKeyPassword: !!OctoTC!!
 	
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: unspecified
@@ -246,13 +238,8 @@ Version=11.8
 '4 - Before the APK Is installed.
 '5 - After the APK Is installed.​
 
-#If klipper
-#CustomBuildAction:1, %WINDIR%\system32\cmd.exe,  /c copy "..\icons\klipper\klipper-icon.png" "..\build-icon.png" /y 
-#CustomBuildAction:1, %WINDIR%\system32\cmd.exe,  /c copy "..\icons\klipper\klipper-icon.png" "res\drawable\icon.png" /y 
-#else
 #CustomBuildAction:1, %WINDIR%\system32\cmd.exe,  /c copy "..\icons\octo\octo-icon.png" "..\build-icon.png" /y 
 #CustomBuildAction:1, %WINDIR%\system32\cmd.exe,  /c copy "..\icons\octo\octo-icon.png" "res\drawable\icon.png" /y 
-#End If
 #end region
 
 #Region  Activity Attributes 

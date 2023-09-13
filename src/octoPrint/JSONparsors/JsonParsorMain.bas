@@ -227,6 +227,10 @@ Public Sub  JobStatus(s As String)
 		If oc.lastJobPrintState <> oc.JobPrintState Then
 		'--- updated master buttons as soon as STATE changes
 			CallSubDelayed(B4XPages.MainPage,"Update_Printer_Btns")
+			'If oc.lastJobPrintState = gblConst.NOT_CONNECTED Or oc.JobPrintState = gblConst.NOT_CONNECTED Then
+			'	CallSubDelayed(B4XPages.MainPage,"Build_RightSideMenu")
+			'End If
+			
 		End If
 		oc.lastJobPrintState = oc.JobPrintState
 		'------------------------------------

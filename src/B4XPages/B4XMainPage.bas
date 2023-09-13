@@ -288,20 +288,31 @@ Private Sub TryPrinterConnection
 		oMasterController.Initialize
 	End If
 	If fnc.ReadConnectionFile(oMasterController.CN) = False Then
-		#if klipper
-		Dim o9 As dlgPrinterSetup : o9.Initialize
-		#else
-		Dim o9 As dlgOctoSetup : o9.Initialize("Printer Connection","PrinterSetup_Closed")
-		#End If
+		Dim o9 As dlgOctoSetup : 
+		o9.Initialize("Printer Connection","PrinterSetup_Closed")
 		o9.Show(True)
 	Else
 		If oc.IsConnectionValid Then
 			oMasterController.SetCallbackTargets(Me,"Update_Printer_Temps","Update_Printer_Status","Update_Printer_Btns")
 			oMasterController.Start
+			If Main.kvs.ContainsKey("OctoKlippy") = False Then
+				Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Is_OctoKlipper",800)
+			Else
+				oc.Klippy = Main.kvs.Get("OctoKlippy")
+			End If
+			
 		End If
 	End If
 
 End Sub
+
+Private Sub Is_OctoKlipper
+	Dim oo As OctoKlippyMisc
+	oo.Initialize 
+	Wait For (oo.IsOctoKlipper) Complete(i As Boolean)
+	Build_RightSideMenu
+End Sub
+
 
 #Region "PRINTER_EVENTS"
 '--- events called from the masterController
@@ -377,6 +388,7 @@ Private Sub btnPageAction_Click
 End Sub
 
 
+
 Public Sub Switch_Pages(action As String)
 	
 	'--- called from menu page class and back button
@@ -386,6 +398,7 @@ Public Sub Switch_Pages(action As String)
 	If oPageCurrent <> Null Then
 		CallSub(oPageCurrent,"Lost_Focus")
 	End If
+	
 	
 	'--- set defaults
 	btnPageAction.Text = Chr(0xE5C4)  '--- back button
@@ -479,16 +492,10 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			pObjCurrentDlg1 = o3.Initialize
 			o3.Show
 			
-		Case "oc"  '--- octo / klipper setup
-			#if klipper
-			Dim o9 As dlgPrinterSetup
-			o9.Initialize
-			o9.Show(False)
-			#else
+		Case "oc"  '--- octo setup
 			Dim o9 As dlgOctoSetup
 			o9.Initialize("Printer Connection","PrinterSetup_Closed")
 			o9.Show(False)
-			#End If
 			
 		Case "pw"  '--- android power setup
 			Dim o1 As dlgAndroidPowerOptions 
@@ -946,7 +953,7 @@ End Sub
 
 
 Private Sub Build_RightSideMenu
-	If gblConst.Klippy Then
+	If oc.Klippy Then
 		
 	End If
 	Log("Build_RightSideMenu")
@@ -957,16 +964,15 @@ Private Sub Build_RightSideMenu
 	Dim cs As CSBuilder
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
-	#if klipper
-	Dim DataPSU As Map = File.ReadMap(xui.DefaultFolder,gblConst.PSU_KLIPPER_SETUP_FILE)
+	
+'	If lblStatus.Text = gblConst.NOT_CONNECTED Then
+'		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Retry Connection").PopAll,"rcnt")
+'	End If
+	
 	If Data.GetDefault("m600",False).As(Boolean) Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Filament Change M600").PopAll,"m600")
 	End If
-	#Else
-	If Data.GetDefault("m600",False).As(Boolean) Then
-		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Filament Change M600").PopAll,"m600")
-	End If
-	#end if
+	
 	
 	'clvDrawer.AddTextItem(cs.Initialize.Size(12).Alignment("ALIGN_CENTER").Append("------------ SYS CMDS -----------").PopAll,"")
 	Dim fn As String
@@ -1029,6 +1035,7 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	SideMenu.CloseRightMenu
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	Select Case Value.As(String)
+					
 		Case "m600"
 			Dim mb2 As dlgMsgBox2
 			Dim w As Float = 400dip
@@ -1066,6 +1073,9 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 			
 		Case "g0","g1","g2","g3","g4","g5","g6","g7" '--- misc GCode commands
 			RunGCodeOnOff_Menu(Value.As(String).Replace("g","") & gblConst.GCODE_CUSTOM_SETUP_FILE)
+			
+		Case "rcnt"
+			lblStatus_Click
 			
 		Case "zled" '--- ZLED
 			If oc.isConnected = False Then

@@ -53,6 +53,9 @@ End Sub
 'End Sub
 '#end if
 Public Sub getCN() As HttpOctoRestAPI
+	If oCN.IsInitialized = False Then 
+		GetConnectionPrinterStatus
+	End If
 	Return oCN
 End Sub
 

@@ -209,9 +209,6 @@ Private Sub mnuCardImg_Click
 '	Log(oc.isConnected) 
 '	Log(oc.FormatedStatus)
 	
-	'#if klipper
-	'If oc.isconnected = False Or mMainObj.lblstatus.text = "no connection"  Then
-	'#else
 	If oc.isconnected = False Then 
 		guiHelpers.show_toast(gblConst.not_connected,1300)
 		Return

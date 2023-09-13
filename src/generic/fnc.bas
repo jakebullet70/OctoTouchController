@@ -52,20 +52,15 @@ End Sub
 Public Sub ReadConnectionFile(cn As HttpOctoRestAPI) As Boolean
 	
 	oc.IsConnectionValid = False '--- assume bad
+	If File.Exists(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE) = False Then
+		Return False
+	End If
 	
-	#if klipper
 	Dim m As Map = File.ReadMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE)
-	If m.IsInitialized = False Then Return False
-	oc.OctoIp     = m.Get( gblConst.psetupPRINTER_IP)
-	oc.OctoPort = m.Get( gblConst.psetupPRINTER_PORT)
-	oc.WSocketPort = m.Get( gblConst.psetupPRINTER_WSPORT)
-	#else
-	Dim m As Map = LoadPrinterConnectionSettings
 	If m.IsInitialized = False Then Return False
 	oc.OctoIp     = m.Get( gblConst.PRINTER_IP)
 	oc.OctoKey = m.Get( gblConst.PRINTER_OCTO_KEY)
 	oc.OctoPort = m.Get( gblConst.PRINTER_PORT)
-	#End If
 
 	If oc.OctoIp = "" Then 
 		oc.IsConnectionValid = False
@@ -79,57 +74,57 @@ Public Sub ReadConnectionFile(cn As HttpOctoRestAPI) As Boolean
 End Sub
 
 
-
-Public Sub LoadPrinterConnectionSettings() As Map
-		
-	'--- get the settings connection file
-	Dim fname As String = "default.psettings"
-	If File.Exists(xui.DefaultFolder,fname) = False Then
-		Return Null
-	End If
-	
-	'--- Should only be 1 settings file at this point
-	'"default.psettings"
-'	Dim o1 As WildCardFilesList : o1.Initialize
-'	Dim flist As List = o1.GetFiles(xui.DefaultFolder,"*.psettings",False,False)
-'	If flist.Size = 0 Then
+'
+'Public Sub LoadPrinterConnectionSettings() As Map
+'		
+'	'--- get the settings connection file
+'	Dim fname As String = "default.psettings"
+'	If File.Exists(xui.DefaultFolder,fname) = False Then
 '		Return Null
-'	Else
-'		If flist.Size = 1 Then
-'			fname = flist.Get(0)
-'		Else
-'			Log("TODO - we have to many .psetting config files, time for a popup selection!")
-'			Return Null
-'		End If
 '	End If
-	
-	Dim inMap As Map = File.ReadMap(xui.DefaultFolder,fname)
-	Return inMap
-	
-End Sub
-
-
+'	
+'	'--- Should only be 1 settings file at this point
+'	'"default.psettings"
+''	Dim o1 As WildCardFilesList : o1.Initialize
+''	Dim flist As List = o1.GetFiles(xui.DefaultFolder,"*.psettings",False,False)
+''	If flist.Size = 0 Then
+''		Return Null
+''	Else
+''		If flist.Size = 1 Then
+''			fname = flist.Get(0)
+''		Else
+''			Log("TODO - we have to many .psetting config files, time for a popup selection!")
+''			Return Null
+''		End If
+''	End If
+'	
+'	Dim inMap As Map = File.ReadMap(xui.DefaultFolder,fname)
+'	Return inMap
+'	
+'End Sub
+'
+'
 
 '================================= misc functions - methods ====================================
 '================================= misc functions - methods ====================================
 '================================= misc functions - methods ====================================
 '================================= misc functions - methods ====================================
 
-#if not (klipper)
-public Sub GetPrinterProfileConnectionFileName(UserProfileDescription As String) As String
-	
-	'--- returns a valid printer settings filename based off of the user entered description
-	'--- all files ending in '.psettings' will be valid primter connectikon setting in a map format
-	'	FORMAT CreateMap( _
-	'						gblConst.PRINTER_DESC : txtPrinterDesc.text, gblConst.PRINTER_IP: txtPrinterIP.Text, _
-	'						gblConst.PRINTER_PORT : txtPrinterPort.Text, gblConst.PRINTER_OCTO_KEY : txtOctoKey.Text)
-	
-	Return fileHelpers.CheckAndCleanFileName(UserProfileDescription) &  "__" & _
-						gblConst.PRINTER_SETTING_BASE_FILE_NAME & ".psettings"
-	
-
-End Sub
-#end if
+'#if not (klipper)
+'public Sub GetPrinterProfileConnectionFileName(UserProfileDescription As String) As String
+'	
+'	'--- returns a valid printer settings filename based off of the user entered description
+'	'--- all files ending in '.psettings' will be valid primter connectikon setting in a map format
+'	'	FORMAT CreateMap( _
+'	'						gblConst.PRINTER_DESC : txtPrinterDesc.text, gblConst.PRINTER_IP: txtPrinterIP.Text, _
+'	'						gblConst.PRINTER_PORT : txtPrinterPort.Text, gblConst.PRINTER_OCTO_KEY : txtOctoKey.Text)
+'	
+'	Return fileHelpers.CheckAndCleanFileName(UserProfileDescription) &  "__" & _
+'						gblConst.PRINTER_SETTING_BASE_FILE_NAME & ".psettings"
+'	
+'
+'End Sub
+'#end if
 
 
 Public Sub IsValidIPv4Address(IPAddress As String) As Boolean

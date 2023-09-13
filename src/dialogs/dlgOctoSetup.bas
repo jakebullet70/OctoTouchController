@@ -46,11 +46,11 @@ End Sub
 
 
 Public Sub Initialize( title As String, EventName As String) As Object
-	#if not (klipper)
+	
 	mMainObj = B4XPages.MainPage
 	mTitle = title
 	mEventName = EventName
-	#end if
+	
 	Return Me
 End Sub
 
@@ -85,7 +85,11 @@ Public Sub Show(firstRun As Boolean)
 	Dialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
 	dlgHelper.ThemeInputDialogBtnsResize
 	
-	If firstRun = False Then ReadSettingsFile
+	If firstRun = False Then 
+		ReadSettingsFile
+	Else
+		txtPrinterDesc.Text = "Default"		
+	End If
 	InvalidateConnection
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
 
@@ -104,13 +108,6 @@ Public Sub Show(firstRun As Boolean)
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 	
 End Sub
-
-Private Sub IsOctoKlipper
-	Dim oo As dlgAbout
-	oo.Initialize
-	oo.Check4OctoKlipper
-End Sub
-
 
 
 Private Sub Show_KB
@@ -152,20 +149,22 @@ End Sub
 private Sub Save_settings
 	
 	'Dim fname As String = fnc.GetPrinterProfileConnectionFileName(txtPrinterDesc.text) 'TODO, for multi configs
-	Dim fname As String = "default.psettings"
+	
 	Dim outMap As Map = CreateMap( _
 						gblConst.PRINTER_DESC : txtPrinterDesc.text, gblConst.PRINTER_IP: txtPrinterIP.Text, _
 						gblConst.PRINTER_PORT : txtPrinterPort.Text, gblConst.PRINTER_OCTO_KEY : txtOctoKey.Text)
 
 
 	guiHelpers.Show_toast(gblConst.DATA_SAVED,2500)
-	IsOctoKlipper
-	Wait For IsOctoKlipper
-	fileHelpers.SafeKill(fname)
-	File.WriteMap(xui.DefaultFolder,fname,outMap)
+	fileHelpers.SafeKill(gblConst.PRINTER_SETUP_FILE)
+	File.WriteMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE,outMap)
 	oc.IsConnectionValid = True
+
 	
 End Sub
+
+
+
 
 
 Private Sub SetSaveButtonState
@@ -394,7 +393,7 @@ End Sub
 private Sub ReadSettingsFile
 
 	'--- read settings file (if there is one) and pre-populate txt boxes
-	Dim m As Map = fnc.LoadPrinterConnectionSettings
+	Dim m As Map = File.ReadMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE)
 	If m.IsInitialized = False Then Return
 	
 	

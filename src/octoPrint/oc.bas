@@ -75,12 +75,7 @@ Sub Process_Globals
 	Public JobPrintThumbnail As String
 	Public JobPrintThumbnailSrc As String
 
-	#if klipper
-	Public KlipperFileSrcPath As String = ""
-	Public Const gcodeRelPos As String = "G91"
-	#End If
 	
-		
 	'======================================================================
 	'======================================================================
 	'======================================================================
@@ -500,6 +495,19 @@ Public Sub ResetStateVars
 	
 End Sub
 
+Public Sub IsKlippyConnected() As Boolean
+	If Klippy And BedActual.StartsWith("0") Then
+		Return False
+	End If
+	Return True
+End Sub
+Public Sub IsKlippyConnected2() As Boolean
+	If IsKlippyConnected = False Then
+		guiHelpers.Show_toast2("Klipper is NOT connected",2300)
+		Return False
+	End If
+	Return True
+End Sub
 		
 	
 	

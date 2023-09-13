@@ -212,7 +212,7 @@ Private Sub mnuCardImg_Click
 	If oc.isconnected = False Then 
 		guiHelpers.show_toast(gblConst.not_connected,1300)
 		Return
-	else if oc.Klippy And oc.BedActual.StartsWith("0") Then
+	else if Not (oc.IsKlippyConnected2) Then
 		guiHelpers.show_toast("Klipper is NOT connected",2300)
 		Return
 	End If

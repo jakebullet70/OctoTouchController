@@ -132,7 +132,7 @@ End Sub
 
 
 #Region "BRIGHTNESS BTN SUPPORT"
-Private Sub DoBrightnessDlg
+Public Sub DoBrightnessDlg
 	
 	Dim o1 As dlgBrightness
 	B4XPages.MainPage.pObjCurrentDlg1 = o1.Initialize("Screen Brightness",Me,"Brightness_Change")

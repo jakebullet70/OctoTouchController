@@ -48,7 +48,9 @@ Public Sub Show(defaultValue As Int)
 	dlgHelper.Initialize(mDialog)
 	
 	Dim p As B4XView = xui.CreatePanel("")
-	p.SetLayoutAnimated(0, 0, 0, 280dip, 280dip)
+	Dim h As Float = 280dip
+	If guiHelpers.gIsLandScape And guiHelpers.gScreenSizeAprox < 5.1 Then h = guiHelpers.gHeight * .8
+	p.SetLayoutAnimated(0, 0, 0, 280dip,h)
 	p.LoadLayout("viewRoundSlider")
 	
 	pnlMain.Color = clrTheme.Background

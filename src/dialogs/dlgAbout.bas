@@ -62,7 +62,7 @@ Public Sub Show
 	p.LoadLayout("dlgAbout")
 	BuildGUI
 	
-	If gblConst.Klippy = True Then lblOctoKlipper.Visible = True '--- checked in config.init class
+	If oc.Klippy = True Then lblOctoKlipper.Visible = True '--- checked in config.init class
 	
 	dlgHelper.ThemeDialogForm("About - " & Application.LabelName)
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "OK")
@@ -140,32 +140,3 @@ End Sub
 
 
 
-
-Public Sub Check4OctoKlipper
-	
-'	Dim oldKlippyKey As Boolean = False
-'	If Main.kvs.ContainsKey("OctoKlippy") = False Then 
-'		gblConst.Klippy1stRunOrChange = True
-'	Else
-'		oldKlippyKey = Main.kvs.Get("OctoKlippy")
-'	End If
-
-	'--- check if OctoKlipper plug in is installed	
-	Dim rs As ResumableSub =  B4XPages.MainPage.oMasterController.CN.SendRequestGetInfo("/plugin/pluginmanager/plugins")
-	Wait For(rs) Complete (Result As String)
-	If Result.Length <> 0 Then
-
-		Dim o As JsonParsorPlugins  : o.Initialize
-		If o.IsOctoKlipperRunning(Result) = True Then
-			gblConst.Klippy = True
-		End If
-		
-	End If
-	'---------------------------------------
-	
-'	If oldKlippyKey <> gblConst.Klippy Then
-'		gblConst.Klippy1stRunOrChange = True
-'	End If
-	Main.kvs.Put("OctoKlippy",gblConst.Klippy)
-	
-End Sub

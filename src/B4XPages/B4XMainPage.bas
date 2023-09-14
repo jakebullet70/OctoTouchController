@@ -572,7 +572,7 @@ Private Sub PopupFunctionOptionsMnu
 	pObjCurrentDlg1 = o1.Initialize(title,Me,"FncMenu_Event",pObjCurrentDlg1)
 	o1.IsMenu = True
 	Dim h As Float = 300dip
-	If guiHelpers.gIsLandScape Then h = guiHelpers.gHeight*.8
+	If guiHelpers.gIsLandScape Then h = guiHelpers.MaxVerticalHeight_Landscape
 	o1.Show(h,300dip,po)
 	
 	
@@ -931,7 +931,7 @@ Public Sub ShowPreHeatMenu_All2(titleTxt As String)
 		
 	pObjPreHeatDlg1 = ht.Initialize(title,Me,"TempChange_Presets",pObjPreHeatDlg1)
 	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,guiHelpers.gWidth - 10dip)
-	Dim h As Float = IIf(guiHelpers.gIsLandScape,guiHelpers.gHeight * .8,guiHelpers.gHeight * .7)
+	Dim h As Float = IIf(guiHelpers.gIsLandScape,guiHelpers.MaxVerticalHeight_Landscape,guiHelpers.gHeight * .7)
 		
 	BuildPreHeatMenu
 	ht.Show(h,w,mapMasterPreHeaterMenu)

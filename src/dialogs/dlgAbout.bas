@@ -48,7 +48,7 @@ Public Sub Show
 	Dim w,h As Float 
 	If guiHelpers.gIsLandScape Then
 		w = IIf(guiHelpers.gScreenSizeAprox < 6,460dip,640dip)
-		h = guiHelpers.gHeight * .8
+		h = guiHelpers.MaxVerticalHeight_Landscape
 	Else
 	 	w = IIf(guiHelpers.gScreenSizeAprox < 6,guiHelpers.gWidth - 40dip,520dip)
 		h = 310dip

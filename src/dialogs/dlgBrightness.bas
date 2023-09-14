@@ -49,7 +49,7 @@ Public Sub Show(defaultValue As Int)
 	
 	Dim p As B4XView = xui.CreatePanel("")
 	Dim h As Float = 280dip
-	If guiHelpers.gIsLandScape And guiHelpers.gScreenSizeAprox < 5.1 Then h = guiHelpers.gHeight * .8
+	If guiHelpers.gIsLandScape And guiHelpers.gScreenSizeAprox < 5.1 Then h = guiHelpers.MaxVerticalHeight_Landscape
 	p.SetLayoutAnimated(0, 0, 0, 280dip,h)
 	p.LoadLayout("viewRoundSlider")
 	

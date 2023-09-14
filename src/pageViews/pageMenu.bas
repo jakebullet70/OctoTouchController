@@ -177,11 +177,11 @@ End Sub
 
 Private Sub mnuCardImg1_Click
 	
-	#if klipper
-	If oc.isconnected = False Or mMainObj.lblstatus.text = "no connection"  Then
-	#else
+	If oc.IsKlippyConnected2 = False Then
+		Return
+	End If
+	
 	If oc.isconnected = False Then 
-	#end if
 		guiHelpers.show_toast(gblConst.not_connected,1000)
 		Return
 	End If
@@ -213,7 +213,6 @@ Private Sub mnuCardImg_Click
 		guiHelpers.show_toast(gblConst.not_connected,1300)
 		Return
 	else if Not (oc.IsKlippyConnected2) Then
-		guiHelpers.show_toast("Klipper is NOT connected",2300)
 		Return
 	End If
 	

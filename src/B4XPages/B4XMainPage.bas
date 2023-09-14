@@ -959,6 +959,7 @@ Private Sub Build_RightSideMenu
 	Log("Build_RightSideMenu")
 
 	clvDrawer.Clear
+	If oc.IsKlippyConnected = False Then Return
 	Dim size As Float = IIf(guiHelpers.gIsLandScape,20,22)
 	Dim txt As Object 
 	Dim cs As CSBuilder
@@ -998,13 +999,6 @@ Private Sub Build_RightSideMenu
 		End If
 	Next
 	
-	#if klipper
-	If DataPSU.GetDefault("active",False).As(Boolean) Then
-		txt = DataPSU.Get("desc")
-		If strHelpers.IsNullOrEmpty(txt) Then txt = "Printer Power Menu"
-		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,"pwr")
-	End If
-	#else
 	If config.ShowZLEDCtrlFLAG Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("ZLED Menu").PopAll,"zled")
 	End If
@@ -1014,10 +1008,14 @@ Private Sub Build_RightSideMenu
 	If config.ShowPwrCtrlFLAG Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Printer Power Menu").PopAll,"pwr")
 	End If
-	#End If
 		
 	If Data.GetDefault("syscmds",False).As(Boolean) Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("OS Systems Menu").PopAll,"sys")
+	End If
+	
+	If oc.Klippy And oc.IsKlippyConnected Then
+		'--- add a complete firmware restart btn and yes/no prompt
+		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Klipper Full Restart").PopAll,"kst")
 	End If
 	
 	If clvDrawer.Size = 0 Then '--- nothing in the menu so add something.
@@ -1032,17 +1030,34 @@ End Sub
 
 
 Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
+	Dim txt As String = "", w As Float
+	Dim mb2 As dlgMsgBox2
 	SideMenu.CloseRightMenu
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	Select Case Value.As(String)
-					
-		Case "m600"
-			Dim mb2 As dlgMsgBox2
-			Dim w As Float = 400dip
+		
+		Case "kst" '--- full octokliiper firmware restart
+			w = 400dip
 			If guiHelpers.gIsLandScape = False Then w = 90%x
 			mb2.Initialize(B4XPages.MainPage.Root,"Question", w, 150dip,False)
 			mb2.NewTextSize = 24
-			Wait For (mb2.Show("Touch RUN to start M600" & CRLF & "Filament change",gblConst.MB_ICON_QUESTION, "RUN","","CANCEL")) Complete (res As Int)
+			txt = "Touch RESTART to fully" & CRLF & "restart klipper"
+			If guiHelpers.gIsLandScape Then txt = txt.Replace(CRLF," ")
+			Wait For (mb2.Show(txt,gblConst.MB_ICON_QUESTION, "RESTART","","CANCEL")) Complete (res As Int)
+			If res = xui.DialogResponse_Cancel Then
+				Return
+			End If
+			SideMenu.BtnPressed(btnFRESTART)
+			
+					
+		Case "m600"
+			w = 400dip
+			If guiHelpers.gIsLandScape = False Then w = 90%x
+			mb2.Initialize(B4XPages.MainPage.Root,"Question", w, 150dip,False)
+			mb2.NewTextSize = 24
+			txt = "Touch RUN to start M600" & CRLF & "Filament change"
+			If guiHelpers.gIsLandScape Then txt = txt.Replace(CRLF," ")
+			Wait For (mb2.Show(txt,gblConst.MB_ICON_QUESTION, "RUN","","CANCEL")) Complete (res As Int)
 			If res = xui.DialogResponse_Cancel Then
 				Return
 			End If
@@ -1148,7 +1163,7 @@ End Sub
 
 
 Public Sub Send_Gcode(code As String)
-	If strHelpers.IsNullOrEmpty(code.Trim) = "" Then Return
+	If strHelpers.IsNullOrEmpty(code.Trim) Then Return
 	'  TODO ----  this function is like in 3 places - needs to be put in 1
 '	#if debug
 	'Log(code)

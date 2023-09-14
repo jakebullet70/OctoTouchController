@@ -460,10 +460,14 @@ Private Sub PopupMainOptionMenu
 	Dim o1 As dlgListbox
 	pObjCurrentDlg1 = o1.Initialize("Options Menu",Me,"OptionsMenu_Event",pObjCurrentDlg1)
 	o1.IsMenu = True
-	'Log(guiHelpers.gScreenSizeAprox)
-	
+'	Log(guiHelpers.gScreenSizeAprox)
+'	Log(guiHelpers.gHeight)
+'	Log(guiHelpers.gWidth)
+'	Log(guiHelpers.gFscale)
+'	Log(guiHelpers.gScreenSizeDPI)
+		
 	If guiHelpers.gIsLandScape Then '- TODO needs refactor for sizes
-		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,320dip,280dip),340dip,popUpMemuItems)
+		o1.Show(guiHelpers.gHeight*.8, 340dip,popUpMemuItems)
 	Else
 		If guiHelpers.gScreenSizeAprox < 5 Then
 			o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,436dip,340dip),guiHelpers.gWidth - 10dip,popUpMemuItems)
@@ -567,7 +571,10 @@ Private Sub PopupFunctionOptionsMnu
 	Dim o1 As dlgListbox
 	pObjCurrentDlg1 = o1.Initialize(title,Me,"FncMenu_Event",pObjCurrentDlg1)
 	o1.IsMenu = True
-	o1.Show(260dip,300dip,po)
+	Dim h As Float = 300dip
+	If guiHelpers.gIsLandScape Then h = guiHelpers.gHeight*.8
+	o1.Show(h,300dip,po)
+	
 	
 End Sub
 
@@ -628,7 +635,9 @@ Private Sub PopupPluginOptionMenu
 	Dim o1 As dlgListbox
 	pObjCurrentDlg1 = o1.Initialize(title,Me,"PluginsMenu_Event",pObjCurrentDlg1)
 	o1.IsMenu = True
-	o1.Show(260dip,300dip,popUpMemuItems)
+	Dim h As Float = 300dip
+	If guiHelpers.gIsLandScape Then h = guiHelpers.gHeight*.8
+	o1.Show(h,300dip,popUpMemuItems)
 	
 End Sub
 

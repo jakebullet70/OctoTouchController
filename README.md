@@ -6,27 +6,28 @@
 </p>
 
 # OctoTouchController (OctoTC)
-A dedicated touch screen controller for Octoprint supporting older Android phones / tablets (Android 4.X) 
-Device specs: Android **4.x or above**, 4inch screen with a minimum resolution of 680x340. It is Free Software and released under the [GNU Affero General Public License V3](https://www.gnu.org/licenses/agpl-3.0.html).  
+A dedicated touch screen controller for Octoprint supporting **older Android phones / tablets** (Android 4.X) 
+Device specs: Android **4.x and above**, 4inch screen with a minimum resolution of 680x340. (Single core - 512Mb) It is Free Software and released under the [GNU Affero General Public License V3](https://www.gnu.org/licenses/agpl-3.0.html).  
 ** Works with OctoKlipper **  
 
+NOTE: Newer Android phones WILL NOT WORK. I know now Android 13 fails and I have tested Android 4,5,6 and 7 myself. Google is **very** famous for breaking existing software with newer releases.   
 
-Add a dedicated touch screen to your 3D printer with a *LOW/NO COST* Android device you probibly already have!  
+Add a dedicated touch screen to your 3D printer with a *LOW/NO COST* Android device you probibly already have! No need for access to the Google Play Store.  
 
 
 ### Project Purpose
-Reclaim those old Phones / Tablets that are sitting around that *DO NOT* have access to the Google store anymore. 
-This in *not a replacement* for Octoprint but a way to add a dedicated touch screen to your printer using old - unused Android hardware.
+**Reclaim** those old Phones / Tablets that are sitting around that **DO NOT** have access to the Google store anymore. 
+This in *not a replacement* for Octoprint but a way to add a dedicated touch screen to your printer using **old - unused** Android hardware.
 
 
 ### Features
-Supports Android 4.X to the latest version  
+Supports Android 4.X to about Android V9.0    
 Native Android app, not a re-packaged web app  
 Portrait or landscape modes  
 Built in filament loading - unloading wizard  
 Built in manual bed leveling wizard  
 Support for Sonoff power device without Octoprint plugin  
-Colors themes to match your printers look  
+Colors [themes](https://github.com/jakebullet70/OctoTouchController/wiki/Custom-Theme) to match your printers look  
 View / select and print files right on the touch screen  
 Theme color builder  
   
@@ -47,7 +48,7 @@ ws281z LED			https://plugins.octoprint.org/plugins/ws281x_led_status/
 
 ### Project Status
 Initialze release Aug/26/2022  
-Latest release V1.3.0: Mar/16/2023  
+Latest release V1.3.1: Jul/30/2023  
 
 ### Installing  
 See https://github.com/jakebullet70/OctoTouchController/wiki/Installing  
@@ -69,5 +70,8 @@ Written in [B4X](https://www.b4x.com/)
 
 ![](./github_pics/files2.png?raw=true "Files")  
 
+V2 - Comming soon!  
+
+![image](https://github.com/jakebullet70/OctoTouchController/assets/14124210/3e537942-1178-4fbd-a424-d59870a5d6e2)
 
 

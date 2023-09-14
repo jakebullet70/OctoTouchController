@@ -27,7 +27,7 @@ Portrait or landscape modes
 Built in filament loading - unloading wizard  
 Built in manual bed leveling wizard  
 Support for Sonoff power device without Octoprint plugin  
-Colors [themes]([https://www.gnu.org/licenses/agpl-3.0.html](https://github.com/jakebullet70/OctoTouchController/wiki/Custom-Theme) to match your printers look  
+Colors [themes](https://github.com/jakebullet70/OctoTouchController/wiki/Custom-Theme) to match your printers look  
 View / select and print files right on the touch screen  
 Theme color builder  
   

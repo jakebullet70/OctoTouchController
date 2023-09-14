@@ -61,10 +61,6 @@ public Sub SendRequestGetInfo(octConst As String) As ResumableSub
 
 	Dim inSub As String = "SendRequestGetInfo"
 	Dim sAPI As String = $"http://${gIP}:${gPort}${octConst}?apikey=${mAPIkey}"$
-	#if klipper
-	sAPI = $"http://${gIP}:${gPort}${octConst}"$
-	#End If
-	
 	
 	Dim j As HttpJob: j.Initialize("", Me)
 	Dim retStr As String = ""
@@ -100,16 +96,11 @@ End Sub
 
 Public Sub PostRequest(PostApiCmd As String) As ResumableSub
 	
-	#if klipper
-	Dim EndPoint As String = $"http://${gIP}:${gPort}${PostApiCmd}"$
-	Wait For (PostRequest2(EndPoint,"")) Complete(r As String)
-	#else
 	Dim restAPI, JsonDataMsg As String
 	restAPI = Regex.Split("!!",PostApiCmd)(0)
 	JsonDataMsg = Regex.Split("!!",PostApiCmd)(1)
 	Dim EndPoint As String = $"http://${gIP}:${gPort}${restAPI}?apikey=${mAPIkey}"$
 	Wait For (PostRequest2(EndPoint,JsonDataMsg)) Complete(r As String)
-	#End If
 	Return r
 	
 End Sub
@@ -221,13 +212,8 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String) As Resumable
 	Dim j As HttpJob :	j.Initialize("", Me)
 	Try
 		
-		#if klipper
-		'--- TODO, nned  to parse exact file paths for gcode / files storage
-		j.Download(Link.Replace(".thumbs","server/files/gcodes/.thumbs"))
-		#else
 		j.Download(Link)
 		'j.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
-		#End If
 		
 	Catch
 		If config.logFILE_EVENTS Then logMe.LogIt2(LastException,mModule,InSub)
@@ -271,9 +257,6 @@ public Sub DeleteRequest(DeleteApiCmd As String) As ResumableSub
 
 	Dim InSub As String = "DeleteRequest"
 	Dim sAPI As String = $"http://${gIP}:${gPort}${DeleteApiCmd}?apikey=${mAPIkey}"$
-	#if klipper
-	sAPI = $"http://${gIP}:${gPort}${DeleteApiCmd}"$
-	#End If
 	
 	Dim job As HttpJob : job.Initialize("", Me)
 	Dim retStr As String = ""

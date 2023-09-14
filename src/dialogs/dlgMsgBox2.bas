@@ -32,9 +32,20 @@ Sub Class_Globals
 	
 End Sub
 
+Public Sub getVisible() As Boolean
+	Try
+		Return mDialog.Visible
+	Catch
+		Return False
+	End Try
+End Sub
+
+Public Sub Close_Me
+	mDialog.Close(xui.DialogResponse_Cancel)
+End Sub
+
 
 Public Sub Initialize(parentObj As B4XView, title As String, width As Float, height As Float,PutNegativeBtn2Left As Boolean)
-	
 	mMainObj = parentObj
 	mTitle   = title
 	mHeight  = height

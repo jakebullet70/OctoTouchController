@@ -68,10 +68,11 @@ Sub Class_Globals
 	'--- popups and wiz screens
 	Public pObjCurrentDlg1 As Object = Null
 	Public pObjCurrentDlg2 As Object = Null
-	Public pObjPreHeatDlg1 As dlgListbox = Null
+	Public pObjPreHeatDlg1 As dlgListbox
 	Public pnlWizards As Panel
 	Public pObjWizards As Object = Null
-	Private mErrorDlg As dlgMsgBox
+	Private mErrorDlg As dlgMsgBox 
+	Public pMBox2 As dlgMsgBox2 
 	
 End Sub
 
@@ -157,6 +158,12 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 		mErrorDlg.Close_Me
 		Return False
 	End If
+	
+	If pMBox2.IsInitialized And pMBox2.Visible Then
+		CallSubDelayed(pMBox2,"Close_Me")
+		Return False '--- cancel close request
+	End If
+	
 	If pObjPreHeatDlg1 <> Null And SubExists(pObjPreHeatDlg1,"Close_Me") Then
 		CallSubDelayed(pObjPreHeatDlg1,"Close_Me") 'ignore
 		pObjPreHeatDlg1 = Null
@@ -1031,7 +1038,7 @@ End Sub
 
 Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	Dim txt As String = "", w As Float
-	Dim mb2 As dlgMsgBox2
+	
 	SideMenu.CloseRightMenu
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	Select Case Value.As(String)
@@ -1039,11 +1046,11 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 		Case "kst" '--- full octokliiper firmware restart
 			w = 400dip
 			If guiHelpers.gIsLandScape = False Then w = 90%x
-			mb2.Initialize(B4XPages.MainPage.Root,"Question", w, 150dip,False)
-			mb2.NewTextSize = 24
+			pMBox2.Initialize(B4XPages.MainPage.Root,"Question", w, 150dip,False)
+			pMBox2.NewTextSize = 24
 			txt = "Touch RESTART to fully" & CRLF & "restart klipper"
 			If guiHelpers.gIsLandScape Then txt = txt.Replace(CRLF," ")
-			Wait For (mb2.Show(txt,gblConst.MB_ICON_QUESTION, "RESTART","","CANCEL")) Complete (res As Int)
+			Wait For (pMBox2.Show(txt,gblConst.MB_ICON_QUESTION, "RESTART","","CANCEL")) Complete (res As Int)
 			If res = xui.DialogResponse_Cancel Then
 				Return
 			End If
@@ -1053,11 +1060,11 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 		Case "m600"
 			w = 400dip
 			If guiHelpers.gIsLandScape = False Then w = 90%x
-			mb2.Initialize(B4XPages.MainPage.Root,"Question", w, 150dip,False)
-			mb2.NewTextSize = 24
+			pMBox2.Initialize(B4XPages.MainPage.Root,"Question", w, 150dip,False)
+			pMBox2.NewTextSize = 24
 			txt = "Touch RUN to start M600" & CRLF & "Filament change"
 			If guiHelpers.gIsLandScape Then txt = txt.Replace(CRLF," ")
-			Wait For (mb2.Show(txt,gblConst.MB_ICON_QUESTION, "RUN","","CANCEL")) Complete (res As Int)
+			Wait For (pMBox2.Show(txt,gblConst.MB_ICON_QUESTION, "RUN","","CANCEL")) Complete (res As Int)
 			If res = xui.DialogResponse_Cancel Then
 				Return
 			End If

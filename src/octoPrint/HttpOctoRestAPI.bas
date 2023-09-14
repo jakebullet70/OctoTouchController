@@ -136,20 +136,7 @@ Public Sub PostRequest2(EndPoint As String,JsonDataMsg As String) As ResumableSu
 	If job.Success Then
 		retStr = job.GetString
 	Else
-		#if klipper
-		If job.ErrorMessage.Contains("Move out of") Or  job.ErrorMessage.Contains("Movement out of r") Then
-			guiHelpers.Show_toast2("Movement out of  range",2200)
-		Else If job.ErrorMessage.Contains("Must home") Then
-			guiHelpers.Show_toast2("Must home axis first",3200)
-		End If
-		If Not (EndPoint.Contains(oc.cCMD_CANCEL)) Then '--- timeout error happens sometimes when canceling
-			ProcessErrMsg( EndPoint & CRLF & JsonDataMsg & CRLF &  job.ErrorMessage)
-		End If
-		Log( job.ErrorMessage)
-		#else
 		ProcessErrMsg( EndPoint & CRLF & JsonDataMsg & CRLF &  job.ErrorMessage)
-		#end if
-		
 	End If
 	
 	job.Release '--- free up resources

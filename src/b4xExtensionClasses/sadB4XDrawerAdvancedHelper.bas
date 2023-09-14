@@ -109,9 +109,12 @@ Public Sub Display_Btns
 			btnSTOP.Visible = True
 		End If
 	Else '--- no octoklipper
-		btnBrightness_F.Visible = True '--- pointer to btnFRESTART
-		btnScrnOff_R.Visible = True '--- pointer to btnRESTART
-		btnSTOP.Visible = False			
+'		btnBrightness_F.Visible = True '--- pointer to btnFRESTART
+'		btnScrnOff_R.Visible = True '--- pointer to btnRESTART
+'		btnSTOP.Visible = False			
+		btnBrightness_F.Visible = False '--- pointer to btnFRESTART
+		btnScrnOff_R.Visible = False '--- pointer to btnRESTART
+		btnSTOP.Visible = True
 	End If
 	
 '	

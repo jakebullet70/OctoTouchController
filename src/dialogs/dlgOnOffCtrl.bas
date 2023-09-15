@@ -35,7 +35,7 @@ Public Sub Initialize( title As String) As Object
 End Sub
 
 Public Sub Close_Me
-	mDialog.Close(-1)
+	mDialog.Close(xui.DialogResponse_Cancel)
 End Sub
 
 
@@ -100,7 +100,7 @@ Private Sub btnCtrl_Click
 	Wait For (SendCmd(o.Tag)) Complete(s As String)
 	#End If
 	
-	mDialog.Close(-1) '--- close it, exit dialog
+	mDialog.Close(xui.DialogResponse_Cancel) '--- close it, exit dialog
 	
 End Sub
 

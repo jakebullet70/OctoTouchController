@@ -27,7 +27,7 @@ Public Sub Initialize() As Object
 End Sub
 
 Public Sub Close_Me
-	mDialog.Close(-1)
+	mDialog.Close(xui.DialogResponse_Cancel)
 End Sub
 
 

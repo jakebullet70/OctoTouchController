@@ -27,7 +27,7 @@ Public Sub Initialize() As Object
 End Sub
 
 Public Sub Close_Me
-	mGeneralDlg.Dialog.Close(-1)
+	mGeneralDlg.Dialog.Close(xui.DialogResponse_Cancel)
 End Sub
 
 public Sub CreateDefaultFile

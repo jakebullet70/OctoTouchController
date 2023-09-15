@@ -26,7 +26,7 @@ Public Sub Initialize() As Object
 End Sub
 
 Public Sub Close_Me
-	mPowerDlg.Dialog.Close(-1)
+	mPowerDlg.Dialog.Close(xui.DialogResponse_Cancel)
 End Sub
 
 

@@ -214,7 +214,7 @@ Private Sub btnCtrl_Click
 		
 		Main.tmrTimerCallSub.CallSubDelayedPlus2(Main,"Start_ApkInstall",300,Array As String(DownloadDir))
 		
-		mDialog.Close(-1) '<--- close me, exit dialog
+		mDialog.Close(xui.DialogResponse_Cancel) '<--- close me, exit dialog
 		Return
 
 	Else

@@ -30,7 +30,7 @@ Public Sub Initialize() As Object
 End Sub
 
 Public Sub Close_Me
-	mBlCrTouch.Dialog.Close(-1)
+	mBlCrTouch.Dialog.Close(xui.DialogResponse_Cancel)
 End Sub
 
 public Sub CreateDefaultFile

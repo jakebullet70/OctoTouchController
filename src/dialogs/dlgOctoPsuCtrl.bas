@@ -38,7 +38,7 @@ Public Sub Initialize(mobj As B4XMainPage) As Object
 End Sub
 
 Public Sub Close_Me
-	mDialog.Close(-1)
+	mDialog.Close(xui.DialogResponse_Cancel)
 End Sub
 
 Public Sub Show
@@ -120,7 +120,7 @@ Private Sub btnCtrl_Click
 	If mRunMasterCtrlrStart = True And o.Tag = "on" Then
 		Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage.oMasterController,"Start",3000)
 	End If
-	mDialog.Close(-1) '--- close it, exit dialog
+	mDialog.Close(xui.DialogResponse_Cancel) '--- close it, exit dialog
 	
 End Sub
 

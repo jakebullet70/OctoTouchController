@@ -82,7 +82,7 @@ Public Sub Show(txt  As String, icon_file As String, _
 End Sub
 
 Public Sub Close_Me
-	mDialog.Close(-1)
+	mDialog.Close(xui.DialogResponse_Cancel)
 End Sub
 
 Private Sub CreateDoNotShowCheckbox

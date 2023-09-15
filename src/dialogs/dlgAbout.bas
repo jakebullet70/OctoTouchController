@@ -31,7 +31,7 @@ Public Sub Initialize() As Object
 End Sub
 
 Public Sub Close_Me
-	mDialog.Close(-1)
+	mDialog.Close(xui.DialogResponse_Cancel)
 End Sub
 
 
@@ -109,7 +109,7 @@ End Sub
 
 Private Sub Check4NewVer_Click
 	
-	mDialog.Close(-1) '--- close it, exit class dialog	
+	mDialog.Close(xui.DialogResponse_Cancel) '--- close it, exit class dialog
 	
 	Dim oo As dlgAppUpdate
 	oo.Initialize(B4XPages.MainPage.Root)

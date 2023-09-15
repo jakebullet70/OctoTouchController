@@ -30,7 +30,7 @@ Public Sub Initialize(title As String)
 End Sub
 
 Public Sub Close_Me
-	mDialog.Close(-1)
+	mDialog.Close(xui.DialogResponse_Cancel)
 End Sub
 
 Public Sub Show(fname As String)

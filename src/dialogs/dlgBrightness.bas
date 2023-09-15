@@ -25,7 +25,7 @@ Sub Class_Globals
 End Sub
 
 Public Sub Close_Me
-	mDialog.Close(-1)
+	mDialog.Close(xui.DialogResponse_Cancel)
 End Sub
 
 Public Sub Initialize( title As String, Callback As Object, EventName As String) As Object

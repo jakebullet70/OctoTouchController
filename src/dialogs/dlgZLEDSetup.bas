@@ -31,7 +31,7 @@ Public Sub Initialize(caption As String,dataFile As String) As Object
 End Sub
 
 Public Sub Close_Me
-	mDlg.Dialog.Close(-1)
+	mDlg.Dialog.Close(xui.DialogResponse_Cancel)
 End Sub
 
 Public Sub CreateDefaultFile

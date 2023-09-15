@@ -20,7 +20,7 @@ Sub Process_Globals
 	Public OctoKey, OctoIp ,OctoPort As String
 	Public WSocketPort As String = "" '--- klipper only
 	
-	Public FormatedTemps As String 
+	Public FormatedTemps As Object 
 	Public FormatedStatus As String = "No Connection"
 	Public FormatedJobPct As String
 		

@@ -27,6 +27,7 @@ Sub Class_Globals
 	Private xui As XUI
 	Public oMasterController As MasterController
 	Private toast As BCToast
+	Private csHdr As CSBuilder
 
 	'--- panel to cover screen for power ctrl
 	Public pnlScreenOff As Panel
@@ -345,9 +346,19 @@ Public Sub Update_Printer_Status
 		#End If
 		
 		
-		If oPageCurrent Is pageMovement  Or oPageCurrent Is pageFiles Then
-			If guiHelpers.gIsLandScape = False Then lblStatus.TextSize = 18 Else lblStatus.TextSize = 22
-			lblStatus.Text = lblStatus.Text & "  (" & oc.FormatedTemps.Replace(CRLF,"   ").Replace("C","") & ")"
+		If oPageCurrent Is pageMovement Or oPageCurrent Is pageFiles Then
+			If guiHelpers.gIsLandScape = False Then
+				lblStatus.TextSize = 18
+			Else
+				lblStatus.TextSize = 22
+			End If
+			
+		'	lblStatus.Text = lblStatus.Text.As(String) & _
+		'		"  (" & oc.FormatedTemps.Replace(CRLF,"   ").Replace("C","") & ")"
+			
+			lblStatus.Text = csHdr.Initialize.Append(lblStatus.Text).Append("  ").Append(oc.FormatedTemps).PopAll
+			
+			'oc.FormatedTemps
 '			If guiHelpers.gIsLandScape  Then
 '				lblStatus.Text = lblStatus.Text & "  (" & oc.FormatedTemps.Replace(CRLF,"   ").Replace("C","") & ")"
 '			Else

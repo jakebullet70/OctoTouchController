@@ -40,7 +40,11 @@ Sub Class_Globals
 	'--- maps for popup listboxes - formated!
 	Public mapBedHeatingOptions, mapToolHeatingOptions,mapAllHeatingOptions As Map
 	Public mapToolHeatValuesOnly,mapBedHeatValuesOnly As Map
-
+	
+	'--- pages top header
+	Private csHdr As CSBuilder
+	Private bedImg,toolImg As B4XBitmap
+	Private sizeHdrPic As Float
 
 	'--- stops calls from backing up if we have had a disconnect	
 	Private mGetTempFLAG_Busy, mJobStatusFLAG_Busy As Boolean = False
@@ -64,6 +68,16 @@ Public Sub Initialize
 	
 	mainObj = B4XPages.MainPage
 	parser.Initialize() '--- init the rest parser
+	
+	sizeHdrPic = IIf(guiHelpers.gIsLandScape,32dip,24dip)
+	
+	bedImg.IsInitialized
+	bedImg = guiHelpers.ChangeColorBasedOnAlphaLevel( _
+		LoadBitmapSample(File.DirAssets, "bed_header.png", sizeHdrPic, sizeHdrPic),clrTheme.txtNormal)
+	toolImg.IsInitialized
+	toolImg = guiHelpers.ChangeColorBasedOnAlphaLevel( _
+		LoadBitmapSample(File.DirAssets, "hotend_header.png", sizeHdrPic, sizeHdrPic),clrTheme.txtNormal)
+
 	
 '	#if klipper
 '	parsorConStatus.Initialize
@@ -221,10 +235,13 @@ Private Sub GetTemps
 		oc.ResetTempVars
 	End If
 	
-	Dim tmp As StringBuilder : tmp.Initialize
-	tmp.Append($"Tool: ${oc.Tool1Actual} / ${IIf(oc.tool1Target = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.tool1Target)}"$).Append(CRLF)
-	tmp.Append($"Bed: ${oc.BedActual} / ${IIf(oc.BedTarget = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.BedTarget)}"$)
-	oc.FormatedTemps = tmp.ToString
+'	Dim tmp As StringBuilder : tmp.Initialize
+'	tmp.Append($"Tool: ${oc.Tool1Actual} / ${IIf(oc.tool1Target = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.tool1Target)}"$).Append(CRLF)
+'	tmp.Append($"Bed: ${oc.BedActual} / ${IIf(oc.BedTarget = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.BedTarget)}"$)
+	oc.FormatedTemps = csHdr.Initialize.Image(toolImg,sizeHdrPic,sizeHdrPic,False). _
+		Append($" ${oc.Tool1Actual.Replace("C","")} / ${IIf(oc.tool1Target = $"0${gblConst.DEGREE_SYMBOL}C"$,"off ",oc.tool1Target.Replace("C",""))}"$). _
+		Append("   ").Image(bedImg,sizeHdrPic,sizeHdrPic,False). _
+		Append($" ${oc.BedActual.Replace("C","")} / ${IIf(oc.BedTarget = $"0${gblConst.DEGREE_SYMBOL}C"$,"off",oc.BedTarget.Replace("C",""))}"$).PopAll
 	
 	CallSub(mCallBack,mEventNameTemp)
 	

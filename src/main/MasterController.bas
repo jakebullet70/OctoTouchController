@@ -302,9 +302,11 @@ End Sub
 Private Sub GetConnectionPrinterStatus
 	
 	'--- called once on 1st start
-	If oCN.IsInitialized = False Then
+	If oCN.IsInitialized = False And oc.OctoIp <> "" Then
 		oCN.Initialize(oc.OctoIp ,oc.OctoPort,oc.OctoKey)
 	End If
+	If oc.OctoIp = "" Then Return '--- trying to init without IP / port
+	
 	
 	#if klipper
 	Try

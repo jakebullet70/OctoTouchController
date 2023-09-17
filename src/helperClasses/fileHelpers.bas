@@ -172,7 +172,7 @@ End Sub
 
 
 
-public Sub WriteTxt2Disk(str As String,folder As String, filename As String) 'ignore
+Public Sub WriteTxt2Disk(str As String,folder As String, filename As String) 'ignore
 	
 	'---- Simple, just write out a TXT file, use in debugging long JSON files
 	'--- TODO  see File.OpenOutput
@@ -183,3 +183,22 @@ public Sub WriteTxt2Disk(str As String,folder As String, filename As String) 'ig
 	TextWriter1.Close
 	
 End Sub
+
+
+Public Sub WriteTxt2SharedFolder(filename As String,txt As String) As Boolean 'ignore
+	'--- Used for debugging mostly
+	'--- Used for debugging mostly
+	Dim rp As RuntimePermissions
+	Dim ESDir As String = rp.GetSafeDirDefaultExternal("") 
+	'--- we should get an external shared folder that can be seen by the desktop
+	'   UNLESS you are on newer Android ver the Google thinks you are stupid and will not let you do it
+	If strHelpers.IsNullOrEmpty(ESDir) Then
+		logMe.LogIt("Getting external shared folder failed!","Init")
+		Return False
+	End If
+	SafeKill2(ESDir,filename)
+	WriteTxt2Disk(txt,ESDir,filename)
+	Return True
+End Sub
+
+

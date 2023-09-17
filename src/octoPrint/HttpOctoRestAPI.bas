@@ -28,6 +28,10 @@ Public Sub Initialize(octoIP As String, octoPort As String, octoAPIkey As String
 	mAPIkey = octoAPIkey
 	gPort = octoPort
 	
+	'--- debugging
+	'fileHelpers.WriteTxt2SharedFolder("octokey.txt",mAPIkey)
+	
+	
 End Sub
 
 

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <doclet-version-NOT-library-version>1.05</doclet-version-NOT-library-version>
+    <class>
+        <name>anywheresoftware.b4j.objects.MqttAsyncClientWrapper</name>
+        <shortname>MqttClient</shortname>
+        <comment>Implementation of a MQTT client.</comment>
+        <owner>process</owner>
+        <event>Connected (Success As Boolean)</event>
+        <event>Disconnected</event>
+        <event>MessageArrived (Topic As String, Payload() As Byte)</event>
+        <permission>android.permission.INTERNET</permission>
+        <method>
+            <name>Publish2</name>
+            <comment>Publishes a message to the given topic.
+Topic - The message will be delivered to this topic.
+Payload - Message payload.
+QOS - The QOS level.
+Retained - Whether the server should retain the message (only the last message per topic is retained).</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>Topic</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>Payload</name>
+                <type>byte[]</type>
+            </parameter>
+            <parameter>
+                <name>QOS</name>
+                <type>int</type>
+            </parameter>
+            <parameter>
+                <name>Retained</name>
+                <type>boolean</type>
+            </parameter>
+        </method>
+        <method>
+            <name>Connect</name>
+            <comment>Tries to connect to the broker. The Connected event will be raised.</comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>Close</name>
+            <comment>Asynchronously closes the connection.</comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>IsInitialized</name>
+            <comment></comment>
+            <returntype>boolean</returntype>
+        </method>
+        <method>
+            <name>Subscribe</name>
+            <comment>Subscribes to the given topic.
+Topic - Topic to subscribe.
+QOS - QOS setting.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>Topic</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>QOS</name>
+                <type>int</type>
+            </parameter>
+        </method>
+        <method>
+            <name>Unsubscribe</name>
+            <comment>Unsubscribes from the given topic.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>Topic</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>Initialize</name>
+            <comment>Initializes the client.
+EventName - Sets the subs that will handle the events.
+ServerURI - The server URI. For example: tcp://localhost:51044 or ssl://localhost:51044
+ClientId - Client ID (each client needs a unique id).</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>ba</name>
+                <type>anywheresoftware.b4a.BA</type>
+            </parameter>
+            <parameter>
+                <name>EventName</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>ServerURI</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>ClientId</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>Connect2</name>
+            <comment>Similar to Connect. Allows you to configure the connection options.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>Options</name>
+                <type>org.eclipse.paho.client.mqttv3.MqttConnectOptions</type>
+            </parameter>
+        </method>
+        <method>
+            <name>Publish</name>
+            <comment>Publishes a message to the given topic. The QOS will be set to 1.
+Topic - The message will be delivered to this topic.
+Payload - Message payload.
+For example:&lt;code&gt;
+Client.Publish("Topic1", "Message".GetBytes("UTF8"))&lt;/code&gt;</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>Topic</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>Payload</name>
+                <type>byte[]</type>
+            </parameter>
+        </method>
+        <property>
+            <name>Connected</name>
+            <returntype>boolean</returntype>
+            <comment>Returns true if the client is connected.</comment>
+        </property>
+        <property>
+            <name>ClientId</name>
+            <returntype>java.lang.String</returntype>
+            <comment>Gets the client id.</comment>
+        </property>
+        <field>
+            <name>QOS_0_MOST_ONCE</name>
+            <comment></comment>
+            <returntype>int</returntype>
+        </field>
+        <field>
+            <name>QOS_1_LEAST_ONCE</name>
+            <comment></comment>
+            <returntype>int</returntype>
+        </field>
+        <field>
+            <name>QOS_2_EXACTLY_ONCE</name>
+            <comment></comment>
+            <returntype>int</returntype>
+        </field>
+    </class>
+    <class>
+        <name>anywheresoftware.b4j.objects.MqttAsyncClientWrapper.MqttConnectOptionsWrapper</name>
+        <shortname>MqttConnectOptions</shortname>
+        <objectwrapper>org.eclipse.paho.client.mqttv3.MqttConnectOptions</objectwrapper>
+        <owner>process</owner>
+        <method>
+            <name>SetLastWill</name>
+            <comment>Sets the Last Will message that will be sent if the client was disconnected abruptly.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>Topic</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>Payload</name>
+                <type>byte[]</type>
+            </parameter>
+            <parameter>
+                <name>QOS</name>
+                <type>int</type>
+            </parameter>
+            <parameter>
+                <name>Retained</name>
+                <type>boolean</type>
+            </parameter>
+        </method>
+        <method>
+            <name>IsInitialized</name>
+            <comment></comment>
+            <returntype>boolean</returntype>
+        </method>
+        <method>
+            <name>Initialize</name>
+            <comment>Initializes the object and sets the username and password.
+Pass empty strings if username or password are not required.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>UserName</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <parameter>
+                <name>Password</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <property>
+            <name>UserName</name>
+            <returntype>java.lang.String</returntype>
+            <parameter>
+                <name>s</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <comment>Gets or sets the connection user name.</comment>
+        </property>
+        <property>
+            <name>CleanSession</name>
+            <returntype>boolean</returntype>
+            <parameter>
+                <name>b</name>
+                <type>boolean</type>
+            </parameter>
+            <comment>If set to true (default value) then the state will not be preserved in the case of client restarts.</comment>
+        </property>
+        <property>
+            <name>Password</name>
+            <returntype>java.lang.String</returntype>
+            <parameter>
+                <name>s</name>
+                <type>java.lang.String</type>
+            </parameter>
+            <comment>Gets or sets the connection password.</comment>
+        </property>
+    </class>
+    <version>1.01</version>
+</root>

@@ -17,7 +17,6 @@ Version=11.5
 
 Sub Class_Globals
 	
-	#if not (klipper)
 	Private const mModule As String = "dlgOctoSetup"' 'ignore
 	Private mMainObj As B4XMainPage
 	Private xui As XUI
@@ -39,7 +38,6 @@ Sub Class_Globals
 	Private oGetOctoKey As RequestApiKey
 	
 	Private Dialog As B4XDialog
-	#end if
 	
 End Sub
 
@@ -55,7 +53,6 @@ Public Sub Initialize( title As String, EventName As String) As Object
 End Sub
 
 
-#if not (klipper)
 Public Sub Show(firstRun As Boolean)
 	
 	mMainObj.pPrinterCfgDlgShowingFLAG = True
@@ -155,10 +152,10 @@ private Sub Save_settings
 	fileHelpers.SafeKill(gblConst.PRINTER_SETUP_FILE)
 	File.WriteMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE,outMap)
 	oc.IsConnectionValid = True
-
+	
+	
 	
 End Sub
-
 
 
 
@@ -172,19 +169,13 @@ Private Sub SetSaveButtonState
 	End Try 'ignore
 End Sub
 
+
 Private Sub EnableDisableBtns(en As Boolean)
-									
-	#if klipper
-	guiHelpers.EnableDisableViews(Array As B4XView( _
-									Dialog.GetButton(xui.DialogResponse_Positive),Dialog.GetButton(xui.DialogResponse_Cancel), _
-								 	btnCheckConnection),en)
-	
-	#else
+
 	guiHelpers.EnableDisableViews(Array As B4XView( _
 									Dialog.GetButton(xui.DialogResponse_Positive),Dialog.GetButton(xui.DialogResponse_Cancel), _
 								 	btnCheckConnection,btnGetOctoKey),en)
-	#End If
-			
+		
 End Sub
 
 
@@ -321,7 +312,7 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 		logMe.LogIt2(LastException,mModule,"RequestAPI_RequestComplete")
 		
 	End Try
-
+	
 	EnableDisableBtns(True)
 	SetSaveButtonState
 		
@@ -399,4 +390,3 @@ private Sub ReadSettingsFile
 	txtPrinterPort.Text = m.Get( gblConst.PRINTER_PORT)
 
 End Sub
-#end if

@@ -73,6 +73,11 @@ Public Sub SetVisible(btnArr() As B4XView,Visible As Boolean)
 		v.Visible = Visible
 	Next
 End Sub
+'Public Sub SetVisible2(btnArr() As Button,Visible As Boolean)
+'	For Each v As B4XView In btnArr
+'		v.Visible = Visible
+'	Next
+'End Sub
 
 '--- just an easy wat to Toast!!!!
 Public Sub Show_toast(msg As String, ms As Int)

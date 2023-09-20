@@ -17,6 +17,9 @@ Sub Process_Globals
 	Private Const LICENSE_FILE As String = "LICENSE.txt"
 	Public IsInit As Boolean = False
 	
+	
+	Public empw As String = "b4x!sadLogic512" '--- mailjet password for the moment
+	
 	'Public MQTTserverOnFLAG As Boolean = False
 	'Public MQTTclientOnFLAG As Boolean = False
 	
@@ -53,7 +56,7 @@ Sub Process_Globals
 	'Public ShowBedLevel_ManualFLAG As Boolean = False
 	'Public ShowBLCRtouchMenuFLAG As Boolean = False
 	
-	Public ShowBedLevel_MeshFLAG As Boolean = True
+	'Public ShowBedLevel_MeshFLAG As Boolean = True
 	Public ShowZ_Offset_WizFLAG As Boolean = True
 	
 	'Public ExternalSharedDir As String = ""
@@ -62,23 +65,12 @@ Sub Process_Globals
 End Sub
 
 Public Sub Init
-	
-'	Dim rp As RuntimePermissions
-'	ExternalSharedDir = rp.GetSafeDirDefaultExternal("") 
-'	'--- we should get an external shared folder that can be seen by the desktop
-'   UNLESS you are on newer Android ver the Google thinks you are stupid and will not let you do it
-'	If strHelpers.IsNullOrEmpty(ExternalSharedDir) Then 
-'		logMe.LogIt("Getting external shared folder failed!","Init")
-'		ExternalSharedDir = xui.DefaultFolder
-'	End If
 
-	oc.Klippy = Main.kvs.GetDefault("OctoKlippy",False)
+	oc.Klippy = Main.kvs.GetDefault(gblConst.IS_OCTO_KLIPPY,False)
 	LoadCfgs
 	IsInit = True
 	
-	If File.Exists(xui.DefaultFolder,LICENSE_FILE) = False Then
-		File.Copy(File.DirAssets,LICENSE_FILE,xui.DefaultFolder,LICENSE_FILE)
-	End If
+	If File.Exists(xui.DefaultFolder,LICENSE_FILE) = False Then	File.Copy(File.DirAssets,LICENSE_FILE,xui.DefaultFolder,LICENSE_FILE)
 	
 End Sub
 
@@ -196,28 +188,13 @@ Private Sub LoadCfgs()
 
 
 	'======================================================================
-	Dim key As String = "1stRunCopyDefGCode"
-	
+		
 	'--- dev -----------
 '	For jj = 0 To 7
 '		fileHelpers.SafeKill2(xui.DefaultFolder,jj & gblConst.GCODE_CUSTOM_SETUP_FILE)
 '	Next
 '	Main.kvs.Put(key,False)
 	'-------------------
-	
-	If Main.kvs.GetDefault(key,False) = False Then
-		Dim oSeed As OptionsCfgSeed : oSeed.Initialize
-		'fileHelpers.SafeKill("0" & gblConst.GCODE_CUSTOM_SETUP_FILE) '--- 1st GCode slot, make sure its gone
-		#if klipper
-		'--- need to do a klipper version?
-		'--- if GCODE starts with @ its a macro?
-		File.WriteMap(xui.DefaultFolder,"0" & gblConst.GCODE_CUSTOM_SETUP_FILE,oSeed.SeedBedLevelKlipper) '--- V2, needs testing!!!!!!!!!!!!
-		#else
-		'--- 1 default custom gcode included
-		File.WriteMap(xui.DefaultFolder,"0" & gblConst.GCODE_CUSTOM_SETUP_FILE,oSeed.SeedBedLevelMarlin) '--- G29 Heated
-		#end if
-		Main.kvs.Put(key,True) '--- lets never do this again!
-	End If
 	
 	If File.Exists(xui.DefaultFolder,"7" & gblConst.GCODE_CUSTOM_SETUP_FILE) = False Then
 		Dim oi7 As dlgGCodeCustSetup

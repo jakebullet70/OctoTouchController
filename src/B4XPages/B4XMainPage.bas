@@ -303,10 +303,10 @@ Private Sub TryPrinterConnection
 		If oc.IsConnectionValid Then
 			oMasterController.SetCallbackTargets(Me,"Update_Printer_Temps","Update_Printer_Status","Update_Printer_Btns")
 			oMasterController.Start
-			If Main.kvs.ContainsKey("OctoKlippy") = False Then
+			If Main.kvs.ContainsKey(gblConst.IS_OCTO_KLIPPY) = False Then
 				Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Is_OctoKlipper",800)
 			Else
-				oc.Klippy = Main.kvs.Get("OctoKlippy")
+				oc.Klippy = Main.kvs.Get(gblConst.IS_OCTO_KLIPPY)
 			End If
 			
 		End If
@@ -315,9 +315,15 @@ Private Sub TryPrinterConnection
 End Sub
 
 Private Sub Is_OctoKlipper
-	Dim oo As OctoKlippyMisc
-	oo.Initialize 
+	'--- only happens on 1st connection
+	Dim oo As OctoKlippyMisc : oo.Initialize 
 	Wait For (oo.IsOctoKlipper) Complete(i As Boolean)
+	oo.CreateDefGCodeFiles
+	If oc.Klippy Then 
+		'--- side menu defaulted to Marlin firmware, reset it
+		SideMenu.SkinMe(Array As Button(btnSTOP,btnFRESTART,btnRESTART),pnlMainDrawer,pnlBtnsDrawer)
+		SideMenu.Display_Btns
+	End If
 	Build_RightSideMenu
 End Sub
 
@@ -577,7 +583,7 @@ Private Sub PopupFunctionOptionsMnu
 	Dim po As Map = gui.BuildFunctionSetupMenu
 			
 	Dim title As Object = cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
-										Typeface(Typeface.DEFAULT).Append("  Internal Functions Menu").PopAll
+										Typeface(Typeface.DEFAULT).Append("  Movement Functions Menu").PopAll
 	
 	Dim o1 As dlgListbox
 	pObjCurrentDlg1 = o1.Initialize(title,Me,"FncMenu_Event",pObjCurrentDlg1)
@@ -980,9 +986,9 @@ End Sub
 
 
 Private Sub Build_RightSideMenu
-	If oc.Klippy Then
-		
-	End If
+'	If oc.Klippy Then
+'		
+'	End If
 	Log("Build_RightSideMenu")
 
 	clvDrawer.Clear

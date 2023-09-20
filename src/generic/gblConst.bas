@@ -10,13 +10,10 @@ Version=11.5
 ' V. 1.Whatever 	June-Nov/2022
 #End Region
 Sub Process_Globals
-	
-	Public empw As String = "b4x!sadLogic512" '--- mailjet password for the moment
-	
-	Public Klippy As Boolean = False '--- if we are OctoKlipper
-	
+		
 	Private DEBUG_TEST_INSTALL As Boolean = False
 	
+	Public Const IS_OCTO_KLIPPY As String = "IsKpy"
 	Public Const DATA_SAVED As String = "Data  Saved"
 	Public Const API_ANDROID_4_0 As Int = 14
 	Public Const API_ANDROID_4_4 As Int = 19
@@ -160,11 +157,11 @@ Sub Process_Globals
 	Public Const probeSave As String = "save"
 	
 	
-	#if klipper
-	Public KLIPPER_FRONTEND_NONE As Int = 0
-	Public KLIPPER_FRONTEND_MAINSAIL As Int = 1
-	Public KLIPPER_FRONTEND_FLUIDD As Int = 2
-	#End If
+'	#if klipper
+'	Public KLIPPER_FRONTEND_NONE As Int = 0
+'	Public KLIPPER_FRONTEND_MAINSAIL As Int = 1
+'	Public KLIPPER_FRONTEND_FLUIDD As Int = 2
+'	#End If
 	
 	
 End Sub

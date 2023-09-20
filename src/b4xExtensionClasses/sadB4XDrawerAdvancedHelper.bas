@@ -76,6 +76,7 @@ End Sub
 
 Public Sub SkinMe(b() As Button, p As B4XView,pb As B4XView)
 	guiHelpers.SkinButton(b)
+	'guiHelpers.SetVisible2(b,False)
 	btnSTOP = b(0)
 	btnFRESTART = b(1)
 	btnRESTART = b(2)
@@ -92,6 +93,11 @@ Public Sub SkinMe(b() As Button, p As B4XView,pb As B4XView)
 		txt = cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip).Append(Chr(0xE430)). _
 		Typeface(Typeface.DEFAULT).Append(CRLF & "Brightness").PopAll
 		btnBrightness_F.Text = txt : btnBrightness_F.Tag = "br"
+	Else
+		btnFRESTART.Text = "RESTART FIRMWARE"
+		btnFRESTART.Tag = "fr"
+		btnRESTART.Text = "RESTART HOST"
+		btnRESTART.Tag = "r"
 	End If
 		
 End Sub

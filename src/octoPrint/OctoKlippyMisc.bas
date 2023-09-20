@@ -10,7 +10,8 @@ Version=3.5
 
 Sub Class_Globals
 	Private Const mModule As String = "OctoKlippyMisc" 'ignore
-	
+	Private XUI As XUI
+	Private Const key1stInit As String = "1stRunCopyDefGCode"
 End Sub
 
 Public Sub Initialize
@@ -31,10 +32,35 @@ Public Sub IsOctoKlipper() As ResumableSub
 	End If
 	'---------------------------------------
 	
-	Main.kvs.Put("OctoKlippy",oc.Klippy)
+	Main.kvs.Put(gblConst.IS_OCTO_KLIPPY,oc.Klippy)
 	Return oc.Klippy
 	
 End Sub
 
 
 '===========================================================================
+Public Sub CreateDefGCodeFiles_Force
+	Main.kvs.Remove(key1stInit)
+	CreateDefGCodeFiles
+End Sub
+
+Public Sub CreateDefGCodeFiles
+	
+	'--- called from b4xMainPage connection
+	
+	If Main.kvs.GetDefault(key1stInit,False) = False Then
+		
+		Dim oSeed As OptionsCfgSeed : oSeed.Initialize
+		
+		'--- START - 1st GCode slot - G29
+		fileHelpers.SafeKill("0" & gblConst.GCODE_CUSTOM_SETUP_FILE) '--- 1st GCode slot, make sure its gone
+		'--- default custom gcode included
+		File.WriteMap(XUI.DefaultFolder,"0" & gblConst.GCODE_CUSTOM_SETUP_FILE,oSeed.SeedGCode1StRun) '--- G29, klipper or marlin
+		'--- END - 1st GCode slot
+		
+		Main.kvs.Put(key1stInit,True) '--- lets never do this again!
+	End If
+	
+End Sub
+
+

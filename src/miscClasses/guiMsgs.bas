@@ -108,7 +108,7 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	
 	#if not (klipper)
 	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE8C1)). _
-				 Typeface(Typeface.DEFAULT).Append("   Plugins Menu").PopAll,"plg")				 
+				 Typeface(Typeface.DEFAULT).Append("   Side Plugins Menu").PopAll,"plg")				 
 	
 	#ELSE
 	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE8C1)). _
@@ -117,7 +117,7 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	
 	
 	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
-				 Typeface(Typeface.DEFAULT).Append("   Internal Functions Menu").PopAll,"fn")
+				 Typeface(Typeface.DEFAULT).Append("   Movement Functions Menu").PopAll,"fn")
 		
 	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE3B7)). _
 				 Typeface(Typeface.DEFAULT).Append("   Color Themes").PopAll,"thm1")				 
@@ -146,6 +146,7 @@ Public Sub BuildFunctionSetupMenu() As Map
 	Dim cs As CSBuilder
 	Dim po As Map : po.Initialize
 	
+	'----------------------------------------------------------------
 	txt = " Change Filament Wizard"
 	If config.ReadWizardFilamentChangeFLAG  Then
 		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
@@ -153,13 +154,31 @@ Public Sub BuildFunctionSetupMenu() As Map
 	Else
 		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"fl")
 	End If
-	txt = " Manual Bed Leveling Wizard"
+	
+	
+	'----------------------------------------------------------------
 	If config.ReadManualBedLevelFLAG  Then
+		If oc.Klippy Then
+			txt = " Screw Bed Leveling Wizard"
+		Else
+			txt = " Manual Bed Leveling Wizard"
+		End If
 		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
 										Typeface(Typeface.DEFAULT).Append(txt).PopAll,"bl")
-	Else
-		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"bl")
 	End If
+	
+	
+'	'----------------------------------------------------------------
+'	txt = " Manual Mesh Wizard"
+'	txt = " Auto Bed Leveling Wizard"
+'   txt = " Set Z Offset Wizard"
+'	Else
+'		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"bl") ' this should work
+'	End If
+	
+	
+	
+	'----------------------------------------------------------------
 	txt = " BL/CR Touch Test Settings"
 	If config.ReadBLCRtouchFLAG  Then
 		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
@@ -167,6 +186,7 @@ Public Sub BuildFunctionSetupMenu() As Map
 	Else
 		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"blcr")
 	End If
+	
 	
 	
 	Dim data As Map, fname As String

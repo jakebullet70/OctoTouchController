@@ -287,9 +287,7 @@ Private Sub BuildFunctionMnu() As Map
 	If config.ReadWizardFilamentChangeFLAG  Then m.Put("Change Filament Wizard","cf")
 	If config.ReadBLCRtouchFLAG     		Then m.Put("BL/CR Touch Probe Testing","blcr")
 	
-	#if klipper
-	If config.ShowBedLevel_MeshFLAG	Then m.Put("Mesh Bed Leveling Wizard","mblw")
-	#end if
+	'If config.ShowBedLevel_MeshFLAG			Then m.Put("Mesh Bed Leveling Wizard","mblw")
 	
 	'If config.ShowZ_Offset_WizFLAG 	Then m.Put("Set Z Offset","zo")   TODO 
 	
@@ -317,12 +315,9 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 			CallSubDelayed2(mMainObj,"RunGCodeOnOff_Menu",value.As(String).Replace("f","") & gblConst.GCODE_CUSTOM_SETUP_FILE)
 			
 		Case "zo" '--- Z offset
-			#if klipper
 			Dim bm As dlgBedLevelMeshWiz2
 			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,value)
 			bm.Show("Set Z Offset")
-			#else
-			#end if
 			
 		Case "mblw"
 			#if klipper

@@ -150,6 +150,7 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	'--- catch the android BACK button
 	'--- catch the android BACK button
 	
+	
 	If Drawer.RightOpen Then
 		Drawer.RightOpen = False
 		Return False
@@ -181,12 +182,14 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	
 	
 	'--- NEED 2 BE CHECKED !!!!!!!!!!!!!!!!!!  v2 SEEMS 2 WORK ONLY IN RELEASE MODE
-	If pObjCurrentDlg2 <> Null And SubExists(pObjCurrentDlg2,"Close_Me") Then
+	If pObjCurrentDlg2 <> Null And SubExists(pObjCurrentDlg2,"Close_Me") Then 'pObjCurrentDlg2.As(dlgIpOnOffSetup).Visible = True Then
+		Log("maybe i will log something - closing pObjCurrentDlg2")
 		CallSubDelayed(pObjCurrentDlg2,"Close_Me") 'ignore
 		pObjCurrentDlg2 = Null
 		Return False '--- cancel close request
 	End If
 	If pObjCurrentDlg1 <> Null And SubExists(pObjCurrentDlg1,"Close_Me") Then
+		Log("maybe i will log something - closing pObjCurrentDlg1")
 		CallSubDelayed(pObjCurrentDlg1,"Close_Me") 'ignore
 		pObjCurrentDlg1 = Null
 		Return False '--- cancel close request
@@ -402,7 +405,7 @@ Public Sub Update_Printer_Btns
 End Sub
 #end region
 
-#region "MENUS"
+#region "MY PAGE CHANGING-SWITCHING CODE"
 Private Sub btnPageAction_Click
 	If oPageCurrent = oPageMenu Then
 		PopupMainOptionMenu
@@ -670,15 +673,9 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 	Select Case value
 			
 		Case "psu"  '--- sonoff / PSU control setup		
-			#if klipper
-			Dim oA1 As dlgIpOnOffSetup
-			pObjCurrentDlg2 = oA1.Initialize(Me,"Rebuild_RightMnu")
-			oA1.Show("Printer Power Config",gblConst.PSU_KLIPPER_SETUP_FILE)
-			#else
 			Dim oA As dlgOctoPsuSetup
 			pObjCurrentDlg2 = oA.Initialize("PSU Config")
 			oA.Show
-			#End If
 			
 		Case "1","2","3","4"
 			Dim oA1 As dlgIpOnOffSetup

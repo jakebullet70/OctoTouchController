@@ -237,7 +237,7 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String) As Resumable
 			Out.Close
 			'Log("Download_AndSaveFile-dloading: " & fileName)
 		Else
-			Log("failed to dload thumbnail")
+			logMe.LogIt2("failed to dload thumbnail: " & j.ErrorMessage,mModule,InSub)
 		End If
 		
 	Catch

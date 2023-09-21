@@ -38,7 +38,7 @@ Public Sub IsOctoKlipper() As ResumableSub
 End Sub
 
 
-'===========================================================================
+'=========================================================================== TODO move this code
 Public Sub CreateDefGCodeFiles_Force
 	Main.kvs.Remove(key1stInit)
 	CreateDefGCodeFiles

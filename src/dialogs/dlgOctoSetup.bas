@@ -38,6 +38,7 @@ Sub Class_Globals
 	Private oGetOctoKey As RequestApiKey
 	
 	Private Dialog As B4XDialog
+	Private ws As OctoWebSocket
 	
 End Sub
 
@@ -298,9 +299,28 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 
 	Try
 		If Success Then
+			
 			txtOctoKey.Text = result.As(String)
 			ValidConnection = True
 			guiHelpers.Show_toast("Requested API key OK!",1800)
+			
+			'--- WS check
+			'Dim SocketOK As Boolean = False
+			ws.Initialize(Me,"wsocket",txtPrinterIP.Text,txtPrinterPort.text,txtOctoKey.Text)
+			Wait For (ws.ProviderInstall) Complete (b As Boolean) '--- SSL / Android 4.x crap / cleanup
+			Wait For (ws.Connect) Complete (msg As String) '--- connect to socket
+			If msg = "" Then
+				'--- if error we never get here, this needs a refatctor but as this will only happen 1 in a million times...
+				'Dim mb As dlgMsgBox : mb.Initialize(mainObj.Root,"Problem",320dip, 160dip,False)
+				'Wait For (mb.Show("Web Socket Connection failure.", gblConst.MB_ICON_WARNING,"","","OK")) Complete (res As Int)
+				Log("------------- Socket FAILED ------")
+			Else
+				'mPrefDlg.Dialog.GetButton(xui.DialogResponse_Positive).Visible = True
+				'guiHelpers.Show_toast2("Connection OK!",2000)
+				Log("------------- Socket OK ------")
+			End If
+			ws.wSocket.Close
+			
 		Else
 			Dim w As Float = IIf(guiHelpers.gIsLandScape,500dip,94%x)
 			Dim mb As dlgMsgBox : mb.Initialize(mMainObj.Root,"Problem",w, 220dip,False)
@@ -318,6 +338,8 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 		
 End Sub
 #end region
+
+
 
 
 Private Sub CheckInputs() As String

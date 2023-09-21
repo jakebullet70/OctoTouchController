@@ -15,6 +15,7 @@ Sub Class_Globals
 	
 	Private oCN As HttpOctoRestAPI
 	Public parser As JsonParsorMain
+	Public oWS As OctoWebSocket
 '	#if klipper
 '	Public parsorConStatus As JsonParsorConnectionStatus
 '	Private oWSk As KlippyWebSocket

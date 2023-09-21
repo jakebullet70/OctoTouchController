@@ -44,6 +44,9 @@ End Sub
 '	Return b
 'End Sub
 
+Public Sub gIsPortrait() As Boolean
+	Return Not (gIsLandScape)
+End Sub
 
 
 '---  change color of bitmap

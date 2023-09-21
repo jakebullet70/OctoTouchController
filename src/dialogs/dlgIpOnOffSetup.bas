@@ -74,7 +74,9 @@ Public Sub Show(title As String,dataFileName As String)
 	
 	 ' guiHelpers.gWidth * guiHelpers.gScreenSizeDPI
 	mPrefDlg.Initialize(B4XPages.MainPage.root, title, w, h)
-	mPrefDlg.LoadFromJson(File.ReadString(File.DirAssets,"dlgonoff.json"))
+	Dim s As String = File.ReadString(File.DirAssets,"dlgonoff.json")
+	If guiHelpers.gIsLandScape = False Then s = s.Replace("1st Command","1st Cmd") '--- portrait screen GUI fix
+	mPrefDlg.LoadFromJson(s)
 	mPrefDlg.SetEventsListener(Me,"dlgEvent")
 	
 	mPrefHelper.Initialize(mPrefDlg)

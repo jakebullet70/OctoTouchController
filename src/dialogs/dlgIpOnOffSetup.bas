@@ -25,6 +25,14 @@ Public Sub Initialize(callbackMod As Object, callbackMethod As String) As Object
 	Return Me
 End Sub
 
+Public Sub Visible() As Boolean
+	Try
+		Return mPrefDlg.Dialog.Visible
+	Catch
+		Return False
+	End Try
+End Sub
+
 Public Sub Close_Me
 	mPrefDlg.Dialog.Close(xui.DialogResponse_Cancel)
 End Sub

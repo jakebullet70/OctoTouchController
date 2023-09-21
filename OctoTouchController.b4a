@@ -214,11 +214,12 @@ Module82=|relative|src\main\startAtBoot
 Module83=|relative|src\main\Starter
 Module84=|relative|src\helperClasses\strHelpers
 Module85=|relative|src\miscClasses\SysInfo
-Module86=|relative|src\miscClasses\WildCardFilesList
+Module86=|relative|src\octoPrint\WebSocketParse
+Module87=|relative|src\miscClasses\WildCardFilesList
 Module9=|relative|src\generic\config
 NumberOfFiles=52
 NumberOfLibraries=25
-NumberOfModules=86
+NumberOfModules=87
 Version=12.5
 @EndOfDesignText@
 #Region  Project Attributes 

@@ -18,7 +18,6 @@ Sub Process_Globals
 	Public Klippy As Boolean = False
 	
 	Public OctoKey, OctoIp ,OctoPort As String
-	Public WSocketPort As String = "" '--- klipper only
 	
 	Public FormatedTemps As Object 
 	Public FormatedStatus As String = "No Connection"
@@ -27,9 +26,7 @@ Sub Process_Globals
 	Public isConnected As Boolean = False
 	Public isPrinting As Boolean = False
 	Public isCanceling As Boolean = False
-	#if klipper
-	Public isKlipperCanceling As Boolean = False
-	#End If
+	
 	Public IsPaused2 As Boolean = False
 	Public isHeating As Boolean = False
 	Public isFileLoaded As Boolean = False
@@ -91,70 +88,50 @@ Sub Process_Globals
 	Public Const cAPI_KEY_REQUEST As String = $"/plugin/appkeys/request!!{"app": "!APP!"}"$ '--- POST
 	Public Const cAPI_KEY_PROBE_WAIT As String = "/plugin/appkeys/request/!APP_TOKEN!" '--- GET
 	
-	#if klipper
-	Public const cPOST_GCODE As String = "/printer/gcode/script?script=!G!"
-	#else
+	
 	'--- has a split char for the API and the JSON payload, char is '!!'
-	Private const cPOST_GCODE As String = "/api/printer/command"
-	Public const cPOST_GCODE_COMMAND As String = $"${cPOST_GCODE}!!{"command": "!CMD!"}"$
-	Public const cPOST_GCODE_COMMANDS As String = $"${cPOST_GCODE}!!{"commands": ["!CMDS!"]}"$
+	Private Const cPOST_GCODE As String = "/api/printer/command"
+	Public Const cPOST_GCODE_COMMAND As String = $"${cPOST_GCODE}!!{"command": "!CMD!"}"$
+	Public Const cPOST_GCODE_COMMANDS As String = $"${cPOST_GCODE}!!{"commands": ["!CMDS!"]}"$
 	'---                                                      {"commands": ["M18","M106 S0"]}
-	#End If
 	
-		
-	
-	
-	#if klipper
-	Public Const cFILES As String = "/server/files/list"
-	#else
+			
 	Public Const cFILES As String = "/api/files"
 	Public Const cFILES_ALL As String = "/api/files?recursive=true" '----  NOT WORKING ------------   PERMISSION ERROR  
-	#End If
 	
-	
-	Private const cPOST_FILES As String = "/api/files/!LOC!/!PATH!" '--- !LOC! = local or sdcard
-	Public const cPOST_FILES_PRINT As String = $"${cPOST_FILES}!!{"command": "select","print": true}"$
-	Public const cPOST_FILES_SELECT As String = $"${cPOST_FILES}!!{"command": "select","print": false}"$
-	Public const cDELETE_FILES_DELETE As String = $"${cPOST_FILES}"$
-	
+	Private Const cPOST_FILES As String = "/api/files/!LOC!/!PATH!" '--- !LOC! = local or sdcard
+	Public Const cPOST_FILES_PRINT As String = $"${cPOST_FILES}!!{"command": "select","print": true}"$
+	Public Const cPOST_FILES_SELECT As String = $"${cPOST_FILES}!!{"command": "select","print": false}"$
+	Public Const cDELETE_FILES_DELETE As String = $"${cPOST_FILES}"$
 	
 	
 	
-	#if klipper
-	Public const cCMD_PRINT As String =  $"/printer/print/start?filename=!FN!"$
-	Public const cCMD_CANCEL As String = "/printer/print/cancel"
-	Public const cCMD_PAUSE As String = "/printer/print/pause"
-	Public const cCMD_RESUME As String = "/printer/print/resume"
-	
-	
-	#else
 	'--- has a split char for the API and the JSON payload, char is '!!'
 	'--- has a split char for the API and the JSON payload, char is '!!'
 	'--- has a split char for the API and the JSON payload, char is '!!'
-	Private const cPOST_JOB As String = "/api/job"
+	Private Const cPOST_JOB As String = "/api/job"
 	'Public const cCMD_RESTART As String = $"${cPOST_JOB}!!{ "command": "restart" }"$
-	Public const cCMD_PRINT As String =  $"${cPOST_JOB}!!{ "command": "start" }"$
-	Public const cCMD_CANCEL As String = $"${cPOST_JOB}!!{ "command": "cancel" }"$
-	Public const cCMD_PAUSE As String = $"${cPOST_JOB}!!{ "command": "pause","action": "pause" }"$
-	Public const cCMD_RESUME As String = $"${cPOST_JOB}!!{ "command": "pause","action": "resume" }"$
-	#End If
+	Public Const cCMD_PRINT As String =  $"${cPOST_JOB}!!{ "command": "start" }"$
+	Public Const cCMD_CANCEL As String = $"${cPOST_JOB}!!{ "command": "cancel" }"$
+	Public Const cCMD_PAUSE As String = $"${cPOST_JOB}!!{ "command": "pause","action": "pause" }"$
+	Public Const cCMD_RESUME As String = $"${cPOST_JOB}!!{ "command": "pause","action": "resume" }"$
 	
 	
-	Private const cPOST_JOG As String = "/api/printer/printhead"
-	Public const cJOG_XY_HOME As String = $"${cPOST_JOG}!!{"command": "home", "axes": ["x", "y"]}"$
-	Public const cJOG_Z_HOME As String = $"${cPOST_JOG}!!{"command": "home", "axes": ["z"]}"$
-	Public const cJOG_XYZ_MOVE As String = $"${cPOST_JOG}!!{"command": "jog","!DIR!": !SIZE!}"$
+	Private Const cPOST_JOG As String = "/api/printer/printhead"
+	Public Const cJOG_XY_HOME As String = $"${cPOST_JOG}!!{"command": "home", "axes": ["x", "y"]}"$
+	Public Const cJOG_Z_HOME As String = $"${cPOST_JOG}!!{"command": "home", "axes": ["z"]}"$
+	Public Const cJOG_XYZ_MOVE As String = $"${cPOST_JOG}!!{"command": "jog","!DIR!": !SIZE!}"$
 	
 	'--- has a split char for the API and the JSON payload, char is '!!'
 	'--- has a split char for the API and the JSON payload, char is '!!'
-	Private const cPOST_PRINTER_TOOL As String = "/api/printer/tool"
+	Private Const cPOST_PRINTER_TOOL As String = "/api/printer/tool"
 	'--- you can change the selected tool head by replacing 'tool0' with 'tool1' to select the 2nd print head
-	Public const cCMD_TOOL_SELECT As String = $"${cPOST_PRINTER_TOOL}!!{"command": "select", "tool":"tool0""$
-	Public const cCMD_TOOL_EXTRUDE_RETRACT As String = $"${cPOST_PRINTER_TOOL}!!{"command": "extrude", "amount":!LEN!}"$
+	Public Const cCMD_TOOL_SELECT As String = $"${cPOST_PRINTER_TOOL}!!{"command": "select", "tool":"tool0""$
+	Public Const cCMD_TOOL_EXTRUDE_RETRACT As String = $"${cPOST_PRINTER_TOOL}!!{"command": "extrude", "amount":!LEN!}"$
 	
-	Public const cCMD_SET_BED_TEMP As String = $"/api/printer/bed!!{"command": "target","target": !VAL!}"$
-	Public const cCMD_SET_TOOL_TEMP2 As String = $"${cPOST_PRINTER_TOOL}!!{"command": "target","targets": {"tool0": !VAL0!,	"tool1": !VAL1!}}"$
-	Public const cCMD_SET_TOOL_TEMP As String = $"${cPOST_PRINTER_TOOL}!!{"command": "target","targets": {"tool0": !VAL0!}}"$
+	Public Const cCMD_SET_BED_TEMP As String = $"/api/printer/bed!!{"command": "target","target": !VAL!}"$
+	Public Const cCMD_SET_TOOL_TEMP2 As String = $"${cPOST_PRINTER_TOOL}!!{"command": "target","targets": {"tool0": !VAL0!,	"tool1": !VAL1!}}"$
+	Public Const cCMD_SET_TOOL_TEMP As String = $"${cPOST_PRINTER_TOOL}!!{"command": "target","targets": {"tool0": !VAL0!}}"$
 	
 	'======================================================================
 	#if klipper
@@ -165,7 +142,7 @@ Sub Process_Globals
 	#End If
 	
 	'--- location – The location of the file for which to retrieve the information, either local or sdcard.
-	Public const cFILE_INFO As String = "/api/files/!LOCATION!/!FNAME!"   
+	Public Const cFILE_INFO As String = "/api/files/!LOCATION!/!FNAME!"
 		'	{"name": "whistle_v2.gcode",
 		'	"size": 1468987,
 		'	"date": 1378847754,
@@ -189,7 +166,7 @@ Sub Process_Globals
 		'	"success": True 	}	}	}
 			
 	
-	Public const cPRINTER_PROFILES As String = "/api/printerprofiles" 
+	Public Const cPRINTER_PROFILES As String = "/api/printerprofiles"
 	'	{
 	'	"profiles": {
 	'	"_default": {
@@ -298,19 +275,19 @@ Sub Process_Globals
 '	'	}
 
 	
-	Public const cSERVER As String = "/api/server"
+	Public Const cSERVER As String = "/api/server"
 	'https://docs.octoprint.org/en/master/api/server.html
 	'{"safemode":null,"version":"1.5.2"}
 		
-	Public const cVERSION As String = "/api/version"
+	Public Const cVERSION As String = "/api/version"
 	'https://docs.octoprint.org/en/master/api/version.html
 	'{"api":"0.1","server":"1.5.2","text":"OctoPrint 1.5.2"}
 			
-	Public const cCURRENT_USER As String = "/api/currentuser"
+	Public Const cCURRENT_USER As String = "/api/currentuser"
 	'{"groups":["admins","users"],"name":"_api","permissions":
 	'["ADMIN","STATUS","CONNECTION","WEBCAM","SYSTEM","FILES_LIST","FILES_UPLOAD","FILES_DOWNLOAD","FILES_DELETE","FILES_SELECT","PRINT","GCODE_VIEWER","MONITOR_TERMINAL","CONTROL","SLICE","TIMELAPSE_LIST","TIMELAPSE_DOWNLOAD","TIMELAPSE_DELETE","TIMELAPSE_ADMIN","SETTINGS_READ","SETTINGS","PLUGIN_ACTION_COMMAND_NOTIFICATION_SHOW","PLUGIN_ACTION_COMMAND_NOTIFICATION_CLEAR","PLUGIN_ACTION_COMMAND_PROMPT_INTERACT","PLUGIN_ANNOUNCEMENTS_READ","PLUGIN_ANNOUNCEMENTS_MANAGE","PLUGIN_APPKEYS_ADMIN","PLUGIN_BACKUP_ACCESS","PLUGIN_FIRMWARE_CHECK_DISPLAY","PLUGIN_LOGGING_MANAGE","PLUGIN_PI_SUPPORT_STATUS","PLUGIN_PLUGINMANAGER_MANAGE","PLUGIN_PLUGINMANAGER_INSTALL","PLUGIN_SOFTWAREUPDATE_CHECK","PLUGIN_SOFTWAREUPDATE_UPDATE","PLUGIN_SOFTWAREUPDATE_CONFIGURE"]}
 	
-	Public const cPRINTER_MASTER_STATE As String = "/api/printer"
+	Public Const cPRINTER_MASTER_STATE As String = "/api/printer"
 	'	{
 	'	"temperature": {
 	'	"tool0": {
@@ -414,7 +391,7 @@ Sub Process_Globals
 ''''''''	'	}	}	}
 	
 	
-	Public const cPRINTER_TEMPLATES As String = "/api/settings/templates"
+	Public Const cPRINTER_TEMPLATES As String = "/api/settings/templates"
 	
 	
 End Sub
@@ -431,10 +408,6 @@ public Sub ResetAllOctoVars
 	IsPaused2 = False
 	isHeating = False
 	OctoVersion   = "N/A"
-	#if klipper
-	KlipperFileSrcPath = ""
-	isKlipperCanceling = False
-	#End If
 	
 	FilesB4Xmap.Initialize
 		

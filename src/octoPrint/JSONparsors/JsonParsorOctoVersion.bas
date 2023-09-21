@@ -1,5 +1,5 @@
 ﻿B4J=true
-Group=OCTOPRINT\PARSORS
+Group=OCTOPRINT\PARSORS-RestAPI
 ModulesStructureVersion=1
 Type=Class
 Version=8.8

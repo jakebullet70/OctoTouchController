@@ -101,20 +101,47 @@ Public Sub Connect() As ResumableSub
 	mConnected = True
 	'If mRaiseMsgEvent = False Then
 	Wait For ws_TextMessage (Message As String)
+		
+	Wait For (B4XPages.MainPage.oMasterController.CN.PostRequest($"/api/login!!{ "passive": "true" }"$)) Complete (r As String)
+	Dim parser As JSONParser : parser.Initialize(r) : Dim root As Map = parser.NextObject
+	Wait For (SendAndWait($"{"auth": "${root.Get("name")}:${root.Get("session")}"}"$)) Complete (msg As String)
+	
+	'Log(msg)
 	Return Message
 	'End If
 	
 End Sub
 
 
+Public Sub Subcription_Start
+	Dim s As String = $"
+	{	
+		"subscribe": {"state": {"logs": "^Recv: Cap",
+      	"messages": false
+    	},
+    	"events": true,
+    	"plugins": false
+  		}
+	}"$
+	
+	
+	
+End Sub
+
+
 '--- master msg event method
 Private Sub ws_TextMessage(Message As String)
-	Log(Message)
 	
-	If  (mIgnoreMasterOctoEvent And Message.Contains("notify_proc_stat_update")) Then
-		'--- {"jsonrpc": "2.0", "method": "notify_proc_stat_update", "params": [{"moonraker_stats": {"time": 1682259505.1849313, "cpu_usage": 1.93, "memory": 42916, "mem_units": "kB"}, "cpu_temp": 39.545, "network": {"lo": {"rx_bytes": 1013712283, "tx_bytes": 1013712283, "rx_packets": 785249, "tx_packets": 785249, "rx_errs": 0, "tx_errs": 0, "rx_drop": 0, "tx_drop": 0, "bandwidth": 0.0}, "eth0": {"rx_bytes": 108377478, "tx_bytes": 1008089809, "rx_packets": 1501935, "tx_packets": 915902, "rx_errs": 0, "tx_errs": 3, "rx_drop": 0, "tx_drop": 0, "bandwidth": 1127.61}}, "system_cpu_usage": {"cpu": 0.51, "cpu0": 0.0, "cpu1": 0.0, "cpu2": 0.0, "cpu3": 1.0}, "system_memory": {"total": 999584, "available": 742260, "used": 257324}, "websocket_connections": 1}]}
-		Return
+	
+	Dim KlippyMsg As String = $"{"plugin": "klipper""$
+	If Message.Contains(KlippyMsg) Then
+		Log(Message)
 	End If
+	
+'	If  (mIgnoreMasterOctoEvent And Message.Contains("notify_proc_stat_update")) Then
+'		'--- {"jsonrpc": "2.0", "method": "notify_proc_stat_update", "params": [{"moonraker_stats": {"time": 1682259505.1849313, "cpu_usage": 1.93, "memory": 42916, "mem_units": "kB"}, "cpu_temp": 39.545, "network": {"lo": {"rx_bytes": 1013712283, "tx_bytes": 1013712283, "rx_packets": 785249, "tx_packets": 785249, "rx_errs": 0, "tx_errs": 0, "rx_drop": 0, "tx_drop": 0, "bandwidth": 0.0}, "eth0": {"rx_bytes": 108377478, "tx_bytes": 1008089809, "rx_packets": 1501935, "tx_packets": 915902, "rx_errs": 0, "tx_errs": 3, "rx_drop": 0, "tx_drop": 0, "bandwidth": 1127.61}}, "system_cpu_usage": {"cpu": 0.51, "cpu0": 0.0, "cpu1": 0.0, "cpu2": 0.0, "cpu3": 1.0}, "system_memory": {"total": 999584, "available": 742260, "used": 257324}, "websocket_connections": 1}]}
+'		Return
+'	End If
 	
 '	Dim klippyMethod As String = GetKlippyMethod(Message)
 '	If Not (strHelpers.IsNullOrEmpty(klippyMethod)) And SubExists(mCallbackModule,klippyMethod) Then
@@ -171,7 +198,6 @@ Public Sub SendAndWait(cmd As String) As ResumableSub
 	
 	wSocket.SendText(cmd)
  	Wait For ws_TextMessage (Message As String)
-	
 	Return Message
 End Sub
 

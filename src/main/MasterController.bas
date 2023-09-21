@@ -16,6 +16,8 @@ Sub Class_Globals
 	Private oCN As HttpOctoRestAPI
 	Public parser As JsonParsorMain
 	Public oWS As OctoWebSocket
+	Public parserWO As WebSocketParse
+	
 '	#if klipper
 '	Public parsorConStatus As JsonParsorConnectionStatus
 '	Private oWSk As KlippyWebSocket
@@ -292,11 +294,8 @@ Private Sub GetJobStatus
 End Sub
 
 Private Sub InitWebSocket'ignore
-	#if klipper
-	oWSk.Initialize(parserK,"wsocket",oc.OctoIp,oc.WSocketPort)
-	oWSk.Connect
-	#else
-	#end if
+	oWS.Initialize(parserWO,"wsocket",oc.OctoIp,oc.octoPort,oc.OctoKey)
+	oWS.Connect
 End Sub
 
 
@@ -308,14 +307,12 @@ Private Sub GetConnectionPrinterStatus
 	End If
 	If oc.OctoIp = "" Then Return '--- trying to init without IP / port
 	
-	
-	#if klipper
 	Try
-		If oWSk.IsInit = False Then InitWebSocket
+		If oWS.IsInit = False Then InitWebSocket
 	Catch
 		InitWebSocket
 	End Try
-	#End If
+	
 
 	'---force a connection if its not there
 	Dim rs As ResumableSub = oCN.PostRequest(oc.cCMD_AUTO_CONNECT_STARTUP)
@@ -325,7 +322,7 @@ Private Sub GetConnectionPrinterStatus
 	Dim rs As ResumableSub = oCN.SendRequestGetInfo(oc.cCONNECTION_INFO)
 	Wait For(rs) Complete (Result As String)
 	If Result.Length <> 0 Then
-		
+		'fileHelpers.WriteTxt2SharedFolder("rest-connect.txt",Result)
 		Dim o2 As JsonParsorConnectionStatus
 		o2.Initialize
 		o2.ConnectionStatus(Result)

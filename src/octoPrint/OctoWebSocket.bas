@@ -113,12 +113,12 @@ Public Sub Connect() As ResumableSub
 	
 	
 	
-'	'--- set subscriptions
-'	Dim subscribe As String = $"{"subscribe": {
-'    "state": {"logs": true,"messages": false},"events": true,"plugins": true}
-'	}"$
-'	Wait For (SendAndWait(subscribe)) Complete (msg As String)
-'	Log("subscribe: " & msg)
+	'--- set subscriptions
+	Dim subscribe As String = $"{"subscribe": {
+    "state": {"logs": false,"messages": true},"events": true,"plugins": [klipper]}
+	}"$
+	Wait For (SendAndWait(subscribe)) Complete (msg As String)
+	Log("subscribe: " & msg)
 
 	
 	'--- Set the AUTH and start the events

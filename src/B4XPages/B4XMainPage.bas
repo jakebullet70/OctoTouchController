@@ -217,6 +217,7 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	'--- as 'back button' should turn it on but is not
 	B4XPages.GetNativeParent(Me).Finish 
 	
+	oMasterController.oWS.wSocket.Close
 	Return True '--- exit app
 	
 End Sub

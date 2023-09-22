@@ -42,6 +42,8 @@ Public Sub Initialize(callbackModule As Object, callbackBase As String,ip As Str
 End Sub
 
 Private Sub DisableStrictMode
+	Dim InSub As String = "DisableStrictMode"
+	logMe.LogIt2("Start",mModule,InSub)
 	Dim jo As JavaObject
 	jo.InitializeStatic("android.os.Build.VERSION")
 	If jo.GetField("SDK_INT") > 9 Then
@@ -50,10 +52,15 @@ Private Sub DisableStrictMode
 		policy = policy.RunMethodJO("permitAll", Null).RunMethodJO("build", Null)
 		Dim sm As JavaObject
 		sm.InitializeStatic("android.os.StrictMode").RunMethod("setThreadPolicy", Array(policy))
+		logMe.LogIt2("Done",mModule,InSub)
+	Else
+		logMe.LogIt2("Skipped < Android 9",mModule,InSub)
 	End If
 End Sub
 
 Public Sub ProviderInstall() As ResumableSub
+	Dim InSub As String = "ProviderInstall"
+	logMe.LogIt2("Start",mModule,InSub)
 	'--- Android 4.x SSL stuff
 	'https://www.b4x.com/android/forum/threads/websocket-client-library.40221/#content
 	'https://www.b4x.com/android/forum/threads/ssl-websocket-client.88472/
@@ -68,9 +75,9 @@ Public Sub ProviderInstall() As ResumableSub
 	jo.RunMethod("installIfNeededAsync", Array(context, listener))
 	Wait For listener_Event (MethodName As String, Args() As Object)
 	If MethodName = "onProviderInstalled" Then
-		Log("Provider installed successfully")
+		logMe.LogIt2("Provider installed successfully",mModule,InSub)
 	Else
-		Log("Error installing provider: " & Args(0))
+		logMe.LogIt2("Error installing provider: " & Args(0),mModule,InSub)
 		mErrorSecProvider = True
 	End If
 	Return mErrorSecProvider
@@ -84,6 +91,7 @@ End Sub
 'ws://192.168.1.193:80/websocket?apikey=D009C78831ED4A25A9E48D2EC3538261
 
 Public Sub Connect() As ResumableSub
+	Log("wb start")
 	Dim Const thisSub As String	= "Connect"
 	Try
 		If wSocket.Connected Then Return ""
@@ -94,39 +102,39 @@ Public Sub Connect() As ResumableSub
 	logMe.LogIt2("WS connecting...",mModule,thisSub)
 	
 	mConnected = False
+	'--- Init the socket
 	wSocket.Initialize("ws")
 	wSocket.Connect($"ws://${mIP}:${mPort}/sockjs/websocket?apikey=${mKey}"$)
 	Wait For ws_Connected
 	logMe.LogIt2("WS connected...",mModule,thisSub)
 	mConnected = True
-	'If mRaiseMsgEvent = False Then
 	Wait For ws_TextMessage (Message As String)
-		
+	Log("wb init end")
+	
+	
+	
+'	'--- set subscriptions
+'	Dim subscribe As String = $"{"subscribe": {
+'    "state": {"logs": true,"messages": false},"events": true,"plugins": true}
+'	}"$
+'	Wait For (SendAndWait(subscribe)) Complete (msg As String)
+'	Log("subscribe: " & msg)
+
+	
+	'--- Set the AUTH and start the events
+	'--- (we can tell if Klipper is running from here, need to remove the klippy check code)
 	Wait For (B4XPages.MainPage.oMasterController.CN.PostRequest($"/api/login!!{ "passive": "true" }"$)) Complete (r As String)
 	Dim parser As JSONParser : parser.Initialize(r) : Dim root As Map = parser.NextObject
 	Wait For (SendAndWait($"{"auth": "${root.Get("name")}:${root.Get("session")}"}"$)) Complete (msg As String)
+	Log("AUTH end")
 	
-	'Log(msg)
-	Return Message
-	'End If
+	'--- A value of 2 will set the rate limit to maximally one message every 1s, 3 to maximally one message every 1.5s and so on.
+	Send($"{"throttle": 9}"$)
+	
+	Return Message '--- this is the connected message
 	
 End Sub
 
-
-Public Sub Subcription_Start
-	Dim s As String = $"
-	{	
-		"subscribe": {"state": {"logs": "^Recv: Cap",
-      	"messages": false
-    	},
-    	"events": true,
-    	"plugins": false
-  		}
-	}"$
-	
-	
-	
-End Sub
 
 
 '--- master msg event method
@@ -136,7 +144,10 @@ Private Sub ws_TextMessage(Message As String)
 	Dim KlippyMsg As String = $"{"plugin": "klipper""$
 	If Message.Contains(KlippyMsg) Then
 		Log(Message)
+		Return
 	End If
+	
+		Log(Message)
 	
 '	If  (mIgnoreMasterOctoEvent And Message.Contains("notify_proc_stat_update")) Then
 '		'--- {"jsonrpc": "2.0", "method": "notify_proc_stat_update", "params": [{"moonraker_stats": {"time": 1682259505.1849313, "cpu_usage": 1.93, "memory": 42916, "mem_units": "kB"}, "cpu_temp": 39.545, "network": {"lo": {"rx_bytes": 1013712283, "tx_bytes": 1013712283, "rx_packets": 785249, "tx_packets": 785249, "rx_errs": 0, "tx_errs": 0, "rx_drop": 0, "tx_drop": 0, "bandwidth": 0.0}, "eth0": {"rx_bytes": 108377478, "tx_bytes": 1008089809, "rx_packets": 1501935, "tx_packets": 915902, "rx_errs": 0, "tx_errs": 3, "rx_drop": 0, "tx_drop": 0, "bandwidth": 1127.61}}, "system_cpu_usage": {"cpu": 0.51, "cpu0": 0.0, "cpu1": 0.0, "cpu2": 0.0, "cpu3": 1.0}, "system_memory": {"total": 999584, "available": 742260, "used": 257324}, "websocket_connections": 1}]}

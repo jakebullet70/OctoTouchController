@@ -121,7 +121,6 @@ Library21=viewsex
 Library22=websocket
 Library23=xui
 Library24=xui views
-Library25=jmqtt
 Library3=b4xcollections
 Library4=b4xpages
 Library5=b4xpreferencesdialog
@@ -218,7 +217,7 @@ Module86=|relative|src\octoPrint\WebSocketParse
 Module87=|relative|src\miscClasses\WildCardFilesList
 Module9=|relative|src\generic\config
 NumberOfFiles=52
-NumberOfLibraries=25
+NumberOfLibraries=24
 NumberOfModules=87
 Version=12.5
 @EndOfDesignText@

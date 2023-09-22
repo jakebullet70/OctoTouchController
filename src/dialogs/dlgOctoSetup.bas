@@ -38,7 +38,6 @@ Sub Class_Globals
 	Private oGetOctoKey As RequestApiKey
 	
 	Private Dialog As B4XDialog
-	Private ws As OctoWebSocket
 	
 End Sub
 
@@ -306,7 +305,8 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 			
 			'--- WS check
 			'Dim SocketOK As Boolean = False
-			ws.Initialize(Me,"wsocket",txtPrinterIP.Text,txtPrinterPort.text,txtOctoKey.Text)
+			Dim ws As OctoWebSocket
+			ws.Initialize(txtPrinterIP.Text,txtPrinterPort.text,txtOctoKey.Text)
 			Wait For (ws.ProviderInstall) Complete (b As Boolean) '--- SSL / Android 4.x crap / cleanup
 			Wait For (ws.Connect) Complete (msg As String) '--- connect to socket
 			If msg = "" Then

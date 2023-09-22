@@ -16,7 +16,7 @@ Sub Class_Globals
 	Private oCN As HttpOctoRestAPI
 	Public parser As JsonParsorMain
 	Public oWS As OctoWebSocket
-	Public parserWO As WebSocketParse
+	
 	
 '	#if klipper
 '	Public parsorConStatus As JsonParsorConnectionStatus
@@ -72,21 +72,14 @@ Public Sub Initialize
 	mainObj = B4XPages.MainPage
 	parser.Initialize() '--- init the rest parser
 	
+	'--- const for the header temp string label thingy
 	sizeHdrPic = IIf(guiHelpers.gIsLandScape,32dip,24dip)
-	
 	bedImg.IsInitialized
 	bedImg = guiHelpers.ChangeColorBasedOnAlphaLevel( _
 		LoadBitmapSample(File.DirAssets, "bed_header.png", sizeHdrPic, sizeHdrPic),clrTheme.txtNormal)
 	toolImg.IsInitialized
 	toolImg = guiHelpers.ChangeColorBasedOnAlphaLevel( _
 		LoadBitmapSample(File.DirAssets, "hotend_header.png", sizeHdrPic, sizeHdrPic),clrTheme.txtNormal)
-
-	
-'	#if klipper
-'	parsorConStatus.Initialize
-'	parserK.Initialize
-'	#End If
-	
 	
 End Sub
 
@@ -141,8 +134,8 @@ Public Sub tmrMain_Tick
 	
 	'--- make API requested and update screen
 	'--- Timer is in 'Main'
-	GetTemps
-	GetJobStatus
+	GetTemps      '- V2 change to sockets
+	GetJobStatus  '- V2 change to sockets
 	
 
 End Sub
@@ -294,7 +287,7 @@ Private Sub GetJobStatus
 End Sub
 
 Private Sub InitWebSocket'ignore
-	oWS.Initialize(parserWO,"wsocket",oc.OctoIp,oc.octoPort,oc.OctoKey)
+	oWS.Initialize(oc.OctoIp,oc.octoPort,oc.OctoKey)
 	oWS.Connect
 End Sub
 

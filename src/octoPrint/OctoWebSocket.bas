@@ -6,12 +6,6 @@ Version=11.8
 @EndOfDesignText@
 Sub Class_Globals
 	Private Const mModule As String = "OctoWebSocket" 'ignore
-	Private mCallbackModule As Object 'ignore
-	Private mCallbackBase As String 'ignore
-	Private mCallBackRecTxt As String'ignore
-	
-	Public pCallbackModule2 As Object = Null'ignore
-	Public pCallbackSub2 As String = ""  'ignore
 	
 	Private mIP As String 'ignore
 	Private mPort As String 'ignore
@@ -23,21 +17,21 @@ Sub Class_Globals
 	
 	Public IsInit As Boolean = False
 	Public mIgnoreMasterOctoEvent As Boolean = True
-	'Private mTestingConnection As Boolean = False
+	Public pParserWO As WebSocketParse
+	
+	
 End Sub
 
-#Event: RecievedText
-#Event: Closed
-#Event: Connected
+'#Event: RecievedText
+'#Event: Closed
+'#Event: Connected
 
 'Initializes the object. You can add parameters to this method if needed.
-Public Sub Initialize(callbackModule As Object, callbackBase As String,ip As String, port As String, key As String)
-	mCallbackModule = callbackModule
-	mCallbackBase = callbackBase
+Public Sub Initialize(ip As String, port As String, key As String)
 	mPort = IIf(strHelpers.IsNullOrEmpty(port),"80",port) '--- TODO if port is null then should popup connect dialog, should never happen but did! LOL
 	mIP = ip
 	mKey = key
-	mCallBackRecTxt = mCallbackBase & "_RecievedText"
+	pParserWO.Initialize
 	IsInit = True
 End Sub
 
@@ -91,46 +85,56 @@ End Sub
 'ws://192.168.1.193:80/websocket?apikey=D009C78831ED4A25A9E48D2EC3538261
 
 Public Sub Connect() As ResumableSub
+	'--- we wont ever run this code if the REST API fails
 	Log("wb start")
+	
 	Dim Const thisSub As String	= "Connect"
 	Try
-		If wSocket.Connected Then Return ""
+		If wSocket.Connected Then 
+			Log("wSocket is already connected")
+			Return ""
+		End If
 	Catch
 		'Log(LastException)
 	End Try'ignore
 
 	logMe.LogIt2("WS connecting...",mModule,thisSub)
+	mConnected = False '--- assume bad
 	
-	mConnected = False
 	'--- Init the socket
 	wSocket.Initialize("ws")
 	wSocket.Connect($"ws://${mIP}:${mPort}/sockjs/websocket?apikey=${mKey}"$)
 	Wait For ws_Connected
 	logMe.LogIt2("WS connected...",mModule,thisSub)
-	mConnected = True
 	Wait For ws_TextMessage (Message As String)
+	
 	Log("wb init end")
 	
-	
-	
 	'--- set subscriptions
-	Dim subscribe As String = $"{"subscribe": {
-    "state": {"logs": false,"messages": true},"events": true,"plugins": [klipper]}
-	}"$
-	Wait For (SendAndWait(subscribe)) Complete (msg As String)
-	Log("subscribe: " & msg)
-
+'	Dim subscribe As String = $"{"subscribe": {
+'    "state": {
+'      "logs": "^Recv: Cap",
+'      "messages": false},
+'    "events": true,
+'    "plugins": ["klipper"]}
+'	}"$
 	
-	'--- Set the AUTH and start the events
-	'--- (we can tell if Klipper is running from here, need to remove the klippy check code)
+	
+	Dim subscribe As String = $"{"subscribe": {"plugins": ["klipper"]  }}"$
+	
+	Log(subscribe.Replace(CRLF," "))
+	Send(subscribe)
+	
+	'--- Set the AUTH and start socket events
 	Wait For (B4XPages.MainPage.oMasterController.CN.PostRequest($"/api/login!!{ "passive": "true" }"$)) Complete (r As String)
 	Dim parser As JSONParser : parser.Initialize(r) : Dim root As Map = parser.NextObject
-	Wait For (SendAndWait($"{"auth": "${root.Get("name")}:${root.Get("session")}"}"$)) Complete (msg As String)
+	Send($"{"auth": "${root.Get("name")}:${root.Get("session")}"}"$)
 	Log("AUTH end")
 	
 	'--- A value of 2 will set the rate limit to maximally one message every 1s, 3 to maximally one message every 1.5s and so on.
-	Send($"{"throttle": 9}"$)
+	Send($"{"throttle": 90}"$)
 	
+	mConnected = True
 	Return Message '--- this is the connected message
 	
 End Sub
@@ -140,54 +144,25 @@ End Sub
 '--- master msg event method
 Private Sub ws_TextMessage(Message As String)
 	
-	
-	Dim KlippyMsg As String = $"{"plugin": "klipper""$
-	If Message.Contains(KlippyMsg) Then
-		Log(Message)
+	If oc.Klippy And Message.StartsWith($"{"plugin": {"plugin": "klipper""$) Then
+		CallSubDelayed2(pParserWO,"Klippy_Parse",Message)
+		#if debug
+		Log("klippy plugin msg: " &Message)
+		#end if
 		Return
 	End If
 	
-		Log(Message)
-	
-'	If  (mIgnoreMasterOctoEvent And Message.Contains("notify_proc_stat_update")) Then
-'		'--- {"jsonrpc": "2.0", "method": "notify_proc_stat_update", "params": [{"moonraker_stats": {"time": 1682259505.1849313, "cpu_usage": 1.93, "memory": 42916, "mem_units": "kB"}, "cpu_temp": 39.545, "network": {"lo": {"rx_bytes": 1013712283, "tx_bytes": 1013712283, "rx_packets": 785249, "tx_packets": 785249, "rx_errs": 0, "tx_errs": 0, "rx_drop": 0, "tx_drop": 0, "bandwidth": 0.0}, "eth0": {"rx_bytes": 108377478, "tx_bytes": 1008089809, "rx_packets": 1501935, "tx_packets": 915902, "rx_errs": 0, "tx_errs": 3, "rx_drop": 0, "tx_drop": 0, "bandwidth": 1127.61}}, "system_cpu_usage": {"cpu": 0.51, "cpu0": 0.0, "cpu1": 0.0, "cpu2": 0.0, "cpu3": 1.0}, "system_memory": {"total": 999584, "available": 742260, "used": 257324}, "websocket_connections": 1}]}
-'		Return
-'	End If
-	
-'	Dim klippyMethod As String = GetKlippyMethod(Message)
-'	If Not (strHelpers.IsNullOrEmpty(klippyMethod)) And SubExists(mCallbackModule,klippyMethod) Then
-'		CallSubDelayed2(mCallbackModule,klippyMethod,Message)
-'	Else if SubExists(mCallbackModule,mCallBackRecTxt) Then
-'		CallSubDelayed2(mCallbackModule,mCallBackRecTxt,Message)
-'	End If
-	
-'	If SubExists(pCallbackModule2,pCallbackSub2) Then
-'		CallSubDelayed2(pCallbackModule2,pCallbackSub2,Message)
-'	End If
+	Log(Message)
 	
 End Sub
 
-'Private Sub GetKlippyMethod(s As String) As String
-'	Try
-'		Dim parser As JSONParser : parser.Initialize(s)
-'		Dim root As Map = parser.NextObject
-'		Dim m As String =  root.Get("method").As(String).Replace(".","_")
-'		Return m
-'	Catch
-'		'Log(LastException)
-'	End Try'ignore
-'	Return ""
-'End Sub
 
 Private Sub ws_Closed (Reason As String)
 	'--- socket is closed!
 	mConnected = False
-	If strHelpers.IsNullOrEmpty(Reason) Then Reason = "User closed"
+	If strHelpers.IsNullOrEmpty(Reason) Then Reason = "Sys closed"
 	mClosedReason = Reason
-	Log("ws close reason: " & Reason)
-	If SubExists(mCallbackModule,mCallbackBase & "_Closed") Then
-		CallSubDelayed2(mCallbackModule,mCallbackBase  & "_Closed",Reason)
-	End If
+	Log("ws close reason: " & Reason)	
 End Sub
 
 
@@ -195,9 +170,9 @@ Public Sub Send(cmd As String)
 	If mConnected = False Then
 		logMe.LogIt2("no web socket connection - reconnecting",mModule,"Send")
 		Wait For (Connect) Complete (msg As String)
+		If mConnected = False Then Return
 	End If
 	wSocket.SendText(cmd)
-'	Log("klippy send!")
 End Sub
 
 
@@ -205,8 +180,8 @@ Public Sub SendAndWait(cmd As String) As ResumableSub
 	If mConnected = False Then
 		logMe.LogIt2("no web socket connection - reconnecting",mModule,"SendAndWait")
 		Wait For (Connect) Complete (msg As String)
+		If mConnected = False Then Return "no connection"
 	End If
-	
 	wSocket.SendText(cmd)
  	Wait For ws_TextMessage (Message As String)
 	Return Message

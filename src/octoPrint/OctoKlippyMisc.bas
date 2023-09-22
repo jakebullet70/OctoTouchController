@@ -22,8 +22,9 @@ Public Sub IsOctoKlipper() As ResumableSub
 	'--- check if OctoKlipper plug in is installed
 	Dim rs As ResumableSub =  B4XPages.MainPage.oMasterController.CN.SendRequestGetInfo("/plugin/pluginmanager/plugins")
 	Wait For(rs) Complete (Result As String)
+	'fileHelpers.WriteTxt2SharedFolder("isklippy.txt",Result)
 	If Result.Length <> 0 Then
-
+		
 		Dim o As JsonParsorPlugins  : o.Initialize
 		If o.IsOctoKlipperRunning(Result) = True Then
 			oc.Klippy = True

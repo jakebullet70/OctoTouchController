@@ -282,6 +282,7 @@ End Sub
 Private Sub BuildFunctionMnu() As Map
 	Dim m As Map : m.Initialize
 	m.Put("Pre-Heat Menu","prh")
+	m.Put("Cooling Fan Menu","clf")
 	
 	If config.ReadManualBedLevelFLAG 		Then m.Put("Manual Bed Leveling Wizard","blw")
 	If config.ReadWizardFilamentChangeFLAG  Then m.Put("Change Filament Wizard","cf")
@@ -311,6 +312,9 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 	Dim Ask As String = "Touch OK to continue" 'ignore
 	
 	Select Case value
+		Case "clf"
+			CallSub(B4XPages.MainPage,"Cooling_Fan")
+			
 		Case "f0","f1","f2","f3","f4","f5","f6","f7"
 			CallSubDelayed2(mMainObj,"RunGCodeOnOff_Menu",value.As(String).Replace("f","") & gblConst.GCODE_CUSTOM_SETUP_FILE)
 			

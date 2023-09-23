@@ -140,6 +140,24 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	
 End Sub
 
+Public Sub BuildCoolingFanMnu() As Map
+	Dim cs As CSBuilder
+	Dim po As Map : po.Initialize
+	
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan Off").PopAll,"0")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 20%").PopAll,"20")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 30%").PopAll,"30")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 40%").PopAll,"40")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 50%").PopAll,"50")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 60%").PopAll,"60")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 70%").PopAll,"70")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 85%").PopAll,"85")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 100%").PopAll,"100")
+	Return po
+	
+End Sub
+
+
 Public Sub BuildFunctionSetupMenu() As Map
 	
 	Dim txt As String

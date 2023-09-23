@@ -1155,6 +1155,47 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 End Sub
 #end region
 
+
+Public Sub Cooling_Fan
+	Dim cs As CSBuilder
+	Dim gui As guiMsgs : gui.Initialize
+	Dim po As Map = gui.BuildCoolingFanMnu
+	
+	Dim title As Object = cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE24A)). _
+										Typeface(Typeface.DEFAULT).Append("  Cooling Fan Menu").PopAll
+	
+	Dim o1 As dlgListbox
+	pObjCurrentDlg1 = o1.Initialize(title,Me,"CoolMenu_Event",pObjCurrentDlg1)
+	o1.IsMenu = True
+	Dim h As Float = 300dip
+	If guiHelpers.gIsLandScape Then h = guiHelpers.MaxVerticalHeight_Landscape
+	o1.Show(h,300dip,po)
+End Sub
+Public Sub CoolMenu_Event(selectedMsg As String, tag As Object)
+	'--- callback for Cooling_Fan
+	If selectedMsg.Length = 0 Then Return
+	Dim o As B4XEval : o.Initialize(Me,"")
+	Dim g As String = "M106 S"
+	Dim txt As String, v As Int
+	Select Case True
+		
+		Case selectedMsg = "0"   : txt = "M107"
+		Case selectedMsg = "100" : txt = g & "255"
+		Case Else
+			v = o.Eval("255 * ." & selectedMsg)
+			txt = (g & v)
+		
+	End Select
+	Send_Gcode(txt)
+	pObjCurrentDlg1 = Null
+	
+End Sub
+
+
+
+
+
+
 #region "FUCTIONS / METHODS FRM MENUS"
 
 Private Sub RunHTTPOnOff_Menu(fname As String)

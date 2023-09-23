@@ -407,7 +407,7 @@ End Sub
 #end region
 
 #region "MY PAGE CHANGING-SWITCHING CODE"
-Private Sub btnPageAction_Click
+Public Sub btnPageAction_Click
 	If oPageCurrent = oPageMenu Then
 		PopupMainOptionMenu
 	Else
@@ -427,15 +427,19 @@ Public Sub Switch_Pages(action As String)
 		CallSub(oPageCurrent,"Lost_Focus")
 	End If
 	
-	
 	'--- set defaults
 	btnPageAction.Text = Chr(0xE5C4)  '--- back button
 	
 	Select Case action
 		Case gblConst.PAGE_MENU
 			If oPageMenu.IsInitialized = False Then oPageMenu.Initialize(pnlMenu,"Switch_Pages")
-			oPageCurrent = oPageMenu
-			btnPageAction.Text = Chr(0xE5D2)
+			'--- are we already on the menu page? this can be called when printer disapears and we are on another page
+			If oPageCurrent = Null Or oPageCurrent <> oPageMenu Then 
+				oPageCurrent = oPageMenu
+				btnPageAction.Text = Chr(0xE5D2)
+			Else
+				Return
+			End If
 			
 		Case gblConst.PAGE_FILES
 			If oPageFiles.IsInitialized = False Then oPageFiles.Initialize(pnlFiles,"")
@@ -1079,6 +1083,10 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 				Return
 			End If
 			SideMenu.BtnPressed(btnFRESTART)
+			If B4XPages.MainPage.oPageCurrent <> B4XPages.MainPage.oPageMenu Then
+				'--- back to main page if page is anything else
+				btnPageAction_Click
+			End If
 			
 					
 		Case "m600"

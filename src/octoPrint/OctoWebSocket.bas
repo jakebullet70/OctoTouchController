@@ -10,6 +10,7 @@ Sub Class_Globals
 	Private mIP As String 'ignore
 	Private mPort As String 'ignore
 	Private mKey As String
+	
 	Public wSocket As WebSocket
 	Public mErrorSecProvider As Boolean = False
 	Public mClosedReason As String
@@ -107,7 +108,7 @@ Public Sub Connect() As ResumableSub
 	Wait For ws_Connected
 	logMe.LogIt2("WS connected...",mModule,thisSub)
 	Wait For ws_TextMessage (Message As String)
-	
+	mConnected = True
 	Log("wb init end")
 	
 	'--- set subscriptions
@@ -126,20 +127,29 @@ Public Sub Connect() As ResumableSub
 	Send(subscribe)
 	
 	'--- Set the AUTH and start socket events
-	Wait For (B4XPages.MainPage.oMasterController.CN.PostRequest($"/api/login!!{ "passive": "true" }"$)) Complete (r As String)
-	Dim parser As JSONParser : parser.Initialize(r) : Dim root As Map = parser.NextObject
-	Send($"{"auth": "${root.Get("name")}:${root.Get("session")}"}"$)
-	Log("AUTH end")
-	
+	Wait For (Passive_Login) Complete(i As Int)
+		
 	'--- A value of 2 will set the rate limit to maximally one message every 1s, 3 to maximally one message every 1.5s and so on.
-	Send($"{"throttle": 90}"$)
+	setThrottle("90")
 	
-	mConnected = True
+	
 	Return Message '--- this is the connected message
 	
 End Sub
 
 
+Public Sub Passive_Login() As ResumableSub
+	'--- this might need to be called again if 'reauthRequired' is recieved
+	Wait For (B4XPages.MainPage.oMasterController.CN.PostRequest($"/api/login!!{ "passive": "true" }"$)) Complete (r As String)
+	Dim parser As JSONParser : parser.Initialize(r) : Dim root As Map = parser.NextObject
+	Send($"{"auth": "${root.Get("name")}:${root.Get("session")}"}"$)
+	Log("AUTH end")
+	Return Null
+End Sub
+
+Public Sub setThrottle(num As String)
+	Send($"{"throttle": ${num}}"$)
+End Sub
 
 '--- master msg event method
 Private Sub ws_TextMessage(Message As String)
@@ -147,12 +157,18 @@ Private Sub ws_TextMessage(Message As String)
 	If oc.Klippy And Message.StartsWith($"{"plugin": {"plugin": "klipper""$) Then
 		CallSubDelayed2(pParserWO,"Klippy_Parse",Message)
 		#if debug
-		Log("klippy plugin msg: " &Message)
+		Log("klippy plugin msg: " & Message)
 		#end if
 		Return
 	End If
 	
-	Log(Message)
+	If Message.StartsWith($"{"reauthRequired""$) Then
+		logMe.LogIt("reauthRequired type: " & Message,mModule)
+		Passive_Login
+		Return
+	End If
+	
+	'Log(Message)
 	
 End Sub
 
@@ -160,9 +176,20 @@ End Sub
 Private Sub ws_Closed (Reason As String)
 	'--- socket is closed!
 	mConnected = False
-	If strHelpers.IsNullOrEmpty(Reason) Then Reason = "Sys closed"
+	If strHelpers.IsNullOrEmpty(Reason) Then 
+		Reason = "Sys closed"
+	End If
 	mClosedReason = Reason
 	Log("ws close reason: " & Reason)	
+	If Reason = "WebSockets connection lost" Then
+		logMe.LogIt2("no web socket connection - reconnecting",mModule,"ws_Closed")
+'		Wait For (Connect) Complete (msg As String)
+'		If mConnected = False Then 
+'			Return
+'		End If
+		guiHelpers.Show_toast2(Reason,2000)
+		Connect
+	End If
 End Sub
 
 

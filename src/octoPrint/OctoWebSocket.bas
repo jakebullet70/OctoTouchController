@@ -127,7 +127,7 @@ Public Sub Connect() As ResumableSub
 	Send(subscribe)
 	
 	'--- Set the AUTH and start socket events
-	Wait For (Passive_Login) Complete(i As Int)
+	Wait For (Passive_Login) Complete(i As Boolean)
 		
 	'--- A value of 2 will set the rate limit to maximally one message every 1s, 3 to maximally one message every 1.5s and so on.
 	setThrottle("90")
@@ -141,10 +141,14 @@ End Sub
 Public Sub Passive_Login() As ResumableSub
 	'--- this might need to be called again if 'reauthRequired' is recieved
 	Wait For (B4XPages.MainPage.oMasterController.CN.PostRequest($"/api/login!!{ "passive": "true" }"$)) Complete (r As String)
+	Log(r)
+	If strHelpers.IsNullOrEmpty(r) Then
+		Return False
+	End If
 	Dim parser As JSONParser : parser.Initialize(r) : Dim root As Map = parser.NextObject
 	Send($"{"auth": "${root.Get("name")}:${root.Get("session")}"}"$)
 	Log("AUTH end")
-	Return Null
+	Return True
 End Sub
 
 Public Sub setThrottle(num As String)

@@ -33,15 +33,15 @@ Public Sub Show
 	'--- grab avail the octo sys commands
 	Wait For (oOctoCmds.GetSysCmds) Complete() 'ignore
 	
-	'--- show info about setting up octoprint permissions
-	If Main.kvs.GetDefault("sysWarning",False).As(Boolean) = False Then
-		Dim mb As dlgMsgBox
-		mb.Initialize(mMainObj.root,"Information",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip),260dip,False)
-		mb.SetAsOptionalMsgBox("sysWarning")
-		Dim gui As guiMsgs : gui.Initialize
-		Wait For (mb.Show(gui.GetOctoSysCmdsWarningTxt, _
-						gblConst.MB_ICON_INFO,"","","OK")) Complete (Result As Int)
-	End If
+'	'--- show info about setting up octoprint permissions
+'	If Main.kvs.GetDefault("sysWarning",False).As(Boolean) = False Then
+'		Dim mb As dlgMsgBox
+'		mb.Initialize(mMainObj.root,"Information",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip),260dip,False)
+'		mb.SetAsOptionalMsgBox("sysWarning")
+'		Dim gui As guiMsgs : gui.Initialize
+'		Wait For (mb.Show(gui.GetOctoSysCmdsWarningTxt, _
+'						gblConst.MB_ICON_INFO,"","","OK")) Complete (Result As Int)
+'	End If
 	
 	If BuildMenu = 0 Then
 		Dim mb As dlgMsgBox

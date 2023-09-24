@@ -66,18 +66,18 @@ Public Sub GetOctoPluginWarningTxt() As String
 End Sub
 
 
-Public Sub GetOctoSysCmdsWarningTxt() As String
-	
-	Msg.Initialize
-	Msg.Append("To have access to Octoprint System commands ")
-	Msg.Append("you first need to grant the 'SYSTEM' permission ")
-	Msg.Append("in Octoprint to the current user.  ").Append(CRLF)
-	'Msg.Append("").Append(CRLF)
-	Msg.Append("(See the Wiki in GitHub for hints)").Append(CRLF)
-	
-	Return ReplaceOcto2KlipperTxt(Msg.ToString)
-	
-End Sub
+'Public Sub GetOctoSysCmdsWarningTxt() As String
+'	
+'	Msg.Initialize
+'	Msg.Append("To have access to Octoprint System commands ")
+'	Msg.Append("you first need to grant the 'SYSTEM' permission ")
+'	Msg.Append("in Octoprint to the current user.  ").Append(CRLF)
+'	'Msg.Append("").Append(CRLF)
+'	Msg.Append("(See the Wiki in GitHub for hints)").Append(CRLF)
+'	
+'	Return ReplaceOcto2KlipperTxt(Msg.ToString)
+'	
+'End Sub
 
 Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	

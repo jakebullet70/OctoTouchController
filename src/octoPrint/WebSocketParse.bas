@@ -29,6 +29,7 @@ End Sub
 
 
 Public Sub Klippy_Parse(msg As String)
+	If config.logREST_API Then logMe.logit2("Klipper msg",mModule,"Klippy_Parse")
 	
 	'guiHelpers.Show_toast2("[stuff]",3500)
 	

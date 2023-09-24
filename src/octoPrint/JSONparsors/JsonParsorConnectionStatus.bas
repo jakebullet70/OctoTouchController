@@ -19,7 +19,10 @@ End Sub
 
 Public Sub ConnectionStatus(s As String) 
 	
-	Dim m, mm As Map, InSub As String = "ConnectionStatus"
+	'--- TODO V2 should be replace with another methoid that returns less data
+	
+	Dim m As Map 'ignore
+	Dim InSub As String = "ConnectionStatus"
 	Dim jp As JSONParser
 	Try
 	
@@ -27,12 +30,12 @@ Public Sub ConnectionStatus(s As String)
 	
 		'--- populate json maps
 		m = jp.NextObject
-		mm = m.Get("current").As(Map)
+		'mm = m.Get("current").As(Map)
 	
-		oc.PrinterBaud = mm.Get("baudrate")
-		oc.PrinterPort = mm.Get("port")
-		oc.PrinterState = mm.Get("state")
-		oc.PrinterProfile = mm.Get("printerProfile") '--- this is NOT the name of the printer! See 'cPRINTER_PROFILES'
+'		oc.PrinterBaud = mm.Get("baudrate")
+'		oc.PrinterPort = mm.Get("port")
+'		oc.PrinterState = mm.Get("state")
+'		oc.PrinterProfile = mm.Get("printerProfile") '--- this is NOT the name of the printer! See 'cPRINTER_PROFILES'
 		oc.isConnected = True
 		
 	Catch

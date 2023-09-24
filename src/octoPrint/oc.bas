@@ -45,9 +45,9 @@ Sub Process_Globals
 	Public Tool2Actual As String, Tool2ActualReal As Float
 	
 	Public PrinterState As String
-	Public PrinterBaud As String
-	Public PrinterPort As String
-	Public PrinterProfile As String '--- need the profile 1st to get the name, desc, inverted stuff
+	'Public PrinterBaud As String
+	'Public PrinterPort As String
+	'Public PrinterProfile As String '--- need the profile 1st to get the name, desc, inverted stuff
 	
 	Public PrinterProfileName As String
 	Public PrinterProfileModel As String
@@ -134,12 +134,8 @@ Sub Process_Globals
 	Public Const cCMD_SET_TOOL_TEMP As String = $"${cPOST_PRINTER_TOOL}!!{"command": "target","targets": {"tool0": !VAL0!}}"$
 	
 	'======================================================================
-	#if klipper
-	'Public Const cCONNECTION_INFO As String = "/printer/objects/list"
-	#else
 	Public Const cCONNECTION_INFO As String = "/api/connection"
 	Public Const cCMD_AUTO_CONNECT_STARTUP As String = $"${cCONNECTION_INFO}!!{ "command": "connect" }"$
-	#End If
 	
 	'--- location – The location of the file for which to retrieve the information, either local or sdcard.
 	Public Const cFILE_INFO As String = "/api/files/!LOCATION!/!FNAME!"
@@ -461,10 +457,10 @@ End Sub
 
 Public Sub ResetStateVars
 	
-	PrinterBaud = ""
-	PrinterPort = ""
+	'PrinterBaud = ""
+	'PrinterPort = ""
 	PrinterState = "Disconnected"
-	PrinterProfile = ""
+	'PrinterProfile = ""
 	
 End Sub
 

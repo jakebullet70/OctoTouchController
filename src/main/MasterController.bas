@@ -17,21 +17,15 @@ Sub Class_Globals
 	Public parser As JsonParsorMain
 	Public oWS As OctoWebSocket
 	
-	
-'	#if klipper
-'	Public parsorConStatus As JsonParsorConnectionStatus
-'	Private oWSk As KlippyWebSocket
-'	Public parserK As KlippySocketParser
-'	#End If
-	
+
 	'--- populated by a REST calls, will be grabbed by their pages
 	Public gMapOctoFilesList As Map
 		
 	Private mapMasterOctoTempSettings As Map
 	
 	#region "TIMER FLAGS"
-	Private mGotProfileInfoFLAG As Boolean = False
-	Private mGotProfileInfoFLAG_IsBusy As Boolean = False
+	'Private mGotProfileInfoFLAG As Boolean = False
+	'Private mGotProfileInfoFLAG_IsBusy As Boolean = False
 	'--
 	Private mGotOctoSettingFLAG As Boolean = False
 	Private mGotOctoSettingFLAG_IsBusy As Boolean = False
@@ -54,11 +48,7 @@ Sub Class_Globals
 	
 End Sub
 
-'#if klipper
-'Public Sub getWSk() As KlippyWebSocket
-'	Return oWSk
-'End Sub
-'#end if
+
 Public Sub getCN() As HttpOctoRestAPI
 	If oCN.IsInitialized = False Then 
 		GetConnectionPrinterStatus
@@ -116,10 +106,10 @@ End Sub
 
 Public Sub tmrMain_Tick
 
-	'--- do we have a valid printer profile?
-	If mGotProfileInfoFLAG = False And mGotProfileInfoFLAG_IsBusy = False Then
-		GetPrinterProfileInfo
-	End If
+'	'--- do we have a valid printer profile?
+'	If mGotProfileInfoFLAG = False And mGotProfileInfoFLAG_IsBusy = False Then
+'		GetPrinterProfileInfo
+'	End If
 	
 	'--- do we have Octo main settings
 	If mGotOctoSettingFLAG = False And mGotOctoSettingFLAG_IsBusy = False Then
@@ -179,36 +169,36 @@ Private Sub GetAllPrinterSettings
 End Sub
 
 
-Private Sub GetPrinterProfileInfo
-	
-	If oc.PrinterProfile.Length = 0 Then Return
-	
-	If mGotProfileInfoFLAG_IsBusy = True Then
-		logMe.logDebug2("mGotProfileInfoFLAG_IsBusy = True",mModule)
-		Return '---already been called
-	End If
-	
-	mGotProfileInfoFLAG_IsBusy = True
-	
-	Dim sendMe As String = oc.cPRINTER_PROFILES & "\" & oc.PrinterProfile
-	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(sendMe)
-	
-	Wait For(rs) Complete (Result As String)
-	If Result.Length <> 0 Then
-	
-		Dim o As JsonParserMasterPrinterSettings : o.Initialize
-		o.ParsePrinterProfile(Result)
-		mGotProfileInfoFLAG = True '--- will stop it from fiting in the main loop
-		mGotProfileInfoFLAG_IsBusy = False
-		
-	Else
-		
-		logMe.LogIt2("reseting vars",mModule,"GetPrinterProfileInfo") 
-		oc.RestPrinterProfileVars
-		
-	End If
-	
-End Sub
+'Private Sub GetPrinterProfileInfo
+'	
+'	If oc.PrinterProfile.Length = 0 Then Return
+'	
+'	If mGotProfileInfoFLAG_IsBusy = True Then
+'		logMe.logDebug2("mGotProfileInfoFLAG_IsBusy = True",mModule)
+'		Return '---already been called
+'	End If
+'	
+'	mGotProfileInfoFLAG_IsBusy = True
+'	
+'	Dim sendMe As String = oc.cPRINTER_PROFILES & "\" & oc.PrinterProfile
+'	Dim rs As ResumableSub =  oCN.SendRequestGetInfo(sendMe)
+'	
+'	Wait For(rs) Complete (Result As String)
+'	If Result.Length <> 0 Then
+'	
+'		Dim o As JsonParserMasterPrinterSettings : o.Initialize
+'		o.ParsePrinterProfile(Result)
+'		mGotProfileInfoFLAG = True '--- will stop it from fiting in the main loop
+'		mGotProfileInfoFLAG_IsBusy = False
+'		
+'	Else
+'		
+'		logMe.LogIt2("reseting vars",mModule,"GetPrinterProfileInfo") 
+'		oc.RestPrinterProfileVars
+'		
+'	End If
+'	
+'End Sub
 
 Private Sub GetTemps
 	

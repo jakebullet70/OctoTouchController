@@ -614,7 +614,7 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 '			Main.kvs.Put("g29", Not (Main.kvs.GetDefault("g29",False)))
 '			Show_toast("G29 Option Saved",2000)
 
-		Case "blcr" '--- filament control
+		Case "blcr" '--- BL touch
 			Dim oB7 As dlgBLTouchSetup
 			oB7.Initialize : oB7.Show
 			

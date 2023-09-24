@@ -284,11 +284,11 @@ Private Sub BuildFunctionMnu() As Map
 	m.Put("Pre-Heat Menu","prh")
 	m.Put("Cooling Fan Menu","clf")
 	
-	If config.ReadManualBedLevelFLAG 		Then m.Put("Manual Bed Leveling Wizard","blw")
+	If config.ReadManualBedScrewLevelFLAG 	Then m.Put("Manual Bed Leveling Wizard","blw")
 	If config.ReadWizardFilamentChangeFLAG  Then m.Put("Change Filament Wizard","cf")
 	If config.ReadBLCRtouchFLAG     		Then m.Put("BL/CR Touch Probe Testing","blcr")
-	
-	'If config.ShowBedLevel_MeshFLAG			Then m.Put("Mesh Bed Leveling Wizard","mblw")
+	'If config.ReadManualBedScrewLevelFLAG	Then m.Put("Manual Bed Leveling Wizard","mbw")
+	'If config.ReadManualBedMeshLevelFLAG	Then m.Put("Mesh Bed Leveling Wizard","mblw")
 	
 	'If config.ShowZ_Offset_WizFLAG 	Then m.Put("Set Z Offset","zo")   TODO 
 	

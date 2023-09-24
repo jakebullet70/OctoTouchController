@@ -230,7 +230,7 @@ Public Sub ReadBLCRtouchFLAG() As Boolean
 	Return Data.Get(gblConst.probeShow).As(Boolean)
 End Sub
 
-Public Sub ReadManualBedLevelFLAG As Boolean
+Public Sub ReadManualBedScrewLevelFLAG As Boolean
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.BED_MANUAL_LEVEL_FILE)
 	Return Data.Get(gblConst.bedManualShow).As(Boolean)
 End Sub

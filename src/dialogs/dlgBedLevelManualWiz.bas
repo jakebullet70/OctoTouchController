@@ -51,7 +51,7 @@ End Sub
 
 
 '---
-'--- Used for both Octoprint and Klipper
+'--- Used for both Octoprint and OctoKlipper
 '---
 
 
@@ -286,34 +286,37 @@ End Sub
 '=================================================================
 
 Private Sub SendMGcode(code As String)
-	If code = "" Then Return
-	
-'	#if debug
-	'Log(code)
-'	Return
-'	#End If
-	
-	If code.Contains(CRLF) Then
-		Dim cd() As String = Regex.Split(CRLF, code)
-		For Each s As String In cd
-			#if klipper
-			mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",s))
-			#else
-			mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",s))
-			#End If
-			Sleep(50)
-		Next
-	Else
-		#if klipper
-		mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",code))
-		#else
-		mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",code))
-		#end if
-	End If
-	
-	Return
-	
+	B4XPages.MainPage.Send_Gcode(code)
 End Sub
+
+'	If code = "" Then Return
+'	
+''	#if debug
+'	'Log(code)
+''	Return
+''	#End If
+'	
+'	If code.Contains(CRLF) Then
+'		Dim cd() As String = Regex.Split(CRLF, code)
+'		For Each s As String In cd
+'			#if klipper
+'			mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",s))
+'			#else
+'			mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",s))
+'			#End If
+'			Sleep(50)
+'		Next
+'	Else
+'		#if klipper
+'		mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",code))
+'		#else
+'		mainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",code))
+'		#end if
+'	End If
+'	
+'	Return
+'	
+
 
 
 
@@ -350,17 +353,17 @@ Private Sub SetPoints() As Boolean
 
 	Try
 		
-		#if klipper
-		point1 = Array As Int(CalcRelitive(min_x  + mData.Get(gblConst.bedManualXYoffset),"L"), CalcRelitive(min_y  + mData.Get(gblConst.bedManualXYoffset),"W"))
-		point2 = Array As Int(CalcRelitive(min_x  - mData.Get(gblConst.bedManualXYoffset),"L"), CalcRelitive(min_y  - mData.Get(gblConst.bedManualXYoffset),"W"))
-		point3 = Array As Int(CalcRelitive(min_x  - mData.Get(gblConst.bedManualXYoffset),"L"), CalcRelitive(min_y  + mData.Get(gblConst.bedManualXYoffset),"W"))
-		point4 = Array As Int(CalcRelitive(min_x  + mData.Get(gblConst.bedManualXYoffset),"L"), CalcRelitive(min_y  - mData.Get(gblConst.bedManualXYoffset),"W"))
-		#else
+'		#if klipper
+'		point1 = Array As Int(CalcRelitive(min_x  + mData.Get(gblConst.bedManualXYoffset),"L"), CalcRelitive(min_y  + mData.Get(gblConst.bedManualXYoffset),"W"))
+'		point2 = Array As Int(CalcRelitive(min_x  - mData.Get(gblConst.bedManualXYoffset),"L"), CalcRelitive(min_y  - mData.Get(gblConst.bedManualXYoffset),"W"))
+'		point3 = Array As Int(CalcRelitive(min_x  - mData.Get(gblConst.bedManualXYoffset),"L"), CalcRelitive(min_y  + mData.Get(gblConst.bedManualXYoffset),"W"))
+'		point4 = Array As Int(CalcRelitive(min_x  + mData.Get(gblConst.bedManualXYoffset),"L"), CalcRelitive(min_y  - mData.Get(gblConst.bedManualXYoffset),"W"))
+		
 		point1 = Array As Int(min_x  + mData.Get(gblConst.bedManualXYoffset), min_y  + mData.Get(gblConst.bedManualXYoffset))
 		point2 = Array As Int(max_x - mData.Get(gblConst.bedManualXYoffset), max_y - mData.Get(gblConst.bedManualXYoffset))
 		point3 = Array As Int(max_x - mData.Get(gblConst.bedManualXYoffset), min_y  + mData.Get(gblConst.bedManualXYoffset))
 		point4 = Array As Int(min_x  + mData.Get(gblConst.bedManualXYoffset), max_y - mData.Get(gblConst.bedManualXYoffset))
-		#End If
+		
 		Return True
 	Catch
 		logMe.LogIt2(LastException.Message, mModule,"SetPoints")

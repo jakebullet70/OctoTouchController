@@ -176,14 +176,16 @@ Public Sub BuildFunctionSetupMenu() As Map
 	
 	
 	'----------------------------------------------------------------
-	If config.ReadManualBedLevelFLAG  Then
-		If oc.Klippy Then
-			txt = " Screw Bed Leveling Wizard"
-		Else
-			txt = " Manual Bed Leveling Wizard"
-		End If
+	If oc.Klippy Then
+		txt = " Screw Bed Leveling Wizard"
+	Else
+		txt = " Manual Bed Leveling Wizard"
+	End If
+	If config.ReadManualBedScrewLevelFLAG  Then
 		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
 										Typeface(Typeface.DEFAULT).Append(txt).PopAll,"bl")
+	Else
+		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"bl")
 	End If
 	
 	

@@ -82,13 +82,13 @@ Sub Process_Globals
 	
 	'---------------------------------------------------------------------------------------------------------------------
 	'--- Plugins - ZLED and WS281
-	Public Const ZLED_CTRL_ON As String = "sTurnOn"
-	Public Const ZLED_ENDPOINT As String = "sEP"
-	Public Const ZLED_CMD_ON As String = "sOn"
-	Public Const ZLED_CMD_OFF As String = "sOff"
+'	Public Const ZLED_CTRL_ON As String = "sTurnOn"
+'	Public Const ZLED_ENDPOINT As String = "sEP"
+'	Public Const ZLED_CMD_ON As String = "sOn"
+'	Public Const ZLED_CMD_OFF As String = "sOff"
 	'--- above const used in both configs below
-	Public Const ZLED_OPTIONS_FILE As String = "zled_options.map"
-	Public Const WS281_OPTIONS_FILE As String = "ws281_options.map"
+	'Public Const ZLED_OPTIONS_FILE As String = "zled_options.map"
+	'Public Const WS281_OPTIONS_FILE As String = "ws281_options.map"
 	'---------------------------------------------------------------------------------------------------------------------
 	
 	'---------------------------------------------------------------------------------------------------------------------

@@ -88,50 +88,44 @@ Private Sub btnCtrl_Click
 	
 	Dim o As B4XView : o = Sender
 	'o.SetColorAnimated(300,xui.Color_Transparent,clrTheme.txtNormal)
-	#if klipper
 	Dim cmd As String
 	If o.Tag ="on" Then
 		cmd = Data.Get("ipon")
 	Else
 		cmd = Data.Get("ipoff")
 	End If
+
 	Wait For (SendCmd2(cmd)) Complete(s As String)
-	#else
-	Wait For (SendCmd(o.Tag)) Complete(s As String)
-	#End If
-	
 	mDialog.Close(xui.DialogResponse_Cancel) '--- close it, exit dialog
 	
 End Sub
 
-#if klipper
 Private  Sub SendCmd2(cmd As String)As ResumableSub'ignore
 	mMainObj.oMasterController.cn.PostRequest2(cmd,"")
 	guiHelpers.Show_toast2("Sending Command",1500)
 End Sub
-#end if
 
-Public Sub SendCmd(cmd As String)As ResumableSub'ignore
-	
-	Dim template As String = $"!ep!!!{"command":"!of!"}"$ '--- POST
-	
-	Select Case True
-			
-		Case mTitle.ToLowerCase.Contains("zle")
-			Data = File.ReadMap(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE)
-			
-		Case mTitle.ToLowerCase.Contains("ws2")
-			Data = File.ReadMap(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE)
-			
-	End Select
-	
-	template = template.Replace("!ep!",Data.Get(gblConst.ZLED_ENDPOINT)). _
-						Replace("!of!", _
-						IIf(cmd = "on",Data.Get(gblConst.ZLED_cmd_on),Data.Get(gblConst.ZLED_CMD_OFF)))
-						
-	LogColor(template,xui.Color_Green)
-	mMainObj.oMasterController.cn.PostRequest(template)
-	guiHelpers.Show_toast2("Sending Command",1500)
-
-End Sub
+'Public Sub SendCmd(cmd As String)As ResumableSub'ignore
+'	
+'	Dim template As String = $"!ep!!!{"command":"!of!"}"$ '--- POST
+'	
+'	Select Case True
+'			
+'		Case mTitle.ToLowerCase.Contains("zle")
+'			Data = File.ReadMap(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE)
+'			
+'		Case mTitle.ToLowerCase.Contains("ws2")
+'			Data = File.ReadMap(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE)
+'			
+'	End Select
+'	
+'	template = template.Replace("!ep!",Data.Get(gblConst.ZLED_ENDPOINT)). _
+'						Replace("!of!", _
+'						IIf(cmd = "on",Data.Get(gblConst.ZLED_cmd_on),Data.Get(gblConst.ZLED_CMD_OFF)))
+'						
+'	LogColor(template,xui.Color_Green)
+'	mMainObj.oMasterController.cn.PostRequest(template)
+'	guiHelpers.Show_toast2("Sending Command",1500)
+'
+'End Sub
 

@@ -682,22 +682,22 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			pObjCurrentDlg2 = oA.Initialize("PSU Config")
 			oA.Show
 			
-		Case "1","2","3","4"
+		Case "1","2","3","4","5","6","7","8"
 			Dim oA1 As dlgIpOnOffSetup
 			pObjCurrentDlg2 = oA1.Initialize(Me,"Rebuild_RightMnu")
 			oA1.Show("HTTP Control Config - " & value,value & gblConst.HTTP_ONOFF_SETUP_FILE)
 				
-		#if not (klipper)	
-		Case "led" '--- ZLED
-			Dim oB As dlgZLEDSetup
-			pObjCurrentDlg2 = oB.Initialize("ZLED Config",gblConst.ZLED_OPTIONS_FILE)
-			oB.Show
-			
-		Case "ws2" '--- ws281x
-			Dim o1 As dlgZLEDSetup
-			pObjCurrentDlg2 = o1.Initialize("ws281x Config",gblConst.WS281_OPTIONS_FILE)
-			o1.Show
-		#end if
+'		#if not (klipper)	
+'		Case "led" '--- ZLED
+'			Dim oB As dlgZLEDSetup
+'			pObjCurrentDlg2 = oB.Initialize("ZLED Config",gblConst.ZLED_OPTIONS_FILE)
+'			oB.Show
+'			
+'		Case "ws2" '--- ws281x
+'			Dim o1 As dlgZLEDSetup
+'			pObjCurrentDlg2 = o1.Initialize("ws281x Config",gblConst.WS281_OPTIONS_FILE)
+'			o1.Show
+'		#end if
 
 	End Select
 		
@@ -1036,12 +1036,12 @@ Private Sub Build_RightSideMenu
 		End If
 	Next
 	
-	If config.ShowZLEDCtrlFLAG Then
-		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("ZLED Menu").PopAll,"zled")
-	End If
-	If config.ShowWS281CtrlFLAG Then
-		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("WS281 Menu").PopAll,"ws2")
-	End If
+'	If config.ShowZLEDCtrlFLAG Then
+'		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("ZLED Menu").PopAll,"zled")
+'	End If
+'	If config.ShowWS281CtrlFLAG Then
+'		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("WS281 Menu").PopAll,"ws2")
+'	End If
 	If config.ShowPwrCtrlFLAG Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Printer Power Menu").PopAll,"pwr")
 	End If
@@ -1133,23 +1133,23 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 		Case "rcnt"
 			lblStatus_Click
 			
-		Case "zled" '--- ZLED
-			If oc.isConnected = False Then
-				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
-				Return
-			End If
-			Dim o3 As dlgOnOffCtrl
-			pObjCurrentDlg1 = o3.Initialize("ZLED Control")
-			o3.Show
-			
-		Case "ws2" '--- ws281x
-			If oc.isConnected = False Then
-				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
-				Return
-			End If
-			Dim o3 As dlgOnOffCtrl
-			pObjCurrentDlg1 = o3.Initialize("WS281x Control")
-			o3.Show
+'		Case "zled" '--- ZLED
+'			If oc.isConnected = False Then
+'				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
+'				Return
+'			End If
+'			Dim o3 As dlgOnOffCtrl
+'			pObjCurrentDlg1 = o3.Initialize("ZLED Control")
+'			o3.Show
+'			
+'		Case "ws2" '--- ws281x
+'			If oc.isConnected = False Then
+'				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
+'				Return
+'			End If
+'			Dim o3 As dlgOnOffCtrl
+'			pObjCurrentDlg1 = o3.Initialize("WS281x Control")
+'			o3.Show
 		
 	End Select
 			

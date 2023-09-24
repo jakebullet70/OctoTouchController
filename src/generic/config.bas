@@ -20,9 +20,6 @@ Sub Process_Globals
 	
 	Public empw As String = "b4x!sadLogic512" '--- mailjet password for the moment
 	
-	'Public MQTTserverOnFLAG As Boolean = False
-	'Public MQTTclientOnFLAG As Boolean = False
-	
 	Public LastConnectedClient As String
 	Public pTurnOnDebugTabFLAG As Boolean
 	
@@ -48,8 +45,8 @@ Sub Process_Globals
 	Public ShowPwrCtrlFLAG As Boolean = False
 	
 	'--- Printer zled or ws281z  flag
-	Public ShowZLEDCtrlFLAG As Boolean = False
-	Public ShowWS281CtrlFLAG As Boolean = False
+	'Public ShowZLEDCtrlFLAG As Boolean = False
+	'Public ShowWS281CtrlFLAG As Boolean = False
 	
 	'--- functions menu
 	'Public ShowFilamentChangeFLAG As Boolean = False
@@ -112,23 +109,23 @@ Private Sub LoadCfgs()
 	
 	'======================================================================
 
-	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE) '--- Dev
-	If File.Exists(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE) = False Then
-		Dim ox As dlgZLEDSetup
-		ox.Initialize("",gblConst.ZLED_OPTIONS_FILE)
-		ox.CreateDefaultFile
-	End If
-	ReadZLED_CFG
-	
-	'======================================================================
-
-	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE) '--- Dev
-	If File.Exists(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE) = False Then
-		Dim oi As dlgZLEDSetup
-		oi.Initialize("",gblConst.WS281_OPTIONS_FILE)
-		oi.CreateDefaultFile
-	End If
-	ReadWS281_CFG
+'	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE) '--- Dev
+'	If File.Exists(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE) = False Then
+'		Dim ox As dlgZLEDSetup
+'		ox.Initialize("",gblConst.ZLED_OPTIONS_FILE)
+'		ox.CreateDefaultFile
+'	End If
+'	ReadZLED_CFG
+'	
+'	'======================================================================
+'
+'	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE) '--- Dev
+'	If File.Exists(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE) = False Then
+'		Dim oi As dlgZLEDSetup
+'		oi.Initialize("",gblConst.WS281_OPTIONS_FILE)
+'		oi.CreateDefaultFile
+'	End If
+'	ReadWS281_CFG
 
 	#end if
 	'======================================================================
@@ -175,13 +172,13 @@ Private Sub LoadCfgs()
 	'======================================================================
 	
 	'--- dev
-'	For jj = 1 To 4
-'		fileHelpers.SafeKill2(xui.DefaultFolder,jj & gblConst.HTTP_ONOFF_SETUP_FILE)
-'	Next
+	For jj = 1 To 8
+		fileHelpers.SafeKill2(xui.DefaultFolder,jj & gblConst.HTTP_ONOFF_SETUP_FILE)
+	Next
 	If File.Exists(xui.DefaultFolder,"1" & gblConst.HTTP_ONOFF_SETUP_FILE) = False Then
 		Dim oiw As dlgIpOnOffSetup
 		oiw.Initialize(Null,Null)
-		For jj = 1 To 4
+		For jj = 1 To 8
 			oiw.CreateDefaultDataFile(jj & gblConst.HTTP_ONOFF_SETUP_FILE) '--- generic HTTP commands
 		Next
 	End If
@@ -240,17 +237,17 @@ Public Sub ReadWizardFilamentChangeFLAG As Boolean
 	Return Data.Get(gblConst.filShow).As(Boolean)
 End Sub
 
-Public Sub ReadZLED_CFG As Boolean
-	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE)
-	ShowZLEDCtrlFLAG = Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean)
-	Return Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean)
-End Sub
-
-Public Sub ReadWS281_CFG As Boolean
-	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE)
-	ShowWS281CtrlFLAG = Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean) '--- this is correct
-	Return Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean) '--- this is correct
-End Sub
+'Public Sub ReadZLED_CFG As Boolean
+'	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE)
+'	ShowZLEDCtrlFLAG = Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean)
+'	Return Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean)
+'End Sub
+'
+'Public Sub ReadWS281_CFG As Boolean
+'	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE)
+'	ShowWS281CtrlFLAG = Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean) '--- this is correct
+'	Return Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean) '--- this is correct
+'End Sub
 
 Public Sub ReadPwrCFG As Boolean
 	ShowPwrCtrlFLAG = Main.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
@@ -261,10 +258,8 @@ Public Sub ReadGeneralCFG
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	
-	'ChangeBrightnessSettingsFLAG = Data.Get("chgBrightness").As(Boolean)
-'	ShowScreenOffFLAG = Data.Get("scrnoff").As(Boolean)
-'	ShowSysCmdsFLAG = Data.Get("syscmds").As(Boolean)
-	
+	'--- these used to come from Octoprint but now we get them locally as the camera view 
+	'--- in Octoprint might be different fromt your eyeball view in front of your printer
 	oc.PrinterProfileInvertedX = Data.GetDefault("axesx",False)
 	oc.PrinterProfileInvertedY = Data.GetDefault("axesy",False)
 	oc.PrinterProfileInvertedZ = Data.GetDefault("axesz",False)

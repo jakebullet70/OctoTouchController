@@ -129,7 +129,7 @@ Public Sub Connect() As ResumableSub
 ''	Wait For (Passive_Login) Complete(i As Boolean)
 		
 	'--- A value of 2 will set the rate limit to maximally one message every 1s, 3 to maximally one message every 1.5s and so on.
-	setThrottle("90")
+	setThrottle("90") '--- this is very inacurate
 	
 	
 	Return Message '--- this is the connected message
@@ -141,7 +141,6 @@ Public Sub Passive_Login() As ResumableSub
 	'--- called when REST commands are fulling working from MasterController
 	'--- this might need to be called again if 'reauthRequired' is recieved
 	Wait For (B4XPages.MainPage.oMasterController.CN.PostRequest($"/api/login!!{ "passive": "true" }"$)) Complete (r As String)
-	Log(r)
 	If strHelpers.IsNullOrEmpty(r) Then
 		Return False
 	End If

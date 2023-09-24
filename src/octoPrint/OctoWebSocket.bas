@@ -19,6 +19,7 @@ Sub Class_Globals
 	Public IsInit As Boolean = False
 	Public mIgnoreMasterOctoEvent As Boolean = True
 	Public pParserWO As WebSocketParse
+	Public subscribe As String = $"{"subscribe": {"plugins": ["klipper"]  }}"$
 	
 	
 End Sub
@@ -121,13 +122,11 @@ Public Sub Connect() As ResumableSub
 '	}"$
 	
 	
-	Dim subscribe As String = $"{"subscribe": {"plugins": ["klipper"]  }}"$
-	
 	Log(subscribe.Replace(CRLF," "))
 	Send(subscribe)
 	
-	'--- Set the AUTH and start socket events
-	Wait For (Passive_Login) Complete(i As Boolean)
+''	--- Set the AUTH And start socket events
+''	Wait For (Passive_Login) Complete(i As Boolean)
 		
 	'--- A value of 2 will set the rate limit to maximally one message every 1s, 3 to maximally one message every 1.5s and so on.
 	setThrottle("90")
@@ -139,6 +138,7 @@ End Sub
 
 
 Public Sub Passive_Login() As ResumableSub
+	'--- called when REST commands are fulling working from MasterController
 	'--- this might need to be called again if 'reauthRequired' is recieved
 	Wait For (B4XPages.MainPage.oMasterController.CN.PostRequest($"/api/login!!{ "passive": "true" }"$)) Complete (r As String)
 	Log(r)
@@ -150,6 +150,7 @@ Public Sub Passive_Login() As ResumableSub
 	Log("AUTH end")
 	Return True
 End Sub
+
 
 Public Sub setThrottle(num As String)
 	Send($"{"throttle": ${num}}"$)

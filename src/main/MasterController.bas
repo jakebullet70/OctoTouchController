@@ -301,9 +301,13 @@ Private Sub GetConnectionPrinterStatus
 	If oc.OctoIp = "" Then Return '--- trying to init without IP / port
 	
 	Try
-		If oWS.IsInit = False Then InitWebSocket
+		If oWS.IsInit = False Then 
+			InitWebSocket
+			Wait For (oWS.Passive_Login) Complete(i As Boolean) '--- Set the AUTH and start socket events
+		End If
 	Catch
 		InitWebSocket
+		Wait For (oWS.Passive_Login) Complete(i As Boolean) '--- Set the AUTH and start socket events
 	End Try
 	
 

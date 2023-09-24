@@ -306,6 +306,7 @@ Private Sub GetConnectionPrinterStatus
 			Wait For (oWS.Passive_Login) Complete(i As Boolean) '--- Set the AUTH and start socket events
 		End If
 	Catch
+		oWS.Initialize(oc.OctoIp ,oc.OctoPort,oc.OctoKey)
 		InitWebSocket
 		Wait For (oWS.Passive_Login) Complete(i As Boolean) '--- Set the AUTH and start socket events
 	End Try

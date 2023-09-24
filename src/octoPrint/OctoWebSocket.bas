@@ -88,12 +88,13 @@ End Sub
 
 Public Sub Connect() As ResumableSub
 	'--- we wont ever run this code if the REST API fails
+	Dim inSub As String = "Connect"
 	Log("wb start")
 	
 	Dim Const thisSub As String	= "Connect"
 	Try
 		If wSocket.Connected Then 
-			Log("wSocket is already connected")
+			If config.logREST_API Then logMe.logit2("wSocket is already connected",mModule,inSub)
 			Return ""
 		End If
 	Catch
@@ -138,21 +139,24 @@ End Sub
 
 
 Public Sub Passive_Login() As ResumableSub
+	Dim inSub As String = "Passive_Login"
 	'--- called when REST commands are fulling working from MasterController
 	'--- this might need to be called again if 'reauthRequired' is recieved
+	If config.logREST_API Then logMe.logit2("Passive_Login start",mModule,inSub)
 	Wait For (B4XPages.MainPage.oMasterController.CN.PostRequest($"/api/login!!{ "passive": "true" }"$)) Complete (r As String)
 	If strHelpers.IsNullOrEmpty(r) Then
 		Return False
 	End If
 	Dim parser As JSONParser : parser.Initialize(r) : Dim root As Map = parser.NextObject
 	Send($"{"auth": "${root.Get("name")}:${root.Get("session")}"}"$)
-	Log("AUTH end")
+	If config.logREST_API Then logMe.logit2("Passive_Login Auth end",mModule,inSub)
 	Return True
 End Sub
 
 
 Public Sub setThrottle(num As String)
 	Send($"{"throttle": ${num}}"$)
+	If config.logREST_API Then logMe.logit2("WebSocket throttle: " & num ,mModule,"setThrottle")
 End Sub
 
 '--- master msg event method

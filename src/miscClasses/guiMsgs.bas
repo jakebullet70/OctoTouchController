@@ -145,14 +145,15 @@ Public Sub BuildCoolingFanMnu() As Map
 	Dim po As Map : po.Initialize
 	
 	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan Off").PopAll,"0")
-	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 20%").PopAll,"20")
-	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 30%").PopAll,"30")
-	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 40%").PopAll,"40")
-	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 50%").PopAll,"50")
-	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 60%").PopAll,"60")
-	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 70%").PopAll,"70")
-	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 85%").PopAll,"85")
 	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 100%").PopAll,"100")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 77%").PopAll,"75")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 50%").PopAll,"50")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 25%").PopAll,"25")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 33%").PopAll,"33")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 40%").PopAll,"40")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 60%").PopAll,"60")
+	po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(" Fan 85%").PopAll,"85")
+	
 	Return po
 	
 End Sub

@@ -27,7 +27,7 @@ Public Sub SeedGCode1StRun() As Map
 	If oc.Klippy Then
 		s.Append("# Klipper - Calls a G29 Macro").Append(CRLF)
 		s.Append("M117 Starting...").Append(CRLF).Append("G29").Append(CRLF)
-		txt = "Level Bed (Call G29 Macro)"
+		txt = "Auto Level Bed (Call G29 Macro)"
 	Else
 		s.Append("# Marlin ONLY")
 		s.Append("M140 S60").Append(CRLF).Append("M117 Homing all").Append(CRLF)
@@ -41,7 +41,7 @@ Public Sub SeedGCode1StRun() As Map
 		s.Append("M500").Append(CRLF)
 		s.Append("M300 S440 P200").Append(CRLF).Append("M300 S660 P250").Append(CRLF).Append("M300 S880 P300").Append(CRLF)
 		s.Append("G28").Append(CRLF)
-		txt = "Level Bed (G29 - Heated 60c)"
+		txt = "Auto Level Bed (G29 - Heated 60c)"
 	End If
 	
 	s.Append("M117 Bed leveling done!").Append(CRLF)

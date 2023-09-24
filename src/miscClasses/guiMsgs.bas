@@ -20,20 +20,20 @@ Public Sub Initialize
 End Sub
 
 
-Private Sub ReplaceOcto2KlipperTxt(s As String) As String
-	#if klipper
-	Return s.Replace("Octoprint","Klipper")
-	#else
-	Return s
-	#End If
-	
-End Sub
+'Private Sub ReplaceOcto2KlipperTxt(s As String) As String
+'	#if klipper
+'	Return s.Replace("Octoprint","Klipper")
+'	#else
+'	Return s
+'	#End If
+'	
+'End Sub
 
 Public Sub GetConnectFailedMsg() As String
 	Msg.Initialize
 	Msg.Append("Connection Failed.").Append(CRLF)
 	Msg.Append("Is Octoprint turned on?").Append(CRLF).Append("Are Your IP And Port correct?").Append(CRLF)
-	Return ReplaceOcto2KlipperTxt(Msg.ToString)
+	Return Msg.ToString
 End Sub
 
 
@@ -51,7 +51,7 @@ Public Sub GetConnectionText(connectedButError As Boolean) As String
 		Msg.Append(CRLF).Append("Connected to the printer?")
 	End If
 	
-	Return ReplaceOcto2KlipperTxt(Msg.ToString)
+	Return Msg.ToString
 End Sub
 
 Public Sub GetOctoPluginWarningTxt() As String
@@ -61,7 +61,7 @@ Public Sub GetOctoPluginWarningTxt() As String
 	Msg.Append("plugin make sure it is working in Octoprint first ")
 	Msg.Append("before you complete the setup here.").Append(CRLF)
 	
-	Return ReplaceOcto2KlipperTxt(Msg.ToString)
+	Return Msg.ToString
 	
 End Sub
 
@@ -243,13 +243,14 @@ End Sub
 
 
 Public Sub BuildPluginOptionsMenu() As Map
-	#if klipper
-	Dim popUpMemuItems As Map = CreateMap("Power Supply HTTP Control":"psu")
-	#else
-	Dim popUpMemuItems As Map = CreateMap("PSU Control":"psu","ZLED Setup":"led","ws281x Setup":"ws2")
-	#End If
+'	#if klipper
+'	Dim popUpMemuItems As Map = CreateMap("Power Supply HTTP Control":"psu")
+'	#else
+	'Dim popUpMemuItems As Map = CreateMap("PSU Control":"psu","ZLED Setup":"led","ws281x Setup":"ws2")
+	Dim popUpMemuItems As Map = CreateMap("PSU Control":"psu")
+	'#End If
 	
-	For xx = 1 To 4
+	For xx = 1 To 8
 		Dim fname As String = xx & gblConst.HTTP_ONOFF_SETUP_FILE
 		Dim Data As Map = File.ReadMap(xui.DefaultFolder,fname)
 		Dim desc As String = Data.GetDefault("desc","Generic HTTP Control " & xx)

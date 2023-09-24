@@ -6,9 +6,11 @@ Version=11.5
 @EndOfDesignText@
 ' Author:  sadLogic
 #Region VERSIONS 
-' V. 1.2		Apr/21/2023
+' V. 1.3	Aug/24/2023
+'			Removed Klipper crap / refactored for OctoKlipper
+' V. 1.2	Apr/21/2023
 '			Conveterd to full screen panel
-' V. 1.1		Apr/10/2023
+' V. 1.1	Apr/10/2023
 '			Refactored  for klipper
 ' V. 1.0 	Mar/11/2023
 '			BOOM! stupid Muscovy (written while listening to an artillery dual)
@@ -19,7 +21,6 @@ Version=11.5
 Sub Class_Globals
 	
 	Private Const mModule As String = "dlgBedLevelManualWiz"' 'ignore
-	Private mainObj As B4XMainPage
 	Private xui As XUI
 	Private mWizDlg As sadPreferencesDialog
 	Private prefHelper As sadPreferencesDialogHelper
@@ -57,7 +58,6 @@ End Sub
 
 Public Sub Initialize(p As Panel) As Object
 	
-	mainObj = B4XPages.MainPage
 	p.RemoveAllViews
 	parent = p
 	
@@ -374,20 +374,20 @@ Private Sub SetPoints() As Boolean
 End Sub
 
 
-#if klipper
-Private Sub CalcRelitive(n As Int, LorW As String) As Int	
-	If n >= 0 Then
-		n = mData.Get(gblConst.bedManualXYoffset)
-	Else
-		If LorW = "L" Then
-			n = printerL - Abs(mData.Get(gblConst.bedManualXYoffset))
-		Else
-			n = printerW - Abs(mData.Get(gblConst.bedManualXYoffset))
-		End If
-	End If
-	Return n
-End Sub
-#End If
+'#if klipper
+'Private Sub CalcRelitive(n As Int, LorW As String) As Int	
+'	If n >= 0 Then
+'		n = mData.Get(gblConst.bedManualXYoffset)
+'	Else
+'		If LorW = "L" Then
+'			n = printerL - Abs(mData.Get(gblConst.bedManualXYoffset))
+'		Else
+'			n = printerW - Abs(mData.Get(gblConst.bedManualXYoffset))
+'		End If
+'	End If
+'	Return n
+'End Sub
+'#End If
 
 
 '======================================================================

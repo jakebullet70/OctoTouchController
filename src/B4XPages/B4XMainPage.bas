@@ -472,7 +472,7 @@ End Sub
 '================================================================================================
 
 
-#Region "POPUP_MAIN_SETUP_MENU"
+#Region "POPUP_MAIN_SETUP_MENU_AND_FUNCTIONS"
 Private Sub PopupMainOptionMenu
 	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
@@ -817,6 +817,57 @@ Private Sub btnPower_Click
 	o1.Show
 End Sub
 
+
+Public Sub Check4_Update
+	
+	Dim obj As dlgAppUpdate : obj.Initialize(Null)
+	Wait For (obj.CheckIfNewDownloadAvail()) Complete (yes As Boolean)
+	If yes Then
+		guiHelpers.Show_toast2("App update available", 3600)
+	End If
+	
+End Sub
+
+#Region HEATER_STUFF_MENU
+
+Public Sub ShowPreHeatMenu_All
+	ShowPreHeatMenu_All2("Pre-Heat")
+End Sub
+Public Sub ShowPreHeatMenu_All2(titleTxt As String)
+	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	If oc.isConnected = False Or oMasterController.mapAllHeatingOptions.IsInitialized = False Then
+		guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
+		Return
+	End If
+	Dim ht As dlgListbox
+	Dim cs As CSBuilder 
+	Dim title As Object = cs.Initialize.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF2CA)). _
+		Typeface(Typeface.DEFAULT).Append("  " & titleTxt).PopAll
+		
+	pObjPreHeatDlg1 = ht.Initialize(title,Me,"TempChange_Presets",pObjPreHeatDlg1)
+	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,guiHelpers.gWidth - 10dip)
+	Dim h As Float = IIf(guiHelpers.gIsLandScape,guiHelpers.MaxVerticalHeight_Landscape,guiHelpers.gHeight * .7)
+		
+	BuildPreHeatMenu
+	ht.Show(h,w,mapMasterPreHeaterMenu)
+End Sub
+
+
+Private Sub BuildPreHeatMenu
+	
+	If mapMasterPreHeaterMenu.IsInitialized Then Return
+	
+	'--- put together all heating options
+	Dim mTmp As Map = objHelpers.ConcatMaps(Array As Map( _
+				oMasterController.mapAllHeatingOptions, _
+				oMasterController.mapToolHeatingOptions))
+				
+	Dim m1 As Map : m1.Initialize : m1.Put("Enter Tool Value","evt")
+	mapMasterPreHeaterMenu = objHelpers.ConcatMaps(Array As Map(mTmp,m1,oMasterController.mapBedHeatingOptions))
+	mapMasterPreHeaterMenu.Put("Enter Bed Value","evb")
+	
+End Sub
+
 Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	
 	'--- callback for btnPresetTemp_Click
@@ -922,55 +973,6 @@ Public Sub TempChange_Presets(selectedMsg As String, tag As Object)
 	
 End Sub
 
-Public Sub Check4_Update
-	
-	Dim obj As dlgAppUpdate : obj.Initialize(Null)
-	Wait For (obj.CheckIfNewDownloadAvail()) Complete (yes As Boolean)
-	If yes Then
-		guiHelpers.Show_toast2("App update available", 3600)
-	End If
-	
-End Sub
-
-#Region HEATER_STUFF_MENU
-
-Public Sub ShowPreHeatMenu_All
-	ShowPreHeatMenu_All2("Pre-Heat")
-End Sub
-Public Sub ShowPreHeatMenu_All2(titleTxt As String)
-	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
-	If oc.isConnected = False Or oMasterController.mapAllHeatingOptions.IsInitialized = False Then
-		guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
-		Return
-	End If
-	Dim ht As dlgListbox
-	Dim cs As CSBuilder 
-	Dim title As Object = cs.Initialize.Typeface(Typeface.FONTAWESOME).VerticalAlign(4dip).Append(Chr(0xF2CA)). _
-		Typeface(Typeface.DEFAULT).Append("  " & titleTxt).PopAll
-		
-	pObjPreHeatDlg1 = ht.Initialize(title,Me,"TempChange_Presets",pObjPreHeatDlg1)
-	Dim w As Float = IIf(guiHelpers.gIsLandScape,450dip,guiHelpers.gWidth - 10dip)
-	Dim h As Float = IIf(guiHelpers.gIsLandScape,guiHelpers.MaxVerticalHeight_Landscape,guiHelpers.gHeight * .7)
-		
-	BuildPreHeatMenu
-	ht.Show(h,w,mapMasterPreHeaterMenu)
-End Sub
-
-
-Private Sub BuildPreHeatMenu
-	
-	If mapMasterPreHeaterMenu.IsInitialized Then Return
-	
-	'--- put together all heating options
-	Dim mTmp As Map = objHelpers.ConcatMaps(Array As Map( _
-				oMasterController.mapAllHeatingOptions, _
-				oMasterController.mapToolHeatingOptions))
-				
-	Dim m1 As Map : m1.Initialize : m1.Put("Enter Tool Value","evt")
-	mapMasterPreHeaterMenu = objHelpers.ConcatMaps(Array As Map(mTmp,m1,oMasterController.mapBedHeatingOptions))
-	mapMasterPreHeaterMenu.Put("Enter Bed Value","evb")
-				
-End Sub
 #end region
 
 #region "RIGHT_SIDE_DRAWER"

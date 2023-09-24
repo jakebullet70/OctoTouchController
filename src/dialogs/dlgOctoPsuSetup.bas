@@ -14,8 +14,6 @@ Version=11.5
 #End Region
 
 Sub Class_Globals
-	' --- Octoprint ONLY
-	' --- Octoprint ONLY
 	Private const mModule As String = "dlgOctoPsuSetup"' 'ignore
 	Private mMainObj As B4XMainPage
 	Private xui As XUI
@@ -47,7 +45,7 @@ Public Sub Show
 
 	If Main.kvs.GetDefault("psuWarning",False).As(Boolean) = False Then
 		Dim mb As dlgMsgBox
-		mb.Initialize(mMainObj.root,"Information",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip),260dip,False)
+		mb.Initialize(mMainObj.root,"Information",IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-20dip),240dip,False)
 		mb.SetAsOptionalMsgBox("psuWarning")
 		Dim gui As guiMsgs : gui.Initialize
 		Wait For (mb.Show(gui.GetOctoPluginWarningTxt, _
@@ -68,7 +66,7 @@ Public Sub Show
 		Else
 			w = guiHelpers.gWidth *.95
 		End If
-		h = 280dip
+		h = 240dip
 	End If
 	
 	Dim p As B4XView = xui.CreatePanel("")

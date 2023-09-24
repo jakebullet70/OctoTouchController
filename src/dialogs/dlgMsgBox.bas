@@ -89,7 +89,13 @@ Private Sub CreateDoNotShowCheckbox
 	Dim chk As CheckBox : chk.Initialize("DoNotShow")
 	chk.Text = " Do not show again"
 	chk.TextColor = clrTheme.txtNormal
-	chk.TextSize = 18
+	
+	If guiHelpers.gScreenSizeAprox < 4.5 Then
+		chk.TextSize = 16
+	Else
+		chk.TextSize = 18
+	End If
+	
 	guiHelpers.SetCBDrawable(chk, clrTheme.txtNormal, 1,clrTheme.txtNormal, Chr(8730), Colors.LightGray, 32dip, 2dip)
 	mDialog.Base.AddView(chk,10dip,mDialog.Base.Height - 50dip, _
 		 (mDialog.Base.Width - mDialog.GetButton(xui.DialogResponse_Cancel).Width - 6dip),36dip)

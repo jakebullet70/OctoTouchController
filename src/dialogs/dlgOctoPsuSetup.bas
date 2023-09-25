@@ -19,7 +19,7 @@ Sub Class_Globals
 	Private xui As XUI
 	Private mTitle As String
 	
-	Private lblPSUinfo,lblSwitch,lblSonoffInfo As B4XView
+	Private lblSwitch As B4XView
 	
 	Private txtPrinterIP As B4XFloatTextField
 	Private pnlMain As B4XView
@@ -28,6 +28,8 @@ Sub Class_Globals
 	
 	Private swPSUocto,swPsuCtrlOnOff,swSonoff As B4XSwitch
 	
+	Private lblPSUinfo2 As AutoTextSizeLabel
+	Private lblSonoffInfo2 As AutoTextSizeLabel
 End Sub
 
 
@@ -78,8 +80,6 @@ Public Sub Show
 	dlgHelper.ThemeDialogForm( mTitle)
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "SAVE", "", "CLOSE")
 	dlgHelper.ThemeInputDialogBtnsResize
-	guiHelpers.SetTextColor(Array As B4XView(lblSonoffInfo,lblSwitch,lblPSUinfo))
-
 	ReadSettingsFile
 	InvalidateConnection
 	
@@ -107,6 +107,11 @@ Private Sub BuildGUI
 	
 	pnlMain.Color = clrTheme.Background
 	guiHelpers.SetTextColorB4XFloatTextField(Array As B4XFloatTextField(txtPrinterIP))
+	Try
+		guiHelpers.SetTextColor(Array As B4XView(lblSonoffInfo2.BaseLabel,lblPSUinfo2.BaseLabel,lblSwitch))
+	Catch
+		Log(LastException)
+	End Try
 	
 	txtPrinterIP.HintText = "Tasmota IP"
 	swPSUocto.Value = True

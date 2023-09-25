@@ -188,11 +188,18 @@ Public Sub BuildFunctionSetupMenu() As Map
 		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"bl")
 	End If
 	
+	'----------------------------------------------------------------
+	txt = "Set Z Offset"
+	If config.ReadZOffsetFLAG  Then
+		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
+										Typeface(Typeface.DEFAULT).Append(txt).PopAll,"zo")
+	Else
+		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"zo")
+	End If
+	
 	
 '	'----------------------------------------------------------------
-'	txt = " Manual Mesh Wizard"
 '	txt = " Auto Bed Leveling Wizard"
-'   txt = " Set Z Offset Wizard"
 '	Else
 '		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"bl") ' this should work
 '	End If

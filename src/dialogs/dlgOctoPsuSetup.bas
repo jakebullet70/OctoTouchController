@@ -89,7 +89,7 @@ Public Sub Show
 	
 	If Result = xui.DialogResponse_Positive Then
 		Save_settings
-		config.ReadPwrCFG
+		'config.ReadPwrCfgFLAG
 		
 		'--- need to read flag so option can now be shown in side menu
 		'CallSub(B4XPages.MainPage,"ShowNoShow_PowerBtn") 'TODO V2

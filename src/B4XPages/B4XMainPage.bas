@@ -578,11 +578,6 @@ Public Sub PrinterSetup_Closed
 	
 End Sub
 
-''--- called from PSU setup
- 'TODO V2
-'Public Sub  ShowNoShow_PowerBtn
-'	btnPower.Visible = config.ShowPwrCtrlFLAG
-'End Sub
 
 '--- options plugin sub menu
 Private Sub PopupFunctionOptionsMnu
@@ -608,12 +603,24 @@ End Sub
 Private Sub FncMenu_Event(value As String, tag As Object)
 	
 	If value.Length = 0 Then PopupMainOptionMenu
+	Dim onOff As Boolean
+	Dim msg As String = ""
 	
 	Select Case value
 			
 '		Case "g29"
 '			Main.kvs.Put("g29", Not (Main.kvs.GetDefault("g29",False)))
 '			Show_toast("G29 Option Saved",2000)
+
+		Case "zo"
+			onOff = Main.kvs.Get(gblConst.Z_OFFSET_FLAG).As(Boolean)
+			msg = "Z Offset menu turned "
+			If onOff Then 
+				msg = msg & "off"
+			Else
+				msg = msg & "on"
+			End If
+			Main.kvs.Put(gblConst.Z_OFFSET_FLAG, Not (onOff))
 
 		Case "blcr" '--- BL touch
 			Dim oB7 As dlgBLTouchSetup
@@ -638,6 +645,8 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 			o23.Show("GCode Control Config - " & fnTMP,fnTMP & gblConst.GCODE_CUSTOM_SETUP_FILE)
 			
 	End Select
+	
+	If msg.Length <> 0 Then Show_toast(msg,2400)
 	
 End Sub
 
@@ -1020,7 +1029,7 @@ Private Sub Build_RightSideMenu
 		End If
 	Next
 	
-	If config.ShowPwrCtrlFLAG Then
+	If config.ReadPwrCfgFLAG Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Printer Power Menu").PopAll,"pwr")
 	End If
 		

@@ -18,7 +18,7 @@ Sub Process_Globals
 	Public IsInit As Boolean = False
 	
 	
-	Public empw As String = "b4x!sadLogic512" '--- mailjet password for the moment
+	Public empw As String = "b4x!sadLogic512" '--- mail password for the moment
 	
 	Public LastConnectedClient As String
 	Public pTurnOnDebugTabFLAG As Boolean
@@ -31,7 +31,6 @@ Sub Process_Globals
 	Public AndroidPrintingMinTill As Int
 	
 	'--- general dlg
-'	Public ShowSysCmdsFLAG As Boolean = True
 	Public logPOWER_EVENTS As Boolean = False 
 	Public logFILE_EVENTS As Boolean = False
 	Public logREQUEST_OCTO_KEY As Boolean = False
@@ -41,24 +40,9 @@ Sub Process_Globals
 	Public logTIMER_EVENTS As Boolean = False '--- not in the general setup
 	'------------
 	
-	'--- Printer power - sonoff
-	Public ShowPwrCtrlFLAG As Boolean = False
-	
-	'--- Printer zled or ws281z  flag
-	'Public ShowZLEDCtrlFLAG As Boolean = False
-	'Public ShowWS281CtrlFLAG As Boolean = False
-	
-	'--- functions menu
-	'Public ShowFilamentChangeFLAG As Boolean = False
-	'Public ShowBedLevel_ManualFLAG As Boolean = False
-	'Public ShowBLCRtouchMenuFLAG As Boolean = False
-	
 	'Public ShowBedLevel_MeshFLAG As Boolean = True
-	Public ShowZ_Offset_WizFLAG As Boolean = True
+	'Public ShowZ_Offset_WizFLAG As Boolean = True
 	
-	'Public ExternalSharedDir As String = ""
-	
-
 End Sub
 
 Public Sub Init
@@ -75,6 +59,10 @@ Private Sub LoadCfgs()
 	
 	If Main.kvs.ContainsKey(gblConst.SELECTED_CLR_THEME) = False Then
 		Main.kvs.Put(gblConst.SELECTED_CLR_THEME,"Prusa")
+	End If
+	
+	If Main.kvs.ContainsKey(gblConst.Z_OFFSET_FLAG) = False Then
+		Main.kvs.Put(gblConst.Z_OFFSET_FLAG,False)
 	End If
 	
 	'======================================================================
@@ -99,35 +87,13 @@ Private Sub LoadCfgs()
 	
 	'======================================================================
 
-	#if not (klipper)
+	'Main.kvs.Remove(gblConst.PWR_CTRL_ON) '--- Dev
 	If Main.kvs.ContainsKey(gblConst.PWR_CTRL_ON) = False Then	
 		Dim o1 As dlgOctoPsuSetup
 		o1.Initialize("")
 		o1.CreateDefaultOctoPowerCfg
 	End If
-	ReadPwrCFG
 	
-	'======================================================================
-
-'	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE) '--- Dev
-'	If File.Exists(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE) = False Then
-'		Dim ox As dlgZLEDSetup
-'		ox.Initialize("",gblConst.ZLED_OPTIONS_FILE)
-'		ox.CreateDefaultFile
-'	End If
-'	ReadZLED_CFG
-'	
-'	'======================================================================
-'
-'	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE) '--- Dev
-'	If File.Exists(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE) = False Then
-'		Dim oi As dlgZLEDSetup
-'		oi.Initialize("",gblConst.WS281_OPTIONS_FILE)
-'		oi.CreateDefaultFile
-'	End If
-'	ReadWS281_CFG
-
-	#end if
 	'======================================================================
 
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE) '--- Dev
@@ -146,35 +112,12 @@ Private Sub LoadCfgs()
 		oiy.CreateDefaultFile
 	End If
 	
-	
-	'======================================================================
-	
-	#if klipper
-	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE) '--- Dev
-	If File.Exists(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE) = False Then
-		Dim oiq As dlgPrinterSetup
-		oiq.Initialize
-		oiq.CreateDefaultFile
-	End If
-	'ReadPrinterCFG '--- this will be done on connection init
-	
-	'======================================================================
-	
-	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.PSU_KLIPPER_SETUP_FILE) '--- Dev
-	If File.Exists(xui.DefaultFolder,gblConst.PSU_KLIPPER_SETUP_FILE) = False Then
-		Dim oiw As dlgIpOnOffSetup
-		oiw.Initialize(Null,Null)
-		oiw.CreateDefaultDataFile(gblConst.PSU_KLIPPER_SETUP_FILE) 
-	End If
-
-	#end if
-	
 	'======================================================================
 	
 	'--- dev
-	For jj = 1 To 8
-		fileHelpers.SafeKill2(xui.DefaultFolder,jj & gblConst.HTTP_ONOFF_SETUP_FILE)
-	Next
+'	For jj = 1 To 8
+'		fileHelpers.SafeKill2(xui.DefaultFolder,jj & gblConst.HTTP_ONOFF_SETUP_FILE)
+'	Next
 	If File.Exists(xui.DefaultFolder,"1" & gblConst.HTTP_ONOFF_SETUP_FILE) = False Then
 		Dim oiw As dlgIpOnOffSetup
 		oiw.Initialize(Null,Null)
@@ -192,7 +135,6 @@ Private Sub LoadCfgs()
 '	Next
 '	Main.kvs.Put(key,False)
 	'-------------------
-	
 	If File.Exists(xui.DefaultFolder,"7" & gblConst.GCODE_CUSTOM_SETUP_FILE) = False Then
 		Dim oi7 As dlgGCodeCustSetup
 		oi7.Initialize(Null,Null)
@@ -237,29 +179,21 @@ Public Sub ReadWizardFilamentChangeFLAG As Boolean
 	Return Data.Get(gblConst.filShow).As(Boolean)
 End Sub
 
-'Public Sub ReadZLED_CFG As Boolean
-'	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.ZLED_OPTIONS_FILE)
-'	ShowZLEDCtrlFLAG = Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean)
-'	Return Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean)
-'End Sub
-'
-'Public Sub ReadWS281_CFG As Boolean
-'	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.WS281_OPTIONS_FILE)
-'	ShowWS281CtrlFLAG = Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean) '--- this is correct
-'	Return Data.Get(gblConst.ZLED_CTRL_ON).As(Boolean) '--- this is correct
-'End Sub
-
-Public Sub ReadPwrCFG As Boolean
-	ShowPwrCtrlFLAG = Main.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
+Public Sub ReadPwrCfgFLAG As Boolean
 	Return Main.kvs.Get(gblConst.PWR_CTRL_ON).As(Boolean)
 End Sub
+
+Public Sub ReadZOffsetFLAG As Boolean
+	Return Main.kvs.Get(gblConst.Z_OFFSET_FLAG).As(Boolean)
+End Sub
+
 
 Public Sub ReadGeneralCFG
 	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	
 	'--- these used to come from Octoprint but now we get them locally as the camera view 
-	'--- in Octoprint might be different fromt your eyeball view in front of your printer
+	'--- in Octoprint might be different from your eyeball view in front of your printer
 	oc.PrinterProfileInvertedX = Data.GetDefault("axesx",False)
 	oc.PrinterProfileInvertedY = Data.GetDefault("axesy",False)
 	oc.PrinterProfileInvertedZ = Data.GetDefault("axesz",False)

@@ -287,10 +287,10 @@ Private Sub BuildFunctionMnu() As Map
 	If config.ReadManualBedScrewLevelFLAG 	Then m.Put("Manual Bed Leveling Wizard","blw")
 	If config.ReadWizardFilamentChangeFLAG  Then m.Put("Change Filament Wizard","cf")
 	If config.ReadBLCRtouchFLAG     		Then m.Put("BL/CR Touch Probe Testing","blcr")
-	'If config.ReadManualBedScrewLevelFLAG	Then m.Put("Manual Bed Leveling Wizard","mbw")
+	If config.ReadZOffsetFLAG 				Then m.Put("Set Z Offset","zo")
 	'If config.ReadManualBedMeshLevelFLAG	Then m.Put("Mesh Bed Leveling Wizard","mblw")
 	
-	'If config.ShowZ_Offset_WizFLAG 	Then m.Put("Set Z Offset","zo")   TODO 
+	
 	
 	For jj =0 To 7
 		Dim f As String = jj & gblConst.GCODE_CUSTOM_SETUP_FILE

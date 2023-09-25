@@ -57,6 +57,14 @@ Public Sub SetAsOptionalMsgBox(kvKey As String)
 End Sub
 
 
+
+'''''''''''''''''''   PSU control needs a refactor on small screen size!!!!!!!!!!!!!!!!!!!
+'''''''''''''''''''   PSU control needs a refactor on small screen size!!!!!!!!!!!!!!!!!!!
+'''''''''''''''''''   PSU control needs a refactor on small screen size!!!!!!!!!!!!!!!!!!!
+
+
+
+
 Public Sub Show(txt  As String, icon_file As String, _
 				btn1 As String, btn2 As String, btn3 As String)As ResumableSub
 	

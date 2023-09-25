@@ -51,7 +51,7 @@ Public Sub Show
 		If guiHelpers.gIsLandScape Then
 			w = 500dip
 		Else
-			txt = strHelpers.WordWrap(txt,24) ' TODO - this word wrap seesm to have an issue and needs revisiting
+			txt = strHelpers.WordWrap(txt,24) ' V2 TODO - this word wrap seems to have an issue and needs revisiting
 			w = guiHelpers.gWidth-40dip
 		End If
 		mb.Initialize(mMainObj.root,"Warning",w,h,False)
@@ -63,9 +63,9 @@ Public Sub Show
 	mMainObj.pObjCurrentDlg2 = o1.Initialize("System Menu",Me,"SysMenu_Event",mMainObj.pObjCurrentDlg2)
 	o1.IsMenu = True
 	If guiHelpers.gIsLandScape Then '- TODO needs refactor for sizes
-		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,320dip,280dip),280dip,popUpMnu)
+		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6,320dip,240dip),280dip,popUpMnu)
 	Else
-		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6.5,436dip,340dip),280dip,popUpMnu)
+		o1.Show(IIf(guiHelpers.gScreenSizeAprox > 6,436dip,340dip),280dip,popUpMnu)
 	End If
 	
 End Sub
@@ -90,7 +90,7 @@ Private Sub SysMenu_Event(value As String, tag As Object)
 			If ret <> xui.DialogResponse_Cancel Then oOctoCmds.Reboot
 			
 	End Select
-	
+	mMainObj.pObjCurrentDlg2 = Null
 End Sub
 
 
@@ -98,8 +98,8 @@ Private Sub BuildMenu() As Int
 	
 	popUpMnu.Initialize
 	
-	If oOctoCmds.mapRestart.Size 		<> 0 Then popUpMnu.Put("Restart Octoprint","ro")
-	If oOctoCmds.mapReboot.Size 		<> 0 Then popUpMnu.Put("Reboot System","rb")
+	If oOctoCmds.mapRestart.Size 	<> 0 Then popUpMnu.Put("Restart Octoprint","ro")
+	If oOctoCmds.mapReboot.Size 	<> 0 Then popUpMnu.Put("Reboot System","rb")
 	If oOctoCmds.mapShutdown.Size 	<> 0 Then popUpMnu.Put("Shutdown System","sd")
 	
 	'--- PLUGIN NOT WORKING IN DOCKER ----   TODO, Search for 'USER_SYS_CMDS'

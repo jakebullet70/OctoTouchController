@@ -28,6 +28,7 @@ Sub Class_Globals
 	Public oMasterController As MasterController
 	Private toast As BCToast
 	Private csHdr As CSBuilder
+	Private fnTMP As String, iiTMP As Int
 
 	'--- panel to cover screen for power ctrl
 	Public pnlScreenOff As Panel
@@ -631,10 +632,10 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 			o1.Initialize : o1.Show
 			
 		Case "g0","g1","g2","g3","g4","g5","g6","g7"
-			Dim v1 As String = value.Replace("g","")
+			fnTMP = value.Replace("g","")
 			Dim o23 As dlgGCodeCustSetup
 			pObjCurrentDlg2 = o23.Initialize(Me,"Rebuild_RightMnu")
-			o23.Show("GCode Control Config - " & v1,v1 & gblConst.GCODE_CUSTOM_SETUP_FILE)
+			o23.Show("GCode Control Config - " & fnTMP,fnTMP & gblConst.GCODE_CUSTOM_SETUP_FILE)
 			
 	End Select
 	
@@ -648,11 +649,7 @@ Private Sub PopupPluginOptionMenu
 
 	Dim o As guiMsgs : 	o.Initialize
 	Dim popUpMemuItems As Map = o.BuildPluginOptionsMenu
-	#if klipper
-	Dim title As Object = "  External Control Menu"
-	#else
 	Dim title As Object = "  Plugins Menu"
-	#End If
 	
 	Dim cs As CSBuilder 
 	Dim title As Object = cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(4dip). _
@@ -686,18 +683,6 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			Dim oA1 As dlgIpOnOffSetup
 			pObjCurrentDlg2 = oA1.Initialize(Me,"Rebuild_RightMnu")
 			oA1.Show("HTTP Control Config - " & value,value & gblConst.HTTP_ONOFF_SETUP_FILE)
-				
-'		#if not (klipper)	
-'		Case "led" '--- ZLED
-'			Dim oB As dlgZLEDSetup
-'			pObjCurrentDlg2 = oB.Initialize("ZLED Config",gblConst.ZLED_OPTIONS_FILE)
-'			oB.Show
-'			
-'		Case "ws2" '--- ws281x
-'			Dim o1 As dlgZLEDSetup
-'			pObjCurrentDlg2 = o1.Initialize("ws281x Config",gblConst.WS281_OPTIONS_FILE)
-'			o1.Show
-'		#end if
 
 	End Select
 		
@@ -1013,35 +998,28 @@ Private Sub Build_RightSideMenu
 	
 	
 	'clvDrawer.AddTextItem(cs.Initialize.Size(12).Alignment("ALIGN_CENTER").Append("------------ SYS CMDS -----------").PopAll,"")
-	Dim fn As String
-	For jj =0 To 7
-		fn = jj & gblConst.GCODE_CUSTOM_SETUP_FILE
-		Dim da As Map = File.ReadMap(xui.DefaultFolder,fn)
+	For iiTMP = 0 To 7
+		fnTMP = iiTMP & gblConst.GCODE_CUSTOM_SETUP_FILE
+		Dim da As Map = File.ReadMap(xui.DefaultFolder,fnTMP)
 		If da.GetDefault("rmenu",False).As(Boolean) = True Then
 			txt = da.Get("desc")
-			If strHelpers.IsNullOrEmpty(txt) Then txt = "GCode " & jj & "Menu"
-			clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,"g" & jj)
+			If strHelpers.IsNullOrEmpty(txt) Then txt = "GCode " & iiTMP & "Menu"
+			clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,"g" & iiTMP)
 		End If
 	Next
 	
-	For ii = 1 To 4
-		fn = ii & gblConst.HTTP_ONOFF_SETUP_FILE
-		If File.Exists(xui.DefaultFolder,fn) = True Then
-			Dim dataEX As Map  = File.ReadMap(xui.DefaultFolder,fn)
+	For iiTMP = 1 To 8
+		fnTMP = iiTMP & gblConst.HTTP_ONOFF_SETUP_FILE
+		If File.Exists(xui.DefaultFolder,fnTMP) = True Then
+			Dim dataEX As Map  = File.ReadMap(xui.DefaultFolder,fnTMP)
 			If dataEX.GetDefault("active",False).As(Boolean) = True Then
 				txt = dataEX.Get("desc")
-				If strHelpers.IsNullOrEmpty(txt) Then txt = "HTTP " & ii & "Menu"
-				clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,ii)
+				If strHelpers.IsNullOrEmpty(txt) Then txt = "HTTP " & iiTMP & "Menu"
+				clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,iiTMP)
 			End If
 		End If
 	Next
 	
-'	If config.ShowZLEDCtrlFLAG Then
-'		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("ZLED Menu").PopAll,"zled")
-'	End If
-'	If config.ShowWS281CtrlFLAG Then
-'		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("WS281 Menu").PopAll,"ws2")
-'	End If
 	If config.ShowPwrCtrlFLAG Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Printer Power Menu").PopAll,"pwr")
 	End If
@@ -1124,7 +1102,7 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 			pObjCurrentDlg1 = o1.Initialize(Me)
 			o1.Show
 			
-		Case "1","2","3","4" '--- misc HTTP commands
+		Case "1","2","3","4","5","6","7","8" '--- misc HTTP commands
 			RunHTTPOnOff_Menu(Value.As(String) & gblConst.HTTP_ONOFF_SETUP_FILE)
 			
 		Case "g0","g1","g2","g3","g4","g5","g6","g7" '--- misc GCode commands
@@ -1132,24 +1110,6 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 			
 		Case "rcnt"
 			lblStatus_Click
-			
-'		Case "zled" '--- ZLED
-'			If oc.isConnected = False Then
-'				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
-'				Return
-'			End If
-'			Dim o3 As dlgOnOffCtrl
-'			pObjCurrentDlg1 = o3.Initialize("ZLED Control")
-'			o3.Show
-'			
-'		Case "ws2" '--- ws281x
-'			If oc.isConnected = False Then
-'				guiHelpers.Show_toast(gblConst.NOT_CONNECTED,1000)
-'				Return
-'			End If
-'			Dim o3 As dlgOnOffCtrl
-'			pObjCurrentDlg1 = o3.Initialize("WS281x Control")
-'			o3.Show
 		
 	End Select
 			

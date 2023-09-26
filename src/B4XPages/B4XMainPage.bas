@@ -182,7 +182,7 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	
 	
 	
-	'--- NEED 2 BE CHECKED !!!!!!!!!!!!!!!!!!  v2 SEEMS 2 WORK ONLY IN RELEASE MODE
+	'--- NEED 2 BE CHECKED !!!!!!!!!!!!!!!!!!  v2 SEEMS 2 WORK ONLY IN RELEASE MODE?????
 	If pObjCurrentDlg2 <> Null And SubExists(pObjCurrentDlg2,"Close_Me") Then 'pObjCurrentDlg2.As(dlgIpOnOffSetup).Visible = True Then
 		Log("maybe i will log something - closing pObjCurrentDlg2")
 		CallSubDelayed(pObjCurrentDlg2,"Close_Me") 'ignore

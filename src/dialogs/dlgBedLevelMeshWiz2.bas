@@ -30,15 +30,18 @@ Sub Class_Globals
 	Private mDIstance As Double = .01
 	'Private mInProbeMode As Boolean = False
 	
-	Private Button5,Button4 ,Button3,Button2,Button1 As Button
-	Private lblZinfo As Label
 	Private btnDn,btnUp As Button
 	
 	Public pMode As String 
 	Public Const ppMANUAL_MESH As String = "mblw"
 	
+	Private alblZinfo As AutoTextSizeLabel
 	
-	
+	Private btnDst1 As B4XView
+	Private btnDst2 As B4XView
+	Private btnDst3 As B4XView
+	Private btnDst4 As B4XView
+	Private btnDst5 As B4XView
 End Sub
 
 Public Sub Initialize(p As Panel,mode As String) As Object
@@ -132,7 +135,7 @@ Private Sub BuildGUI(headerTxt As String)
 	pnlBG.Color = clrTheme.Background
 	pnlSpacer1.SetColorAndBorder(clrTheme.txtNormal,2dip,clrTheme.txtNormal,8dip)
 	pnlSpacer2.SetColorAndBorder(clrTheme.txtNormal,2dip,clrTheme.txtNormal,8dip)
-	guiHelpers.SetTextColor(Array As B4XView(lblZinfo,alblHeader.BaseLabel,alblMenu.BaseLabel,lblHeaterBed,lblHeaterTool))
+	guiHelpers.SetTextColor(Array As B4XView(alblZinfo.BaseLabel,alblHeader.BaseLabel,alblMenu.BaseLabel,lblHeaterBed,lblHeaterTool))
 	If guiHelpers.gIsLandScape = False Then  
 		alblMenu.BaseLabel.Visible = False
 	End If
@@ -144,7 +147,7 @@ Private Sub BuildGUI(headerTxt As String)
 	guiHelpers.ResizeText("Bed: " &CRLF & "100",	lblHeaterBed)
 	btn1.Text = "START" : btn2.Text = "STOP"
 	btn1.TextSize =  20   : btn2.TextSize = btn1.TextSize
-	btnDistance_Highlight(Button1)
+	btnDistance_Highlight(btnDst1)
 	ShowZinfo("Touch START to begin")
 	parent.Visible = True
 End Sub
@@ -173,16 +176,18 @@ Private Sub btnUpDown_Click
 	Else '--- Marlin
 	
 	End If
-	
+	btn.RequestFocus
 	'Log("btnUP-DN: " & msg)
 End Sub
 
 Private Sub DistanceBtnsLookReset
-	guiHelpers.SkinButton(Array As Button(Button5,Button4 ,Button3,Button2,Button1))
+	guiHelpers.SkinButton(Array As Button(btnDst1,btnDst2,btnDst3,btnDst4,btnDst5))
 End Sub
 
-Private Sub btnDistance_Click
+
+Private Sub btnDst_Click
 	Dim b As Button : b = Sender
+	Log(b.text)
 	btnDistance_Highlight(b.As(B4XView))
 	mDIstance = b.Text
 	CallSubDelayed(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
@@ -190,13 +195,14 @@ End Sub
 
 Private Sub btnDistance_Highlight(b As B4XView)
 	DistanceBtnsLookReset
-	b.SetColorAndBorder(xui.Color_Transparent, 8dip,clrTheme.txtAccent,8dip)
+	b.SetColorAndBorder(xui.Color_Transparent, 6dip,clrTheme.txtAccent,6dip)
 End Sub
+
 
 Private Sub ShowZinfo(info As String)
 	If info = "" Then info = "Z Location ???"
 	info = info.Replace("Z position: ","Z pos: ")
-	guiHelpers.ResizeText(info,	lblZinfo)
+	alblZinfo.Text = info
 End Sub
 Private Sub ParseZInfo(s As String)'ignore
 	If s.IndexOf("Z pos") = -1 Then Return
@@ -211,6 +217,7 @@ Private Sub ParseZInfo(s As String)'ignore
 	End Try
 End Sub
 
+
 Private Sub btnStop_Click
 	'--- stop the action
 	ProcessStop_GUI
@@ -223,7 +230,9 @@ Private Sub btnStop_Click
 		
 	End If
 	ShowZinfo("Just hanging out and waiting...")
+	
 End Sub
+
 
 Private Sub btnStart_Click
 
@@ -243,15 +252,15 @@ Private Sub btnStart_Click
 			mainObj.Send_Gcode("G28")
 			Sleep(1000)
 			If pMode = ppMANUAL_MESH Then
-				B4XPages.MainPage.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
 				guiHelpers.Show_toast2("Starting manual mesh Z probe...",1500)
-			Else
-	'			guiHelpers.Show_toast2("Setting up for Z Offset...",1500)
-	'			Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","G1 X100 Y100"))) Complete (msg As String)
-	'			Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","MANUAL_PROBE"))) Complete (msg As String)
+				B4XPages.MainPage.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
+			Else '--- Z OFFSET time!
+				guiHelpers.Show_toast2("Setting up for Z Offset...",1500)
+				B4XPages.MainPage.Send_Gcode("G1 X100 Y100")
+				B4XPages.MainPage.Send_Gcode("MANUAL_PROBE")
 			End If
 			#if debug
-			Log("WT: " & msg)
+			'Log("WT: " & msg)
 			#end if
 		Else '-------------------- Marlin firmware
 		
@@ -262,13 +271,7 @@ Private Sub btnStart_Click
 		If oc.Klippy Then
 			'Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","ACCEPT"))) Complete (msg As String)		
 			mainObj.Send_Gcode("ACCEPT")
-			If msg.Contains("Manual probe failed") Then ''--- mostly happens when just hitting ACCEPT and not moving nozzle 1st
-				Probe_failed
-			Else
-				#if debug
-				Log("accept msg: " & msg)
-				#end if
-			End If
+			
 		Else '-------------------- Marlin firmware
 		
 		End If
@@ -278,7 +281,7 @@ Private Sub btnStart_Click
 End Sub
 
 
-'--- this is recieved as a callbback from the octoprint socket
+'--- this is recieved as a callback from the octoprint socket
 
 Public Sub Rec_Text(txt As String)
 	If txt.Contains(CRLF) Then
@@ -294,49 +297,47 @@ Public Sub Rec_Text(txt As String)
 End Sub
 
 
-Public Sub Rec_Text2(txt As String)
+Private Sub Rec_Text2(txt As String)
 	
 	If oc.Klippy Then
 		
 		If pMode = ppMANUAL_MESH Then '--- manual bed level wiz
+			
+			Select Case True
 				
-			If txt.Contains("y in a manual Z probe") Then
-				'--- just started probe mode but are already in it so cancel and restart
-				'mInProbeMode = False
-				guiHelpers.Show_toast2("Already in a manual Z probe: Restarting...",6500)
-				mainObj.Send_Gcode("ABORT")
-				Sleep(2000)
-				mainObj.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
-				Sleep(2000)
-				Return
-			End If
+				Case txt.Contains("y in a manual Z probe")
+					'--- just started probe mode but are already in it so cancel and restart
+					'mInProbeMode = False
+					guiHelpers.Show_toast2("Already in a manual Z probe: Restarting...",6500)
+					mainObj.Send_Gcode("ABORT")
+					Sleep(2000)
+					mainObj.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
+					Sleep(2000)
+					
+				Case txt.Contains("g manual Z probe")
+					'mInProbeMode = True
+					If pMode = ppMANUAL_MESH Then '--- manual bed level wiz
+						btn1.Text = "ACCEPT"
+					Else
+						btn1.Text = "DONE"
+					End If
+					btnClose.Visible = False
+					btnPreheat.Visible = False
+					btn2.Visible = True
+				
+				Case txt.Contains("Z pos")
+					ParseZInfo(txt)
+					
+				Case txt.Contains("Manual probe failed") '--- mostly happens when just hitting ACCEPT and not moving nozzle 1st
+					Probe_failed
+					
+				Case txt.Contains("has been saved")
+					ShowZinfo("Process complete")
+					ProcessMeshComplete
+					
+			End Select
 			
-			If txt.Contains("g manual Z probe") Then
-				'mInProbeMode = True
-				If pMode = ppMANUAL_MESH Then '--- manual bed level wiz
-					btn1.Text = "ACCEPT"
-				Else
-					btn1.Text = "DONE"
-				End If
-				btn2.Visible = True
-				btnClose.Visible = False
-				btnPreheat.Visible = False
-				Return
-			End If
 			
-			If txt.Contains("Z pos") Then 
-				ParseZInfo(txt) : Return
-			End If
-			
-			If txt.Contains("Manual probe failed") Then '--- mostly happens when just hitting ACCEPT and not moving nozzle 1st
-				Probe_failed : Return
-			End If
-			
-			If txt.Contains("has been saved") Then
-				ShowZinfo("Process complete")
-				ProcessMeshComplete
-				Return
-			End If
 		Else
 			
 			'--- Z offset
@@ -356,12 +357,12 @@ Public Sub Rec_Text2(txt As String)
 		End If
 		
 	Else
-		'--- Marlin time!
+		'--- Marlin time! ----------------------------
 	
 	End If
 	
 	#if debug
-	Log("RT: Not processed: " & txt)
+	'Log("RT: Not processed: " & txt)
 	#end if
 	
 End Sub
@@ -412,3 +413,6 @@ Private Sub ProcessMeshComplete'ignore
 	
 End Sub
 
+Private Sub pnlBG_Click
+	'--- eat the click
+End Sub

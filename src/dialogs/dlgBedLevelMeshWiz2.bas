@@ -125,6 +125,7 @@ Public Sub Close_Me  '--- class method, also called from android back btn
 	tmrHeaterOnOff.Enabled = False
 	tmrHeaterOnOff = Null
 	parent.RemoveAllViews
+	'B4XPages.MainPage.pObjWizards=Null
 End Sub
 
 Private Sub btnPreHeat_Click

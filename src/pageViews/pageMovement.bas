@@ -305,6 +305,7 @@ End Sub
 Private Sub FunctionMenu_Event(value As String, tag As Object)
 	
 	'--- callback for Function Menu
+	B4XPages.MainPage.pObjCurrentDlg1 = Null
 	If value.Length = 0 Then Return
 	Dim msg As String = "Command sent: " 'ignore
 	Dim mb As dlgMsgBox 

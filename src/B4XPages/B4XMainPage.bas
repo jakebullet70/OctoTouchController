@@ -174,7 +174,8 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 		Return False '--- cancel close request
 	End If
 		
-	If pnlWizards.Visible = True And (pObjWizards <> Null) And SubExists(pObjWizards,"Close_Me") Then
+	'If pnlWizards.Visible = True And (pObjWizards <> Null) And SubExists(pObjWizards,"Close_Me") Then
+	If (pObjWizards <> Null) And SubExists(pObjWizards,"Close_Me") Then
 		CallSubDelayed(pObjWizards,"Close_Me") 'ignore
 		pObjWizards = Null
 		Return False '--- cancel close request

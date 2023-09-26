@@ -163,10 +163,7 @@ End Sub
 Private Sub ws_TextMessage(Message As String)
 	
 	If oc.Klippy And Message.StartsWith($"{"plugin": {"plugin": "klipper""$) Then
-		CallSubDelayed2(pParserWO,"Klippy_Parse",Message)
-		#if debug
-		Log("klippy plugin msg: " & Message)
-		#end if
+		CallSub2(pParserWO,"Klippy_Parse",Message)
 		Return
 	End If
 	
@@ -217,6 +214,7 @@ Public Sub SendAndWait(cmd As String) As ResumableSub
 		Wait For (Connect) Complete (msg As String)
 		If mConnected = False Then Return "no connection"
 	End If
+	'Log(cmd)
 	wSocket.SendText(cmd)
  	Wait For ws_TextMessage (Message As String)
 	Return Message

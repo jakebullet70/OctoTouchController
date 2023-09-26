@@ -612,9 +612,19 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 '			Main.kvs.Put("g29", Not (Main.kvs.GetDefault("g29",False)))
 '			Show_toast("G29 Option Saved",2000)
 
+		Case "mms"
+			onOff = Main.kvs.Get(gblConst.MANUAL_MESH_FLAG).As(Boolean)
+			msg = "Manual mesh wizard turned "
+			If onOff Then
+				msg = msg & "off"
+			Else
+				msg = msg & "on"
+			End If
+			Main.kvs.Put(gblConst.MANUAL_MESH_FLAG, Not (onOff))
+			
 		Case "zo"
 			onOff = Main.kvs.Get(gblConst.Z_OFFSET_FLAG).As(Boolean)
-			msg = "Z Offset menu turned "
+			msg = "Z Offset wizard turned "
 			If onOff Then 
 				msg = msg & "off"
 			Else

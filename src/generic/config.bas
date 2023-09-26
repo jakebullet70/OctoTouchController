@@ -65,6 +65,10 @@ Private Sub LoadCfgs()
 		Main.kvs.Put(gblConst.Z_OFFSET_FLAG,False)
 	End If
 	
+	If Main.kvs.ContainsKey(gblConst.MANUAL_MESH_FLAG) = False Then
+		Main.kvs.Put(gblConst.MANUAL_MESH_FLAG,False)
+	End If
+	
 	'======================================================================
 	
 	'fileHelpers.SafeKill2(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) '--- Dev
@@ -185,6 +189,10 @@ End Sub
 
 Public Sub ReadZOffsetFLAG As Boolean
 	Return Main.kvs.Get(gblConst.Z_OFFSET_FLAG).As(Boolean)
+End Sub
+
+Public Sub ReadManualBedMeshLevelFLAG As Boolean
+	Return Main.kvs.Get(gblConst.MANUAL_MESH_FLAG).As(Boolean)
 End Sub
 
 

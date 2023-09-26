@@ -16,8 +16,12 @@ Version=11.5
 Sub Class_Globals
 	
 	Private Const mModule As String = "WebSocketParse" 'ignore
+	Public RaiseEventMod As Object = Null
+	Public RaiseEventEvent As String = ""
+	
 	
 End Sub
+
 
 
 Public Sub Initialize
@@ -27,6 +31,10 @@ End Sub
 '===========================================================================================
 '===========================================================================================
 
+Public Sub ResetRaiseEvent
+	RaiseEventEvent = ""
+	RaiseEventMod = Null
+End Sub
 
 Public Sub Klippy_Parse(msg As String)
 	If config.logREST_API Then logMe.logit2("Klipper msg",mModule,"Klippy_Parse")
@@ -56,6 +64,20 @@ Public Sub Klippy_Parse(msg As String)
 	Dim msgType As String = data.Get("type") 'ignore
 	'Dim title As String = data.Get("title")
 	
+	'--- live callback for klippy built in interaction commands
+	'--- this will process ALL klippy events if event callback is set
+	If RaiseEventMod <> Null Then
+		If msgType = "log" Then
+			If SubExists(RaiseEventMod,RaiseEventEvent) Then
+				CallSubDelayed2(RaiseEventMod,RaiseEventEvent,payload) 'ignore
+				Return
+			End If
+		Else
+			Return
+		End If
+	End If
+	
+	'--- no event callback set so process
 	Dim payloadU As String = payload.ToUpperCase
 	Select Case True
 		
@@ -81,8 +103,5 @@ Public Sub Klippy_Parse(msg As String)
 				End Try
 	End Select
 
-	
-	
-	
-	
+		
 End Sub

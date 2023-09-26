@@ -174,6 +174,14 @@ Public Sub BuildFunctionSetupMenu() As Map
 		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"fl")
 	End If
 	
+	'----------------------------------------------------------------
+	txt = "Set Z Offset"
+	If config.ReadZOffsetFLAG  Then
+		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
+										Typeface(Typeface.DEFAULT).Append(txt).PopAll,"zo")
+	Else
+		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"zo")
+	End If
 	
 	'----------------------------------------------------------------
 	If oc.Klippy Then
@@ -189,12 +197,12 @@ Public Sub BuildFunctionSetupMenu() As Map
 	End If
 	
 	'----------------------------------------------------------------
-	txt = "Set Z Offset"
-	If config.ReadZOffsetFLAG  Then
+	txt = "Manual Mesh Leveling"
+	If config.ReadManualBedMeshLevelFLAG  Then
 		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
-										Typeface(Typeface.DEFAULT).Append(txt).PopAll,"zo")
+										Typeface(Typeface.DEFAULT).Append(txt).PopAll,"mms")
 	Else
-		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"zo")
+		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"mms")
 	End If
 	
 	

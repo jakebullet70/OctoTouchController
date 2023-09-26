@@ -287,8 +287,8 @@ Private Sub BuildFunctionMnu() As Map
 	If config.ReadManualBedScrewLevelFLAG 	Then m.Put("Manual Bed Leveling Wizard","blw")
 	If config.ReadWizardFilamentChangeFLAG  Then m.Put("Change Filament Wizard","cf")
 	If config.ReadBLCRtouchFLAG     		Then m.Put("BL/CR Touch Probe Testing","blcr")
-	If config.ReadZOffsetFLAG 				Then m.Put("Set Z Offset","zo")
-	'If config.ReadManualBedMeshLevelFLAG	Then m.Put("Mesh Bed Leveling Wizard","mblw")
+	If config.ReadZOffsetFLAG 				Then m.Put("Set Z Offset Wizard","zo")
+	If config.ReadManualBedMeshLevelFLAG	Then m.Put("Manual Mesh Bed Leveling Wizard","mblw")
 	
 	
 	
@@ -319,23 +319,19 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 			CallSubDelayed2(mMainObj,"RunGCodeOnOff_Menu",value.As(String).Replace("f","") & gblConst.GCODE_CUSTOM_SETUP_FILE)
 			
 		Case "zo" '--- Z offset
-			Dim bm As dlgBedLevelMeshWiz2
-			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,value)
-			bm.Show("Set Z Offset")
+'			Dim bm As dlgBedLevelMeshWiz2
+'			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,value)
+'			bm.Show("Set Z Offset")
 			
 		Case "mblw"
-			#if klipper
 			Dim bm As dlgBedLevelMeshWiz2
-			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,value)
+			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,value) '--- value tells mesh of z-offset
 			bm.Show("Mesh Bed Leveling Wizard")
-			#else
-			#end if
 		
 		Case "blw"
 			Dim uu As dlgBedLevelManualWiz
 			mMainObj.pobjWizards = uu.Initialize(mMainObj.pnlWizards)
 			uu.Show
-			
 			
 '		Case "cfl" '--- Change filament through firmware
 '			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)

@@ -158,6 +158,7 @@ Sub Process_Globals
 	
 	
 	Public Const Z_OFFSET_FLAG As String = "zoffst"
+	Public Const MANUAL_MESH_FLAG As String = "mmesh"
 	
 	
 	

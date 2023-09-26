@@ -58,14 +58,10 @@ Public Sub Initialize(p As Panel,mode As String) As Object
 End Sub
 
 'Private Sub Check4MeshSupport() As ResumableSub
-'	
 '	Dim ns As String = "Mesh bed leveling is not supported in the firmware."
 '	#if klipper
-'	
 '	#else
-'	
 '	#End If
-'	
 '	Return True
 'End Sub
 
@@ -75,7 +71,7 @@ Public Sub Show(headerTxt As String)
 	
 	'Wait For (Check4MeshSupport) Complete (b As Boolean)
 	'If b = False Then Return
-	
+		
 	parent.SetLayoutAnimated(0, 0, 0, parent.Width, parent.Height)
 	parent.LoadLayout("wizManualMeshBedLevel")
 	BuildGUI(headerTxt)
@@ -85,7 +81,8 @@ Public Sub Show(headerTxt As String)
 	tmrHeater_Tick
 	tmrHeaterOnOff.Enabled = True
 	
-	
+	B4XPages.MainPage.oMasterController.oWS.pParserWO.RaiseEventMod = Me
+	B4XPages.MainPage.oMasterController.oWS.pParserWO.RaiseEventEvent = "rec_text"
 	
 End Sub
 
@@ -117,6 +114,9 @@ Public Sub Close_Me  '--- class method, also called from android back btn
 	#if klipper
 	mainObj.oMasterController.WSk.pCallbackModule2 = Null
 	#end if
+	If oc.Klippy Then
+		B4XPages.MainPage.oMasterController.oWS.pParserWO.ResetRaiseEvent
+	End If
 	parent.SetVisibleAnimated(500,False)
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
 	tmrHeaterOnOff.Enabled = False
@@ -133,7 +133,9 @@ Private Sub BuildGUI(headerTxt As String)
 	pnlSpacer1.SetColorAndBorder(clrTheme.txtNormal,2dip,clrTheme.txtNormal,8dip)
 	pnlSpacer2.SetColorAndBorder(clrTheme.txtNormal,2dip,clrTheme.txtNormal,8dip)
 	guiHelpers.SetTextColor(Array As B4XView(lblZinfo,alblHeader.BaseLabel,alblMenu.BaseLabel,lblHeaterBed,lblHeaterTool))
-	If guiHelpers.gIsLandScape = False Then  alblMenu.BaseLabel.Visible = False
+	If guiHelpers.gIsLandScape = False Then  
+		alblMenu.BaseLabel.Visible = False
+	End If
 	alblHeader.Text = headerTxt
 	pnlSteps.Color =clrTheme.Background
 	guiHelpers.SkinButton(Array As Button(btnClose,btnPreheat,btn1,btn2,btnDn,btnUp))
@@ -159,17 +161,18 @@ End Sub
 
 Private Sub btnUpDown_Click
 	Dim btn As Button = Sender
-	If btn1.Text = "START" Then Return
+	If btn1.Text = "START" Then 
+		Return
+	End If
 	Dim nVal As String = Round2(mDIstance,3).As(String)
 	If btn.Text.ToUpperCase.Contains("LO") Then
 		nVal = "-" & nVal 
 	End If
-	#if klipper
-	Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","TESTZ Z=" & nVal))) Complete (msg As String)
-	ParseZInfo(msg)
-	#else
+	If oc.Klippy Then
+		mainObj.Send_Gcode("TESTZ Z=" & nVal)
+	Else '--- Marlin
 	
-	#end if
+	End If
 	
 	'Log("btnUP-DN: " & msg)
 End Sub
@@ -199,7 +202,8 @@ Private Sub ParseZInfo(s As String)'ignore
 	If s.IndexOf("Z pos") = -1 Then Return
 	Try
 		Dim StartNdx As Int = s.IndexOf("Z pos")
-		ShowZinfo(s.SubString2(StartNdx,s.IndexOf2("]}",StartNdx)))
+		'ShowZinfo(s.SubString2(StartNdx,s.IndexOf2("]}",StartNdx)))
+		ShowZinfo(s.SubString2(StartNdx,s.Length))
 	Catch
 		Log(LastException)
 		Log("ParseZInfo ERR2: " & s)
@@ -210,127 +214,151 @@ End Sub
 Private Sub btnStop_Click
 	'--- stop the action
 	ProcessStop_GUI
-	guiHelpers.Show_toast2("Canceling... Disabling Steppers...",2500)
-	#if klipper
-	Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","ABORT"))) Complete (msg As String)
-	mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","M18"))
-	#else
+	guiHelpers.Show_toast2("Canceling... Disabling Steppers...",3000)
 	
-	#end if
+	If oc.Klippy Then
+		mainObj.Send_Gcode("ABORT")
+		mainObj.Send_Gcode("M18") '--- disable steppers
+	Else '--- Marlin
+		
+	End If
 	ShowZinfo("Just hanging out and waiting...")
 End Sub
-
 
 Private Sub btnStart_Click
 
 	Dim b As Button : b = Sender
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	Dim msg As String = ""
 	'mInProbeMode = False
 	
 	btn1.RequestFocus
 	'btnPreheat.Visible = False
 	
 	If b.Text = "START" Then
-		#if klipper
-		ShowZinfo("Preparing bed and tool...")
-		Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","G28"))) Complete (msg As String)
-		If pMode = ppMANUAL_MESH Then
-			guiHelpers.Show_toast2("Starting manual mesh Z probe...",1500)
-			Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","BED_MESH_CALIBRATE  METHOD=manual"))) Complete (msg As String)
-		Else
-			guiHelpers.Show_toast2("Setting up for Z Offset...",1500)
-			Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","G1 X100 Y100"))) Complete (msg As String)
-			Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","MANUAL_PROBE"))) Complete (msg As String)
-		End If
-		#if debug
-		Log("WT: " & msg)
-		#end if
-		#else
 		
-		#End If
+		If oc.Klippy Then '--------------------Klipper firmware
+			ShowZinfo("Preparing bed and tool...")
+			guiHelpers.Show_toast2("Homing printer",1500)
+			mainObj.Send_Gcode("G28")
+			Sleep(1000)
+			If pMode = ppMANUAL_MESH Then
+				B4XPages.MainPage.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
+				guiHelpers.Show_toast2("Starting manual mesh Z probe...",1500)
+			Else
+	'			guiHelpers.Show_toast2("Setting up for Z Offset...",1500)
+	'			Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","G1 X100 Y100"))) Complete (msg As String)
+	'			Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","MANUAL_PROBE"))) Complete (msg As String)
+			End If
+			#if debug
+			Log("WT: " & msg)
+			#end if
+		Else '-------------------- Marlin firmware
+		
+		End If
+		
 	
 	else If b.Text = "ACCEPT" Or  b.Text = "DONE" Then
-		#if klipper
-		Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","ACCEPT"))) Complete (msg As String)		
-		If msg.Contains("Manual probe failed") Then ''--- mostly happens when just hitting ACCEPT and not moving nozzle 1st
-			Probe_failed
-		Else
-			#if debug
-			Log("accept msg: " & msg)
-			#end if
-		End If
-		#else
+		If oc.Klippy Then
+			'Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","ACCEPT"))) Complete (msg As String)		
+			mainObj.Send_Gcode("ACCEPT")
+			If msg.Contains("Manual probe failed") Then ''--- mostly happens when just hitting ACCEPT and not moving nozzle 1st
+				Probe_failed
+			Else
+				#if debug
+				Log("accept msg: " & msg)
+				#end if
+			End If
+		Else '-------------------- Marlin firmware
 		
-		#End If
+		End If
+	
 	End If
 	
 End Sub
 
+
+'--- this is recieved as a callbback from the octoprint socket
+
 Public Sub Rec_Text(txt As String)
-	#if klipper
-	
-	If pMode = ppMANUAL_MESH Then '--- manual bed level wiz
-			
-		If txt.Contains("y in a manual Z probe") Then
-			'--- just started probe mode but are already in it so cancel and restart
-			'mInProbeMode = False
-			guiHelpers.Show_toast2("Already in a manual Z probe: Restarting...",6500)
-			Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","ABORT"))) Complete (msg As String)
-			Sleep(1000)
-			Log("AB:" & msg)
-			Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","BED_MESH_CALIBRATE  METHOD=manual"))) Complete (msg As String)
-			Sleep(1000)
-			Return
-		End If
+	If txt.Contains(CRLF) Then
+		Dim cd() As String = Regex.Split(CRLF, txt)
 		
-		If txt.Contains("g manual Z probe") Then
-			'mInProbeMode = True
-			If pMode = ppMANUAL_MESH Then '--- manual bed level wiz
-				btn1.Text = "ACCEPT"
-			Else
-				btn1.Text = "DONE"
-			End If
-			btn2.Visible = True
-			btnClose.Visible = False
-			btnPreheat.Visible = False
-			Return
-		End If
-		
-		If txt.Contains("Z pos") Then 
-			ParseZInfo(txt) : Return
-		End If
-		
-		If txt.Contains("Manual probe failed") Then '--- mostly happens when just hitting ACCEPT and not moving nozzle 1st
-			Probe_failed : Return
-		End If
-		
-		If txt.Contains("has been saved") Then
-			ShowZinfo("Process complete")
-			ProcessMeshComplete
-			Return
-		End If
+		For Each s As String In cd
+			Rec_Text2(s)
+			Sleep(250) '--- 1/4 second between
+		Next
 	Else
-		
-		'--- Z offset
-		If txt.Contains("g manual Z probe") Then
-			'mInProbeMode = True
-			btn1.Text = "DONE"
-			btn2.Visible = True
-			btnClose.Visible = False
-			btnPreheat.Visible = False
-			Return
-		End If
-		
-		If txt.Contains("Z pos") Then
-			ParseZInfo(txt) : Return
-		End If
-			
+		Rec_Text2(s)
 	End If
+End Sub
+
+
+Public Sub Rec_Text2(txt As String)
 	
-	#else 
-	'--- Marlin time!
+	If oc.Klippy Then
+		
+		If pMode = ppMANUAL_MESH Then '--- manual bed level wiz
+				
+			If txt.Contains("y in a manual Z probe") Then
+				'--- just started probe mode but are already in it so cancel and restart
+				'mInProbeMode = False
+				guiHelpers.Show_toast2("Already in a manual Z probe: Restarting...",6500)
+				mainObj.Send_Gcode("ABORT")
+				Sleep(2000)
+				mainObj.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
+				Sleep(2000)
+				Return
+			End If
+			
+			If txt.Contains("g manual Z probe") Then
+				'mInProbeMode = True
+				If pMode = ppMANUAL_MESH Then '--- manual bed level wiz
+					btn1.Text = "ACCEPT"
+				Else
+					btn1.Text = "DONE"
+				End If
+				btn2.Visible = True
+				btnClose.Visible = False
+				btnPreheat.Visible = False
+				Return
+			End If
+			
+			If txt.Contains("Z pos") Then 
+				ParseZInfo(txt) : Return
+			End If
+			
+			If txt.Contains("Manual probe failed") Then '--- mostly happens when just hitting ACCEPT and not moving nozzle 1st
+				Probe_failed : Return
+			End If
+			
+			If txt.Contains("has been saved") Then
+				ShowZinfo("Process complete")
+				ProcessMeshComplete
+				Return
+			End If
+		Else
+			
+			'--- Z offset
+			If txt.Contains("g manual Z probe") Then
+				'mInProbeMode = True
+				btn1.Text = "DONE"
+				btn2.Visible = True
+				btnClose.Visible = False
+				btnPreheat.Visible = False
+				Return
+			End If
+			
+			If txt.Contains("Z pos") Then
+				ParseZInfo(txt) : Return
+			End If
+				
+		End If
+		
+	Else
+		'--- Marlin time!
 	
-	#end if
+	End If
 	
 	#if debug
 	Log("RT: Not processed: " & txt)
@@ -353,30 +381,34 @@ End Sub
 
 Private Sub ProcessMeshComplete'ignore
 	
-	#if klipper
-	Dim m As StringBuilder : 	m.Initialize
-	m.Append("Bed Mesh state has been saved to profile [default] for the ")
-	m.Append("current session. Touch SAVE to update the printer config ")
-	m.Append("File And restart the printer or CLOSE to just use the current mesh")
-	Dim w,h As Float
-	If guiHelpers.gIsLandScape Then
-		w = guiHelpers.gWidth * .7 : h = 220dip
-	Else
-		w = guiHelpers.gWidth * .8 : h = 310dip
+	If oc.Klippy Then
+		Dim m As StringBuilder : 	m.Initialize
+		m.Append("Bed Mesh state has been saved to profile [default] for the ")
+		m.Append("current session. Touch SAVE to update the printer config ")
+		m.Append("File And restart the printer or CLOSE to just use the current mesh")
+		Dim w,h As Float
+		If guiHelpers.gIsLandScape Then
+			w = guiHelpers.gWidth * .7 : h = 220dip
+		Else
+			w = guiHelpers.gWidth * .8 : h = 310dip
+		End If
+		Dim mb2 As dlgMsgBox2 : 	mb2.Initialize(mainObj.Root,"Question", w, h,False)
+		mb2.NewTextSize = 24
+		Wait For (mb2.Show(m.ToString,gblConst.MB_ICON_QUESTION, "SAVE","","CLOSE")) Complete (res As Int)
+		If res = xui.DialogResponse_Positive Then
+			'mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","SAVE_CONFIG"))
+			mainObj.Send_Gcode("SAVE_CONFIG")
+			guiHelpers.Show_toast2("Saving CONFIG and restarting printer",5200)
+			Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage.oMasterController,"tmrMain_Tick",800)
+		Else
+			guiHelpers.Show_toast2("Using Mesh for current session, homing printer",3000)
+			mainObj.Send_Gcode("G28")
+			'mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","G28"))
+		End If
 	End If
-	Dim mb2 As dlgMsgBox2 : 	mb2.Initialize(mainObj.Root,"Question", w, h,False)
-	mb2.NewTextSize = 24
-	Wait For (mb2.Show(m.ToString,gblConst.MB_ICON_QUESTION, "SAVE","","CLOSE")) Complete (res As Int)
-	If res = xui.DialogResponse_Positive Then
-		mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","SAVE_CONFIG"))
-		guiHelpers.Show_toast2("Saving CONFIG and restarting printer",5200)
-		Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage.oMasterController,"tmrMain_Tick",800)
-	Else
-		guiHelpers.Show_toast2("Using Mesh for current session, homing printer",3000)
-		mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","G28"))
-	End If
-	#end if
+	
 	Close_Me
 	Return
+	
 End Sub
 

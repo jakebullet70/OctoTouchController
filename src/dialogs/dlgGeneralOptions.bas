@@ -35,7 +35,7 @@ public Sub CreateDefaultFile
 	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
 		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,  _
 						CreateMap( "logall": "false", "logpwr": "false",  "logfiles": "false", "logoctokey": "false", "logrest": "false","syscmds": "false",  _
-							"axesx": "false",  "axesy": "false", "axesz": "false","sboot":"false","syscmds":"false", "m600":"true","prpwr":"false"))					 
+							"axesx": "false",  "axesy": "false", "axesz": "false","sboot":"false","syscmds":"false", "m600":"true","prpwr":"false","mpsd":"false"))					 
 	End If
 End Sub
 
@@ -60,11 +60,15 @@ Public Sub Show
 	End If
 	
 	mGeneralDlg.Initialize(mainObj.root, "General Settings", w, h)
-	mGeneralDlg.LoadFromJson(File.ReadString(File.DirAssets, "dlgGeneral.json"))
+	
+	Dim s As String = File.ReadString(File.DirAssets,"dlggeneral.json")
+	If guiHelpers.gIsPortrait Then s = s.Replace("Movement ","Move ") '--- portrait screen GUI fix
+	mGeneralDlg.LoadFromJson(s)
 	mGeneralDlg.SetEventsListener(Me,"dlgGeneral")
 	
 	
 	prefHelper.Initialize(mGeneralDlg)
+	If guiHelpers.gIsPortrait Then prefHelper.pDefaultFontSize = 17
 	prefHelper.ThemePrefDialogForm
 	mGeneralDlg.PutAtTop = False
 	Dim RS As ResumableSub = mGeneralDlg.ShowDialog(Data, "OK", "CANCEL")
@@ -109,6 +113,16 @@ End Sub
 
 Private Sub dlgGeneral_BeforeDialogDisplayed (Template As Object)
 	prefHelper.SkinDialog(Template)
+	
+	For i = 0 To mGeneralDlg.PrefItems.Size - 1
+		Dim pi As B4XPrefItem = mGeneralDlg.PrefItems.Get(i)
+		If pi.ItemType = mGeneralDlg.TYPE_BOOLEAN Then
+'			Dim ft As B4XFloatTextField = mGeneralDlg.CustomListView1.GetPanel(i).GetView(0).Tag
+'			ft.TextField.Font = xui.CreateDefaultBoldFont(14)    'or whatever you want
+'			'rest
+		End If
+	Next
+	
 End Sub
 
 

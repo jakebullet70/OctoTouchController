@@ -111,8 +111,14 @@ public Sub Update_Printer_Btns
 	End If
 	#End If
 	
+	Dim ReadAllowMovementWhenPausedFLAG As Boolean = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE).GetDefault("mpsd",False).As(Boolean)
+	
 	'--- sets enable, disable
 	mPageEnableDisable = IIf(oc.isPrinting,False,True)
+	If ReadAllowMovementWhenPausedFLAG And oc.IsPaused2 Then '--- over ride flag 
+		mPageEnableDisable = True
+	End If
+		
 	guiHelpers.EnableDisableBtns2(Array As Button( _
 				btnRetract,btnMOff,btnHeat,btnFN,btnExtrude,btnLength, _
 				btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback, _

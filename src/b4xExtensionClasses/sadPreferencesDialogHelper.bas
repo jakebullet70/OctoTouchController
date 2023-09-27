@@ -15,6 +15,7 @@ Sub Class_Globals
 	Private prefdlg As sadPreferencesDialog
 	Public dlgHelper As sadB4XDialogHelper
 	Private dlg As B4XDialog
+	Public pDefaultFontSize As Float = 19
 End Sub
 
 Public Sub Initialize(oPrefDlg As sadPreferencesDialog)  
@@ -70,7 +71,7 @@ End Sub
 
 Public Sub SkinDialog(Template As Object)
 	
-	Dim fnt0 As B4XFont = xui.CreateDefaultFont(20)
+	Dim fnt0 As B4XFont = xui.CreateDefaultFont(pDefaultFontSize)
 	'Dim mDlg As sadPreferencesDialog = prefdlg
 	Try
 		

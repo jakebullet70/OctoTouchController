@@ -253,7 +253,6 @@ Version=12.5
 	'#DebuggerForceFullDeployment: true
 	'#DebuggerForceStandardAssets: true
 	
-	'---  ALWAYS SET FALSE IN DEBUG MODE
 	#BridgeLogger: True 
 	'-----------------------------------
 #End Region

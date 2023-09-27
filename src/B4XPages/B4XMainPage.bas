@@ -28,7 +28,7 @@ Sub Class_Globals
 	Public oMasterController As MasterController
 	Private toast As BCToast
 	Private csHdr As CSBuilder
-	Private fnTMP As String, iiTMP As Int
+	Private strTMP As String, iiTMP As Int
 
 	'--- panel to cover screen for power ctrl
 	Public pnlScreenOff As Panel
@@ -650,10 +650,10 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 			o1.Initialize : o1.Show
 			
 		Case "g0","g1","g2","g3","g4","g5","g6","g7"
-			fnTMP = value.Replace("g","")
+			strTMP = value.Replace("g","")
 			Dim o23 As dlgGCodeCustSetup
 			pObjCurrentDlg2 = o23.Initialize(Me,"Rebuild_RightMnu")
-			o23.Show("GCode Control Config - " & fnTMP,fnTMP & gblConst.GCODE_CUSTOM_SETUP_FILE)
+			o23.Show("GCode Control Config - " & strTMP,strTMP & gblConst.GCODE_CUSTOM_SETUP_FILE)
 			
 	End Select
 	
@@ -1019,8 +1019,8 @@ Private Sub Build_RightSideMenu
 	
 	'clvDrawer.AddTextItem(cs.Initialize.Size(12).Alignment("ALIGN_CENTER").Append("------------ SYS CMDS -----------").PopAll,"")
 	For iiTMP = 0 To 7
-		fnTMP = iiTMP & gblConst.GCODE_CUSTOM_SETUP_FILE
-		Dim da As Map = File.ReadMap(xui.DefaultFolder,fnTMP)
+		strTMP = iiTMP & gblConst.GCODE_CUSTOM_SETUP_FILE
+		Dim da As Map = File.ReadMap(xui.DefaultFolder,strTMP)
 		If da.GetDefault("rmenu",False).As(Boolean) = True Then
 			txt = da.Get("desc")
 			If strHelpers.IsNullOrEmpty(txt) Then txt = "GCode " & iiTMP & "Menu"
@@ -1029,9 +1029,9 @@ Private Sub Build_RightSideMenu
 	Next
 	
 	For iiTMP = 1 To 8
-		fnTMP = iiTMP & gblConst.HTTP_ONOFF_SETUP_FILE
-		If File.Exists(xui.DefaultFolder,fnTMP) = True Then
-			Dim dataEX As Map  = File.ReadMap(xui.DefaultFolder,fnTMP)
+		strTMP = iiTMP & gblConst.HTTP_ONOFF_SETUP_FILE
+		If File.Exists(xui.DefaultFolder,strTMP) = True Then
+			Dim dataEX As Map  = File.ReadMap(xui.DefaultFolder,strTMP)
 			If dataEX.GetDefault("active",False).As(Boolean) = True Then
 				txt = dataEX.Get("desc")
 				If strHelpers.IsNullOrEmpty(txt) Then txt = "HTTP " & iiTMP & "Menu"

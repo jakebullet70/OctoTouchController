@@ -19,6 +19,8 @@ Sub Class_Globals
 	Private mMainObj As B4XMainPage
 	Private fp As sadAS_FloatingPanel
 	
+	Private mReadAllowMovementWhenPausedFLAG As Boolean
+	
 	Private MoveJogSize As String
 	Private ExtruderLengthSize As Int = 10
 	
@@ -58,6 +60,7 @@ End Sub
 public Sub Set_focus()
 	mPnlMain.SetVisibleAnimated(500,True)
 	mPnlMain.Enabled = oc.isConnected
+	mReadAllowMovementWhenPausedFLAG = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE).GetDefault("mpsd",False).As(Boolean)
 	Update_Printer_Btns
 End Sub
 
@@ -111,11 +114,9 @@ public Sub Update_Printer_Btns
 	End If
 	#End If
 	
-	Dim ReadAllowMovementWhenPausedFLAG As Boolean = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE).GetDefault("mpsd",False).As(Boolean)
-	
 	'--- sets enable, disable
 	mPageEnableDisable = IIf(oc.isPrinting,False,True)
-	If ReadAllowMovementWhenPausedFLAG And oc.IsPaused2 Then '--- over ride flag 
+	If mReadAllowMovementWhenPausedFLAG And oc.IsPaused2 Then '--- over ride flag to show movement screen when paused
 		mPageEnableDisable = True
 	End If
 		

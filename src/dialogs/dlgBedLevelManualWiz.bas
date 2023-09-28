@@ -47,6 +47,7 @@ Sub Class_Globals
 	Private lblHeaterBed,lblHeaterTool As Label
 	
 	Private tmrHeaterOnOff As Timer
+	Private oBeepMe As SoundsBeeps
 	
 End Sub
 
@@ -60,6 +61,7 @@ Public Sub Initialize(p As Panel) As Object
 	
 	p.RemoveAllViews
 	parent = p
+	oBeepMe.Initialize
 	
 	#if klipper
 	Dim m As Map = File.ReadMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE)
@@ -210,7 +212,7 @@ Private Sub ProcessSteps
 	
 	Select Case current_point
 		Case 0
-			BeepMe(1)
+			oBeepMe.Beeps(300,500,1)
 			'btnPreheat.Visible = True
 			lblMsgSteps.Text = "Starting GCode sent... Touch NEXT when complete to start the leveling sequence."
 			SendMGcode(startGCode) : Wait For SendMGcode
@@ -262,7 +264,7 @@ Private Sub ProcessSteps
 			Catch
 				CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Something went wrong...", 3500)
 				logMe.LogIt2(LastException.Message, mModule,"ProcessSteps")
-				BeepMe(3)
+				oBeepMe.Beeps(300,500,3)
 				btnStop_Click
 				Return
 				
@@ -271,7 +273,7 @@ Private Sub ProcessSteps
 		Case 7 '--- all done!
 			CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Bed Leveling Complete... Sending end gcode.", 3500)
 			SendMGcode(endGCode) : Sleep(200)
-			BeepMe(1)
+			oBeepMe.Beeps(300,500,1)
 			btnStop_Click
 			Return
 			
@@ -401,16 +403,6 @@ Private Sub BuildHelpTextHighlight(txt2hiLight As String, maintxt As String) As 
 	Dim cs As CSBuilder 
 	Return cs.Initialize.Color(clrTheme.txtAccent).Append(m1).Color(clrTheme.txtNormal).Append(txt2hiLight). _
 					Color(clrTheme.txtAccent).Append(m2).PopAll
-	
-End Sub
-
-Private Sub BeepMe(num As Int	)
-	
-	Dim b As Beeper :
-	b.Initialize(120,500)
-	For xx = 1 To num
-		b.Beep : Sleep(200)
-	Next
 	
 End Sub
 

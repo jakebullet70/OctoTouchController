@@ -13,7 +13,7 @@ Sub Process_Globals
 	Private Const mModule As String = "oc" 'ignore
 
 	Public cPRINTER_BUSY_MSG As String = "Problem, Printer is busy"
-	
+		
 	Public IsConnectionValid As Boolean = False
 	Public Klippy As Boolean = False
 	
@@ -47,7 +47,7 @@ Sub Process_Globals
 	Public PrinterState As String
 	'Public PrinterBaud As String
 	'Public PrinterPort As String
-	'Public PrinterProfile As String '--- need the profile 1st to get the name, desc, inverted stuff
+	Public PrinterProfile As String '--- need the profile 1st to get the name, desc, inverted stuff
 	
 	Public PrinterProfileName As String
 	Public PrinterProfileModel As String
@@ -77,7 +77,9 @@ Sub Process_Globals
 	'======================================================================
 	'======================================================================
 	'======================================================================
-	
+	Public Const cKLIPPY_ABORT As String = "ABORT"
+	Public Const cKLIPPY_ACCEPT As String = "ACCEPT"
+	Public Const cKLIPPY_SAVE As String = "SAVE_CONFIG"
 	
 	
 	'https://github.com/kantlivelong/OctoPrint-PSUControl/wiki/API
@@ -460,7 +462,7 @@ Public Sub ResetStateVars
 	'PrinterBaud = ""
 	'PrinterPort = ""
 	PrinterState = "Disconnected"
-	'PrinterProfile = ""
+	PrinterProfile = ""
 	
 End Sub
 

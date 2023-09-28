@@ -13,7 +13,7 @@ Sub Class_Globals
 	
 	Public wSocket As WebSocket
 	Public mErrorSecProvider As Boolean = False
-	Public mClosedReason As String
+	'Public mClosedReason As String
 	Public mConnected As Boolean = False
 	
 	Public IsInit As Boolean = False
@@ -132,7 +132,6 @@ Public Sub Connect() As ResumableSub
 	'--- A value of 2 will set the rate limit to maximally one message every 1s, 3 to maximally one message every 1.5s and so on.
 	setThrottle("90") '--- this is very inacurate
 	
-	
 	Return Message '--- this is the connected message
 	
 End Sub
@@ -173,28 +172,37 @@ Private Sub ws_TextMessage(Message As String)
 		Return
 	End If
 	
-	'Log(Message)
+	Log(Message)
 	
 End Sub
 
 
 Private Sub ws_Closed (Reason As String)
 	'--- socket is closed!
+	Dim InSub As String = "ws_Closed"
 	mConnected = False
 	If strHelpers.IsNullOrEmpty(Reason) Then 
 		Reason = "Sys closed"
+	Else
+		logMe.LogIt2("ws close reason: " & Reason,mModule,InSub)
 	End If
-	mClosedReason = Reason
-	Log("ws close reason: " & Reason)	
-	If Reason = "WebSockets connection lost" Then
-		logMe.LogIt2("no web socket connection - reconnecting",mModule,"ws_Closed")
+	'mClosedReason = Reason
+	
+	'--- Reason = "WebSockets protocol violation" -- happend in a docker container!!!
+	If Reason = "WebSockets connection lost" Then 
+		logMe.LogIt2("no web socket connection - reconnecting",mModule,InSub)
 '		Wait For (Connect) Complete (msg As String)
 '		If mConnected = False Then 
 '			Return
 '		End If
-		guiHelpers.Show_toast2(Reason,2000)
+		guiHelpers.Show_toast2("Web Socket Lost: " & Reason,2000)
 		Connect
+	Else If Reason = "WebSockets protocol violation" Then
+		'--- general reason has been logged above already ---
+		logMe.LogIt2("!!!WebSockets protocol violation -- happend in a docker container!!!",mModule,InSub)
+		guiHelpers.Show_toast2("WebSockets protocol violation",15000)
 	End If
+	
 End Sub
 
 

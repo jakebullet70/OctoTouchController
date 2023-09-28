@@ -19,7 +19,7 @@ End Sub
 
 Public Sub ConnectionStatus(s As String) 
 	
-	'--- TODO V2 should be replace with another methoid that returns less data
+	'--- NEEDED as it gets printer profile and that allows us to get the size of the bed
 	
 	Dim m,mm As Map 'ignore
 	Dim InSub As String = "ConnectionStatus"
@@ -48,40 +48,40 @@ Public Sub ConnectionStatus(s As String)
 End Sub
 
 
-#if klipper
-Public Sub ConnectionStatusKlipper(s As String) 
-	
-	Dim m, flags As Map, InSub As String = "ConnectionStatusKlipper"
-	Dim jp As JSONParser
-	Try
-	
-		jp.Initialize(s)
-	'Log(s)
-		'--- populate json maps
-		m = jp.NextObject
-		Dim state As Map = m.Get("state")
-		Dim flags As Map = state.Get("flags")
-		Dim error As Boolean = flags.Get("error")
-		Dim closedOrError As Boolean = flags.Get("closedOrError")
-		Dim op As Boolean =  flags.Get("operational")
-		Dim ready As Boolean = flags.Get("ready")
-		'oc.isConnected = ((Not (error)) Or closedOrError) 'And op
-		oc.isConnected = (ready Or op) And ((Not (error)) Or closedOrError)
-		If oc.isConnected = False Then oc.ResetTempVars
-	
-'		oc.PrinterBaud = mm.Get("baudrate")
-'		oc.PrinterPort = mm.Get("port")
-		'oc.PrinterProfile = mm.Get("printerProfile") '--- this is NOT the name of the printer! See 'cPRINTER_PROFILES'
-		
-	Catch
-		
-		logMe.LogIt2(LastException,mModule,InSub)
-		oc.ResetStateVars
-		
-	End Try
-	
-End Sub
-#End If
+'#if klipper
+'Public Sub ConnectionStatusKlipper(s As String) 
+'	
+'	Dim m, flags As Map, InSub As String = "ConnectionStatusKlipper"
+'	Dim jp As JSONParser
+'	Try
+'	
+'		jp.Initialize(s)
+'	'Log(s)
+'		'--- populate json maps
+'		m = jp.NextObject
+'		Dim state As Map = m.Get("state")
+'		Dim flags As Map = state.Get("flags")
+'		Dim error As Boolean = flags.Get("error")
+'		Dim closedOrError As Boolean = flags.Get("closedOrError")
+'		Dim op As Boolean =  flags.Get("operational")
+'		Dim ready As Boolean = flags.Get("ready")
+'		'oc.isConnected = ((Not (error)) Or closedOrError) 'And op
+'		oc.isConnected = (ready Or op) And ((Not (error)) Or closedOrError)
+'		If oc.isConnected = False Then oc.ResetTempVars
+'	
+''		oc.PrinterBaud = mm.Get("baudrate")
+''		oc.PrinterPort = mm.Get("port")
+'		'oc.PrinterProfile = mm.Get("printerProfile") '--- this is NOT the name of the printer! See 'cPRINTER_PROFILES'
+'		
+'	Catch
+'		
+'		logMe.LogIt2(LastException,mModule,InSub)
+'		oc.ResetStateVars
+'		
+'	End Try
+'	
+'End Sub
+'#End If
 
 'Dim parser As JSONParser
 'parser.Initialize(<text>)

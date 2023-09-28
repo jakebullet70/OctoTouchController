@@ -1149,7 +1149,7 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 End Sub
 #end region
 
-
+#Region "COOLING FAN CRAP"
 Public Sub Cooling_Fan
 	Dim cs As CSBuilder
 	Dim gui As guiMsgs : gui.Initialize
@@ -1184,13 +1184,13 @@ Public Sub CoolMenu_Event(selectedMsg As String, tag As Object)
 	pObjCurrentDlg1 = Null
 	
 End Sub
+#end region
 
 
 
 
 
-
-#region "FUCTIONS / METHODS FRM MENUS"
+#region "FUCTIONS / GCODE METHODS FROM MENUS"
 
 Private Sub RunHTTPOnOff_Menu(fname As String)
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,fname)

@@ -328,13 +328,13 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 			CallSubDelayed2(mMainObj,"RunGCodeOnOff_Menu",value.As(String).Replace("f","") & gblConst.GCODE_CUSTOM_SETUP_FILE)
 			
 		Case "zo" '--- Z offset
-'			Dim bm As dlgBedLevelMeshWiz2
-'			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,value)
-'			bm.Show("Set Z Offset")
+			Dim bm As dlgBedLevelMeshWiz2
+			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,value)'--- value tells class z-offset or mesh
+			bm.Show("Set Z Offset Wizard")
 			
 		Case "mblw"
 			Dim bm As dlgBedLevelMeshWiz2
-			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,value) '--- value tells mesh of z-offset
+			mMainObj.pobjWizards = bm.Initialize(mMainObj.pnlWizards,value) '--- value tells class z-offset or mesh
 			bm.Show("Mesh Bed Leveling Wizard")
 		
 		Case "blw"

@@ -28,7 +28,7 @@ Sub Class_Globals
 	
 	Private tmrHeaterOnOff As Timer
 	Private mDIstance As Double = .01
-	'Private mInProbeMode As Boolean = False
+	Private mInProbeMode As Boolean = False
 	
 	Private btnDn,btnUp As Button
 	
@@ -103,6 +103,9 @@ Public Sub Close_Me  '--- class method, also called from android back btn
 	#end if
 	If oc.Klippy Then
 		B4XPages.MainPage.oMasterController.oWS.pParserWO.ResetRaiseEvent
+		If mInProbeMode Then 
+			mainObj.Send_Gcode(oc.cKLIPPY_ABORT)
+		End If
 	End If
 	parent.SetVisibleAnimated(500,False)
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
@@ -138,7 +141,7 @@ Private Sub BuildGUI(headerTxt As String)
 End Sub
 
 Private Sub ProcessStop_GUI
-	'mInProbeMode = False
+	mInProbeMode = False
 	btn2.Visible = False
 	btnPreheat.Visible = True
 	btn1.Text = "START"
@@ -161,7 +164,7 @@ Private Sub btnUpDown_Click
 	Else '--- Marlin
 	
 	End If
-	btn.RequestFocus
+	'btn.RequestFocus
 	'Log("btnUP-DN: " & msg)
 End Sub
 
@@ -216,6 +219,7 @@ Private Sub btnStop_Click
 		
 	End If
 	ShowZinfo("Just hanging out and waiting...")
+	mInProbeMode = False
 	
 End Sub
 
@@ -225,7 +229,7 @@ Private Sub btnStart_Click
 	Dim b As Button : b = Sender
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	'Dim msg As String = ""
-	'mInProbeMode = False
+	mInProbeMode = True
 	
 	btn1.RequestFocus
 	'btnPreheat.Visible = False
@@ -242,7 +246,9 @@ Private Sub btnStart_Click
 				B4XPages.MainPage.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
 			Else '--- Z OFFSET time!
 				guiHelpers.Show_toast2("Setting up for Z Offset...",1500)
-				B4XPages.MainPage.Send_Gcode("G1 X100 Y100")
+				'B4XPages.MainPage.Send_Gcode("G1 Z5")
+				B4XPages.MainPage.Send_Gcode($"G1 Z5 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F3000"$)
+				Sleep(500)
 				B4XPages.MainPage.Send_Gcode("MANUAL_PROBE")
 			End If
 			#if debug
@@ -281,11 +287,13 @@ Public Sub Rec_Text(txt As String)
 	Else
 		Rec_Text2(s)
 	End If
+	
+	Log(s)
 End Sub
 
 
 Private Sub Rec_Text2(txt As String)
-	
+	Log("rec txt:" & txt)
 	If oc.Klippy Then
 		
 		If pMode = ppMANUAL_MESH Then '--- manual bed level wiz
@@ -294,15 +302,10 @@ Private Sub Rec_Text2(txt As String)
 				
 				Case txt.Contains("y in a manual Z probe")
 					'--- just started probe mode but are already in it so cancel and restart
-					'mInProbeMode = False
-					guiHelpers.Show_toast2("Already in a manual Z probe: Restarting...",6500)
-					mainObj.Send_Gcode(oc.cKLIPPY_ABORT)
-					Sleep(2000)
-					mainObj.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
-					Sleep(2000)
+					RestartAlreadyIn
 					
 				Case txt.Contains("g manual Z probe")
-					'mInProbeMode = True
+					
 					If pMode = ppMANUAL_MESH Then '--- manual bed level wiz
 						btn1.Text = oc.cKLIPPY_ACCEPT
 					Else
@@ -328,18 +331,26 @@ Private Sub Rec_Text2(txt As String)
 		Else
 			
 			'--- Z offset
-			If txt.Contains("g manual Z probe") Then
-				'mInProbeMode = True
-				btn1.Text = "DONE"
-				btn2.Visible = True
-				btnClose.Visible = False
-				btnPreheat.Visible = False
-				Return
-			End If
-			
-			If txt.Contains("Z pos") Then
-				ParseZInfo(txt) : Return
-			End If
+			Select Case True
+				
+				Case txt.Contains("Already in a manual Z p")
+					RestartAlreadyIn
+					
+				Case txt.Contains("g manual Z probe")
+					btn1.Text = "DONE"
+					btn2.Visible = True
+					btnClose.Visible = False
+					btnPreheat.Visible = False
+				
+				Case txt.Contains("Z position is")
+					ProcessMeshComplete
+					
+				Case txt.Contains("Z pos")
+					ParseZInfo(txt)
+				Case Else
+					Log("else:" & txt)
+						
+			End Select
 				
 		End If
 		
@@ -354,6 +365,21 @@ Private Sub Rec_Text2(txt As String)
 	#end if
 	
 End Sub
+
+Private Sub RestartAlreadyIn
+	guiHelpers.Show_toast2("Manual Z probe already started: Restarting...",6500)
+	mainObj.Send_Gcode(oc.cKLIPPY_ABORT)
+	Sleep(2000)
+	If pMode = ppMANUAL_MESH Then
+		mainObj.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
+	Else
+		B4XPages.MainPage.Send_Gcode("MANUAL_PROBE")
+	End If
+	Sleep(2000)
+	Return
+End Sub
+
+
 #end region
 
 
@@ -373,7 +399,7 @@ End Sub
 
 Private Sub ProcessMeshComplete'ignore
 	
-	If oc.Klippy Then
+	If oc.Klippy And pMode = ppMANUAL_MESH Then
 		Dim m As StringBuilder : 	m.Initialize
 		m.Append("Bed Mesh state has been saved to profile [default] for the ")
 		m.Append("current session. Touch SAVE to update the printer config ")
@@ -396,6 +422,31 @@ Private Sub ProcessMeshComplete'ignore
 			guiHelpers.Show_toast2("Using Mesh for current session, homing printer",3000)
 			mainObj.Send_Gcode("G28")
 		End If
+		
+	ELSE If oc.Klippy And pMode <> ppMANUAL_MESH Then
+		Dim m As StringBuilder : 	m.Initialize
+		m.Append("New Z-Offset will be used for the current session.")
+		m.Append("Touch SAVE to update the printer config File And ")
+		m.Append("restart the printer or CLOSE to just use the current offset")
+		Dim w,h As Float
+		If guiHelpers.gIsLandScape Then
+			w = guiHelpers.gWidth * .7
+			h = guiHelpers.MaxVerticalHeight_Landscape
+		Else
+			w = guiHelpers.gWidth * .8 : h = 310dip
+		End If
+		Dim mb2 As dlgMsgBox2 : mb2.Initialize(mainObj.Root,"Question", w, h,False)
+		mb2.NewTextSize = 24
+		Wait For (mb2.Show(m.ToString,gblConst.MB_ICON_QUESTION, "SAVE","","CLOSE")) Complete (res As Int)
+		If res = xui.DialogResponse_Positive Then
+			mainObj.Send_Gcode(oc.cKLIPPY_SAVE)
+			guiHelpers.Show_toast2("Saving new Z-Offset and restarting printer",5200)
+			Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage.oMasterController,"tmrMain_Tick",800)
+		Else
+			guiHelpers.Show_toast2("Using Z-Offset for current session, homing printer",3000)
+			mainObj.Send_Gcode("G28")
+		End If
+		
 		
 	Else '--- Marlin
 		'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in

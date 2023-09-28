@@ -36,12 +36,10 @@ Sub Class_Globals
 	Public Const ppMANUAL_MESH As String = "mblw"
 	
 	Private alblZinfo As AutoTextSizeLabel
+	Private oBeepMe As SoundsBeeps
 	
-	Private btnDst1 As B4XView
-	Private btnDst2 As B4XView
-	Private btnDst3 As B4XView
-	Private btnDst4 As B4XView
-	Private btnDst5 As B4XView
+	Private btnDst5,btnDst4,btnDst3,btnDst2,btnDst1 As B4XView
+	
 End Sub
 
 Public Sub Initialize(p As Panel,mode As String) As Object
@@ -50,8 +48,17 @@ Public Sub Initialize(p As Panel,mode As String) As Object
 	p.RemoveAllViews
 	parent = p
 	pMode = mode
+	oBeepMe.Initialize
 	Return Me
 
+End Sub
+Private Sub pnlBG_Click
+	'--- eat the click
+End Sub
+
+Private Sub tmrHeater_Tick
+	lblHeaterTool.Text ="Tool: " & CRLF & oc.Tool1Actual.Replace("C","")
+	lblHeaterBed.Text = "Bed: " & CRLF & oc.BedActual.Replace("C","")
 End Sub
 
 'Private Sub Check4MeshSupport() As ResumableSub
@@ -83,24 +90,7 @@ Public Sub Show(headerTxt As String)
 	
 End Sub
 
-Private Sub tmrHeater_Tick
-	lblHeaterTool.Text ="Tool: " & CRLF & oc.Tool1Actual.Replace("C","")
-	lblHeaterBed.Text = "Bed: " & CRLF & oc.BedActual.Replace("C","")
-End Sub
 
-
-
-''=================================================================
-
-'Private Sub BeepMe(num As Int	)'ignore
-'	
-'	Dim b As Beeper :
-'	b.Initialize(120,500)
-'	For xx = 1 To num
-'		b.Beep : Sleep(200)
-'	Next
-'	
-'End Sub
 
 Private Sub btnClose_Click
 	Close_Me
@@ -186,6 +176,7 @@ Private Sub btnDst_Click
 	btnDistance_Highlight(b.As(B4XView))
 	mDIstance = b.Text
 	CallSubDelayed(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	oBeepMe.Beeps(300,500,1)
 End Sub
 
 Private Sub btnDistance_Highlight(b As B4XView)
@@ -219,7 +210,7 @@ Private Sub btnStop_Click
 	guiHelpers.Show_toast2("Canceling... Disabling Steppers...",3000)
 	
 	If oc.Klippy Then
-		mainObj.Send_Gcode("ABORT")
+		mainObj.Send_Gcode(oc.cKLIPPY_ABORT)
 		mainObj.Send_Gcode("M18") '--- disable steppers
 	Else '--- Marlin
 		
@@ -262,13 +253,14 @@ Private Sub btnStart_Click
 		End If
 		
 	
-	else If b.Text = "ACCEPT" Or  b.Text = "DONE" Then
+	else If b.Text = oc.cKLIPPY_ACCEPT Or  b.Text = "DONE" Then
 		If oc.Klippy Then
 			'Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","ACCEPT"))) Complete (msg As String)		
-			mainObj.Send_Gcode("ACCEPT")
+			mainObj.Send_Gcode(oc.cKLIPPY_ACCEPT)
 			
 		Else '-------------------- Marlin firmware
 			'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
+			'--- when today might be my last day living.
 		End If
 	
 	End If
@@ -276,6 +268,7 @@ Private Sub btnStart_Click
 End Sub
 
 
+#Region "SOCKET EVENT CALLBACK"
 '--- this is recieved as a callback from the octoprint socket
 Public Sub Rec_Text(txt As String)
 	If txt.Contains(CRLF) Then
@@ -303,7 +296,7 @@ Private Sub Rec_Text2(txt As String)
 					'--- just started probe mode but are already in it so cancel and restart
 					'mInProbeMode = False
 					guiHelpers.Show_toast2("Already in a manual Z probe: Restarting...",6500)
-					mainObj.Send_Gcode("ABORT")
+					mainObj.Send_Gcode(oc.cKLIPPY_ABORT)
 					Sleep(2000)
 					mainObj.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
 					Sleep(2000)
@@ -311,7 +304,7 @@ Private Sub Rec_Text2(txt As String)
 				Case txt.Contains("g manual Z probe")
 					'mInProbeMode = True
 					If pMode = ppMANUAL_MESH Then '--- manual bed level wiz
-						btn1.Text = "ACCEPT"
+						btn1.Text = oc.cKLIPPY_ACCEPT
 					Else
 						btn1.Text = "DONE"
 					End If
@@ -361,8 +354,11 @@ Private Sub Rec_Text2(txt As String)
 	#end if
 	
 End Sub
+#end region
+
 
 Private Sub Probe_failed
+	'--- mostly happens when just hitting ACCEPT and not moving nozzle 1st
 	ShowZinfo("probe failed...")
 	ProcessStop_GUI
 End Sub
@@ -393,15 +389,14 @@ Private Sub ProcessMeshComplete'ignore
 		mb2.NewTextSize = 24
 		Wait For (mb2.Show(m.ToString,gblConst.MB_ICON_QUESTION, "SAVE","","CLOSE")) Complete (res As Int)
 		If res = xui.DialogResponse_Positive Then
-			'mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","SAVE_CONFIG"))
-			mainObj.Send_Gcode("SAVE_CONFIG")
+			mainObj.Send_Gcode(oc.cKLIPPY_SAVE)
 			guiHelpers.Show_toast2("Saving CONFIG and restarting printer",5200)
 			Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage.oMasterController,"tmrMain_Tick",800)
 		Else
 			guiHelpers.Show_toast2("Using Mesh for current session, homing printer",3000)
 			mainObj.Send_Gcode("G28")
-			'mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","G28"))
 		End If
+		
 	Else '--- Marlin
 		'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in
 	End If
@@ -411,8 +406,5 @@ Private Sub ProcessMeshComplete'ignore
 	
 End Sub
 
-Private Sub pnlBG_Click
-	'--- eat the click
-End Sub
 
 

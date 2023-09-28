@@ -80,6 +80,10 @@ Private Sub Build_GUI
 																btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback, _
 																btnZup,btnZhome,btnZdown,btnMoveMM0,btnMoveMM1,btnMoveMM2,btnMoveMM3))
 	
+	If guiHelpers.gScreenSizeAprox < 4.4 Then
+		Dim bs As Float = btnExtrude.TextSize - 2
+		guiHelpers.SetTextSize(Array As Button(btnRetract,btnMOff,btnExtrude),bs)
+	End If
 	guiHelpers.SetTextColor(Array As B4XView(lblGeneral,lblHeaderZ,lblHeaderXY,lblMovePopup))
 	guiHelpers.ResizeText("General",lblGeneral)
 	guiHelpers.ResizeText("Z",lblHeaderZ)

@@ -49,12 +49,6 @@ Public Sub Initialize(p As Panel,mode As String) As Object
 	mainObj = B4XPages.MainPage
 	p.RemoveAllViews
 	parent = p
-	#if klipper
-	mainObj.oMasterController.WSk.pCallbackModule2 = Me
-	mainObj.oMasterController.WSk.pCallbackSub2 = "Rec_Text"
-	#else
-	
-	#end if
 	pMode = mode
 	Return Me
 
@@ -283,7 +277,6 @@ End Sub
 
 
 '--- this is recieved as a callback from the octoprint socket
-
 Public Sub Rec_Text(txt As String)
 	If txt.Contains(CRLF) Then
 		Dim cd() As String = Regex.Split(CRLF, txt)
@@ -390,11 +383,12 @@ Private Sub ProcessMeshComplete'ignore
 		m.Append("File And restart the printer or CLOSE to just use the current mesh")
 		Dim w,h As Float
 		If guiHelpers.gIsLandScape Then
-			w = guiHelpers.gWidth * .7 : h = 220dip
+			w = guiHelpers.gWidth * .7 
+			h = guiHelpers.MaxVerticalHeight_Landscape
 		Else
 			w = guiHelpers.gWidth * .8 : h = 310dip
 		End If
-		Dim mb2 As dlgMsgBox2 : 	mb2.Initialize(mainObj.Root,"Question", w, h,False)
+		Dim mb2 As dlgMsgBox2 : mb2.Initialize(mainObj.Root,"Question", w, h,False)
 		mb2.NewTextSize = 24
 		Wait For (mb2.Show(m.ToString,gblConst.MB_ICON_QUESTION, "SAVE","","CLOSE")) Complete (res As Int)
 		If res = xui.DialogResponse_Positive Then
@@ -417,3 +411,5 @@ End Sub
 Private Sub pnlBG_Click
 	'--- eat the click
 End Sub
+
+

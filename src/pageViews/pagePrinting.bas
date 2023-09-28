@@ -65,6 +65,8 @@ public Sub Set_focus()
 	
 	UpdateFileName
 	mDisplayedFileName = oc.JobFileName
+'	Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage ,"Build_RightSideMenu",1000)
+'	Log("fffffffffffffff")
 	
 End Sub
 
@@ -246,7 +248,7 @@ Private Sub UpdateFileName
 	mNumOfTries4Thumbnail = 0
 	LoadThumbNail
 	If (oc.isHeating Or oc.isPrinting) Then
-		Printing_FromFilesPage
+		Show_Temp_Panel
 	End If
 End Sub
 
@@ -442,7 +444,7 @@ End Sub
 Private Sub HeaterViewLbl_Click
 	ivPreviewLG_Click
 End Sub
-Public Sub Printing_FromFilesPage
+Public Sub Show_Temp_Panel
 	'--- called when starting a print from files page
 	Log("Printing_FromFilesPage")
 	If ivPreviewLG.mBase.Visible = True Then

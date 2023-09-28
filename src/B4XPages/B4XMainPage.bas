@@ -815,12 +815,12 @@ Private Sub lblStatus_Click
 	End If
 End Sub
 
-Private Sub btnPower_Click
-	'--- printer on/off
-	Dim o1 As dlgOctoPsuCtrl
-	o1.Initialize(Me)
-	o1.Show
-End Sub
+'Private Sub btnPower_Click
+'	'--- printer on/off
+'	Dim o1 As dlgOctoPsuCtrl
+'	o1.Initialize(Me)
+'	o1.Show
+'End Sub
 
 
 Public Sub Check4_Update
@@ -1003,16 +1003,20 @@ Private Sub Build_RightSideMenu
 	clvDrawer.Clear
 	If oc.IsKlippyConnected = False Then Return
 	Dim size As Float = IIf(guiHelpers.gIsLandScape,20,22)
-	Dim txt As Object 
+	Dim txt As Object, dataMap As Map
 	Dim cs As CSBuilder
 	
-	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+	Dim dataMapG As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	
 '	If lblStatus.Text = gblConst.NOT_CONNECTED Then
 '		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Retry Connection").PopAll,"rcnt")
 '	End If
+
+	'If oc.isPrinting Then
+		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Filament Cooling Menu").PopAll,"fcm")
+	'End If
 	
-	If Data.GetDefault("m600",False).As(Boolean) Then
+	If dataMapG.GetDefault("m600",False).As(Boolean) Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Filament Change M600").PopAll,"m600")
 	End If
 	
@@ -1020,21 +1024,26 @@ Private Sub Build_RightSideMenu
 	'clvDrawer.AddTextItem(cs.Initialize.Size(12).Alignment("ALIGN_CENTER").Append("------------ SYS CMDS -----------").PopAll,"")
 	For iiTMP = 0 To 7
 		strTMP = iiTMP & gblConst.GCODE_CUSTOM_SETUP_FILE
-		Dim da As Map = File.ReadMap(xui.DefaultFolder,strTMP)
-		If da.GetDefault("rmenu",False).As(Boolean) = True Then
-			txt = da.Get("desc")
-			If strHelpers.IsNullOrEmpty(txt) Then txt = "GCode " & iiTMP & "Menu"
+		dataMap = File.ReadMap(xui.DefaultFolder,strTMP)
+		If dataMap.GetDefault("rmenu",False).As(Boolean) = True Then
+			txt = dataMap.Get("desc")
+			If strHelpers.IsNullOrEmpty(txt) Then 
+				txt = "GCode " & iiTMP & "Menu"
+			End If
 			clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,"g" & iiTMP)
 		End If
 	Next
 	
+	
 	For iiTMP = 1 To 8
 		strTMP = iiTMP & gblConst.HTTP_ONOFF_SETUP_FILE
 		If File.Exists(xui.DefaultFolder,strTMP) = True Then
-			Dim dataEX As Map  = File.ReadMap(xui.DefaultFolder,strTMP)
-			If dataEX.GetDefault("active",False).As(Boolean) = True Then
-				txt = dataEX.Get("desc")
-				If strHelpers.IsNullOrEmpty(txt) Then txt = "HTTP " & iiTMP & "Menu"
+			dataMap  = File.ReadMap(xui.DefaultFolder,strTMP)
+			If dataMap.GetDefault("active",False).As(Boolean) = True Then
+				txt = dataMap.Get("desc")
+				If strHelpers.IsNullOrEmpty(txt) Then 
+					txt = "HTTP " & iiTMP & "Menu"
+				End If
 				clvDrawer.AddTextItem(cs.Initialize.Size(size).Append(txt).PopAll,iiTMP)
 			End If
 		End If
@@ -1044,7 +1053,7 @@ Private Sub Build_RightSideMenu
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Printer Power Menu").PopAll,"pwr")
 	End If
 		
-	If Data.GetDefault("syscmds",False).As(Boolean) Then
+	If dataMapG.GetDefault("syscmds",False).As(Boolean) Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("OS Systems Menu").PopAll,"sys")
 	End If
 	
@@ -1070,6 +1079,9 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	SideMenu.CloseRightMenu
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	Select Case Value.As(String)
+		
+		Case "fcm"
+			Cooling_Fan
 		
 		Case "kst" '--- full octokliiper firmware restart
 			w = 400dip

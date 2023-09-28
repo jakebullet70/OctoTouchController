@@ -235,7 +235,7 @@ Private Sub btnAction_Click
 			CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_PRINTING)
 			Sleep(10)
 			guiHelpers.Show_toast2("Starting Print",2000)
-			Main.tmrTimerCallSub.CallSubDelayedPlus(mMainObj.oPagePrinting,"Printing_FromFilesPage",500)
+			Main.tmrTimerCallSub.CallSubDelayedPlus(mMainObj.oPagePrinting,"Show_Temp_Panel",500)
 			
 	End Select
 		

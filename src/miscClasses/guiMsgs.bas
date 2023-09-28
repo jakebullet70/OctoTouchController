@@ -88,7 +88,7 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 				 Typeface(Typeface.DEFAULT).Append("   General Settings").PopAll,"gn")				 
 	
 	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE859)). _
-				 Typeface(Typeface.DEFAULT).Append("   Power Settings").PopAll,"pw")
+				 Typeface(Typeface.DEFAULT).Append("   Android Power Settings").PopAll,"pw")
 
 	#if klipper
 	'------------------------------  TODO !!!!!!!!!!!!!!!!!
@@ -108,7 +108,7 @@ Public Sub BuildOptionsMenu(NoOctoConnection As Boolean) As Map
 	
 	#if not (klipper)
 	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE8C1)). _
-				 Typeface(Typeface.DEFAULT).Append("   Side Plugins Menu").PopAll,"plg")				 
+				 Typeface(Typeface.DEFAULT).Append("   Right Side Menu Options").PopAll,"plg")				 
 	
 	#ELSE
 	m.Put(cs.Initialize.Append(" ").Typeface(Typeface.MATERIALICONS).VerticalAlign(6dip).Append(Chr(0xE8C1)). _
@@ -197,14 +197,15 @@ Public Sub BuildFunctionSetupMenu() As Map
 	End If
 	
 	'----------------------------------------------------------------
-	txt = "Manual Mesh Leveling"
-	If config.ReadManualBedMeshLevelFLAG  Then
-		po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
-										Typeface(Typeface.DEFAULT).Append(txt).PopAll,"mms")
-	Else
-		po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"mms")
+	If oc.Klippy Then '--- when I get a marlin printer WITHOUT auto bed leveling I will add this in
+		txt = "Manual Mesh Leveling"
+		If config.ReadManualBedMeshLevelFLAG  Then
+			po.Put(cs.Initialize.Typeface(Typeface.MATERIALICONS).VerticalAlign(2dip).Append(Chr(0xE5CA)). _
+											Typeface(Typeface.DEFAULT).Append(txt).PopAll,"mms")
+		Else
+			po.Put(cs.Initialize.Typeface(Typeface.DEFAULT).Append(txt.Trim).PopAll,"mms")
+		End If
 	End If
-	
 	
 '	'----------------------------------------------------------------
 '	txt = " Auto Bed Leveling Wizard"

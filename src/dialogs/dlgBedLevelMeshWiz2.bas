@@ -233,7 +233,7 @@ Private Sub btnStart_Click
 
 	Dim b As Button : b = Sender
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
-	Dim msg As String = ""
+	'Dim msg As String = ""
 	'mInProbeMode = False
 	
 	btn1.RequestFocus
@@ -258,7 +258,7 @@ Private Sub btnStart_Click
 			'Log("WT: " & msg)
 			#end if
 		Else '-------------------- Marlin firmware
-		
+			'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
 		End If
 		
 	
@@ -268,7 +268,7 @@ Private Sub btnStart_Click
 			mainObj.Send_Gcode("ACCEPT")
 			
 		Else '-------------------- Marlin firmware
-		
+			'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
 		End If
 	
 	End If
@@ -352,7 +352,8 @@ Private Sub Rec_Text2(txt As String)
 		
 	Else
 		'--- Marlin time! ----------------------------
-	
+		'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
+		'--- and really, we might get killed and our home destroyed today.
 	End If
 	
 	#if debug
@@ -401,6 +402,8 @@ Private Sub ProcessMeshComplete'ignore
 			mainObj.Send_Gcode("G28")
 			'mainObj.oMasterController.WSk.Send(krpc.GCODE.Replace("!G!","G28"))
 		End If
+	Else '--- Marlin
+		'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in
 	End If
 	
 	Close_Me

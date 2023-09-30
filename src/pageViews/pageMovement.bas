@@ -101,19 +101,14 @@ Private Sub Build_GUI
 	
 	lblMovePopup.Top = btnXYforward.Top +btnXYforward.Height / 2
 	pnlMoveMM.SetColorAndBorder(clrTheme.BackgroundHeader,1dip,clrTheme.txtNormal,8dip)
-	MoveJogSize = "1.0"
+	
+	MoveJogSize = "10"
+	lblMovePopup.Text = "10mm"
 	
 End Sub
 
 
 public Sub Update_Printer_Btns
-	
-	#if klipper 
-	If oc.isConnected = False Then
-		CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_MENU)
-		Return
-	End If
-	#End If
 	
 	'--- sets enable, disable
 	mPageEnableDisable = IIf(oc.isPrinting,False,True)
@@ -192,30 +187,7 @@ Private Sub btnXYZ_Click
 '	Log("PrinterProfileInvertedX" & oc.PrinterProfileInvertedx )
 	
 	Select Case btn.Tag
-		#if klipper
-		Case "Zhome"
-			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G28 Z"))
-		Case "XYhome"
-			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G28 X Y"))
-		Case "Zup"
-			SendRelPosCmd
-			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G1 Z " & $"${IIf(oc.PrinterProfileInvertedZ,"-","")}"$ & MoveJogSize))
-		Case "Zdown"
-			SendRelPosCmd
-			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G1 Z " & $"${IIf(oc.PrinterProfileInvertedZ,"","-")}"$ & MoveJogSize))
-		Case "XYleft"
-			SendRelPosCmd
-			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G1 X " & $"${IIf(oc.PrinterProfileInvertedX,"","-")}"$ & MoveJogSize))
-		Case "XYright"
-			SendRelPosCmd
-			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G1 X " & $"${IIf(oc.PrinterProfileInvertedx,"-","")}"$ & MoveJogSize))
-		Case "XYforward"
-			SendRelPosCmd
-			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G1 Y " & $"${IIf(oc.PrinterProfileInvertedY,"","-")}"$ & MoveJogSize))
-		Case "XYback"
-			SendRelPosCmd
-			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","G1 Y " & $"${IIf(oc.PrinterProfileInvertedY,"-","")}"$ & MoveJogSize))
-		#else
+		
 		Case "Zhome"
 			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_Z_HOME)
 		Case "XYhome"
@@ -232,9 +204,6 @@ Private Sub btnXYZ_Click
 			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!",$"${IIf(oc.PrinterProfileInvertedY,"","-")}"$ & MoveJogSize).Replace("!DIR!","y"))
 		Case "XYback"
 			mMainObj.oMasterController.cn.PostRequest(oc.cJOG_XYZ_MOVE.Replace("!SIZE!",$"${IIf(oc.PrinterProfileInvertedY,"-","")}"$ & MoveJogSize).Replace("!DIR!","y"))
-		#End If
-		
-			
 	
 	End Select
 	guiHelpers.Show_toast("Command Sent",1200)

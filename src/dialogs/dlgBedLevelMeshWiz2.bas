@@ -39,6 +39,7 @@ Sub Class_Globals
 	Private oBeepMe As SoundsBeeps
 	
 	Private btnDst5,btnDst4,btnDst3,btnDst2,btnDst1 As B4XView
+	Private mCurrentMarlinZ as Float = 0
 	
 End Sub
 
@@ -106,6 +107,8 @@ Public Sub Close_Me  '--- class method, also called from android back btn
 		If mInProbeMode Then 
 			mainObj.Send_Gcode(oc.cKLIPPY_ABORT)
 		End If
+	Else '--- marlin
+		
 	End If
 	parent.SetVisibleAnimated(500,False)
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
@@ -162,7 +165,7 @@ Private Sub btnUpDown_Click
 	If oc.Klippy Then
 		mainObj.Send_Gcode("TESTZ Z=" & nVal)
 	Else '--- Marlin
-	
+		
 	End If
 	'btn.RequestFocus
 	'Log("btnUP-DN: " & msg)
@@ -216,7 +219,7 @@ Private Sub btnStop_Click
 		mainObj.Send_Gcode(oc.cKLIPPY_ABORT)
 		mainObj.Send_Gcode("M18") '--- disable steppers
 	Else '--- Marlin
-		
+		mainObj.Send_Gcode("M18") '--- disable steppers
 	End If
 	ShowZinfo("Just hanging out and waiting...")
 	mInProbeMode = False
@@ -234,36 +237,64 @@ Private Sub btnStart_Click
 	btn1.RequestFocus
 	'btnPreheat.Visible = False
 	
+	
+	'--- Starting 
 	If b.Text = "START" Then
 		
 		If oc.Klippy Then '--------------------Klipper firmware
 			ShowZinfo("Preparing bed and tool...")
-			guiHelpers.Show_toast2("Homing printer",1500)
+			guiHelpers.Show_toast2("Homing printer",2500)
 			mainObj.Send_Gcode("G28")
 			Sleep(1000)
 			If pMode = ppMANUAL_MESH Then
-				guiHelpers.Show_toast2("Starting manual mesh Z probe...",1500)
+				guiHelpers.Show_toast2("Starting manual mesh Z probe...",2500)
 				B4XPages.MainPage.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
 			Else '--- Z OFFSET time!
-				guiHelpers.Show_toast2("Setting up for Z Offset...",1500)
+				guiHelpers.Show_toast2("Setting up for Z Offset...",2500)
 				'B4XPages.MainPage.Send_Gcode("G1 Z5")
-				B4XPages.MainPage.Send_Gcode($"G1 Z5 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F3000"$)
+				B4XPages.MainPage.Send_Gcode($"G1 Z5 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F4000"$)
 				Sleep(500)
 				B4XPages.MainPage.Send_Gcode("MANUAL_PROBE")
 			End If
 	
 		Else '-------------------- Marlin firmware
-			'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
+			If pMode = ppMANUAL_MESH Then
+				'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
+				'--- when today might be my last day living.
+				
+			Else '--- Z OFFSET time!
+				ShowZinfo("Preparing bed and tool...")
+				guiHelpers.Show_toast2("Homing printer",2500)
+				mainObj.Send_Gcode("G28")
+				Sleep(600)
+				guiHelpers.Show_toast2("Setting up for Z Offset...",2900)
+				B4XPages.MainPage.Send_Gcode("G90") '--- absolute position
+				B4XPages.MainPage.Send_Gcode($"G1 Z5 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F4000"$)
+				mCurrentMarlinZ = 5
+				btn1.Text = "DONE"
+				btn2.Visible = True
+				btnClose.Visible = False
+				btnPreheat.Visible = False
+				
+			End If
 		End If
 		
 	
 	else If b.Text = oc.cKLIPPY_ACCEPT Or  b.Text = "DONE" Then
+		
 		If oc.Klippy Then
 			mainObj.Send_Gcode(oc.cKLIPPY_ACCEPT)
 			
 		Else '-------------------- Marlin firmware
-			'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
-			'--- when today might be my last day living.
+			
+			If pMode = ppMANUAL_MESH Then
+				'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
+				'--- when today might be my last day living.
+				
+			Else '--- Z OFFSET time!
+			
+			End If
+			
 		End If
 	
 	End If
@@ -381,7 +412,7 @@ End Sub
 
 
 Private Sub Probe_failed
-	'--- mostly happens when just hitting ACCEPT and not moving nozzle 1st
+	'--- mostly happens when just hitting ACCEPT and not moving nozzle 1st - KLIPPY only
 	ShowZinfo("probe failed...")
 	ProcessStop_GUI
 End Sub

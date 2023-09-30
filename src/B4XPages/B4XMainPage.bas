@@ -571,7 +571,7 @@ End Sub
 Public Sub PrinterSetup_Closed
 
 	If oc.IsConnectionValid Then
-		Show_toast("Trying to connect...",3000)		
+		Show_toast("Trying to connect... This might take a few moments...",3000)		
 		TryPrinterConnection
 	End If
 	'Sleep(100)

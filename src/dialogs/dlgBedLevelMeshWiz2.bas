@@ -251,9 +251,7 @@ Private Sub btnStart_Click
 				Sleep(500)
 				B4XPages.MainPage.Send_Gcode("MANUAL_PROBE")
 			End If
-			#if debug
-			'Log("WT: " & msg)
-			#end if
+	
 		Else '-------------------- Marlin firmware
 			'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
 		End If
@@ -261,7 +259,6 @@ Private Sub btnStart_Click
 	
 	else If b.Text = oc.cKLIPPY_ACCEPT Or  b.Text = "DONE" Then
 		If oc.Klippy Then
-			'Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","ACCEPT"))) Complete (msg As String)		
 			mainObj.Send_Gcode(oc.cKLIPPY_ACCEPT)
 			
 		Else '-------------------- Marlin firmware
@@ -287,13 +284,13 @@ Public Sub Rec_Text(txt As String)
 	Else
 		Rec_Text2(s)
 	End If
-	
-	Log(s)
 End Sub
 
 
 Private Sub Rec_Text2(txt As String)
-	Log("rec txt:" & txt)
+
+	logMe.LogDebug2("rec txt:" & txt,"")
+
 	If oc.Klippy Then
 		
 		If pMode = ppMANUAL_MESH Then '--- manual bed level wiz
@@ -398,9 +395,8 @@ End Sub
 
 
 Private Sub ProcessMeshComplete'ignore
-	
+	Dim m As StringBuilder:m.Initialize
 	If oc.Klippy And pMode = ppMANUAL_MESH Then
-		Dim m As StringBuilder : 	m.Initialize
 		m.Append("Bed Mesh state has been saved to profile [default] for the ")
 		m.Append("current session. Touch SAVE to update the printer config ")
 		m.Append("File And restart the printer or CLOSE to just use the current mesh")
@@ -424,9 +420,8 @@ Private Sub ProcessMeshComplete'ignore
 		End If
 		
 	ELSE If oc.Klippy And pMode <> ppMANUAL_MESH Then
-		Dim m As StringBuilder : 	m.Initialize
 		m.Append("New Z-Offset will be used for the current session.")
-		m.Append("Touch SAVE to update the printer config File And ")
+		m.Append("Touch SAVE to update the printer config file And ")
 		m.Append("restart the printer or CLOSE to just use the current offset")
 		Dim w,h As Float
 		If guiHelpers.gIsLandScape Then
@@ -438,6 +433,9 @@ Private Sub ProcessMeshComplete'ignore
 		Dim mb2 As dlgMsgBox2 : mb2.Initialize(mainObj.Root,"Question", w, h,False)
 		mb2.NewTextSize = 24
 		Wait For (mb2.Show(m.ToString,gblConst.MB_ICON_QUESTION, "SAVE","","CLOSE")) Complete (res As Int)
+		
+		'mainObj.Send_Gcode(oc.cKLIPPY_ACCEPT)  '--- has already been sent
+		
 		If res = xui.DialogResponse_Positive Then
 			mainObj.Send_Gcode(oc.cKLIPPY_SAVE)
 			guiHelpers.Show_toast2("Saving new Z-Offset and restarting printer",5200)

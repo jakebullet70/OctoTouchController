@@ -86,8 +86,10 @@ Public Sub Show(headerTxt As String)
 	tmrHeater_Tick
 	tmrHeaterOnOff.Enabled = True
 	
-	B4XPages.MainPage.oMasterController.oWS.pParserWO.RaiseEventMod = Me
-	B4XPages.MainPage.oMasterController.oWS.pParserWO.RaiseEventEvent = "rec_text"
+	If oc.Klippy Then
+		B4XPages.MainPage.oMasterController.oWS.pParserWO.RaiseEventMod = Me
+		B4XPages.MainPage.oMasterController.oWS.pParserWO.RaiseEventEvent = "rec_text"
+	End If
 	
 End Sub
 
@@ -99,9 +101,6 @@ End Sub
 
 Public Sub Close_Me  '--- class method, also called from android back btn
 	'--- out of here!
-	#if klipper
-	mainObj.oMasterController.WSk.pCallbackModule2 = Null
-	#end if
 	If oc.Klippy Then
 		B4XPages.MainPage.oMasterController.oWS.pParserWO.ResetRaiseEvent
 		If mInProbeMode Then 
@@ -153,23 +152,6 @@ Private Sub ProcessStop_GUI
 End Sub
 
 
-Private Sub btnUpDown_Click
-	Dim btn As Button = Sender
-	If btn1.Text = "START" Then 
-		Return
-	End If
-	Dim nVal As String = Round2(mDIstance,3).As(String)
-	If btn.Text.ToUpperCase.Contains("LO") Then
-		nVal = "-" & nVal 
-	End If
-	If oc.Klippy Then
-		mainObj.Send_Gcode("TESTZ Z=" & nVal)
-	Else '--- Marlin
-		
-	End If
-	'btn.RequestFocus
-	'Log("btnUP-DN: " & msg)
-End Sub
 
 Private Sub DistanceBtnsLookReset
 	guiHelpers.SkinButton(Array As Button(btnDst1,btnDst2,btnDst3,btnDst4,btnDst5))
@@ -193,7 +175,9 @@ End Sub
 
 Private Sub ShowZinfo(info As String)
 	If info = "" Then info = "Z Location ???"
-	info = info.Replace("Z position: ","Z pos: ")
+	If oc.Klippy Then
+		info = info.Replace("Z position: ","Z pos: ")
+	End If
 	alblZinfo.Text = info
 End Sub
 Private Sub ParseZInfo(s As String)'ignore
@@ -219,7 +203,9 @@ Private Sub btnStop_Click
 		mainObj.Send_Gcode(oc.cKLIPPY_ABORT)
 		mainObj.Send_Gcode("M18") '--- disable steppers
 	Else '--- Marlin
+		B4XPages.MainPage.oMasterController.oWS.pParserWO.EventRemove("ZChange")
 		mainObj.Send_Gcode("M18") '--- disable steppers
+		B4XPages.MainPage.Send_Gcode("G90") '--- absolute position
 	End If
 	ShowZinfo("Just hanging out and waiting...")
 	mInProbeMode = False
@@ -241,36 +227,44 @@ Private Sub btnStart_Click
 	'--- Starting 
 	If b.Text = "START" Then
 		
+		ShowZinfo("Preparing printer...")
+		guiHelpers.Show_toast2("Homing printer",2500)
+		mainObj.Send_Gcode("G28")
+		Sleep(1000)
+			
 		If oc.Klippy Then '--------------------Klipper firmware
-			ShowZinfo("Preparing bed and tool...")
-			guiHelpers.Show_toast2("Homing printer",2500)
-			mainObj.Send_Gcode("G28")
-			Sleep(1000)
+			
+			'--- what are we doing?
 			If pMode = ppMANUAL_MESH Then
+				
 				guiHelpers.Show_toast2("Starting manual mesh Z probe...",2500)
 				B4XPages.MainPage.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
+				
 			Else '--- Z OFFSET time!
+				
 				guiHelpers.Show_toast2("Setting up for Z Offset...",2500)
-				'B4XPages.MainPage.Send_Gcode("G1 Z5")
 				B4XPages.MainPage.Send_Gcode($"G1 Z5 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F4000"$)
 				Sleep(500)
 				B4XPages.MainPage.Send_Gcode("MANUAL_PROBE")
+				
 			End If
 	
 		Else '-------------------- Marlin firmware
+			
+			'--- what are we doing?
 			If pMode = ppMANUAL_MESH Then
 				'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
-				'--- when today might be my last day living.
+				'--- when today might be my last day living. Kherson Ukraine, Sept - 2023
 				
 			Else '--- Z OFFSET time!
-				ShowZinfo("Preparing bed and tool...")
-				guiHelpers.Show_toast2("Homing printer",2500)
-				mainObj.Send_Gcode("G28")
-				Sleep(600)
+				
+				'https://www.3dprintbeast.com/marlin-z-offset/
+				B4XPages.MainPage.oMasterController.oWS.pParserWO.EventAdd("ZChange",Me,"rec_text")
 				guiHelpers.Show_toast2("Setting up for Z Offset...",2900)
 				B4XPages.MainPage.Send_Gcode("G90") '--- absolute position
 				B4XPages.MainPage.Send_Gcode($"G1 Z5 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F4000"$)
-				mCurrentMarlinZ = 5
+				B4XPages.MainPage.Send_Gcode("G91") '--- back to relitive position
+				mCurrentMarlinZ = 5.00 
 				btn1.Text = "DONE"
 				btn2.Visible = True
 				btnClose.Visible = False
@@ -280,9 +274,11 @@ Private Sub btnStart_Click
 		End If
 		
 	
-	else If b.Text = oc.cKLIPPY_ACCEPT Or  b.Text = "DONE" Then
+	else If b.Text = oc.cKLIPPY_ACCEPT Or b.Text = "DONE" Then
 		
 		If oc.Klippy Then
+			
+			'--- same for Z-Offset or Manual mesh
 			mainObj.Send_Gcode(oc.cKLIPPY_ACCEPT)
 			
 		Else '-------------------- Marlin firmware
@@ -292,6 +288,10 @@ Private Sub btnStart_Click
 				'--- when today might be my last day living.
 				
 			Else '--- Z OFFSET time!
+				
+				'https://www.3dprintbeast.com/marlin-z-offset/
+				B4XPages.MainPage.Send_Gcode("M428") '--- Current position is now the new Z0
+				B4XPages.MainPage.Send_Gcode("G91")  '--- absolute position
 			
 			End If
 			
@@ -299,6 +299,25 @@ Private Sub btnStart_Click
 	
 	End If
 	
+End Sub
+
+
+Private Sub btnUpDown_Click
+	Dim btn As Button = Sender
+	If btn1.Text = "START" Then
+		Return
+	End If
+	Dim nVal As String = Round2(mDIstance,3).As(String)
+	If btn.Text.ToUpperCase.Contains("LO") Then
+		nVal = "-" & nVal
+	End If
+	If oc.Klippy Then
+		mainObj.Send_Gcode("TESTZ Z=" & nVal)
+	Else '--- Marlin
+		
+	End If
+	'btn.RequestFocus
+	'Log("btnUP-DN: " & msg)
 End Sub
 
 
@@ -386,6 +405,7 @@ Private Sub Rec_Text2(txt As String)
 		'--- Marlin time! ----------------------------
 		'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
 		'--- and really, we might get killed and our home destroyed today.
+		ShowZinfo(txt)
 	End If
 	
 	#if debug
@@ -394,7 +414,7 @@ Private Sub Rec_Text2(txt As String)
 	
 End Sub
 
-Private Sub RestartAlreadyIn
+Private Sub RestartAlreadyIn '--- Klippy ONLY
 	guiHelpers.Show_toast2("Manual Z probe already started: Restarting...",6500)
 	mainObj.Send_Gcode(oc.cKLIPPY_ABORT)
 	Sleep(2000)
@@ -418,73 +438,93 @@ Private Sub Probe_failed
 End Sub
 
 
-
-'Private Sub InCalMode() As ResumableSub
-'	'# This is only here because klipper doesn't provide a method to detect if it's calibrating
-'	Wait For (mainObj.oMasterController.WSk.SendAndWait(krpc.GCODE.Replace("!G!","TESTZ Z=0.001"))) Complete (msg As String)
-'End Sub
-
-
 Private Sub ProcessMeshComplete'ignore
-	Dim m As StringBuilder:m.Initialize
-	If oc.Klippy And pMode = ppMANUAL_MESH Then
-		m.Append("Bed Mesh state has been saved to profile [default] for the ")
-		m.Append("current session. Touch SAVE to update the printer config ")
-		m.Append("File And restart the printer or CLOSE to just use the current mesh")
-		Dim w,h As Float
-		If guiHelpers.gIsLandScape Then
-			w = guiHelpers.gWidth * .7 
-			h = guiHelpers.MaxVerticalHeight_Landscape
-		Else
-			w = guiHelpers.gWidth * .8 : h = 310dip
-		End If
-		Dim mb2 As dlgMsgBox2 : mb2.Initialize(mainObj.Root,"Question", w, h,False)
-		mb2.NewTextSize = 24
-		Wait For (mb2.Show(m.ToString,gblConst.MB_ICON_QUESTION, "SAVE","","CLOSE")) Complete (res As Int)
-		If res = xui.DialogResponse_Positive Then
-			mainObj.Send_Gcode(oc.cKLIPPY_SAVE)
-			guiHelpers.Show_toast2("Saving CONFIG and restarting printer",5200)
-			Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage.oMasterController,"tmrMain_Tick",800)
-		Else
-			guiHelpers.Show_toast2("Using Mesh for current session, homing printer",3000)
-			mainObj.Send_Gcode("G28")
-		End If
-		
-	ELSE If oc.Klippy And pMode <> ppMANUAL_MESH Then
-		m.Append("New Z-Offset will be used for the current session.")
-		m.Append("Touch SAVE to update the printer config file And ")
-		m.Append("restart the printer or CLOSE to just use the current offset")
-		Dim w,h As Float
-		If guiHelpers.gIsLandScape Then
-			w = guiHelpers.gWidth * .7
-			h = guiHelpers.MaxVerticalHeight_Landscape
-		Else
-			w = guiHelpers.gWidth * .8 : h = 310dip
-		End If
-		Dim mb2 As dlgMsgBox2 : mb2.Initialize(mainObj.Root,"Question", w, h,False)
-		mb2.NewTextSize = 24
-		Wait For (mb2.Show(m.ToString,gblConst.MB_ICON_QUESTION, "SAVE","","CLOSE")) Complete (res As Int)
-		
-		'mainObj.Send_Gcode(oc.cKLIPPY_ACCEPT)  '--- has already been sent
-		
-		If res = xui.DialogResponse_Positive Then
-			mainObj.Send_Gcode(oc.cKLIPPY_SAVE)
-			guiHelpers.Show_toast2("Saving new Z-Offset and restarting printer",5200)
-			Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage.oMasterController,"tmrMain_Tick",800)
-		Else
-			guiHelpers.Show_toast2("Using Z-Offset for current session, homing printer",3000)
-			mainObj.Send_Gcode("G28")
-		End If
-		
-		
-	Else '--- Marlin
-		'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in
-	End If
 	
-	Close_Me
+	Dim m As StringBuilder: m.Initialize
+	
+	Select Case True
+		Case oc.Klippy And pMode = ppMANUAL_MESH
+			m.Append("Bed Mesh state has been saved to profile [default] for the ")
+			m.Append("current session. Touch SAVE to update the printer config ")
+			m.Append("File And restart the printer or CLOSE to just use the current mesh")
+			Wait For (SavePrompt(m.ToString)) Complete (res As Int)
+			
+			If res = xui.DialogResponse_Positive Then
+				mainObj.Send_Gcode(oc.cKLIPPY_SAVE)
+				guiHelpers.Show_toast2("Saving CONFIG and restarting printer",5200)
+				Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage.oMasterController,"tmrMain_Tick",800)
+			Else
+				guiHelpers.Show_toast2("Using Mesh for current session, homing printer",3000)
+				mainObj.Send_Gcode("G28")
+			End If
+			
+			
+		Case oc.Klippy And pMode <> ppMANUAL_MESH '--- Z-Offset
+			m.Append("New Z-Offset will be used for the current session.")
+			m.Append("Touch SAVE to update the printer config file And ")
+			m.Append("restart the printer or CLOSE to just use the current offset")
+			Wait For (SavePrompt(m.ToString)) Complete (res As Int)
+			
+			'mainObj.Send_Gcode(oc.cKLIPPY_ACCEPT)  '--- has already been sent
+			
+			If res = xui.DialogResponse_Positive Then
+				mainObj.Send_Gcode(oc.cKLIPPY_SAVE)
+				guiHelpers.Show_toast2("Saving new Z-Offset and restarting printer",5200)
+				Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage.oMasterController,"tmrMain_Tick",800)
+			Else
+				guiHelpers.Show_toast2("Using Z-Offset for current session, homing printer",4000)
+				mainObj.Send_Gcode("G28")
+			End If
+
+		Case oc.Klippy = False And pMode = ppMANUAL_MESH
+			'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
+						
+		Case oc.Klippy = False And pMode <> ppMANUAL_MESH '--- Z-Offset
+			B4XPages.MainPage.oMasterController.oWS.pParserWO.EventRemove("ZChange")
+			m.Append("New Z-Offset will be used for the current session.")
+			m.Append("Touch SAVE to update printers the EEPROM ")
+			m.Append("or CLOSE to just use the current offset")
+			Wait For (SavePrompt(m.ToString)) Complete (res As Int)
+			
+			If res = xui.DialogResponse_Positive Then
+				mainObj.Send_Gcode("M500")
+				guiHelpers.Show_toast2("New Z-Offset saved to EEPROM, homing printer",4000)
+			Else
+				guiHelpers.Show_toast2("Using Z-Offset for current session, homing printer",4000)
+			End If
+			mainObj.Send_Gcode("G28")
+			
+	End Select
+
+
+	Close_Me '--- out of here, exit wizard
 	Return
 	
 End Sub
+
+
+
+Private Sub SavePrompt(msg As String) As ResumableSub
+
+	Dim w,h As Float
+	If guiHelpers.gIsLandScape Then
+		w = guiHelpers.gWidth * .7
+		h = guiHelpers.MaxVerticalHeight_Landscape
+	Else
+		w = guiHelpers.gWidth * .8 : h = 310dip
+	End If
+	Dim mb2 As dlgMsgBox2 : mb2.Initialize(mainObj.Root,"Question", w, h,False)
+	mb2.NewTextSize = 24
+	Wait For (mb2.Show(msg,gblConst.MB_ICON_QUESTION, "SAVE","","CLOSE")) Complete (res As Int)
+	Return res
+
+	
+End Sub
+
+
+
+
+
 
 
 

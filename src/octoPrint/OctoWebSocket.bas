@@ -124,7 +124,7 @@ Public Sub Connect() As ResumableSub
 	
 	
 	Log(subscribe.Replace(CRLF," "))
-	Send(subscribe)
+	'Send(subscribe)
 	
 ''	--- Set the AUTH And start socket events
 ''	Wait For (Passive_Login) Complete(i As Boolean)
@@ -166,6 +166,16 @@ Private Sub ws_TextMessage(Message As String)
 		Return
 	End If
 	
+	If Message.StartsWith($"{"plugin": {"plugin": "$) Then
+		'--- do not care of any plugins
+		Return
+	End If
+	
+	If Message.StartsWith($"{"event": {""$) Then
+		CallSub2(pParserWO,"Event_Parse",Message)
+		Return
+	End If
+	
 	If Message.StartsWith($"{"reauthRequired""$) Then
 		logMe.LogIt("reauthRequired type: " & Message,mModule)
 		Passive_Login
@@ -199,8 +209,8 @@ Private Sub ws_Closed (Reason As String)
 		Connect
 	Else If Reason = "WebSockets protocol violation" Then
 		'--- general reason has been logged above already ---
-		logMe.LogIt2("!!!WebSockets protocol violation -- happend in a docker container!!!",mModule,InSub)
-		guiHelpers.Show_toast2("WebSockets protocol violation",15000)
+		logMe.LogIt2("!!!WebSockets protocol violation -- Octoprint needs to be restarted!!!",mModule,InSub)
+		guiHelpers.Show_toast2("WebSockets protocol violation. Restart Octoprint",15000)
 	End If
 	
 End Sub

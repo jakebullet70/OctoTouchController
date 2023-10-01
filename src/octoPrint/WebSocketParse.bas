@@ -18,6 +18,8 @@ Sub Class_Globals
 	Private Const mModule As String = "WebSocketParse" 'ignore
 	Public RaiseEventMod As Object = Null
 	Public RaiseEventEvent As String = ""
+	Public pEvents2Monitor As Map
+	Type tOctoEvents(CallbackObj As Object, CallbackSub As String)
 	
 	
 End Sub
@@ -25,7 +27,22 @@ End Sub
 
 
 Public Sub Initialize
+	pEvents2Monitor.Initialize
 End Sub
+
+Public Sub EventRemove(name As String)
+	If pEvents2Monitor.ContainsKey(name) Then
+		pEvents2Monitor.Remove(name)
+	End If
+End Sub
+Public Sub EventAdd(name As String,CallbackObj As Object, CallbackSub As String)
+	Dim o As tOctoEvents : o.Initialize
+	o.CallbackObj = CallbackObj
+	o.CallbackSub = CallbackSub
+	EventRemove(name)
+	pEvents2Monitor.Put(name,o)	
+End Sub
+
 
 '===========================================================================================
 '===========================================================================================
@@ -35,6 +52,48 @@ Public Sub ResetRaiseEvent
 	RaiseEventEvent = ""
 	RaiseEventMod = Null
 End Sub
+
+
+Public Sub Event_Parse(msg As String)
+	Log(msg)
+	
+	Dim parser As JSONParser : parser.Initialize(msg)
+	
+	Dim root As Map = parser.NextObject
+	Dim Event As Map = root.Get("event")
+	Dim payload As Map = Event.Get("payload")
+	Dim evType As String = Event.Get("type")
+	
+	If pEvents2Monitor.ContainsKey(evType) = False Then
+		#if debug
+		Log("*** pEvents2Monitor.ContainsKey(evType) = False")
+		Log("*** " & msg)
+		#end if
+		Return
+	End If
+	
+	Dim o As tOctoEvents = pEvents2Monitor.Get(evType) 'ignore
+	
+	
+	Dim outMsg As Object = Null 'ignore
+	Select Case evType
+		Case "ZChange"
+			'{"event": {"type": "ZChange", "payload": {"new": 5.0, "old": null}}}
+			Dim new As Double = payload.Get("new")
+			Dim old As String = payload.Get("old")
+			outMsg = $"** Old Z=${old} / New Z=${new} **"$
+			
+			
+	End Select
+	
+	If SubExists(o.CallbackObj,o.CallbackSub) Then
+		CallSubDelayed2(o.CallbackObj,o.CallbackSub,outMsg)
+	End If
+
+	
+End Sub
+
+
 
 Public Sub Klippy_Parse(msg As String)
 	If config.logREST_API Then logMe.logit2("Klipper msg",mModule,"Klippy_Parse")

@@ -42,6 +42,10 @@ Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
 	Return True
 	#else
 	ProcessCrash(Error,StackTrace)
+	Try
+		B4XPages.MainPage.oMasterController.oWS.wSocket.Close
+	Catch
+	End Try	'ignore
 	CallSub(Main,"Restart_App") '--- this code is there but seems to fail
 	Return False
 	#end if

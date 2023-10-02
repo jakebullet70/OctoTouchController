@@ -13,8 +13,8 @@ Sub Class_Globals
 	
 	Public wSocket As WebSocket
 	Public mErrorSecProvider As Boolean = False
-	'Public mClosedReason As String
-	Public mConnected As Boolean = False
+	Public pClosedReason As String
+	Public pConnected As Boolean = False
 	
 	Public IsInit As Boolean = False
 	Public mIgnoreMasterOctoEvent As Boolean = True
@@ -190,13 +190,13 @@ End Sub
 Private Sub ws_Closed (Reason As String)
 	'--- socket is closed!
 	Dim InSub As String = "ws_Closed"
-	mConnected = False
+	pConnected = False
 	If strHelpers.IsNullOrEmpty(Reason) Then 
 		Reason = "Sys closed"
 	Else
 		logMe.LogIt2("ws close reason: " & Reason,mModule,InSub)
 	End If
-	'mClosedReason = Reason
+	pClosedReason = Reason
 	
 	'--- Reason = "WebSockets protocol violation" -- happend in a docker container!!!
 	If Reason = "WebSockets connection lost" Then 
@@ -217,20 +217,20 @@ End Sub
 
 
 Public Sub Send(cmd As String) 
-	If mConnected = False Then
+	If pConnected = False Then
 		logMe.LogIt2("no web socket connection - reconnecting",mModule,"Send")
 		Wait For (Connect) Complete (msg As String)
-		If mConnected = False Then Return
+		If pConnected = False Then Return
 	End If
 	wSocket.SendText(cmd)
 End Sub
 
 
 Public Sub SendAndWait(cmd As String) As ResumableSub
-	If mConnected = False Then
+	If pConnected = False Then
 		logMe.LogIt2("no web socket connection - reconnecting",mModule,"SendAndWait")
 		Wait For (Connect) Complete (msg As String)
-		If mConnected = False Then Return "no connection"
+		If pConnected = False Then Return "no connection"
 	End If
 	'Log(cmd)
 	wSocket.SendText(cmd)

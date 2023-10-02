@@ -114,8 +114,10 @@ Public Sub Show
 	
 	Wait For (RS) Complete (Result As Int)
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
-	tmrHeaterOnOff.Enabled = False
-	tmrHeaterOnOff = Null
+	If tmrHeaterOnOff.IsInitialized Then
+		tmrHeaterOnOff.Enabled = False
+		tmrHeaterOnOff = Null
+	End If
 	
 End Sub
 

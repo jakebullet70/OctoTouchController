@@ -380,6 +380,11 @@ End Sub
 
 Private Sub SetUserOrientPref
 	
+	If File.Exists(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE) = False Then
+		OrientPrefAuto
+		Return
+	End If
+	
 	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
 	Dim pref As String = Data.GetDefault("ort","Auto").As(String).ToUpperCase
 	
@@ -390,15 +395,18 @@ Private Sub SetUserOrientPref
 		Case pref.StartsWith("LA")
 			ph.SetScreenOrientation(6)
 		Case Else
-			If Activity.width < Activity.Height Then
-				ph.SetScreenOrientation(7) 
-			Else 
-				ph.SetScreenOrientation(6)
-			End If
+			OrientPrefAuto
 	End Select
 	
 End Sub
 
+Private Sub OrientPrefAuto
+	If Activity.width < Activity.Height Then
+		ph.SetScreenOrientation(7)
+	Else
+		ph.SetScreenOrientation(6)
+	End If
+End Sub
 
 Private Sub GetRealSize() As LayoutValues 
 	

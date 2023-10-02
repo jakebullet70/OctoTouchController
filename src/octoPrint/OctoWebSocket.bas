@@ -21,7 +21,7 @@ Sub Class_Globals
 	Public pParserWO As WebSocketParse
 	Public subscribe As String = $"{"subscribe": {"plugins": ["klipper"]  }}"$
 	
-	
+	Private isConnecting As Boolean = False
 End Sub
 
 '#Event: RecievedText
@@ -90,6 +90,11 @@ Public Sub Connect() As ResumableSub
 	'--- we wont ever run this code if the REST API fails
 	Dim inSub As String = "Connect"
 	Log("wb start")
+	If isConnecting = True Then 
+		Log("WS already trying to connect")
+		Return ""
+	End If
+	isConnecting = True
 	
 	Dim Const thisSub As String	= "Connect"
 	Try
@@ -102,7 +107,7 @@ Public Sub Connect() As ResumableSub
 	End Try'ignore
 
 	logMe.LogIt2("WS connecting...",mModule,thisSub)
-	mConnected = False '--- assume bad
+	pConnected = False '--- assume bad
 	
 	'--- Init the socket
 	wSocket.Initialize("ws")
@@ -110,7 +115,7 @@ Public Sub Connect() As ResumableSub
 	Wait For ws_Connected
 	logMe.LogIt2("WS connected...",mModule,thisSub)
 	Wait For ws_TextMessage (Message As String)
-	mConnected = True
+	pConnected = True
 	Log("wb init end")
 	
 	'--- set subscriptions
@@ -131,7 +136,7 @@ Public Sub Connect() As ResumableSub
 		
 	'--- A value of 2 will set the rate limit to maximally one message every 1s, 3 to maximally one message every 1.5s and so on.
 	setThrottle("90") '--- this is very inacurate
-	
+	isConnecting = False
 	Return Message '--- this is the connected message
 	
 End Sub
@@ -211,6 +216,7 @@ Private Sub ws_Closed (Reason As String)
 		'--- general reason has been logged above already ---
 		logMe.LogIt2("!!!WebSockets protocol violation -- Octoprint needs to be restarted!!!",mModule,InSub)
 		guiHelpers.Show_toast2("WebSockets protocol violation. Restart Octoprint",15000)
+		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)
 	End If
 	
 End Sub

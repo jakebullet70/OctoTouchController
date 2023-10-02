@@ -50,7 +50,7 @@ End Sub
 
 
 Public Sub getCN() As HttpOctoRestAPI
-	If oCN.IsInitialized = False Then 
+	If oCN.IsInitialized = False Then 'Or (oWS.IsInitialized And oWS.pConnected = False)) Then 
 		GetConnectionPrinterStatus
 	End If
 	Return oCN

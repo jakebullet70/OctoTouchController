@@ -739,11 +739,12 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 	Dim Const JUSTIFY_BUTTON_2_LEFT As Boolean = True
 	Dim h,w As Float
 	If guiHelpers.gIsLandScape Then
-		h = 180dip : w = 500dip
+		h = guiHelpers.MaxVerticalHeight_Landscape
+		w = 500dip
 	Else
 		h = 310dip : w = 88%x
 	End If
-	mErrorDlg.Initialize(Root,"Connetion Problem",w, h,JUSTIFY_BUTTON_2_LEFT)
+	mErrorDlg.Initialize(Root,"Connetion Problem", w, h,JUSTIFY_BUTTON_2_LEFT)
 	Dim gui As guiMsgs : gui.Initialize
 	Wait For (mErrorDlg.Show(gui.GetConnectionText(connectedButError),gblConst.MB_ICON_WARNING, _
 					"RETRY",PowerCtrlAvail,"SETUP")) Complete (res As Int)
@@ -761,10 +762,6 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 			Dim o As dlgOctoPsuCtrl : o.Initialize(Me)
 			o.mRunMasterCtrlrStart = True
 			o.Show
-'			Dim o As dlgOctoPsuCtrl : o.Initialize(Null)
-'			Wait For (o.SendCmd("on")) Complete(s As String)
-'			Sleep(3000)
-'			oMasterController.Start
 			
 	End Select
 	
@@ -810,7 +807,7 @@ End Sub
 
 Private Sub lblStatus_Click
 	'--- if not connected then popup the connection screen
-	If lblStatus.Text.ToLowerCase.Contains("no c") Or oc.isConnected = False  Then
+	If lblStatus.Text.ToLowerCase.Contains("no c") Or oc.isConnected = False Or oMasterController.oWS.pConnected = False  Then
 		CallSetupErrorConnecting(False)
 	End If
 End Sub

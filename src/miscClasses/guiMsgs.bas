@@ -41,9 +41,17 @@ End Sub
 Public Sub GetConnectionText(connectedButError As Boolean) As String
 	
 	Msg.Initialize
+	If B4XPages.MainPage.oMasterController.oWS.pConnected = False And _
+			B4XPages.MainPage.oMasterController.oWS.pClosedReason.Contains("protocol v")  Then
+		Msg.Append("Connected to Octoprint but there is an error ")'.Append(CRLF)
+		Msg.Append("with the Octoprint socket. Please restart ").Append(CRLF)
+		Msg.Append("Octoprint and make sure sure you are connected ")'.Append(CRLF)
+		Msg.Append("to the printer.")
+		Return Msg.ToString
+	End If
 	
 	If connectedButError Then
-		Msg.Append("Connected to Octoprint but there is an error.").Append(CRLF)
+		Msg.Append("Connected to Octoprint but there is an error.")'.Append(CRLF)
 		Msg.Append("Check that Octoprint is connected to the printer?").Append(CRLF)
 		Msg.Append("Make sure you can print from the Octoprint UI.")
 	Else

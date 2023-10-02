@@ -15,6 +15,17 @@
             "required": false
         },
         {
+            "options": [
+                "Autodetect",
+                "Portrait",
+                "Landscape"
+            ],
+            "title": "Orientation",
+            "type": "Short Options",
+            "key": "ort",
+            "required": false
+        },
+        {
             "title": "Allow Movement When Paused",
             "type": "Boolean",
             "key": "mpsd",

@@ -60,7 +60,7 @@ I usually hang out at the Octoprint discord server.
 An invite can be found here: [discord.octoprint.org](https://discord.octoprint.org).  
 Quesion can also be posted here in GitHub.  
 
-Written in the middle of a war under occupation in Kherson Ukraine. Continued after liberation and under shelling... Slava Ukraini!   
+Written in the middle of a war under occupation in Kherson Ukraine. Continued after liberation and under shelling...    
 Written in [B4X](https://www.b4x.com/)  
 ![GitHub all releases](https://img.shields.io/github/downloads/jakebullet70/OctoTouchController/total)
 

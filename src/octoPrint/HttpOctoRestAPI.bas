@@ -163,7 +163,7 @@ Public Sub DownloadThumbnailAndShow(Link As String, iv As B4XImageView, fileName
 	'--- pass "" in filename for NO file
 	
 	If Link.Length = 0 Then
-		If config.logFILE_EVENTS Then logMe.LogIt("Thumbnail path is empty",mModule)
+		If config.logFILE_EVENTS Then logMe.LogIt2("Thumbnail path is empty",mModule,InSub)
 		Return
 	End If
 	
@@ -207,7 +207,7 @@ Public Sub Download_AndSaveFile(Link As String, fileName As String) As Resumable
 	Dim InSub As String = "Download_AndSaveFile"
 	
 	If Link.Length = 0 Then
-		If config.logFILE_EVENTS Then logMe.LogIt("Thumbnail path is empty",mModule) 	'--- no thumbnail
+		If config.logFILE_EVENTS Then logMe.LogIt2("Thumbnail path is empty",mModule,InSub) 	'--- no thumbnail
 		Return Null
 	End If
 	

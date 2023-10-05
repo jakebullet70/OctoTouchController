@@ -426,7 +426,7 @@ Private Sub Build_PresetHeaterOption(mapOfOptions As Map)
 		
 	Catch
 		
-		logMe.LogIt(LastException,mModule)
+		logMe.LogIt2(LastException,mModule,"Build_PresetHeaterOption")
 		
 	End Try
 	

@@ -193,7 +193,7 @@ Public Sub WriteTxt2SharedFolder(filename As String,txt As String) As Boolean 'i
 	'--- we should get an external shared folder that can be seen by the desktop
 	'   UNLESS you are on newer Android ver the Google thinks you are stupid and will not let you do it
 	If strHelpers.IsNullOrEmpty(ESDir) Then
-		logMe.LogIt("Getting external shared folder failed!","Init")
+		logMe.LogIt2("Getting external shared folder failed!",mModule,"WriteTxt2SharedFolder")
 		Return False
 	End If
 	SafeKill2(ESDir,filename)

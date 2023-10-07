@@ -153,7 +153,7 @@ Private Sub BuildGUI
 	lblBusy.Visible = True
 	lblBusy.SetColorAndBorder(clrTheme.BackgroundHeader,1dip,clrTheme.txtNormal,8dip)
 	
-	pnlPortraitDivide.SetColorAndBorder(clrTheme.txtNormal,2dip,clrTheme.txtNormal,8dip)
+	pnlPortraitDivide.SetColorAndBorder(clrTheme.txtAccent,2dip,clrTheme.txtaccent,8dip)
 	
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized And mMainObj.oMasterController.gMapOctoFilesList.Size > 0 Then
 		Build_ListViewFileList

@@ -128,7 +128,7 @@ Public Sub Connect() As ResumableSub
 '	}"$
 	
 	
-	Log(subscribe.Replace(CRLF," "))
+	'Log(subscribe.Replace(CRLF," "))
 	'Send(subscribe)
 	
 ''	--- Set the AUTH And start socket events
@@ -166,6 +166,10 @@ End Sub
 '--- master msg event method
 Private Sub ws_TextMessage(Message As String)
 	
+	#if debug
+	Log(Message)
+	#end if
+	
 	If oc.Klippy And Message.StartsWith($"{"plugin": {"plugin": "klipper""$) Then
 		CallSub2(pParserWO,"Klippy_Parse",Message)
 		Return
@@ -187,7 +191,6 @@ Private Sub ws_TextMessage(Message As String)
 		Return
 	End If
 	
-	Log(Message)
 	
 End Sub
 
@@ -196,6 +199,7 @@ Private Sub ws_Closed (Reason As String)
 	'--- socket is closed!
 	Dim InSub As String = "ws_Closed"
 	pConnected = False
+	pClosedReason = ""
 	If strHelpers.IsNullOrEmpty(Reason) Then 
 		Reason = "Sys closed"
 	Else
@@ -203,7 +207,7 @@ Private Sub ws_Closed (Reason As String)
 	End If
 	pClosedReason = Reason
 	
-	'--- Reason = "WebSockets protocol violation" -- happend in a docker container!!!
+	'--- Reason = "WebSockets protocol violation" 
 	If Reason = "WebSockets connection lost" Then 
 		logMe.LogIt2("no web socket connection - reconnecting",mModule,InSub)
 '		Wait For (Connect) Complete (msg As String)
@@ -216,6 +220,10 @@ Private Sub ws_Closed (Reason As String)
 		'--- general reason has been logged above already ---
 		logMe.LogIt2("!!!WebSockets protocol violation -- Octoprint needs to be restarted!!!",mModule,InSub)
 		guiHelpers.Show_toast2("WebSockets protocol violation. Restart Octoprint",15000)
+		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)
+	Else
+		Log("Socket Connect err???: " & pClosedReason)
+		guiHelpers.Show_toast2("Restart Octoprint: Odd error: " & pClosedReason ,15000)
 		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)
 	End If
 	

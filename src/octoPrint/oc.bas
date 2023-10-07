@@ -56,7 +56,8 @@ Sub Process_Globals
 	Public PrinterProfileInvertedY As Boolean
 	Public PrinterProfileNozzleCount As Int
 	
-	Public PrinterWidth,PrinterDepth As Double
+	Public PrinterWidth As Double = 0
+	Public PrinterDepth As Double = 0
 	Public PrinterCustomBoundingBox As Boolean
 		
 	Public JobFileName As String

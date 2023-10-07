@@ -39,7 +39,8 @@ Sub Class_Globals
 	Private oBeepMe As SoundsBeeps
 	
 	Private btnDst5,btnDst4,btnDst3,btnDst2,btnDst1 As B4XView
-	Private mCurrentMarlinZ as Float = 0
+	Private mCurrentMarlinZ As Float = 0
+	Private mOldMarlinZ As Float = 0
 	
 End Sub
 
@@ -111,8 +112,14 @@ Public Sub Close_Me  '--- class method, also called from android back btn
 	End If
 	parent.SetVisibleAnimated(500,False)
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
-	tmrHeaterOnOff.Enabled = False
-	tmrHeaterOnOff = Null
+	Try '--- blowing up when app ends. Why? 
+		If tmrHeaterOnOff.IsInitialized Then
+			tmrHeaterOnOff.Enabled = False
+			tmrHeaterOnOff = Null
+		End If
+	Catch
+		Log(LastException)
+	End Try
 	parent.RemoveAllViews
 	'B4XPages.MainPage.pObjWizards=Null
 End Sub
@@ -160,11 +167,10 @@ End Sub
 
 Private Sub btnDst_Click
 	Dim b As Button : b = Sender
-	Log(b.text)
 	btnDistance_Highlight(b.As(B4XView))
 	mDIstance = b.Text
 	CallSubDelayed(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
-	oBeepMe.Beeps(300,500,1)
+	'oBeepMe.Beeps(300,500,1)
 End Sub
 
 Private Sub btnDistance_Highlight(b As B4XView)
@@ -204,8 +210,11 @@ Private Sub btnStop_Click
 		mainObj.Send_Gcode("M18") '--- disable steppers
 	Else '--- Marlin
 		B4XPages.MainPage.oMasterController.oWS.pParserWO.EventRemove("ZChange")
+		'B4XPages.MainPage.Send_Gcode($"M851 Z${mOldMarlinZ}"$) '--- reset Z back to original
+		B4XPages.MainPage.Send_Gcode($"M501"$) '--- reset Z back to original
 		mainObj.Send_Gcode("M18") '--- disable steppers
 		B4XPages.MainPage.Send_Gcode("G90") '--- absolute position
+		B4XPages.MainPage.Send_Gcode("M211 S1") '--- turn on software end stops
 	End If
 	ShowZinfo("Just hanging out and waiting...")
 	mInProbeMode = False
@@ -229,10 +238,13 @@ Private Sub btnStart_Click
 		
 		ShowZinfo("Preparing printer...")
 		guiHelpers.Show_toast2("Homing printer",2500)
-		mainObj.Send_Gcode("G28")
-		Sleep(1000)
-			
+		
+		
+		#region "KLIPPY"	
 		If oc.Klippy Then '--------------------Klipper firmware
+			
+			mainObj.Send_Gcode("G28")
+			Sleep(1000)
 			
 			'--- what are we doing?
 			If pMode = ppMANUAL_MESH Then
@@ -248,7 +260,7 @@ Private Sub btnStart_Click
 				B4XPages.MainPage.Send_Gcode("MANUAL_PROBE")
 				
 			End If
-	
+			#end region
 		Else '-------------------- Marlin firmware
 			
 			'--- what are we doing?
@@ -258,13 +270,32 @@ Private Sub btnStart_Click
 				
 			Else '--- Z OFFSET time!
 				
+				If oc.PrinterWidth = 0 Then
+					Log("oc.PrinterWidth = 0")
+				End If
+				
 				'https://www.3dprintbeast.com/marlin-z-offset/
 				B4XPages.MainPage.oMasterController.oWS.pParserWO.EventAdd("ZChange",Me,"rec_text")
-				guiHelpers.Show_toast2("Setting up for Z Offset...",2900)
+				mOldMarlinZ = 0.00
+				mCurrentMarlinZ = 8.00
+				
 				B4XPages.MainPage.Send_Gcode("G90") '--- absolute position
-				B4XPages.MainPage.Send_Gcode($"G1 Z5 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F4000"$)
-				B4XPages.MainPage.Send_Gcode("G91") '--- back to relitive position
-				mCurrentMarlinZ = 5.00 
+				B4XPages.MainPage.Send_Gcode("M851 Z0.0") '--- reset Z
+				Sleep(1000)
+				mainObj.Send_Gcode("G28")
+				Sleep(1000)
+				
+				guiHelpers.Show_toast2("Setting up for Z Offset...",2900)
+'				Wait For (GetMarlinZoffset) Complete (r As String)
+'				If strHelpers.IsNullOrEmpty(r) Then
+'					guiHelpers.Show_toast2("M851 - Invalid Z, Cannot continue.",5000)
+'					Return
+'				End If
+				
+
+				B4XPages.MainPage.Send_Gcode("M211 S0") '--- turn off software end stops
+				B4XPages.MainPage.Send_Gcode($"G1 Z8 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F4000"$)
+				'B4XPages.MainPage.Send_Gcode("G91") '--- back to relitive position
 				btn1.Text = "DONE"
 				btn2.Visible = True
 				btnClose.Visible = False
@@ -287,11 +318,12 @@ Private Sub btnStart_Click
 				'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
 				'--- when today might be my last day living.
 				
-			Else '--- Z OFFSET time!
+			Else '--- Z OFFSET time! - all done!
 				
-				'https://www.3dprintbeast.com/marlin-z-offset/
-				B4XPages.MainPage.Send_Gcode("M428") '--- Current position is now the new Z0
+				'https://3dprinting.stackexchange.com/questions/9820/specifying-z-offset-in-marlin-firmware
+				B4XPages.MainPage.Send_Gcode($"M851 Z${mCurrentMarlinZ}"$)
 				B4XPages.MainPage.Send_Gcode("G91")  '--- absolute position
+				ProcessMeshComplete
 			
 			End If
 			
@@ -301,20 +333,51 @@ Private Sub btnStart_Click
 	
 End Sub
 
+Private Sub GetMarlinZoffset() As ResumableSub
+	
+	Dim ret As String = ""
+	Wait For (B4XPages.MainPage.oMasterController.CN.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","M503"))) Complete (r As String)
+	If Not (strHelpers.IsNullOrEmpty(r)) Then
+		Dim z1 As Int = r.IndexOf("z")
+		Dim z2 As Int = r.IndexOf(";")
+		ret = r.SubString2(z1+1,z2-1).Trim	
+		If IsNumber(ret) Then
+			mOldMarlinZ = ret.As(Float)
+		End If
+	End If
+	
+	Return ret
+End Sub
+
 
 Private Sub btnUpDown_Click
 	Dim btn As Button = Sender
-	If btn1.Text = "START" Then
+	If btn1.Text = "START" Or mInProbeMode = False Then
 		Return
 	End If
+	
+	'--- calc the move
 	Dim nVal As String = Round2(mDIstance,3).As(String)
 	If btn.Text.ToUpperCase.Contains("LO") Then
-		nVal = "-" & nVal
+		If oc.Klippy Then
+			nVal = "-" & nVal
+		Else
+			mCurrentMarlinZ = mCurrentMarlinZ - nVal
+		End If
+	Else
+		If oc.Klippy Then
+			'--- do nothing
+		Else
+			mCurrentMarlinZ = mCurrentMarlinZ + nVal
+		End If
 	End If
+	
+	'--- 
 	If oc.Klippy Then
 		mainObj.Send_Gcode("TESTZ Z=" & nVal)
 	Else '--- Marlin
-		
+		mCurrentMarlinZ = Round2(mCurrentMarlinZ,2)
+		mainObj.Send_Gcode("G1 Z" & Round2(mCurrentMarlinZ,2))
 	End If
 	'btn.RequestFocus
 	'Log("btnUP-DN: " & msg)
@@ -332,7 +395,7 @@ Public Sub Rec_Text(txt As String)
 			Sleep(250) '--- 1/4 second between
 		Next
 	Else
-		Rec_Text2(s)
+		Rec_Text2(txt)
 	End If
 End Sub
 
@@ -405,6 +468,8 @@ Private Sub Rec_Text2(txt As String)
 		'--- Marlin time! ----------------------------
 		'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
 		'--- and really, we might get killed and our home destroyed today.
+		Log(txt)
+		ProcessMarlinMoveMsg(txt)
 		ShowZinfo(txt)
 	End If
 	
@@ -412,6 +477,21 @@ Private Sub Rec_Text2(txt As String)
 	'Log("RT: Not processed: " & txt)
 	#end if
 	
+End Sub
+
+Private Sub ProcessMarlinMoveMsg(msg As String)
+	
+	Try
+		If msg.Contains("???") Then Return
+		Dim sp As Int = msg.IndexOf("New Z=")
+		Dim tmp As String = msg.SubString(sp).Replace("New Z=","").Replace("*","").Trim
+		mCurrentMarlinZ = Round2(tmp,2)
+		Log("G1 Z" & tmp)
+	Catch
+		Log(LastException)
+	End Try
+	
+		
 End Sub
 
 Private Sub RestartAlreadyIn '--- Klippy ONLY
@@ -482,8 +562,8 @@ Private Sub ProcessMeshComplete'ignore
 		Case oc.Klippy = False And pMode <> ppMANUAL_MESH '--- Z-Offset
 			B4XPages.MainPage.oMasterController.oWS.pParserWO.EventRemove("ZChange")
 			m.Append("New Z-Offset will be used for the current session.")
-			m.Append("Touch SAVE to update printers the EEPROM ")
-			m.Append("or CLOSE to just use the current offset")
+			m.Append("Touch SAVE to update your printers the EEPROM ")
+			m.Append("or CLOSE to just use the current offset.")
 			Wait For (SavePrompt(m.ToString)) Complete (res As Int)
 			
 			If res = xui.DialogResponse_Positive Then
@@ -492,11 +572,13 @@ Private Sub ProcessMeshComplete'ignore
 			Else
 				guiHelpers.Show_toast2("Using Z-Offset for current session, homing printer",4000)
 			End If
+			B4XPages.MainPage.Send_Gcode("M211 S1") '--- turn on software end stops
 			mainObj.Send_Gcode("G28")
+			
 			
 	End Select
 
-
+	
 	Close_Me '--- out of here, exit wizard
 	Return
 	

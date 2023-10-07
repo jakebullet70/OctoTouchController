@@ -510,8 +510,7 @@ Public Sub TurnOnOff_MainTmr(EnableDisable As Boolean)
 End Sub
 
 Public Sub TurnOnOff_FilesCheckChangeTmr(EnableDisable As Boolean)
-	If config.logFILE_EVENTS Then logMe.LogIt("file tmr on: " & EnableDisable,mModule)
-	If config.logTIMER_EVENTS Then logMe.LogIt("file tmr on: " & EnableDisable,mModule)
+	If config.logFILE_EVENTS Or config.logTIMER_EVENTS Then logMe.LogIt("file tmr on: " & EnableDisable,mModule)
 	tmrFilesCheckChange.Enabled = EnableDisable
 End Sub
 

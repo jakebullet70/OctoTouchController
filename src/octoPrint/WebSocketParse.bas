@@ -81,7 +81,14 @@ Public Sub Event_Parse(msg As String)
 			'{"event": {"type": "ZChange", "payload": {"new": 5.0, "old": null}}}
 			Dim new As Double = payload.Get("new")
 			Dim old As String = payload.Get("old")
-			outMsg = $"** Old Z=${old} / New Z=${new} **"$
+			new = Round2(new,3)
+			If IsNumber(old) Then
+				old = Round2(old,3)
+			Else
+				old = "???"
+			End If
+			
+			outMsg = $"* Old Z=${old} / New Z=${new} *"$
 			
 			
 	End Select

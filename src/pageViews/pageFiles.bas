@@ -68,7 +68,9 @@ public Sub Set_focus()
 		Sleep(500)
 	Else
 		'--- 1st showing of tab page
-		If config.logFILE_EVENTS Then logMe.LogIt(firstRun,mModule)
+		If config.logFILE_EVENTS Then 
+			logMe.LogIt2(firstRun,mModule,"Set_focus")
+		End If
 		If clvFiles.Size > 0 Then 
 			Show1stFile
 		End If
@@ -151,7 +153,7 @@ Private Sub BuildGUI
 	lblBusy.Visible = True
 	lblBusy.SetColorAndBorder(clrTheme.BackgroundHeader,1dip,clrTheme.txtNormal,8dip)
 	
-	pnlPortraitDivide.SetColorAndBorder(clrTheme.BackgroundHeader,2dip,clrTheme.BackgroundHeader,8dip)
+	pnlPortraitDivide.SetColorAndBorder(clrTheme.txtNormal,2dip,clrTheme.txtNormal,8dip)
 	
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized And mMainObj.oMasterController.gMapOctoFilesList.Size > 0 Then
 		Build_ListViewFileList
@@ -329,6 +331,7 @@ End Sub
 Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
+	'Dim InSub As String = "clvFiles_ItemClick"
 	
 	If Value = Null Then
 		clvLastIndexClicked = NO_SELECTION
@@ -360,7 +363,9 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 		End If
 		'Log("clvFiles_ItemClick sub")
 		
-		If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & mCurrentFileInfo.myThumbnail_filename_disk,mModule)
+		If config.logFILE_EVENTS Then 
+			logMe.LogIt("downloading missing thumbnail file; " & mCurrentFileInfo.myThumbnail_filename_disk,mModule)
+		End If
 		
 		Wait For (mMainObj.oMasterController.cn.Download_AndSaveFile( _
 			$"http://${mMainObj.oMasterController.cn.gIP}:${mMainObj.oMasterController.cn.gPort}/"$ & mCurrentFileInfo.Thumbnail, _

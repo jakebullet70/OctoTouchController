@@ -80,7 +80,8 @@ Private Sub Build_GUI
 																btnXYright,btnXYleft,btnXYhome,btnXYforward,btnXYback, _
 																btnZup,btnZhome,btnZdown,btnMoveMM0,btnMoveMM1,btnMoveMM2,btnMoveMM3))
 	
-	If guiHelpers.gScreenSizeAprox < 4.4 Then
+	'Log(guiHelpers.gScreenSizeAprox)
+	If guiHelpers.gScreenSizeAprox < 5.1 Then
 		Dim bs As Float = btnExtrude.TextSize - 2
 		guiHelpers.SetTextSize(Array As Button(btnRetract,btnMOff,btnExtrude),bs)
 	End If

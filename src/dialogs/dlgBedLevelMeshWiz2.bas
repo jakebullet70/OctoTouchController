@@ -11,7 +11,7 @@ Version=11.8
 Sub Class_Globals
 	
 	Private Const mModule As String = "dlgBedLevelMeshWiz"' 'ignore
-	Private mainObj As B4XMainPage'ignore
+	Private mOBJ As B4XMainPage'ignore
 	Private oWS As OctoWebSocket
 	Private xui As XUI
 	
@@ -53,12 +53,12 @@ End Sub
 
 Public Sub Initialize(p As Panel,mode As String) As Object
 	
-	mainObj = B4XPages.MainPage
+	mOBJ = B4XPages.MainPage
 	p.RemoveAllViews
 	parent = p
 	pMode = mode
 	oBeepMe.Initialize
-	oWS = B4XPages.MainPage.oMasterController.oWS
+	oWS = mOBJ.oMasterController.oWS
 	Return Me
 
 End Sub
@@ -96,8 +96,8 @@ Public Sub Show(headerTxt As String)
 	tmrHeaterOnOff.Enabled = True
 	
 	If oc.Klippy Then
-		B4XPages.MainPage.oMasterController.oWS.pParserWO.RaiseEventMod = Me
-		B4XPages.MainPage.oMasterController.oWS.pParserWO.RaiseEventEvent = "rec_text"
+		mOBJ.oMasterController.oWS.pParserWO.RaiseEventMod = Me
+		mOBJ.oMasterController.oWS.pParserWO.RaiseEventEvent = "rec_text"
 	End If
 	
 End Sub
@@ -111,9 +111,9 @@ End Sub
 Public Sub Close_Me  '--- class method, also called from android back btn
 	'--- out of here!
 	If oc.Klippy Then
-		B4XPages.MainPage.oMasterController.oWS.pParserWO.ResetRaiseEvent
+		mOBJ.oMasterController.oWS.pParserWO.ResetRaiseEvent
 		If mInProbeMode Then 
-			mainObj.Send_Gcode(oc.cKLIPPY_ABORT)
+			mOBJ.Send_Gcode(oc.cKLIPPY_ABORT)
 		End If
 	Else '--- marlin
 		
@@ -129,7 +129,7 @@ Public Sub Close_Me  '--- class method, also called from android back btn
 		Log(LastException)
 	End Try
 	parent.RemoveAllViews
-	'B4XPages.MainPage.pObjWizards=Null
+	'mOBJ.pObjWizards=Null
 End Sub
 
 Private Sub btnPreHeat_Click
@@ -214,21 +214,21 @@ Private Sub btnStop_Click
 	guiHelpers.Show_toast2("Canceling... Disabling Steppers...",3000)
 	
 	If oc.Klippy Then
-		mainObj.Send_Gcode(oc.cKLIPPY_ABORT)
-		mainObj.Send_Gcode("M18") '--- disable steppers
+		mOBJ.Send_Gcode(oc.cKLIPPY_ABORT)
+		mOBJ.Send_Gcode("M18") '--- disable steppers
 	Else '--- Marlin
 		oWS.pParserWO.EventRemove("ZChange")
 		oWS.pParserWO.MsgsRemove("M851 ") '--- just in case the event msg is still there
 		If mOldMarlinZ < -500 Then
 			Log("invalid oldMarlinZ")
-			B4XPages.MainPage.Send_Gcode($"M501"$) '--- reset Z back to original
+			mOBJ.Send_Gcode($"M501"$) '--- reset Z back to original
 		Else
 			Log("good oldMarlinZ")
-			B4XPages.MainPage.Send_Gcode($"M851 Z${Round2(mOldMarlinZ,2)}"$) '--- reset Z back to original
+			mOBJ.Send_Gcode($"M851 Z${Round2(mOldMarlinZ,2)}"$) '--- reset Z back to original
 		End If
-		mainObj.Send_Gcode("M18") '--- disable steppers
-		B4XPages.MainPage.Send_Gcode("G90") '--- absolute position
-		B4XPages.MainPage.Send_Gcode("M211 S1") '--- turn on software end stops
+		mOBJ.Send_Gcode("M18") '--- disable steppers
+		mOBJ.Send_Gcode("G90") '--- absolute position
+		mOBJ.Send_Gcode("M211 S1") '--- turn on software end stops
 	End If
 	ShowZinfo("Just hanging out and waiting...")
 	mInProbeMode = False
@@ -258,21 +258,21 @@ Private Sub btnStart_Click
 		#region "KLIPPY"	
 		If oc.Klippy Then '--------------------Klipper firmware
 			
-			mainObj.Send_Gcode("G28")
+			mOBJ.Send_Gcode("G28")
 			Sleep(1000)
 			
 			'--- what are we doing?
 			If pMode = ppMANUAL_MESH Then
 				
 				guiHelpers.Show_toast2("Starting manual mesh Z probe...",2500)
-				B4XPages.MainPage.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
+				mOBJ.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
 				
 			Else '--- Z OFFSET time!
 				
 				guiHelpers.Show_toast2("Setting up for Z Offset...",2500)
-				mainObj.Send_Gcode($"G1 Z5 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F4000"$)
+				mOBJ.Send_Gcode($"G1 Z5 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F4000"$)
 				Sleep(500)
-				B4XPages.MainPage.Send_Gcode("MANUAL_PROBE")
+				mOBJ.Send_Gcode("MANUAL_PROBE")
 				
 			End If
 			#end region
@@ -312,11 +312,11 @@ Private Sub btnStart_Click
 '				Sleep(400)
 				
 				'https://www.3dprintbeast.com/marlin-z-offset/
-				oWS.pParserWO.MsgsAdd("M851 ",Me,"get_z_offset")
+				oWS.pParserWO.MsgsAdd("M851 ",Me,"parse_z_offset_msg")
 				oWS.setThrottle("1") : Sleep(1500)
 				'oWS.bLastMessage = True
 				mOldMarlinZ = -999
-				B4XPages.MainPage.Send_Gcode("M851") : Sleep(1500)
+				mOBJ.Send_Gcode("M851") : Sleep(1500)
 				Do While mOldMarlinZ = -999
 					Sleep(0)
 				Loop
@@ -325,17 +325,17 @@ Private Sub btnStart_Click
 				
 				
 				'oWS.bLastMessage = False
-				'fileHelpers.WriteTxt2SharedFolder("out.txt",B4XPages.MainPage.oMasterController.oWS.mlastMsg)
+				'fileHelpers.WriteTxt2SharedFolder("out.txt",mOBJ.oMasterController.oWS.mlastMsg)
 					
 								
 				oWS.pParserWO.EventAdd("ZChange",Me,"rec_text")
 				'mOldMarlinZ = 0.00
 				mCurrentMarlinZ = 8.00
 				
-				B4XPages.MainPage.Send_Gcode("G90") '--- absolute position
-				B4XPages.MainPage.Send_Gcode("M851 Z0.0") '--- reset Z
+				mOBJ.Send_Gcode("G90") '--- absolute position
+				mOBJ.Send_Gcode("M851 Z0.0") '--- reset Z
 				Sleep(1000)
-				mainObj.Send_Gcode("G28")
+				mOBJ.Send_Gcode("G28")
 				Sleep(1000)
 				
 				guiHelpers.Show_toast2("Setting up for Z Offset...",2900)
@@ -346,9 +346,9 @@ Private Sub btnStart_Click
 '				End If
 				
 
-				B4XPages.MainPage.Send_Gcode("M211 S0") '--- turn off software end stops
-				B4XPages.MainPage.Send_Gcode($"G1 Z8 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F4000"$)
-				'B4XPages.MainPage.Send_Gcode("G91") '--- back to relitive position
+				mOBJ.Send_Gcode("M211 S0") '--- turn off software end stops
+				mOBJ.Send_Gcode($"G1 Z8 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F4000"$)
+				'mOBJ.Send_Gcode("G91") '--- back to relitive position
 				btn1.Text = "DONE"
 				btn2.Visible = True
 				btnClose.Visible = False
@@ -364,7 +364,7 @@ Private Sub btnStart_Click
 		If oc.Klippy Then
 			
 			'--- same for Z-Offset or Manual mesh
-			mainObj.Send_Gcode(oc.cKLIPPY_ACCEPT)
+			mOBJ.Send_Gcode(oc.cKLIPPY_ACCEPT)
 			
 		Else '-------------------- Marlin firmware
 			
@@ -375,8 +375,8 @@ Private Sub btnStart_Click
 			Else '--- Z OFFSET time! - all done!
 				
 				'https://3dprinting.stackexchange.com/questions/9820/specifying-z-offset-in-marlin-firmware
-				B4XPages.MainPage.Send_Gcode($"M851 Z${mCurrentMarlinZ}"$)
-				B4XPages.MainPage.Send_Gcode("G91")  '--- absolute position
+				mOBJ.Send_Gcode($"M851 Z${mCurrentMarlinZ}"$)
+				mOBJ.Send_Gcode("G91")  '--- absolute position
 				ProcessMeshComplete
 			
 			End If
@@ -387,7 +387,7 @@ Private Sub btnStart_Click
 	
 End Sub
 
-Private Sub get_z_offset(txt As String) 
+Private Sub parse_z_offset_msg(txt As String)
 	
 	'--- called from 
 	mOldMarlinZ = -998
@@ -430,10 +430,10 @@ Private Sub btnUpDown_Click
 	
 	'--- 
 	If oc.Klippy Then
-		mainObj.Send_Gcode("TESTZ Z=" & nVal)
+		mOBJ.Send_Gcode("TESTZ Z=" & nVal)
 	Else '--- Marlin
 		mCurrentMarlinZ = Round2(mCurrentMarlinZ,2)
-		mainObj.Send_Gcode("G1 Z" & Round2(mCurrentMarlinZ,2))
+		mOBJ.Send_Gcode("G1 Z" & Round2(mCurrentMarlinZ,2))
 	End If
 	'btn.RequestFocus
 	'Log("btnUP-DN: " & msg)
@@ -552,12 +552,12 @@ End Sub
 
 Private Sub RestartAlreadyIn '--- Klippy ONLY
 	guiHelpers.Show_toast2("Manual Z probe already started: Restarting...",6500)
-	mainObj.Send_Gcode(oc.cKLIPPY_ABORT)
+	mOBJ.Send_Gcode(oc.cKLIPPY_ABORT)
 	Sleep(2000)
 	If pMode = ppMANUAL_MESH Then
-		mainObj.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
+		mOBJ.Send_Gcode("BED_MESH_CALIBRATE  METHOD=manual")
 	Else
-		B4XPages.MainPage.Send_Gcode("MANUAL_PROBE")
+		mOBJ.Send_Gcode("MANUAL_PROBE")
 	End If
 	Sleep(2000)
 	Return
@@ -586,12 +586,12 @@ Private Sub ProcessMeshComplete'ignore
 			Wait For (SavePrompt(m.ToString)) Complete (res As Int)
 			
 			If res = xui.DialogResponse_Positive Then
-				mainObj.Send_Gcode(oc.cKLIPPY_SAVE)
+				mOBJ.Send_Gcode(oc.cKLIPPY_SAVE)
 				guiHelpers.Show_toast2("Saving CONFIG and restarting printer",5200)
-				Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage.oMasterController,"tmrMain_Tick",800)
+				Main.tmrTimerCallSub.CallSubDelayedPlus(mOBJ.oMasterController,"tmrMain_Tick",800)
 			Else
 				guiHelpers.Show_toast2("Using Mesh for current session, homing printer",3000)
-				mainObj.Send_Gcode("G28")
+				mOBJ.Send_Gcode("G28")
 			End If
 			
 			
@@ -601,35 +601,35 @@ Private Sub ProcessMeshComplete'ignore
 			m.Append("restart the printer or CLOSE to just use the current offset")
 			Wait For (SavePrompt(m.ToString)) Complete (res As Int)
 			
-			'mainObj.Send_Gcode(oc.cKLIPPY_ACCEPT)  '--- has already been sent
+			'mOBJ.Send_Gcode(oc.cKLIPPY_ACCEPT)  '--- has already been sent
 			
 			If res = xui.DialogResponse_Positive Then
-				mainObj.Send_Gcode(oc.cKLIPPY_SAVE)
+				mOBJ.Send_Gcode(oc.cKLIPPY_SAVE)
 				guiHelpers.Show_toast2("Saving new Z-Offset and restarting printer",5200)
-				Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage.oMasterController,"tmrMain_Tick",800)
+				Main.tmrTimerCallSub.CallSubDelayedPlus(mOBJ.oMasterController,"tmrMain_Tick",800)
 			Else
 				guiHelpers.Show_toast2("Using Z-Offset for current session, homing printer",4000)
-				mainObj.Send_Gcode("G28")
+				mOBJ.Send_Gcode("G28")
 			End If
 
 		Case oc.Klippy = False And pMode = ppMANUAL_MESH
 			'--- when I get a marlin printer WITHOUT auto bed leveling I will add this in, Hard to justify spending money in the middle of a war
 						
 		Case oc.Klippy = False And pMode <> ppMANUAL_MESH '--- Z-Offset
-			B4XPages.MainPage.oMasterController.oWS.pParserWO.EventRemove("ZChange")
+			mOBJ.oMasterController.oWS.pParserWO.EventRemove("ZChange")
 			m.Append("New Z-Offset will be used for the current session.")
 			m.Append("Touch SAVE to update your printers the EEPROM ")
 			m.Append("or CLOSE to just use the current offset.")
 			Wait For (SavePrompt(m.ToString)) Complete (res As Int)
 			
 			If res = xui.DialogResponse_Positive Then
-				mainObj.Send_Gcode("M500")
-				guiHelpers.Show_toast2("New Z-Offset saved to EEPROM, homing printer",4000)
+				mOBJ.Send_Gcode("M500")
+				guiHelpers.Show_toast2("New Z-Offset saved to EEPROM",4000)
 			Else
-				guiHelpers.Show_toast2("Using Z-Offset for current session, homing printer",4000)
+				guiHelpers.Show_toast2("Using Z-Offset for current session",4000)
 			End If
-			B4XPages.MainPage.Send_Gcode("M211 S1") '--- turn on software end stops
-			mainObj.Send_Gcode("G28")
+			mOBJ.Send_Gcode("M211 S1") '--- turn on software end stops
+			mOBJ.Send_Gcode("G28")
 			
 			
 	End Select
@@ -651,7 +651,7 @@ Private Sub SavePrompt(msg As String) As ResumableSub
 	Else
 		w = guiHelpers.gWidth * .8 : h = 310dip
 	End If
-	Dim mb2 As dlgMsgBox2 : mb2.Initialize(mainObj.Root,"Question", w, h,False)
+	Dim mb2 As dlgMsgBox2 : mb2.Initialize(mOBJ.Root,"Question", w, h,False)
 	mb2.NewTextSize = 24
 	Wait For (mb2.Show(msg,gblConst.MB_ICON_QUESTION, "SAVE","","CLOSE")) Complete (res As Int)
 	Return res

@@ -21,8 +21,7 @@ Sub Class_Globals
 	Public pEvents2Monitor As Map
 	Public pMsgs2Monitor As Map
 	Type tOctoEvents(CallbackObj As Object, CallbackSub As String)
-	
-	
+		
 End Sub
 
 
@@ -32,6 +31,8 @@ Public Sub Initialize
 	pMsgs2Monitor.Initialize
 End Sub
 
+
+'---------------------------------------------------------------------------------------
 Public Sub EventRemove(name As String)
 	If pEvents2Monitor.ContainsKey(name) Then
 		pEvents2Monitor.Remove(name)
@@ -44,6 +45,7 @@ Public Sub EventAdd(name As String,CallbackObj As Object, CallbackSub As String)
 	EventRemove(name)
 	pEvents2Monitor.Put(name,o)
 End Sub
+'---------------------------------------------------------------------------------------
 Public Sub MsgsRemove(name As String)
 	If pMsgs2Monitor.ContainsKey(name) Then
 		pMsgs2Monitor.Remove(name)
@@ -56,6 +58,10 @@ Public Sub MsgsAdd(name As String,CallbackObj As Object, CallbackSub As String)
 	MsgsRemove(name)
 	pMsgs2Monitor.Put(name,o)	
 End Sub
+'---------------------------------------------------------------------------------------
+
+
+
 
 '===========================================================================================
 '===========================================================================================

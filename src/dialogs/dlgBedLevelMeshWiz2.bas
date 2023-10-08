@@ -324,12 +324,11 @@ Private Sub btnStart_Click
 				oWS.setThrottle("90")
 				
 				
-				'oWS.bLastMessage = False
+				oWS.bLastMessage = False
 				'fileHelpers.WriteTxt2SharedFolder("out.txt",mOBJ.oMasterController.oWS.mlastMsg)
 					
 								
 				oWS.pParserWO.EventAdd("ZChange",Me,"rec_text")
-				'mOldMarlinZ = 0.00
 				mCurrentMarlinZ = 8.00
 				
 				mOBJ.Send_Gcode("G90") '--- absolute position
@@ -339,13 +338,6 @@ Private Sub btnStart_Click
 				Sleep(1000)
 				
 				guiHelpers.Show_toast2("Setting up for Z Offset...",2900)
-'				Wait For (GetMarlinZoffset) Complete (r As String)
-'				If strHelpers.IsNullOrEmpty(r) Then
-'					guiHelpers.Show_toast2("M851 - Invalid Z, Cannot continue.",5000)
-'					Return
-'				End If
-				
-
 				mOBJ.Send_Gcode("M211 S0") '--- turn off software end stops
 				mOBJ.Send_Gcode($"G1 Z8 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F4000"$)
 				'mOBJ.Send_Gcode("G91") '--- back to relitive position
@@ -389,7 +381,7 @@ End Sub
 
 Private Sub parse_z_offset_msg(txt As String)
 	
-	'--- called from 
+	'--- called from WebSocketParse, MsgEvent map
 	mOldMarlinZ = -998
 	Try
 		Dim z1 As Int = txt.IndexOf("Z")
@@ -441,7 +433,7 @@ End Sub
 
 
 #Region "SOCKET EVENT CALLBACK"
-'--- this is recieved as a callback from the octoprint socket
+'--- this is recieved as a callback from the octoprint socket - generic
 Public Sub Rec_Text(txt As String)
 	If txt.Contains(CRLF) Then
 		Dim cd() As String = Regex.Split(CRLF, txt)
@@ -468,7 +460,7 @@ Private Sub Rec_Text2(txt As String)
 				
 				Case txt.Contains("y in a manual Z probe")
 					'--- just started probe mode but are already in it so cancel and restart
-					RestartAlreadyIn
+					RestartAlreadyIn_klippy
 					
 				Case txt.Contains("g manual Z probe")
 					
@@ -500,7 +492,7 @@ Private Sub Rec_Text2(txt As String)
 			Select Case True
 				
 				Case txt.Contains("Already in a manual Z p")
-					RestartAlreadyIn
+					RestartAlreadyIn_klippy
 					
 				Case txt.Contains("g manual Z probe")
 					btn1.Text = "DONE"
@@ -550,7 +542,7 @@ Private Sub ProcessMarlinMoveMsg(msg As String)
 		
 End Sub
 
-Private Sub RestartAlreadyIn '--- Klippy ONLY
+Private Sub RestartAlreadyIn_klippy '--- Klippy ONLY
 	guiHelpers.Show_toast2("Manual Z probe already started: Restarting...",6500)
 	mOBJ.Send_Gcode(oc.cKLIPPY_ABORT)
 	Sleep(2000)

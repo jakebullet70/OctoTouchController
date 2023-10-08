@@ -124,11 +124,11 @@ Public Sub Connect() As ResumableSub
 	'--- set subscriptions
 	Dim subscribe As String = $"{"subscribe": {
 				  "state": {
-				      "logs": false,
-				      "messages": true},
+			      "logs": false,
+			      "messages": true},
 			      "events": true,
 				  "plugins": ["OctoKlipper","klipper"]
-					  }}"$
+				  }}"$
 	
 	
 	
@@ -175,7 +175,6 @@ Private Sub ws_TextMessage(Message As String)
 	If bLastMessage Then
 		mlastMsg = mlastMsg & Message & CRLF
 	End If
-		
 	Log("~"&Message)
 	#end if
 	
@@ -200,7 +199,7 @@ Private Sub ws_TextMessage(Message As String)
 		Return
 	End If
 	
-	If pParserWO.pMsgs2Monitor.Size <> 0 Then
+	If pParserWO.pMsgs2Monitor.Size <> 0 Then '--- msg returned from the terminal
 		CallSub2(pParserWO,"Msg_Parse",Message)
 	End If
 	

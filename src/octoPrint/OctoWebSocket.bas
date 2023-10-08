@@ -22,6 +22,9 @@ Sub Class_Globals
 	Public subscribe As String = $"{"subscribe": {"plugins": ["klipper"]  }}"$
 	
 	Private isConnecting As Boolean = False
+	Public mlastMsg As String
+	Public bLastMessage As Boolean = False
+	
 End Sub
 
 '#Event: RecievedText
@@ -119,20 +122,22 @@ Public Sub Connect() As ResumableSub
 	Log("wb init end")
 	
 	'--- set subscriptions
-'	Dim subscribe As String = $"{"subscribe": {
-'    "state": {
-'      "logs": "^Recv: Cap",
-'      "messages": false},
-'    "events": true,
-'    "plugins": ["klipper"]}
-'	}"$
+	Dim subscribe As String = $"{"subscribe": {
+				  "state": {
+				      "logs": false,
+				      "messages": true},
+			      "events": true,
+				  "plugins": ["OctoKlipper","klipper"]
+					  }}"$
+	
 	
 	
 	'Log(subscribe.Replace(CRLF," "))
-	'Send(subscribe)
+	Send(subscribe)
 	
-''	--- Set the AUTH And start socket events
-''	Wait For (Passive_Login) Complete(i As Boolean)
+'	--- Set the AUTH And start socket events
+	Wait For (Passive_Login) Complete(i As Boolean)
+	Log("Passive login:" & i.As(String))
 		
 	'--- A value of 2 will set the rate limit to maximally one message every 1s, 3 to maximally one message every 1.5s and so on.
 	setThrottle("90") '--- this is very inacurate
@@ -167,7 +172,11 @@ End Sub
 Private Sub ws_TextMessage(Message As String)
 	
 	#if debug
-	Log(Message)
+	If bLastMessage Then
+		mlastMsg = mlastMsg & Message & CRLF
+	End If
+		
+	Log("~"&Message)
 	#end if
 	
 	If oc.Klippy And Message.StartsWith($"{"plugin": {"plugin": "klipper""$) Then
@@ -180,7 +189,7 @@ Private Sub ws_TextMessage(Message As String)
 		Return
 	End If
 	
-	If Message.StartsWith($"{"event": {""$) Then
+	If Message.StartsWith($"{"event": {""$) And pParserWO.pEvents2Monitor.Size <> 0 Then
 		CallSub2(pParserWO,"Event_Parse",Message)
 		Return
 	End If
@@ -191,6 +200,9 @@ Private Sub ws_TextMessage(Message As String)
 		Return
 	End If
 	
+	If pParserWO.pMsgs2Monitor.Size <> 0 Then
+		CallSub2(pParserWO,"Msg_Parse",Message)
+	End If
 	
 End Sub
 
@@ -221,7 +233,10 @@ Private Sub ws_Closed (Reason As String)
 		logMe.LogIt2("!!!WebSockets protocol violation -- Octoprint needs to be restarted!!!",mModule,InSub)
 		guiHelpers.Show_toast2("WebSockets protocol violation. Restart Octoprint",15000)
 		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)
+		wSocket.Close
+		
 	Else
+		If Main.isAppClosing Then Return
 		Log("Socket Connect err???: " & pClosedReason)
 		guiHelpers.Show_toast2("Restart Octoprint: Odd error: " & pClosedReason ,15000)
 		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)

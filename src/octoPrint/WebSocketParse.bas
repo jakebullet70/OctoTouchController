@@ -19,6 +19,7 @@ Sub Class_Globals
 	Public RaiseEventMod As Object = Null
 	Public RaiseEventEvent As String = ""
 	Public pEvents2Monitor As Map
+	Public pMsgs2Monitor As Map
 	Type tOctoEvents(CallbackObj As Object, CallbackSub As String)
 	
 	
@@ -28,6 +29,7 @@ End Sub
 
 Public Sub Initialize
 	pEvents2Monitor.Initialize
+	pMsgs2Monitor.Initialize
 End Sub
 
 Public Sub EventRemove(name As String)
@@ -40,18 +42,56 @@ Public Sub EventAdd(name As String,CallbackObj As Object, CallbackSub As String)
 	o.CallbackObj = CallbackObj
 	o.CallbackSub = CallbackSub
 	EventRemove(name)
-	pEvents2Monitor.Put(name,o)	
+	pEvents2Monitor.Put(name,o)
+End Sub
+Public Sub MsgsRemove(name As String)
+	If pMsgs2Monitor.ContainsKey(name) Then
+		pMsgs2Monitor.Remove(name)
+	End If
+End Sub
+Public Sub MsgsAdd(name As String,CallbackObj As Object, CallbackSub As String)
+	Dim o As tOctoEvents : o.Initialize
+	o.CallbackObj = CallbackObj
+	o.CallbackSub = CallbackSub
+	MsgsRemove(name)
+	pMsgs2Monitor.Put(name,o)	
 End Sub
 
-
 '===========================================================================================
 '===========================================================================================
 '===========================================================================================
 
+'--- Generic event handler
 Public Sub ResetRaiseEvent
 	RaiseEventEvent = ""
 	RaiseEventMod = Null
 End Sub
+
+
+
+Public Sub Msg_Parse(msg As String)
+	
+	'Log(msg)
+	
+	Dim parser As JSONParser : parser.Initialize(msg)
+	Dim root As Map = parser.NextObject
+	Dim current As Map = root.Get("current")
+	Dim messages As List = current.Get("messages")
+	
+	For Each msgkey As String In pMsgs2Monitor.keys
+		For Each colmessages As String In messages
+			If colmessages.Contains(msgkey) Then
+				Dim o As tOctoEvents = pMsgs2Monitor.Get(msgkey) 
+				If SubExists(o.CallbackObj,o.CallbackSub) Then
+					CallSubDelayed2(o.CallbackObj,o.CallbackSub,colmessages)
+				End If
+			End If
+		Next
+	Next
+	
+End Sub
+
+
 
 
 Public Sub Event_Parse(msg As String)
@@ -165,9 +205,70 @@ Public Sub Klippy_Parse(msg As String)
 						guiHelpers.Show_toast2(payload.Replace(CRLF,"").Replace("[","{").Replace("]","}"),3500)
 					End If
 				Catch
-					Log(LastException)
-				End Try
+				Log(LastException)
+			End Try
 	End Select
 
 		
 End Sub
+
+
+
+
+
+
+'Private Sub ReturnMsg(txt As String) As String
+'	Dim parser As JSONParser : parser.Initialize(txt)
+'	Dim root As Map = parser.NextObject
+'	Dim current As Map = root.Get("current")
+'''	Dim busyFiles As List = current.Get("busyFiles")
+'''	Dim markings As List = current.Get("markings")
+'''	Dim offsets As Map = current.Get("offsets")
+'''	Dim progress As Map = current.Get("progress")
+'''	Dim printTimeLeft As String = progress.Get("printTimeLeft")
+'''	Dim completion As String = progress.Get("completion")
+'''	Dim filepos As String = progress.Get("filepos")
+'''	Dim printTimeOrigin As String = progress.Get("printTimeOrigin")
+'''	Dim printTime As String = progress.Get("printTime")
+'	Dim messages As List = current.Get("messages")
+'	Return strHelpers.Join("!!!",messages)
+''	For Each colmessages As String In messages
+''	Next
+''	Dim currentZ As String = current.Get("currentZ")
+''	Dim serverTime As Double = current.Get("serverTime")
+''	Dim state As Map = current.Get("state")
+''	Dim flags As Map = state.Get("flags")
+''	Dim finishing As String = flags.Get("finishing")
+''	Dim paused As String = flags.Get("paused")
+''	Dim pausing As String = flags.Get("pausing")
+''	Dim resuming As String = flags.Get("resuming")
+''	Dim ready As String = flags.Get("ready")
+''	Dim sdReady As String = flags.Get("sdReady")
+''	Dim operational As String = flags.Get("operational")
+''	Dim closedOrError As String = flags.Get("closedOrError")
+''	Dim error As String = flags.Get("error")
+''	Dim cancelling As String = flags.Get("cancelling")
+''	Dim printing As String = flags.Get("printing")
+''	Dim text As String = state.Get("text")
+''	Dim error As String = state.Get("error")
+''	Dim resends As Map = current.Get("resends")
+''	Dim count As Int = resends.Get("count")
+''	Dim transmitted As Int = resends.Get("transmitted")
+''	Dim ratio As Int = resends.Get("ratio")
+''	Dim job As Map = current.Get("job")
+''	Dim File As Map = job.Get("file")
+''	Dim date As String = File.Get("date")
+''	Dim path As String = File.Get("path")
+''	Dim size As String = File.Get("size")
+''	Dim origin As String = File.Get("origin")
+''	Dim name As String = File.Get("name")
+''	Dim lastPrintTime As String = job.Get("lastPrintTime")
+''	Dim estimatedPrintTime As String = job.Get("estimatedPrintTime")
+''	Dim filament As Map = job.Get("filament")
+''	Dim volume As String = filament.Get("volume")
+''	Dim length As String = filament.Get("length")
+''	Dim user As String = job.Get("user")
+''	Dim temps As List = current.Get("temps")
+''	Dim logs As List = current.Get("logs")
+'
+'End Sub

@@ -12,6 +12,7 @@ Sub Class_Globals
 	
 	Private Const mModule As String = "dlgBedLevelMeshWiz"' 'ignore
 	Private mainObj As B4XMainPage'ignore
+	Private oWS As OctoWebSocket
 	Private xui As XUI
 	
 '	Private zAct As String = "?"
@@ -39,8 +40,14 @@ Sub Class_Globals
 	Private oBeepMe As SoundsBeeps
 	
 	Private btnDst5,btnDst4,btnDst3,btnDst2,btnDst1 As B4XView
+	
+	
 	Private mCurrentMarlinZ As Float = 0
-	Private mOldMarlinZ As Float = 0
+	Private mOldMarlinZ As Float = -999
+	
+	
+	
+	
 	
 End Sub
 
@@ -51,6 +58,7 @@ Public Sub Initialize(p As Panel,mode As String) As Object
 	parent = p
 	pMode = mode
 	oBeepMe.Initialize
+	oWS = B4XPages.MainPage.oMasterController.oWS
 	Return Me
 
 End Sub
@@ -209,15 +217,22 @@ Private Sub btnStop_Click
 		mainObj.Send_Gcode(oc.cKLIPPY_ABORT)
 		mainObj.Send_Gcode("M18") '--- disable steppers
 	Else '--- Marlin
-		B4XPages.MainPage.oMasterController.oWS.pParserWO.EventRemove("ZChange")
-		'B4XPages.MainPage.Send_Gcode($"M851 Z${mOldMarlinZ}"$) '--- reset Z back to original
-		B4XPages.MainPage.Send_Gcode($"M501"$) '--- reset Z back to original
+		oWS.pParserWO.EventRemove("ZChange")
+		oWS.pParserWO.MsgsRemove("M851 ") '--- just in case the event msg is still there
+		If mOldMarlinZ < -500 Then
+			Log("invalid oldMarlinZ")
+			B4XPages.MainPage.Send_Gcode($"M501"$) '--- reset Z back to original
+		Else
+			Log("good oldMarlinZ")
+			B4XPages.MainPage.Send_Gcode($"M851 Z${Round2(mOldMarlinZ,2)}"$) '--- reset Z back to original
+		End If
 		mainObj.Send_Gcode("M18") '--- disable steppers
 		B4XPages.MainPage.Send_Gcode("G90") '--- absolute position
 		B4XPages.MainPage.Send_Gcode("M211 S1") '--- turn on software end stops
 	End If
 	ShowZinfo("Just hanging out and waiting...")
 	mInProbeMode = False
+	
 	
 End Sub
 
@@ -255,7 +270,7 @@ Private Sub btnStart_Click
 			Else '--- Z OFFSET time!
 				
 				guiHelpers.Show_toast2("Setting up for Z Offset...",2500)
-				B4XPages.MainPage.Send_Gcode($"G1 Z5 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F4000"$)
+				mainObj.Send_Gcode($"G1 Z5 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F4000"$)
 				Sleep(500)
 				B4XPages.MainPage.Send_Gcode("MANUAL_PROBE")
 				
@@ -274,9 +289,47 @@ Private Sub btnStart_Click
 					Log("oc.PrinterWidth = 0")
 				End If
 				
+				'"^Recv:"
+				
+'				'--- set subscriptions
+'				Dim subscribe As String = $"{"subscribe": {
+'				    "state": {
+'				      "logs": false,
+'				      "messages": true,
+'					  "resends": false,
+'					  "job": false,
+'					  "temps": false,
+'					  "state": false,
+'					  "progress": false,
+'					  "flags": false},
+'				    "events": true,
+'				    "plugins": ["OctoKlipper","klipper"]}
+'					}"$
+'	
+'	
+'				'Log(subscribe.Replace(CRLF," "))
+'				oWS.Send(subscribe)
+'				Sleep(400)
+				
 				'https://www.3dprintbeast.com/marlin-z-offset/
-				B4XPages.MainPage.oMasterController.oWS.pParserWO.EventAdd("ZChange",Me,"rec_text")
-				mOldMarlinZ = 0.00
+				oWS.pParserWO.MsgsAdd("M851 ",Me,"get_z_offset")
+				oWS.setThrottle("1") : Sleep(1500)
+				'oWS.bLastMessage = True
+				mOldMarlinZ = -999
+				B4XPages.MainPage.Send_Gcode("M851") : Sleep(1500)
+				Do While mOldMarlinZ = -999
+					Sleep(0)
+				Loop
+				
+				oWS.setThrottle("90")
+				
+				
+				'oWS.bLastMessage = False
+				'fileHelpers.WriteTxt2SharedFolder("out.txt",B4XPages.MainPage.oMasterController.oWS.mlastMsg)
+					
+								
+				oWS.pParserWO.EventAdd("ZChange",Me,"rec_text")
+				'mOldMarlinZ = 0.00
 				mCurrentMarlinZ = 8.00
 				
 				B4XPages.MainPage.Send_Gcode("G90") '--- absolute position
@@ -300,6 +353,7 @@ Private Sub btnStart_Click
 				btn2.Visible = True
 				btnClose.Visible = False
 				btnPreheat.Visible = False
+				'oWS.pParserWO.MsgsRemove("M851")
 				
 			End If
 		End If
@@ -333,20 +387,22 @@ Private Sub btnStart_Click
 	
 End Sub
 
-Private Sub GetMarlinZoffset() As ResumableSub
+Private Sub get_z_offset(txt As String) 
 	
-	Dim ret As String = ""
-	Wait For (B4XPages.MainPage.oMasterController.CN.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","M503"))) Complete (r As String)
-	If Not (strHelpers.IsNullOrEmpty(r)) Then
-		Dim z1 As Int = r.IndexOf("z")
-		Dim z2 As Int = r.IndexOf(";")
-		ret = r.SubString2(z1+1,z2-1).Trim	
+	'--- called from 
+	mOldMarlinZ = -998
+	Try
+		Dim z1 As Int = txt.IndexOf("Z")
+		Dim z2 As Int = txt.IndexOf(";")
+		Dim ret As String = txt.SubString2(z1 + 1,z2 - 1).Trim
 		If IsNumber(ret) Then
-			mOldMarlinZ = ret.As(Float)
+			mOldMarlinZ = Round2(ret.As(Float),2)
 		End If
-	End If
-	
-	Return ret
+	Catch
+		Log(LastException)
+	End Try
+	oWS.pParserWO.MsgsRemove("M851 ") 
+
 End Sub
 
 
@@ -429,7 +485,7 @@ Private Sub Rec_Text2(txt As String)
 					ParseZInfo(txt)
 					
 				Case txt.Contains("Manual probe failed") '--- mostly happens when just hitting ACCEPT and not moving nozzle 1st
-					Probe_failed
+					Probe_failed_klippy
 					
 				Case txt.Contains("has been saved")
 					ShowZinfo("Process complete")
@@ -511,7 +567,7 @@ End Sub
 #end region
 
 
-Private Sub Probe_failed
+Private Sub Probe_failed_klippy
 	'--- mostly happens when just hitting ACCEPT and not moving nozzle 1st - KLIPPY only
 	ShowZinfo("probe failed...")
 	ProcessStop_GUI

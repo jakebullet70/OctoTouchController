@@ -213,13 +213,17 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	End If
 	
 	powerHelpers.ReleaseLocks
+	
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)
+	CallSub2(Main,"TurnOnOff_MainTmr",False)
+	Main.isAppClosing = True
+	guiHelpers.Show_toast("Shutting down...",2000)
+	oMasterController.oWS.wSocket.Close : Sleep(1500) '--- give sometime to close socket
 	
 	'--- Needed to turn on 'UserClosed' var in Main.Activity_Pause
 	'--- as 'back button' should turn it on but is not
 	B4XPages.GetNativeParent(Me).Finish 
 	
-	oMasterController.oWS.wSocket.Close
 	Return True '--- exit app
 	
 End Sub

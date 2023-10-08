@@ -271,11 +271,13 @@ Sub Process_Globals
 	Public kvs As KeyValueStore
 	Public db As InMemDB
 	Public Provider As FileProvider
+	Public isAppClosing as Boolean = false
 			
 	'--- timers need to be in 'Process_Globals'
 	Private tmrMain As Timer
 	Private tmrFilesCheckChange As Timer
 	Private tmrScreen As Timer
+	
 	
 End Sub
 

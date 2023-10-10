@@ -53,13 +53,7 @@ Public Sub getCN() As HttpOctoRestAPI
 	If oCN.IsInitialized = False Then  
 		GetConnectionPrinterStatus
 	End If
-	Try
-		Return oCN
-	Catch
-		Log(LastException)
-		Return Null
-	End Try
-	
+	Return oCN
 End Sub
 
 #Region "CLASS CRAP"
@@ -292,7 +286,7 @@ Private Sub GetConnectionPrinterStatus
 	
 	'--- called once on 1st start
 	If oCN.IsInitialized = False And oc.OctoIp <> "" Then
-		oCN.Initialize(oc.OctoIp ,oc.OctoPort,oc.OctoKey)
+		oCN.Initialize
 	End If
 	If oc.OctoIp = "" Then Return '--- trying to init without IP / port
 	
@@ -459,7 +453,7 @@ public Sub Download_ThumbnailAndCache2File(JobFileName As String,outFileName As 
 		
 		Dim link As String
 		''http://192.168.1.236:5003/plugin/prusaslicerthumbnails/thumbnail/asus_eee_pad_bracket_fixed (2).png
-		link  = $"http://${oCN.gIP}:${oCN.gPort}/"$ & JobFileName'oc.JobPrintThumbnail.SubString2(0,oc.JobPrintThumbnail.IndexOf("?"))
+		link  = $"http://${oc.OctoIp}:${oc.OctoPort}/"$ & JobFileName'oc.JobPrintThumbnail.SubString2(0,oc.JobPrintThumbnail.IndexOf("?"))
 		'Dim fname As String = gbl.BuildThumbnailTempFilename(gbl.GetFilenameFromHTTP(link))
 		oCN.Download_AndSaveFile(link,outFileName)
 		

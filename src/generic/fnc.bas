@@ -65,7 +65,7 @@ Public Sub ReadConnectionFile(cn As HttpOctoRestAPI) As Boolean
 	If oc.OctoIp = "" Then 
 		oc.IsConnectionValid = False
 	Else
-		cn.Initialize(oc.OctoIp ,oc.OctoPort,oc.OctoKey) 'octoAPIkey (MAIN GLOBAL key)
+		cn.Initialize 
 		oc.IsConnectionValid = True
 	End If
 

@@ -400,7 +400,7 @@ Public Sub LoadThumbNail
 			If config.logFILE_EVENTS Then logMe.LogIt("downloading missing thumbnail file; " & currentFileInfo.myThumbnail_filename_disk,mModule)
 		
 			Wait For (mMainObj.oMasterController.cn.Download_AndSaveFile( _
-					$"http://${mMainObj.oMasterController.cn.gIP}:${mMainObj.oMasterController.cn.gPort}/"$ & currentFileInfo.Thumbnail, _
+					$"http://${oc.OctoIp}:${oc.OctoPort}/"$ & currentFileInfo.Thumbnail, _
 					currentFileInfo.myThumbnail_filename_disk)) Complete (i As Object)
 					
 			'Sleep(2200)

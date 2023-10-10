@@ -139,21 +139,21 @@ End Sub
 '==========================================================
 
 Public Sub Restart()
-	oCN.PostRequest2($"${mapRestart.Get("resource") & $"?apikey=${oCN.mAPIkey}"$}"$,$"{"source": "core", "action": "restart"}"$)
+	oCN.PostRequest2($"${mapRestart.Get("resource") & $"?apikey=${oc.OctoKey}"$}"$,$"{"source": "core", "action": "restart"}"$)
 	guiHelpers.Show_toast("Restarting Octoprint... ",3500)
 	CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
 End Sub
 
 
 Public Sub Shutdown()
-	oCN.PostRequest2($"${mapShutdown.Get("resource") & $"?apikey=${oCN.mAPIkey}"$}"$,$"{"source": "core", "action": "shutdown"}"$)
+	oCN.PostRequest2($"${mapShutdown.Get("resource") & $"?apikey=${oc.OctoKey}"$}"$,$"{"source": "core", "action": "shutdown"}"$)
 	guiHelpers.Show_toast("Shutting down system... ",3500)
 	CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
 End Sub
 
 
 Public Sub Reboot()
-	oCN.PostRequest2($"${mapReboot.Get("resource") & $"?apikey=${oCN.mAPIkey}"$}"$,$"{"source": "core", "action": "reboot"}"$)
+	oCN.PostRequest2($"${mapReboot.Get("resource") & $"?apikey=${oc.OctoKey}"$}"$,$"{"source": "core", "action": "reboot"}"$)
 	guiHelpers.Show_toast("Rebooting system... ",3500)
 	CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
 End Sub

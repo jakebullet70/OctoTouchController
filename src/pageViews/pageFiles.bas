@@ -368,7 +368,7 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 		End If
 		
 		Wait For (mMainObj.oMasterController.cn.Download_AndSaveFile( _
-			$"http://${mMainObj.oMasterController.cn.gIP}:${mMainObj.oMasterController.cn.gPort}/"$ & mCurrentFileInfo.Thumbnail, _
+			$"http://${oc.OctoIp}:${oc.OctoPort}/"$ & mCurrentFileInfo.Thumbnail, _
 			mCurrentFileInfo.myThumbnail_filename_disk)) Complete (i As Object)
 			 
 		'Sleep(1800)

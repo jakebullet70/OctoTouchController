@@ -14,19 +14,19 @@ Sub Class_Globals
 	Private xui As XUI
 	Private Const mModule As String = "HttpOctoRestAPI" 'ignore
 	
-	Public mAPIkey As String
-	Public gPort As String
-	Public gIP As String
-	Public gWSocketPort As String
+'	Public mAPIkey As String
+'	Public gPort As String
+'	Public gIP As String
+'	Public gWSocketPort As String
 	
 End Sub
 
 
-Public Sub Initialize(octoIP As String, octoPort As String, octoAPIkey As String)
+Public Sub Initialize
 	
-	gIP = octoIP
-	mAPIkey = octoAPIkey
-	gPort = octoPort
+'	gIP = octoIP
+'	mAPIkey = octoAPIkey
+'	gPort = octoPort
 	
 	'--- debugging
 	'fileHelpers.WriteTxt2SharedFolder("octokey.txt",mAPIkey)
@@ -64,7 +64,7 @@ End Sub
 public Sub SendRequestGetInfo(octConst As String) As ResumableSub
 
 	Dim inSub As String = "SendRequestGetInfo"
-	Dim sAPI As String = $"http://${gIP}:${gPort}${octConst}?apikey=${mAPIkey}"$
+	Dim sAPI As String = $"http://${oc.OctoIp}:${oc.OctoPort}${octConst}?apikey=${oc.OctoKey}"$
 	
 	Dim j As HttpJob: j.Initialize("", Me)
 	Dim retStr As String = ""
@@ -103,7 +103,7 @@ Public Sub PostRequest(PostApiCmd As String) As ResumableSub
 	Dim restAPI, JsonDataMsg As String
 	restAPI = Regex.Split("!!",PostApiCmd)(0)
 	JsonDataMsg = Regex.Split("!!",PostApiCmd)(1)
-	Dim EndPoint As String = $"http://${gIP}:${gPort}${restAPI}?apikey=${mAPIkey}"$
+	Dim EndPoint As String = $"http://${oc.OctoIp}:${oc.OctoPort}${restAPI}?apikey=${oc.OctoKey}"$
 	Wait For (PostRequest2(EndPoint,JsonDataMsg)) Complete(r As String)
 	Return r
 	
@@ -260,7 +260,7 @@ End Sub
 public Sub DeleteRequest(DeleteApiCmd As String) As ResumableSub
 
 	Dim InSub As String = "DeleteRequest"
-	Dim sAPI As String = $"http://${gIP}:${gPort}${DeleteApiCmd}?apikey=${mAPIkey}"$
+	Dim sAPI As String = $"http://${oc.OctoIp}:${oc.OctoPort}${DeleteApiCmd}?apikey=${oc.OctoKey}"$
 	
 	Dim job As HttpJob : job.Initialize("", Me)
 	Dim retStr As String = ""

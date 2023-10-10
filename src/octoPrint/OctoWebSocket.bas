@@ -175,7 +175,7 @@ Private Sub ws_TextMessage(Message As String)
 	If bLastMessage Then
 		mlastMsg = mlastMsg & Message & CRLF
 	End If
-	Log("~"&Message)
+	'Log("~"&Message)
 	#end if
 	
 	If oc.Klippy And Message.StartsWith($"{"plugin": {"plugin": "klipper""$) Then

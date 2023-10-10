@@ -94,12 +94,12 @@ End Sub
 #Region "TIMERS"
 Public Sub tmrFilesCheckChange_Tick
 	
-	'--- check for added, deleted files
-	If SubExists(mainObj.oPageCurrent,"tmrFilesCheckChange_Tick") Then
-		CallSub(mainObj.oPageCurrent,"tmrFilesCheckChange_Tick")
-	Else
-		CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False) '--- turn off timer, not even on the right page
-	End If
+'	'--- check for added, deleted files
+'	If SubExists(mainObj.oPageCurrent,"tmrFilesCheckChange_Tick") Then
+'		CallSub(mainObj.oPageCurrent,"tmrFilesCheckChange_Tick")
+'	Else
+'		'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False) '--- turn off timer, not even on the right page
+'	End If
 
 End Sub
 

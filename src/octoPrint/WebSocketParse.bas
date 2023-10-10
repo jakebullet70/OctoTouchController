@@ -33,6 +33,7 @@ End Sub
 
 
 '---------------------------------------------------------------------------------------
+'--- tracks octo events
 Public Sub EventRemove(name As String)
 	If pEvents2Monitor.ContainsKey(name) Then
 		pEvents2Monitor.Remove(name)
@@ -45,63 +46,9 @@ Public Sub EventAdd(name As String,CallbackObj As Object, CallbackSub As String)
 	EventRemove(name)
 	pEvents2Monitor.Put(name,o)
 End Sub
-'---------------------------------------------------------------------------------------
-Public Sub MsgsRemove(name As String)
-	If pMsgs2Monitor.ContainsKey(name) Then
-		pMsgs2Monitor.Remove(name)
-	End If
-End Sub
-Public Sub MsgsAdd(name As String,CallbackObj As Object, CallbackSub As String)
-	Dim o As tOctoEvents : o.Initialize
-	o.CallbackObj = CallbackObj
-	o.CallbackSub = CallbackSub
-	MsgsRemove(name)
-	pMsgs2Monitor.Put(name,o)	
-End Sub
-'---------------------------------------------------------------------------------------
-
-
-
-
-'===========================================================================================
-'===========================================================================================
-'===========================================================================================
-
-'--- Generic event handler
-Public Sub ResetRaiseEvent
-	RaiseEventEvent = ""
-	RaiseEventMod = Null
-End Sub
-
-
-
-Public Sub Msg_Parse(msg As String)
-	
-	'Log(msg)
-	
-	Dim parser As JSONParser : parser.Initialize(msg)
-	Dim root As Map = parser.NextObject
-	Dim current As Map = root.Get("current")
-	Dim messages As List = current.Get("messages")
-	
-	For Each msgkey As String In pMsgs2Monitor.keys
-		For Each colmessages As String In messages
-			If colmessages.Contains(msgkey) Then
-				Dim o As tOctoEvents = pMsgs2Monitor.Get(msgkey) 
-				If SubExists(o.CallbackObj,o.CallbackSub) Then
-					CallSubDelayed2(o.CallbackObj,o.CallbackSub,colmessages)
-				End If
-			End If
-		Next
-	Next
-	
-End Sub
-
-
-
 
 Public Sub Event_Parse(msg As String)
-	Log(msg)
+	'Log(msg)
 	
 	Dim parser As JSONParser : parser.Initialize(msg)
 	
@@ -112,8 +59,8 @@ Public Sub Event_Parse(msg As String)
 	
 	If pEvents2Monitor.ContainsKey(evType) = False Then
 		#if debug
-		Log("*** pEvents2Monitor.ContainsKey(evType) = False")
-		Log("*** " & msg)
+		'Log("*** pEvents2Monitor.ContainsKey(evType) = False")
+		'Log("*** " & msg)
 		#end if
 		Return
 	End If
@@ -136,6 +83,13 @@ Public Sub Event_Parse(msg As String)
 			
 			outMsg = $"* Old Z=${old} / New Z=${new} *"$
 			
+		Case "MetadataAnalysisFinished"
+			fileHelpers.WriteTxt2SharedFolder("newfile.txt",msg)
+			outMsg = msg	
+			
+		Case "FileRemoved"
+			'fileHelpers.WriteTxt2SharedFolder("delfile.txt",msg)
+			outMsg = msg
 			
 	End Select
 	
@@ -146,24 +100,69 @@ Public Sub Event_Parse(msg As String)
 	
 End Sub
 
+'---------------------------------------------------------------------------------------
+
+
+
+'--- tracks returns of M GCode commands
+Public Sub MsgsRemove(name As String)
+	If pMsgs2Monitor.ContainsKey(name) Then
+		pMsgs2Monitor.Remove(name)
+	End If
+End Sub
+Public Sub MsgsAdd(name As String,CallbackObj As Object, CallbackSub As String)
+	Dim o As tOctoEvents : o.Initialize
+	o.CallbackObj = CallbackObj
+	o.CallbackSub = CallbackSub
+	MsgsRemove(name)
+	pMsgs2Monitor.Put(name,o)
+End Sub
+
+Public Sub Msgs_Parse(msg As String)
+	
+	'Log(msg)
+	
+	Dim parser As JSONParser : parser.Initialize(msg)
+	Dim root As Map = parser.NextObject
+	Dim current As Map = root.Get("current")
+	Dim messages As List = current.Get("messages")
+	
+	For Each msgkey As String In pMsgs2Monitor.keys
+		For Each colmessages As String In messages
+			If colmessages.Contains(msgkey) Then
+				Dim o As tOctoEvents = pMsgs2Monitor.Get(msgkey)
+				If SubExists(o.CallbackObj,o.CallbackSub) Then
+					CallSubDelayed2(o.CallbackObj,o.CallbackSub,colmessages)
+				End If
+			End If
+		Next
+	Next
+	
+End Sub
+'---------------------------------------------------------------------------------------
+
+
+
+
+'===========================================================================================
+'===========================================================================================
+'===========================================================================================
+
+'--- Generic event handler
+Public Sub ResetRaiseEvent
+	RaiseEventEvent = ""
+	RaiseEventMod = Null
+End Sub
+
+
+
+
+
 
 
 Public Sub Klippy_Parse(msg As String)
 	If config.logREST_API Then logMe.logit2("Klipper msg",mModule,"Klippy_Parse")
 	
-	'guiHelpers.Show_toast2("[stuff]",3500)
-	
-'	If msg.Contains("Move out of ") Then
-'		'{"plugin": {"plugin": "klipper", "data": {"time": "12:37:32", "type": "log", "subtype": "error", "title": " Move out of range: -3.000 0.000 0.000 [0.000]\n", "payload": " Move out of range: -3.000 0.000 0.000 [0.000]\n"}}}
-'		guiHelpers.Show_toast2("Movement out of range",3800)
-'		Return
-'	End If
-
-'	If msg.Contains("Must home ") Then
-'		'{"plugin": {"plugin": "klipper", "data": {"time": "12:51:47", "type": "log", "subtype": "error", "title": " Must home axis first: -2.000 0.000 1.000 [0.000]\n", "payload": " Must home axis first: -2.000 0.000 1.000 [0.000]\n"}}}
-'		guiHelpers.Show_toast2("Home printer first",3800)
-'		Return
-'	End If
 	
 	Dim parser As JSONParser : parser.Initialize(msg)
 	Dim root As Map = parser.NextObject

@@ -19,6 +19,30 @@ Public Sub Initialize
 
 End Sub
 
+Public Sub ExistsRemove(Module As Object, SubName As String) 
+	
+	Dim t As Timer = Exists(Module,SubName) 
+	If t <> Null Then 
+		t.Enabled = False
+		RunDelayed.Remove(t)
+	End If
+	
+End Sub
+Public Sub Exists(Module As Object, SubName As String) As Timer
+	
+	For Each t As Timer In RunDelayed.Keys
+		Dim dt As RunDelayedData = RunDelayed.Get(t)
+		If dt.SubName = SubName And dt.Module = Module Then
+			Log("tmr already here")
+			Return t
+		End If
+	Next
+	Return Null
+	
+End Sub
+
+
+
 'Similar to CallSubDelayed. This method allows you to set the delay (in milliseconds).
 'Note that the sub name must include an underscore if compiled with obfuscation enabled.
 Public Sub CallSubDelayedPlus(Module As Object, SubName As String, Delay As Int)

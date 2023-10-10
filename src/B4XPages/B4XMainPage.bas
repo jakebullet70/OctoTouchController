@@ -244,7 +244,7 @@ End Sub
 
 Private Sub B4XPage_Background
 	CallSub2(Main,"TurnOnOff_MainTmr",False)
-	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
+	'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	CallSub2(Main,"TurnOnOff_ScreenTmr",False)
 	Log("B4XPage_Background - timers off")
 End Sub
@@ -313,6 +313,8 @@ Private Sub TryPrinterConnection
 		If oc.IsConnectionValid Then
 			oMasterController.SetCallbackTargets(Me,"Update_Printer_Temps","Update_Printer_Status","Update_Printer_Btns")
 			oMasterController.Start
+			oMasterController.oWS.pParserWO.EventAdd("MetadataAnalysisFinished",Me,"ev_file_change")
+			oMasterController.oWS.pParserWO.EventAdd("FileRemoved",Me,"ev_file_del")
 			If Main.kvs.ContainsKey(gblConst.IS_OCTO_KLIPPY) = False Then
 				Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Is_OctoKlipper",800)
 			Else
@@ -400,7 +402,6 @@ Public Sub Update_Printer_Status
 	'lblStatus.TextSize = oldTxtSize
 	
 End Sub
-
 
 Public Sub Update_Printer_Btns
 	
@@ -722,7 +723,7 @@ Public Sub CallSetupErrorConnecting(connectedButError As Boolean)
 
 	'--- turn timers off
 	CallSub2(Main,"TurnOnOff_MainTmr",False)
-	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
+	'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	
 	'--- back to the main menu
 	If oPageCurrent <> oPageMenu Then Switch_Pages(gblConst.PAGE_MENU)
@@ -1286,6 +1287,43 @@ End Sub
 
 
 
+Private Sub ev_file_change(msg As String)
+	Log("ev_file_change")
+	If oPageFiles.IsInitialized = False Then Return
+	If oPageFiles <> oPageCurrent Then
+		oPageFiles.FileEvent = True
+	Else
+		Dim parser As JSONParser : parser.Initialize(msg)
+		Dim R1 As Map = parser.NextObject
+		Dim event As Map = R1.Get("event")
+		Dim etype As String = event.Get("type")
+		If etype = "MetadataAnalysisFinished" Then
+			Dim payload As Map = event.Get("payload")
+			Dim result As Map = payload.Get("result")
+			Dim analysisPending As String = result.Get("analysisPending")
+			If analysisPending = "true" Then 
+				logMe.LogDebug2("analysisPending=true","")
+				Return
+			End If
+		End If
+		If Main.tmrTimerCallSub.Exists(Me,"FilesCheckChange") <>  Null Then Return
+		'Main.tmrTimerCallSub.ExistsRemove(Me,"FilesCheckChange")
+		Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"FilesCheckChange",1200)
+	End If
+End Sub
+Private Sub ev_file_del(msg As String)
+	If oPageFiles.IsInitialized = False Then Return
+	If oPageFiles <> oPageCurrent Then
+		oPageFiles.FileEvent = True
+	Else
+		If Main.tmrTimerCallSub.Exists(Me,"FilesCheckChange") <>  Null Then Return
+		'Main.tmrTimerCallSub.ExistsRemove(Me,"FilesCheckChange")
+		Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"FilesCheckChange",1200)
+	End If
+End Sub
 
+Private Sub FilesCheckChange
+	oPageFiles.tmrFilesCheckChange
+End Sub
 
 

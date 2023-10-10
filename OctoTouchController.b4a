@@ -224,7 +224,7 @@ Version=12.5
 #Region  Project Attributes 
 	#ApplicationLabel: OctoTC
 	#VersionCode: 50
-	#VersionName: 2.0.0
+	#VersionName: 2.0.1
 	#SignKeyFile: ..\keystore\release.keystore
  	#SignKeyPassword: !!OctoTC!!
 	
@@ -271,11 +271,11 @@ Sub Process_Globals
 	Public kvs As KeyValueStore
 	Public db As InMemDB
 	Public Provider As FileProvider
-	Public isAppClosing as Boolean = false
+	Public isAppClosing As Boolean = False
 			
 	'--- timers need to be in 'Process_Globals'
 	Private tmrMain As Timer
-	Private tmrFilesCheckChange As Timer
+	'Private tmrFilesCheckChange As Timer
 	Private tmrScreen As Timer
 	
 	
@@ -317,15 +317,15 @@ Sub Activity_Create(FirstTime As Boolean) 'ignore
 	End If
 	
 	
-	#if release
-	Dim fcheck As Long = 3000
-	#else
-	Dim fcheck As Long = 8000
-	#End If
-	'--- TODO add 
-	If tmrFilesCheckChange.IsInitialized = False Then 
-		tmrFilesCheckChange.Initialize("tmrFilesCheckChange",fcheck) '--- printer files check change
-	End If
+'	#if release
+'	Dim fcheck As Long = 3000
+'	#else
+'	Dim fcheck As Long = 8000
+'	#End If
+'	'--- TODO add 
+'	If tmrFilesCheckChange.IsInitialized = False Then 
+'		tmrFilesCheckChange.Initialize("tmrFilesCheckChange",fcheck) '--- printer files check change
+'	End If
 		
 	
 	If tmrMain.IsInitialized = False Then 
@@ -437,7 +437,7 @@ End Sub
 
 Private Sub tmrFilesCheckChange_Tick
 	'--- when files page is in focus, check files
-	CallSub(B4XPages.MainPage.oMasterController,"tmrFilesCheckChange_Tick")
+	'CallSub(B4XPages.MainPage.oMasterController,"tmrFilesCheckChange_Tick")
 End Sub
 
 Private Sub tmrSplash_Tick
@@ -511,10 +511,10 @@ Public Sub TurnOnOff_MainTmr(EnableDisable As Boolean)
 	tmrMain.Enabled = EnableDisable
 End Sub
 
-Public Sub TurnOnOff_FilesCheckChangeTmr(EnableDisable As Boolean)
-	If config.logFILE_EVENTS Or config.logTIMER_EVENTS Then logMe.LogIt("file tmr on: " & EnableDisable,mModule)
-	tmrFilesCheckChange.Enabled = EnableDisable
-End Sub
+'Public Sub TurnOnOff_FilesCheckChangeTmr(EnableDisable As Boolean)
+'	If config.logFILE_EVENTS Or config.logTIMER_EVENTS Then logMe.LogIt("file tmr on: " & EnableDisable,mModule)
+'	tmrFilesCheckChange.Enabled = EnableDisable
+'End Sub
 
 #end region
 

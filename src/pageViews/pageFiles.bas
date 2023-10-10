@@ -15,7 +15,7 @@ Sub Class_Globals
 	Private mCallBackEvent As String 'ignore
 	Private mMainObj As B4XMainPage'ignore
 	Private DisplayedFileName As String '--- curently displayed file name
-	
+		
 	Private CSelections As sadClvSelections
 	Private Const NO_SELECTION As Int = -1
 	Private clvLastIndexClicked As Int = NO_SELECTION
@@ -42,6 +42,8 @@ Sub Class_Globals
 	Private SortAscDesc As Boolean = True
 	Private LastSort As String
 	
+	Public FileEvent As Boolean = False
+	
 End Sub
 
 Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
@@ -64,8 +66,10 @@ public Sub Set_focus()
 	
 	If firstRun = False Then
 		'--- this happened already on 1st run
-		tmrFilesCheckChange_Tick '--- call the check change, it will turn on the timer
-		Sleep(500)
+		'tmrFilesCheckChange_Tick '--- call the check change, it will turn on the timer
+		Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrFilesCheckChange",500)
+		'tmrFilesCheckChange_Tick
+		'Sleep(500)
 	Else
 		'--- 1st showing of tab page
 		If config.logFILE_EVENTS Then 
@@ -74,7 +78,12 @@ public Sub Set_focus()
 		If clvFiles.Size > 0 Then 
 			Show1stFile
 		End If
-		CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
+		If FileEvent Then
+			Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrFilesCheckChange",500)
+		Else
+			FileEvent = False
+		End If
+		'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 		firstRun = False
 	End If
 	
@@ -86,7 +95,7 @@ End Sub
 
 public Sub Lost_focus()
 	mPnlMain.SetVisibleAnimated(500,False)
-	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
+	'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	CallSub2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
 End Sub
 
@@ -115,11 +124,12 @@ public Sub Update_Printer_Btns
 
 End Sub
 
-Public Sub tmrFilesCheckChange_Tick
+Public Sub tmrFilesCheckChange
+	Log("tmrFilesCheckChange")
 	
 	If mPnlMain.Visible = False Then
 		'--- we do not have focus so just disable files check
-		CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
+		'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 		Return
 	End If
 	
@@ -197,7 +207,7 @@ Private Sub btnAction_Click
 	
 	Select Case btn.Tag
 		Case "delete"
-			CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
+			'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 			
 			Dim mb As dlgMsgBox 
 			mb.Initialize(mMainObj.Root,"Question", IIf(guiHelpers.gIsLandScape,500dip,guiHelpers.gWidth-40dip), 170dip,False)
@@ -210,7 +220,7 @@ Private Sub btnAction_Click
 			If res = xui.DialogResponse_Positive Then
 				SendDeleteCmdAndRemoveFromGrid
 			End If
-			CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
+			'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 
 		#if not (klipper)			
 		Case "load"
@@ -409,7 +419,7 @@ Public Sub CheckIfFilesChanged
 	
 	Dim oldListViewSize As Int = clvFiles.Size
 		
-	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
+	'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	FilesCheckChangeIsBusyFLAG = True
 	
 	'--- grab a list of files
@@ -465,7 +475,7 @@ Public Sub CheckIfFilesChanged
 	End If
 	
 	FilesCheckChangeIsBusyFLAG = False
-	CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
+	'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 	
 	Dim ttlRecsInDB As Int = Main.db.GetTotalRecs
 	If oldListViewSize <> clvFiles.Size And ttlRecsInDB > 0 Then

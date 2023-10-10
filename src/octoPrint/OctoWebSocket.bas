@@ -7,9 +7,9 @@ Version=11.8
 Sub Class_Globals
 	Private Const mModule As String = "OctoWebSocket" 'ignore
 	
-	Private mIP As String 'ignore
-	Private mPort As String 'ignore
-	Private mKey As String
+'	Private mIP As String 'ignore
+'	Private mPort As String 'ignore
+'	Private mKey As String
 	
 	Public wSocket As WebSocket
 	Public mErrorSecProvider As Boolean = False
@@ -32,10 +32,10 @@ End Sub
 '#Event: Connected
 
 'Initializes the object. You can add parameters to this method if needed.
-Public Sub Initialize(ip As String, port As String, key As String)
-	mPort = IIf(strHelpers.IsNullOrEmpty(port),"80",port) '--- TODO if port is null then should popup connect dialog, should never happen but did! LOL
-	mIP = ip
-	mKey = key
+Public Sub Initialize
+'	mPort = oc.OctoPort = IIf(strHelpers.IsNullOrEmpty(oc.OctoPort),"80",port) '--- TODO if port is null then should popup connect dialog, should never happen but did! LOL
+'	mIP = ip
+'	mKey = key
 	pParserWO.Initialize
 	IsInit = True
 End Sub
@@ -114,7 +114,7 @@ Public Sub Connect() As ResumableSub
 	
 	'--- Init the socket
 	wSocket.Initialize("ws")
-	wSocket.Connect($"ws://${mIP}:${mPort}/sockjs/websocket?apikey=${mKey}"$)
+	wSocket.Connect($"ws://${oc.OctoIp}:${oc.OctoPort}/sockjs/websocket?apikey=${oc.OctoKey}"$)
 	Wait For ws_Connected
 	logMe.LogIt2("WS connected...",mModule,thisSub)
 	Wait For ws_TextMessage (Message As String)
@@ -183,12 +183,12 @@ Private Sub ws_TextMessage(Message As String)
 		Return
 	End If
 	
-	If Message.StartsWith($"{"plugin": {"plugin": "$) Then
+	If Message.StartsWith($"{"plugin": {""$) Then
 		'--- do not care of any plugins
 		Return
 	End If
 	
-	If Message.StartsWith($"{"event": {""$) And pParserWO.pEvents2Monitor.Size <> 0 Then
+	If Message.StartsWith($"{"event": {""$) Then
 		CallSub2(pParserWO,"Event_Parse",Message)
 		Return
 	End If
@@ -200,7 +200,7 @@ Private Sub ws_TextMessage(Message As String)
 	End If
 	
 	If pParserWO.pMsgs2Monitor.Size <> 0 Then '--- msg returned from the terminal
-		CallSub2(pParserWO,"Msg_Parse",Message)
+		CallSub2(pParserWO,"Msgs_Parse",Message)
 	End If
 	
 End Sub

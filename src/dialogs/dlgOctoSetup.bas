@@ -303,10 +303,14 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 			ValidConnection = True
 			guiHelpers.Show_toast("Requested API key OK!",1800)
 			
+			oc.OctoIp = txtPrinterIP.Text
+			oc.OctoKey = txtOctoKey.Text
+			oc.OctoPort = txtPrinterPort.text
+			
 			'--- WS check
 			'Dim SocketOK As Boolean = False
 			Dim ws As OctoWebSocket
-			ws.Initialize(txtPrinterIP.Text,txtPrinterPort.text,txtOctoKey.Text)
+			ws.Initialize
 			Wait For (ws.ProviderInstall) Complete (b As Boolean) '--- SSL / Android 4.x crap / cleanup
 			Wait For (ws.Connect) Complete (msg As String) '--- connect to socket
 			If msg = "" Then

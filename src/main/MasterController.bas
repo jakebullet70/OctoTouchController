@@ -10,7 +10,7 @@ Sub Class_Globals
 	Private mEventNameTemp As String 
 	Private mEventNameStatus As String 
 	Private mEventNameBtns As String 
-	Private mCallBack As Object 
+	Private mCallBack As Object = Null
 	Private mainObj As B4XMainPage 'ignore
 	
 	Private oCN As HttpOctoRestAPI
@@ -50,10 +50,16 @@ End Sub
 
 
 Public Sub getCN() As HttpOctoRestAPI
-	If oCN.IsInitialized = False Then 'Or (oWS.IsInitialized And oWS.pConnected = False)) Then 
+	If oCN.IsInitialized = False Then  
 		GetConnectionPrinterStatus
 	End If
-	Return oCN
+	Try
+		Return oCN
+	Catch
+		Log(LastException)
+		Return Null
+	End Try
+	
 End Sub
 
 #Region "CLASS CRAP"
@@ -260,7 +266,7 @@ Private Sub GetJobStatus
 	End If
 
 	'--- Update printer btns (enable, disabled)
-	CallSub(mCallBack,mEventNameBtns)
+	If mCallBack <> Null Then CallSub(mCallBack,mEventNameBtns)
 	
 	oc.FormatedJobPct = IIf(oc.isPrinting = True And oc.isHeating = False,fnc.RoundJobPctNoDecimals(oc.JobCompletion),"")
 	If oc.JobPrintState = "Printing" Then
@@ -270,14 +276,14 @@ Private Sub GetJobStatus
 	End If
 
 	'Log(oc.JobPrintState)
-	CallSub(mCallBack,mEventNameStatus)
+	If mCallBack <> Null Then CallSub(mCallBack,mEventNameStatus)
 	
 	mJobStatusFLAG_Busy = False
 	
 End Sub
 
 Private Sub InitWebSocket'ignore
-	oWS.Initialize(oc.OctoIp,oc.octoPort,oc.OctoKey)
+	oWS.Initialize
 	oWS.Connect
 End Sub
 
@@ -296,7 +302,7 @@ Private Sub GetConnectionPrinterStatus
 			Wait For (oWS.Passive_Login) Complete(i As Boolean) '--- Set the AUTH and start socket events
 		End If
 	Catch
-		oWS.Initialize(oc.OctoIp ,oc.OctoPort,oc.OctoKey)
+		oWS.Initialize
 		InitWebSocket
 		Wait For (oWS.Passive_Login) Complete(i As Boolean) '--- Set the AUTH and start socket events
 	End Try

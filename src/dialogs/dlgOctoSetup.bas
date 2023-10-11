@@ -153,6 +153,10 @@ private Sub Save_settings
 	File.WriteMap(xui.DefaultFolder,gblConst.PRINTER_SETUP_FILE,outMap)
 	oc.IsConnectionValid = True
 	
+	'--- when DEV'n and switching printers forces a rescan of files
+	If mMainObj.oPageFiles.IsInitialized Then
+		mMainObj.oPageFiles.FileEvent = True
+	End If
 	
 	
 End Sub

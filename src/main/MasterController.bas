@@ -92,17 +92,6 @@ End Sub
 '============================================================================================
 
 #Region "TIMERS"
-Public Sub tmrFilesCheckChange_Tick
-	
-'	'--- check for added, deleted files
-'	If SubExists(mainObj.oPageCurrent,"tmrFilesCheckChange_Tick") Then
-'		CallSub(mainObj.oPageCurrent,"tmrFilesCheckChange_Tick")
-'	Else
-'		'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False) '--- turn off timer, not even on the right page
-'	End If
-
-End Sub
-
 
 Public Sub tmrMain_Tick
 
@@ -124,8 +113,8 @@ Public Sub tmrMain_Tick
 	
 	'--- make API requested and update screen
 	'--- Timer is in 'Main'
-	GetTemps      '- V2 change to sockets
-	GetJobStatus  '- V2 change to sockets
+	GetTemps     
+	Get_JobStatus
 	
 
 End Sub
@@ -236,7 +225,7 @@ Private Sub GetTemps
 End Sub
 
 
-Private Sub GetJobStatus
+Public Sub Get_JobStatus
 	
 '	#if klipper
 '	If oc.isConnected = False Then
@@ -438,9 +427,9 @@ End Sub
 
 public Sub AllHeaters_Off
 	
-	If oc.PrinterProfileNozzleCount > 1 Then
-		'TODO  2 tool support
-	End If
+'	If oc.PrinterProfileNozzleCount > 1 Then
+'		'TODO  2 tool support
+'	End If
 	oCN.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
 	oCN.PostRequest(oc.cCMD_SET_BED_TEMP.Replace("!VAL!",0))
 	

@@ -177,30 +177,31 @@ Private Sub ws_TextMessage(Message As String)
 	End If
 	'Log("~"&Message)
 	#end if
-	
-	If oc.Klippy And Message.StartsWith($"{"plugin": {"plugin": "klipper""$) Then
-		CallSub2(pParserWO,"Klippy_Parse",Message)
-		Return
-	End If
-	
-	If Message.StartsWith($"{"plugin": {""$) Then
-		'--- do not care of any plugins
-		Return
-	End If
-	
+		
 	If Message.StartsWith($"{"event": {""$) Then
 		CallSub2(pParserWO,"Event_Parse",Message)
 		Return
 	End If
 	
-	If Message.StartsWith($"{"reauthRequired""$) Then
-		logMe.LogIt("reauthRequired type: " & Message,mModule)
-		Passive_Login
+	If oc.Klippy And Message.StartsWith($"{"plugin": {"plugin": "klippe""$) Then
+		CallSub2(pParserWO,"Klippy_Parse",Message)
+		Return
+	End If
+	
+	If Message.StartsWith($"{"plugin": {""$) Then
+		'--- do not care of any other plugins
 		Return
 	End If
 	
 	If pParserWO.pMsgs2Monitor.Size <> 0 Then '--- msg returned from the terminal
 		CallSub2(pParserWO,"Msgs_Parse",Message)
+		Return
+	End If
+		
+	If Message.StartsWith($"{"reauthRequired""$) Then
+		logMe.LogIt("reauthRequired type: " & Message,mModule)
+		Passive_Login
+		Return
 	End If
 	
 End Sub
@@ -225,7 +226,7 @@ Private Sub ws_Closed (Reason As String)
 '		If mConnected = False Then 
 '			Return
 '		End If
-		guiHelpers.Show_toast2("Web Socket Lost: " & Reason,2000)
+		guiHelpers.Show_toast2("Retrying... Web Socket Lost: " & Reason,2000)
 		Connect
 	Else If Reason = "WebSockets protocol violation" Then
 		'--- general reason has been logged above already ---
@@ -235,9 +236,9 @@ Private Sub ws_Closed (Reason As String)
 		wSocket.Close
 		
 	Else
-		If Main.isAppClosing Then Return
+		If Main.isAppClosing Or Reason = "Sys closed" Then Return
 		Log("Socket Connect err???: " & pClosedReason)
-		guiHelpers.Show_toast2("Restart Octoprint: Odd error: " & pClosedReason ,15000)
+		guiHelpers.Show_toast2("Restart Octoprint: Error: " & pClosedReason ,15000)
 		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)
 	End If
 	

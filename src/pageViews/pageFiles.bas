@@ -63,33 +63,31 @@ public Sub Set_focus()
 	
 	mPnlMain.SetVisibleAnimated(500,True)
 	mPnlMain.Enabled = oc.isConnected  
-	
-	If firstRun = False Then
-		'--- this happened already on 1st run
-		'tmrFilesCheckChange_Tick '--- call the check change, it will turn on the timer
-		Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrFilesCheckChange",500)
-		'tmrFilesCheckChange_Tick
-		'Sleep(500)
-	Else
-		'--- 1st showing of tab page
-		If config.logFILE_EVENTS Then 
-			logMe.LogIt2(firstRun,mModule,"Set_focus")
-		End If
-		If clvFiles.Size > 0 Then 
-			Show1stFile
-		End If
-		If FileEvent Then
-			Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"tmrFilesCheckChange",500)
-		Else
-			FileEvent = False
-		End If
-		'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
-		firstRun = False
-	End If
-	
+	If config.logFILE_EVENTS Then logMe.LogIt2(firstRun,mModule,"Set_focus")
 	Update_LoadedFileName2Scrn
 	DisplayedFileName = oc.JobFileName
 	Update_Printer_Btns
+	Wait For (FilesCheckChange(True)) Complete (i As Object) '--- always check files on focus
+	
+	If firstRun = True Then '--- 1st showing of tab page
+		'Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"FilesCheckChange",300)
+		'--- main file list is already populated
+		'FilesCheckChange
+		Show1stFile
+'		If clvFiles.Size > 0 Then 
+'			Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Show1stFile",500)
+'		End If
+		firstRun = False
+	Else
+		'If FileEvent Then
+			'Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"FilesCheckChange",500)
+			'FilesCheckChange
+		'	FileEvent = False
+		'End If
+		'FilesCheckChange
+	End If
+	
+	
 	
 End Sub
 
@@ -124,8 +122,8 @@ public Sub Update_Printer_Btns
 
 End Sub
 
-Public Sub tmrFilesCheckChange
-	Log("tmrFilesCheckChange")
+Public Sub FilesCheckChange(Force As Boolean) As ResumableSub 'ignore
+	Log("FilesCheckChange")
 	
 	If mPnlMain.Visible = False Then
 		'--- we do not have focus so just disable files check
@@ -133,7 +131,7 @@ Public Sub tmrFilesCheckChange
 		Return
 	End If
 	
-	CheckIfFilesChanged
+	Wait For (CheckIfFilesChanged) Complete (i As Object)
 	
 	If (oc.JobFileName.Length = 0 And lblFileName.Text <> gblConst.NO_FILE_LOADED) Or _
 		(oc.JobFileName.Length <> 0 And lblFileName.Text = gblConst.NO_FILE_LOADED) Or _
@@ -142,6 +140,13 @@ Public Sub tmrFilesCheckChange
 	End If
 	
 	DisplayedFileName = oc.JobFileName
+	
+	If mMainObj.oMasterController.IsIncompleteFileData Or Force Then
+		Log("---------> setting refresh for incomplete files")
+		If Main.tmrTimerCallSub.Exists(Me,"Build_ListViewFileList_keep") = Null Then
+			Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Build_ListViewFileList_keep",6000)
+		End If
+	End If
 	
 End Sub
 
@@ -191,6 +196,7 @@ Private Sub BuildGUI
 	lblHeaderFileName.Text = "Viewing File"
 	lblFileName.Text = ""
 	#End If
+
 	
 End Sub
 
@@ -260,7 +266,24 @@ Private Sub GetFileSortOrder() As String 'ignore
 	End Select
 End Sub
 
-Public Sub Build_ListViewFileList()
+Private Sub Build_ListViewFileList_keep
+	Dim currentItem As Int = clvLastIndexClicked
+	Build_ListViewFileList
+	Try
+		If clvFiles.Size > 0 Then
+			CSelections.ItemClicked(currentItem)
+			clvLastIndexClicked = currentItem
+		End If
+	Catch
+		CSelections.ItemClicked(0)
+		clvLastIndexClicked = 0
+	End Try
+	
+End Sub
+
+Public Sub Build_ListViewFileList
+	
+	'Dim currentItem = clvLastIndexClicked
 	
 	clvFiles.Clear
 	If rsFiles.IsInitialized Then rsFiles.Close
@@ -284,7 +307,7 @@ Public Sub Build_ListViewFileList()
 		ndx = ndx + 1
 	Loop
 	
-	clvFiles.PressedColor = DimColor(clrTheme.txtNormal) 
+	clvFiles.PressedColor = DimColor(clrTheme.txtNormal)
 	CSelections.SelectionColor = clvFiles.PressedColor
 	clvFiles.DefaultTextColor  = clrTheme.txtNormal
 	clvFiles.DefaultTextBackgroundColor = xui.Color_Transparent
@@ -404,17 +427,17 @@ End Sub
 #region "FILES_CHANGED_CHECK"
 
 
-Public Sub CheckIfFilesChanged
+Public Sub CheckIfFilesChanged() As ResumableSub
 	
 	#if klipper
 	If oc.isConnected = False Then Return
 	#End If
 	
 	Dim inSub As String = "CheckIfFilesChanged"
-	If FilesCheckChangeIsBusyFLAG Then Return
+	If FilesCheckChangeIsBusyFLAG Then Return Null
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized = False Then
 		mMainObj.oMasterController.GetAllOctoFilesInfo
-		Return
+		Return Null
 	End If
 	
 	Dim oldListViewSize As Int = clvFiles.Size
@@ -486,6 +509,7 @@ Public Sub CheckIfFilesChanged
 	If ttlRecsInDB = 0 Then SetThumbnail2Nothing
 	
 	Update_Printer_Btns
+	Return Null
 	
 End Sub
 

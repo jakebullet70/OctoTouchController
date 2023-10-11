@@ -84,7 +84,7 @@ Public Sub Event_Parse(msg As String)
 			outMsg = $"* Old Z=${old} / New Z=${new} *"$
 			
 		Case "MetadataAnalysisFinished"
-			fileHelpers.WriteTxt2SharedFolder("newfile.txt",msg)
+			'fileHelpers.WriteTxt2SharedFolder("newfile.txt",msg)
 			outMsg = msg	
 			
 		Case "FileRemoved"

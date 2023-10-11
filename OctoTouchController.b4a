@@ -224,7 +224,7 @@ Version=12.5
 #Region  Project Attributes 
 	#ApplicationLabel: OctoTC
 	#VersionCode: 50
-	#VersionName: 2.0.1
+	#VersionName: 2.0.2
 	#SignKeyFile: ..\keystore\release.keystore
  	#SignKeyPassword: !!OctoTC!!
 	
@@ -435,10 +435,10 @@ Private Sub tmrMain_Tick
 	CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
 End Sub
 
-Private Sub tmrFilesCheckChange_Tick
-	'--- when files page is in focus, check files
-	'CallSub(B4XPages.MainPage.oMasterController,"tmrFilesCheckChange_Tick")
-End Sub
+'Private Sub tmrFilesCheckChange_Tick
+'	'--- when files page is in focus, check files
+'	'CallSub(B4XPages.MainPage.oMasterController,"tmrFilesCheckChange_Tick")
+'End Sub
 
 Private Sub tmrSplash_Tick
 	CallSubDelayed(B4XPages.MainPage,"HideSplash_StartUp")

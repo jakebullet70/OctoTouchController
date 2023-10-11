@@ -222,6 +222,7 @@ Private Sub ParseOcto(jsonTXT As String)
 	Dim files As List = root.Get("files")
 	
 	Dim cacheTTL As Int = 0
+	Dim missingData As Int = 0
 	
 	For Each colfiles As Map In files
 
@@ -304,6 +305,12 @@ Private Sub ParseOcto(jsonTXT As String)
 				'--- added file so the gcode analisys is incomplete
 				ff.missingData = True
 				logMe.LogIt2("ParseFile-missingData=True",mModule,InSub)
+				missingData = missingData + 1
+				If missingData > 3 Then
+					guiHelpers.Show_toast2("Octoprint Analyzing GCode",800)
+				End If
+
+				
 			End Try
 			
 		Catch

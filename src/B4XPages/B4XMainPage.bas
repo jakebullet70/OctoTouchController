@@ -244,7 +244,6 @@ End Sub
 
 Private Sub B4XPage_Background
 	CallSub2(Main,"TurnOnOff_MainTmr",False)
-	'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
 	CallSub2(Main,"TurnOnOff_ScreenTmr",False)
 	Log("B4XPage_Background - timers off")
 End Sub
@@ -315,6 +314,8 @@ Private Sub TryPrinterConnection
 			oMasterController.Start
 			oMasterController.oWS.pParserWO.EventAdd("MetadataAnalysisFinished",Me,"ev_file_change")
 			oMasterController.oWS.pParserWO.EventAdd("FileRemoved",Me,"ev_file_del")
+'			oMasterController.oWS.pParserWO.EventAdd("PrinterStateChanged",Me,"ev_get_jobstatus")
+'			Main.tmrTimerCallSub.CallSubDelayedPlus2(Me,"ev_get_jobstatus",1200,Null)
 			If Main.kvs.ContainsKey(gblConst.IS_OCTO_KLIPPY) = False Then
 				Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Is_OctoKlipper",800)
 			Else
@@ -1022,6 +1023,10 @@ Private Sub Build_RightSideMenu
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Filament Change M600").PopAll,"m600")
 	End If
 	
+	If (oPageFiles.IsInitialized) And (oPageCurrent = oPageFiles) Then
+		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Force Refresh Of Files").PopAll,"refl")
+	End If
+	
 	
 	'clvDrawer.AddTextItem(cs.Initialize.Size(12).Alignment("ALIGN_CENTER").Append("------------ SYS CMDS -----------").PopAll,"")
 	For iiTMP = 0 To 7
@@ -1082,8 +1087,8 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	Select Case Value.As(String)
 		
-		Case "fcm"
-			Cooling_Fan
+		
+		Case "fcm"  : Cooling_Fan
 		
 		Case "kst" '--- full octokliiper firmware restart
 			w = 400dip
@@ -1116,6 +1121,7 @@ Private Sub clvDrawer_ItemClick (Index As Int, Value As Object)
 			End If
 			Send_Gcode("M600")
 
+		Case "refl" : FilesCheckChange
 			
 		Case "ab" '--- about screen
 			Dim o2 As dlgAbout : pObjCurrentDlg1 = o2.Initialize
@@ -1288,42 +1294,49 @@ End Sub
 
 
 Private Sub ev_file_change(msg As String)
-	Log("ev_file_change")
+	logMe.LogDebug2("ev_file_change","")
 	If oPageFiles.IsInitialized = False Then Return
-	If oPageFiles <> oPageCurrent Then
+	If oPageCurrent <> oPageFiles Then
 		oPageFiles.FileEvent = True
 	Else
-		Dim parser As JSONParser : parser.Initialize(msg)
-		Dim R1 As Map = parser.NextObject
-		Dim event As Map = R1.Get("event")
-		Dim etype As String = event.Get("type")
-		If etype = "MetadataAnalysisFinished" Then
-			Dim payload As Map = event.Get("payload")
-			Dim result As Map = payload.Get("result")
-			Dim analysisPending As String = result.Get("analysisPending")
-			If analysisPending = "true" Then 
-				logMe.LogDebug2("analysisPending=true","")
-				Return
-			End If
-		End If
+'		Dim parser As JSONParser : parser.Initialize(msg)
+'		Dim R1 As Map = parser.NextObject
+'		Dim event As Map = R1.Get("event")
+'		Dim etype As String = event.Get("type")
+'		If etype = "MetadataAnalysisFinished" Then
+'			Dim payload As Map = event.Get("payload")
+'			Dim result As Map = payload.Get("result")
+'			Dim analysisPending As String = result.Get("analysisPending")
+'			If analysisPending = "true" Then 
+'				logMe.LogDebug2("analysisPending=true","")
+'				Return
+'			End If
+'		End If
+		'--- see if 'FilesCheckChange' is already queud up to run
 		If Main.tmrTimerCallSub.Exists(Me,"FilesCheckChange") <>  Null Then Return
 		'Main.tmrTimerCallSub.ExistsRemove(Me,"FilesCheckChange")
+		
 		Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"FilesCheckChange",1200)
 	End If
 End Sub
 Private Sub ev_file_del(msg As String)
+	logMe.LogDebug2("ev_file_del","")
 	If oPageFiles.IsInitialized = False Then Return
-	If oPageFiles <> oPageCurrent Then
+	If oPageCurrent <> oPageFiles Then
 		oPageFiles.FileEvent = True
 	Else
-		If Main.tmrTimerCallSub.Exists(Me,"FilesCheckChange") <>  Null Then Return
+		'--- see if 'FilesCheckChange' is already queud up to run
+		If Main.tmrTimerCallSub.Exists(Me,"FilesCheckChange") <> Null Then Return
 		'Main.tmrTimerCallSub.ExistsRemove(Me,"FilesCheckChange")
+		
 		Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"FilesCheckChange",1200)
 	End If
 End Sub
 
 Private Sub FilesCheckChange
-	oPageFiles.tmrFilesCheckChange
+	oPageFiles.FilesCheckChange(False)
 End Sub
-
-
+'
+'Private Sub ev_get_jobstatus(msg As String)
+'	'oMasterController.Get_JobStatus(msg As String)
+'End Sub

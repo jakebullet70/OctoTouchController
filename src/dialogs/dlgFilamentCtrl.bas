@@ -12,19 +12,12 @@ Version=11.5
 #End Region
 
 
-'=============================================
-'
-'   needs work for klipper - TODO
-'
-'============================================
-
-
-
 Sub Class_Globals
 	
 	Private const mModule As String = "dlgFilamentCtrl"' 'ignore
 	Private mMainObj As B4XMainPage
 	Private xui As XUI
+	Private oBeepMe As SoundsBeeps
 	
 	Private mDialog As B4XDialog
 	Private pnlMain As B4XView, lblStatus As AutoTextSizeLabel
@@ -37,11 +30,13 @@ Sub Class_Globals
 	Private btnUnload,btnLoad,btnPark,btnHeat As Button
 	Private chkHeatOff As CheckBox
 	Private btnBack As B4XView
+	Private btnSetup As Button
 End Sub
 
 Public Sub Initialize() As Object
 	mMainObj = B4XPages.MainPage
 	mData = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
+	oBeepMe.Initialize
 	Return Me
 End Sub
 
@@ -53,13 +48,13 @@ End Sub
 Private Sub BuildGUI
 	pnlMain.Color = clrTheme.Background : pnlWorking.Color = clrTheme.Background
 	
-	guiHelpers.SkinButton(Array As Button(btnUnload,btnLoad,btnPark,btnHeat,btnStuff))
+	guiHelpers.SkinButton(Array As Button(btnUnload,btnLoad,btnPark,btnHeat,btnStuff,btnSetup))
 	guiHelpers.SetTextSize(Array As Button(btnUnload,btnLoad,btnPark,btnHeat,btnStuff), _
 							NumberFormat2(btnStuff.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
 	
 	btnStuff.TextSize = btnStuff.TextSize - 2 '--- 
 	
-	guiHelpers.SkinButton_Pugin(Array As Button(btnBack))
+	guiHelpers.SkinButton_Pugin(Array As Button(btnBack,btnSetup))
 	btnBack.BringToFront
 	
 	guiHelpers.SetTextColor(Array As B4XView(lblTemp,lblStatus.BaseLabel))
@@ -92,8 +87,8 @@ Public Sub Show
 	
 	'--- TODO - needs cleanup
 	If guiHelpers.gIsLandScape Then
-		p.SetLayoutAnimated(0, 0, 0, _
-					IIf(guiHelpers.gScreenSizeAprox < 6,460dip,560dip),IIf(guiHelpers.gScreenSizeAprox < 6,224dip,280dip))
+		p.SetLayoutAnimated(0, 0, 0,  _
+					IIf(guiHelpers.gScreenSizeAprox < 6,460dip,560dip),IIf(guiHelpers.gScreenSizeAprox < 6,guiHelpers.MaxVerticalHeight_Landscape,280dip))
 	Else
 		p.SetLayoutAnimated(0, 0, 0, 90%x, _
 							IIf(guiHelpers.gScreenSizeAprox < 5,280dip,320dip))
@@ -157,7 +152,10 @@ End Sub
 
 Private Sub LoadUnLoadFil
 	
-	BeepMe
+	'--- re-read data
+	mData = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
+	
+	oBeepMe.Beeps(300,500,5)
 	btnStuff.Visible = True
 	If mLoadUnload.ToLowerCase = "load" Then
 		SetStatusLabel("Insert filament and touch the 'Continue' button to load")	
@@ -167,20 +165,11 @@ Private Sub LoadUnLoadFil
 	
 End Sub
 
-Private Sub BeepMe
-	
-	Dim b As Beeper : 
-	b.Initialize(120,500)
-	For xx = 1 To 5
-		b.Beep : Sleep(200)
-	Next
-	
-End Sub
 
 Private Sub btnStuff_Click
 	
 	If btnStuff.Text.StartsWith("E") Then 
-		SendMGcode("G1 E10 F60") '--- Extrude 5mm more
+		SendMGcode("G1 E10 F60") '--- Extrude 10mm more
 		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Extruding 10mm...", 1000)
 		Return
 	End If
@@ -212,7 +201,7 @@ Private Sub btnStuff_Click
 		SendMGcode("M83") : Sleep(100)
 		
 		If mData.Get(gblConst.filSmallExtBeforeUload).As(Boolean) = True Then
-			SendMGcode($"G1 E10 F${speed1}"$) : Sleep(500) '--- small push to avoid blobs
+			SendMGcode($"G1 E20 F${speed1}"$) : Sleep(500) '--- small push to avoid blobs
 		End If
 		
 		sLen = mData.Get(gblConst.filUnLoadLen)
@@ -392,3 +381,10 @@ End Sub
 
 #END REGION
 
+
+
+Private Sub btnSetup_Click
+	Dim oB As dlgFilamentSetup
+	mMainObj.pObjCurrentDlg2 = oB.Initialize 
+	oB.Show
+End Sub

@@ -109,14 +109,16 @@ Private Sub ShowInfoLoad_Click
 	
 	Dim s As String= $"Marlin firmware uses the EXTRUDE_MAXLENGTH setting to stop extruding large amounts.
 To ensure that that you don't hit the limit, divide the extrude length into segments.
-For example, if your printer has a path of 500mm, set it up like this, each segment
-length less then the EXTRUDE_MAXLENGTH:
+For example, if your printer has a path of 500mm and your EXTRUDE_MAXLENGTH is set to 175, set it up like this, each segment length less then the EXTRUDE_MAXLENGTH:
 
 Extrude Length: `160,160,150,30` (total is 500mm)
 Extrude Speed: `2500,60` (last segment is extruded at 60mm/s)
 
 Note: Unload works in reverse."$
 	
+	If oc.Klippy Then
+		s = s.Replace("Marlin","Klipper").Replace("EXTRUDE_MAXLENGTH","'max_extrude_only_distance'")
+	End If
 
 	Dim msgDlg As dlgMsgBox
 	Dim w,h As Float

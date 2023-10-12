@@ -327,7 +327,7 @@ End Sub
 
 
 Public Sub MaxVerticalHeight_Landscape() As Float
-	Return gHeight*.8
+	Return gHeight*.79
 End Sub
 
 

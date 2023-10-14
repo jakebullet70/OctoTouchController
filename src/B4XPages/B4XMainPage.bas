@@ -72,6 +72,7 @@ Sub Class_Globals
 	Public pObjCurrentDlg2 As Object = Null
 	Public pObjPreHeatDlg1 As dlgListbox
 	Public pnlWizards As Panel
+	Public pDlgFilSetup As dlgFilamentSetup
 	Public pObjWizards As Object = Null
 	Private mErrorDlg As dlgMsgBox 
 	Public pMBox2 As dlgMsgBox2 
@@ -159,6 +160,11 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 	
 	If mConnectionErrDlgShowingFLAG Or pPrinterCfgDlgShowingFLAG Then
 		mErrorDlg.Close_Me
+		Return False
+	End If
+	
+	If pDlgFilSetup.IsInitialized And pDlgFilSetup.pPrefDlg.Dialog.Visible Then
+		CallSubDelayed(pDlgFilSetup,"Close_Me") 
 		Return False
 	End If
 	
@@ -644,8 +650,9 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 			oB7.Initialize : oB7.Show
 			
 		Case "fl" '--- filament control
-			Dim oB As dlgFilamentSetup
-			oB.Initialize : oB.Show
+			''Dim pDlgFilSetup As dlgFilamentSetup
+			pDlgFilSetup.Initialize 
+			pDlgFilSetup.Show
 			
 		Case "bl" '--- bed level control
 			If oc.PrinterCustomBoundingBox = True Then

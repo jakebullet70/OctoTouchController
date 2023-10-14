@@ -384,7 +384,6 @@ End Sub
 
 
 Private Sub btnSetup_Click
-	Dim oB As dlgFilamentSetup
-	mMainObj.pObjCurrentDlg2 = oB.Initialize 
-	oB.Show
+	mMainObj.pDlgFilSetup.Initialize
+	mMainObj.pDlgFilSetup.Show
 End Sub

@@ -14,7 +14,7 @@ Sub Class_Globals
 	Private const mModule As String = "dlgFilamentSetup"' 'ignore
 	Private mainObj As B4XMainPage
 	Private xui As XUI
-	Private mPrefDlg As sadPreferencesDialog
+	Public pPrefDlg As sadPreferencesDialog
 	Private prefHelper As sadPreferencesDialogHelper
 	Private lblAboutLoadUnload As  Label
 	
@@ -25,6 +25,10 @@ Public Sub Initialize() As Object
 	mainObj = B4XPages.MainPage
 	Return Me
 	
+End Sub
+
+Public Sub Close_Me  '--- class method, called from android back btn
+	pPrefDlg.Dialog.Close(xui.DialogResponse_Cancel)
 End Sub
 
 public Sub CreateDefaultFile
@@ -71,16 +75,16 @@ Public Sub Show
 	End If
 	
 	 ' guiHelpers.gWidth * guiHelpers.gScreenSizeDPI
-	mPrefDlg.Initialize(mainObj.root, "Filament Change Settings", w, h)
-	mPrefDlg.LoadFromJson(File.ReadString(File.DirAssets,"dlgFilamentCtrl.json"))
-	mPrefDlg.SetEventsListener(Me,"dlgEvent")
+	pPrefDlg.Initialize(mainObj.root, "Filament Change Settings", w, h)
+	pPrefDlg.LoadFromJson(File.ReadString(File.DirAssets,"dlgFilamentCtrl.json"))
+	pPrefDlg.SetEventsListener(Me,"dlgEvent")
 	
 	
-	prefHelper.Initialize(mPrefDlg)
+	prefHelper.Initialize(pPrefDlg)
 	
 	prefHelper.ThemePrefDialogForm
-	mPrefDlg.PutAtTop = ToTop
-	Dim RS As ResumableSub = mPrefDlg.ShowDialog(Data, "OK", "CANCEL")
+	pPrefDlg.PutAtTop = ToTop
+	Dim RS As ResumableSub = pPrefDlg.ShowDialog(Data, "OK", "CANCEL")
 	prefHelper.dlgHelper.NoCloseOn2ndDialog
 	prefHelper.dlgHelper.ThemeInputDialogBtnsResize
 	BuildHelpLabel
@@ -101,7 +105,7 @@ Private Sub BuildHelpLabel
 	Dim cs As CSBuilder
 	lblAboutLoadUnload.Text = cs.Initialize.Underline.Color(clrTheme.txtNormal).Append("Help").PopAll
 	lblAboutLoadUnload.TextSize = 20
-	mPrefDlg.Dialog.Base.AddView(lblAboutLoadUnload,14dip,mPrefDlg.Dialog.Base.Height - 47dip,80dip,36dip)
+	pPrefDlg.Dialog.Base.AddView(lblAboutLoadUnload,14dip,pPrefDlg.Dialog.Base.Height - 47dip,80dip,36dip)
 End Sub
 
 

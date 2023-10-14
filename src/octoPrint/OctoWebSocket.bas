@@ -20,7 +20,11 @@ Sub Class_Globals
 	Public mIgnoreMasterOctoEvent As Boolean = True
 	Public pParserWO As WebSocketParse
 	Public subscribe As String = $"{"subscribe": {"plugins": ["klipper"]  }}"$
-	
+
+	Private mSesionName As String = ""
+	Private mSessionKey As String = ""	
+	Private mPassiveLoginIsBusy As Boolean = False
+		
 	Private isConnecting As Boolean = False
 	Public mlastMsg As String
 	Public bLastMessage As Boolean = False
@@ -32,12 +36,10 @@ End Sub
 '#Event: Connected
 
 'Initializes the object. You can add parameters to this method if needed.
-Public Sub Initialize
-'	mPort = oc.OctoPort = IIf(strHelpers.IsNullOrEmpty(oc.OctoPort),"80",port) '--- TODO if port is null then should popup connect dialog, should never happen but did! LOL
-'	mIP = ip
-'	mKey = key
+Public Sub Initialize() As OctoWebSocket
 	pParserWO.Initialize
 	IsInit = True
+	Return Me
 End Sub
 
 Private Sub DisableStrictMode
@@ -94,7 +96,7 @@ Public Sub Connect() As ResumableSub
 	Dim inSub As String = "Connect"
 	Log("wb start")
 	If isConnecting = True Then 
-		Log("WS already trying to connect")
+		If config.logREST_API Then logMe.logit2("WS already trying to connect",mModule,inSub)
 		Return ""
 	End If
 	isConnecting = True
@@ -102,7 +104,7 @@ Public Sub Connect() As ResumableSub
 	Dim Const thisSub As String	= "Connect"
 	Try
 		If wSocket.Connected Then 
-			If config.logREST_API Then logMe.logit2("wSocket is already connected",mModule,inSub)
+			If config.logREST_API Then logMe.logit2("WS is already connected",mModule,inSub)
 			Return ""
 		End If
 	Catch
@@ -119,7 +121,7 @@ Public Sub Connect() As ResumableSub
 	logMe.LogIt2("WS connected...",mModule,thisSub)
 	Wait For ws_TextMessage (Message As String)
 	pConnected = True
-	Log("wb init end")
+	
 	
 	'--- set subscriptions
 	Dim subscribe As String = $"{"subscribe": {
@@ -137,11 +139,12 @@ Public Sub Connect() As ResumableSub
 	
 '	--- Set the AUTH And start socket events
 	Wait For (Passive_Login) Complete(i As Boolean)
-	Log("Passive login:" & i.As(String))
+	Log("Passive login OK=" & i.As(String))
 		
 	'--- A value of 2 will set the rate limit to maximally one message every 1s, 3 to maximally one message every 1.5s and so on.
 	setThrottle("90") '--- this is very inacurate
 	isConnecting = False
+	Log("wb init end")
 	Return Message '--- this is the connected message
 	
 End Sub
@@ -149,16 +152,55 @@ End Sub
 
 Public Sub Passive_Login() As ResumableSub
 	Dim inSub As String = "Passive_Login"
-	'--- called when REST commands are fulling working from MasterController
+	Dim sendMe As String
+	
+	If mPassiveLoginIsBusy Then Return False
+	mPassiveLoginIsBusy = True
+	
+	'--- called when REST commands are fully working from MasterController
 	'--- this might need to be called again if 'reauthRequired' is recieved
 	If config.logREST_API Then logMe.logit2("Passive_Login start",mModule,inSub)
+	
+	'--- do we already have a session?
+	If mSessionKey.Length <> 0 Then
+'		Log("**********RE-USE************")
+'		Log("name:" & mSesionName)
+'		Log("session:" & mSessionKey)
+'		Log("****************************")
+		sendMe = $"{"auth": "${mSesionName}:${mSessionKey}"}"$
+		Wait For (SendAndWait(sendMe)) Complete (r As String)
+		Log("Passive_Login ret val1: " & r)
+		mPassiveLoginIsBusy = False
+		If r.Contains("reauthReq") Then '--- this has happened twice now.
+			guiHelpers.Show_toast2("Auth Err! Restatrt App",15000)
+			Return False
+		End If
+		If oc.Klippy And r.StartsWith($"{"plugin"$) Then ws_TextMessage(r)
+		Return True
+	End If
+		
+	'--- get pasive logon - session info
 	Wait For (B4XPages.MainPage.oMasterController.CN.PostRequest($"/api/login!!{ "passive": "true" }"$)) Complete (r As String)
 	If strHelpers.IsNullOrEmpty(r) Then
 		Return False
 	End If
+	
 	Dim parser As JSONParser : parser.Initialize(r) : Dim root As Map = parser.NextObject
-	Send($"{"auth": "${root.Get("name")}:${root.Get("session")}"}"$)
+	mSesionName = root.Get("name") : mSessionKey = root.Get("session")
+	sendMe = $"{"auth": "${mSessionKey}:${mSessionKey}"}"$
+'	Log("*************NEW************")
+'	Log("name:" & mSesionName)
+'	Log("session:" & mSessionKey)
+'	Log("****************************")
+	Wait For (SendAndWait(sendMe)) Complete (r As String)
+	Log("Passive_Login ret val2: " & r)
+	
 	If config.logREST_API Then logMe.logit2("Passive_Login Auth end",mModule,inSub)
+	mPassiveLoginIsBusy = False
+	If r.Contains("reauthReq") Then 
+		Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Passive_Login",500)
+		Return False
+	End If
 	Return True
 End Sub
 
@@ -221,12 +263,12 @@ Private Sub ws_Closed (Reason As String)
 	
 	'--- Reason = "WebSockets protocol violation" 
 	If Reason = "WebSockets connection lost" Then 
-		logMe.LogIt2("no web socket connection - reconnecting",mModule,InSub)
+		logMe.LogIt2("reconnecting - WS lost: "  & Reason,mModule,InSub)
 '		Wait For (Connect) Complete (msg As String)
 '		If mConnected = False Then 
 '			Return
 '		End If
-		guiHelpers.Show_toast2("Retrying... Web Socket Lost: " & Reason,2000)
+		guiHelpers.Show_toast2("(Re)Connecting WebSocket...",2000)
 		Connect
 	Else If Reason = "WebSockets protocol violation" Then
 		'--- general reason has been logged above already ---

@@ -128,7 +128,7 @@ Public Sub FilesCheckChange(Force As Boolean) As ResumableSub 'ignore
 	If mPnlMain.Visible = False Then
 		'--- we do not have focus so just disable files check
 		'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",False)
-		Return
+		Return 'ignore
 	End If
 	
 	Wait For (CheckIfFilesChanged) Complete (i As Object)

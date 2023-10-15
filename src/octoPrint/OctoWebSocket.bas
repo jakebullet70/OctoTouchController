@@ -24,6 +24,7 @@ Sub Class_Globals
 	Private mSesionName As String = ""
 	Private mSessionKey As String = ""	
 	Private mPassiveLoginIsBusy As Boolean = False
+	Private mSocketTries As Int = 0
 		
 	Private isConnecting As Boolean = False
 	Public mlastMsg As String
@@ -95,6 +96,8 @@ Public Sub Connect() As ResumableSub
 	'--- we wont ever run this code if the REST API fails
 	Dim inSub As String = "Connect"
 	Log("wb start")
+	mSocketTries = mSocketTries + 1
+	
 	If isConnecting = True Then 
 		If config.logREST_API Then logMe.logit2("WS already trying to connect",mModule,inSub)
 		Return ""
@@ -120,7 +123,7 @@ Public Sub Connect() As ResumableSub
 	Wait For ws_Connected
 	logMe.LogIt2("WS connected...",mModule,thisSub)
 	Wait For ws_TextMessage (Message As String)
-	pConnected = True
+	
 	
 	
 	'--- set subscriptions
@@ -144,6 +147,7 @@ Public Sub Connect() As ResumableSub
 	'--- A value of 2 will set the rate limit to maximally one message every 1s, 3 to maximally one message every 1.5s and so on.
 	setThrottle("90") '--- this is very inacurate
 	isConnecting = False
+	pConnected = True
 	Log("wb init end")
 	Return Message '--- this is the connected message
 	
@@ -163,10 +167,10 @@ Public Sub Passive_Login() As ResumableSub
 	
 	'--- do we already have a session?
 	If mSessionKey.Length <> 0 Then
-'		Log("**********RE-USE************")
-'		Log("name:" & mSesionName)
-'		Log("session:" & mSessionKey)
-'		Log("****************************")
+		Log("**********RE-USE************")
+		Log("name:" & mSesionName)
+		Log("session:" & mSessionKey)
+		Log("****************************")
 		sendMe = $"{"auth": "${mSesionName}:${mSessionKey}"}"$
 		Wait For (SendAndWait(sendMe)) Complete (r As String)
 		Log("Passive_Login ret val1: " & r)
@@ -176,6 +180,7 @@ Public Sub Passive_Login() As ResumableSub
 			Return False
 		End If
 		If oc.Klippy And r.StartsWith($"{"plugin"$) Then ws_TextMessage(r)
+		mSocketTries = 0
 		Return True
 	End If
 		
@@ -188,10 +193,10 @@ Public Sub Passive_Login() As ResumableSub
 	Dim parser As JSONParser : parser.Initialize(r) : Dim root As Map = parser.NextObject
 	mSesionName = root.Get("name") : mSessionKey = root.Get("session")
 	sendMe = $"{"auth": "${mSessionKey}:${mSessionKey}"}"$
-'	Log("*************NEW************")
-'	Log("name:" & mSesionName)
-'	Log("session:" & mSessionKey)
-'	Log("****************************")
+	Log("*************NEW************")
+	Log("name:" & mSesionName)
+	Log("session:" & mSessionKey)
+	Log("****************************")
 	Wait For (SendAndWait(sendMe)) Complete (r As String)
 	Log("Passive_Login ret val2: " & r)
 	
@@ -201,6 +206,7 @@ Public Sub Passive_Login() As ResumableSub
 		Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Passive_Login",500)
 		Return False
 	End If
+	mSocketTries = 0
 	Return True
 End Sub
 
@@ -270,11 +276,14 @@ Private Sub ws_Closed (Reason As String)
 '		End If
 		guiHelpers.Show_toast2("(Re)Connecting WebSocket...",2000)
 		Connect
+		
 	Else If Reason = "WebSockets protocol violation" Then
 		'--- general reason has been logged above already ---
-		logMe.LogIt2("!!!WebSockets protocol violation -- Octoprint needs to be restarted!!!",mModule,InSub)
-		guiHelpers.Show_toast2("WebSockets protocol violation. Restart Octoprint",15000)
-		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)
+		If mSocketTries > 3 Then
+			logMe.LogIt2("!!!WebSockets protocol violation -- Octoprint needs to be restarted!!!",mModule,InSub)
+			guiHelpers.Show_toast2("WebSockets protocol violation. Restart Octoprint",15000)
+			''CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)
+		End If
 		wSocket.Close
 		
 	Else

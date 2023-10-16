@@ -109,6 +109,7 @@ Public Sub Show(title As String,dataFileName As String)
 	End If
 		
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
+	CallSubDelayed(B4XPages.MainPage,"PopupPluginOptionMenu")
 		
 End Sub
 

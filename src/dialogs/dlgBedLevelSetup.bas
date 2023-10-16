@@ -87,6 +87,8 @@ Public Sub Show
 		CallSub(mainObj.oPageCurrent,"Set_focus")
 	End If
 	
+	CallSubDelayed(B4XPages.MainPage,"PopupFunctionOptionsMnu")
+	
 End Sub
 
 

@@ -97,6 +97,9 @@ Public Sub Show
 		CallSub(mainObj.oPageCurrent,"Set_focus")
 	End If
 	
+	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
+	CallSubDelayed(B4XPages.MainPage,"PopupFunctionOptionsMnu")
+	
 End Sub
 
 

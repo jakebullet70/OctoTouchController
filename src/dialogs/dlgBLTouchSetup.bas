@@ -85,6 +85,7 @@ Public Sub Show
 	
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
 	mainObj.pObjCurrentDlg2 = Null
+	CallSubDelayed(B4XPages.MainPage,"PopupFunctionOptionsMnu")
 	
 End Sub
 

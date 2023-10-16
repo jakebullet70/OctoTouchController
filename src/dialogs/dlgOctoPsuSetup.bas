@@ -93,6 +93,7 @@ Public Sub Show
 	End If
 	
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF)
+	CallSubDelayed(mMainObj,"PopupPluginOptionMenu")
 	
 End Sub
 

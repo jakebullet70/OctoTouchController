@@ -159,11 +159,7 @@ Public Sub Update_Printer_Btns
 	
 	
 	'--- is a file loaded and ready?
-	#if klipper
-	If oc.isFileLoaded = False Or oc.isKlipperCanceling Then
-	#else
 	If oc.isFileLoaded = False Then
-	#End If
 		
 		guiHelpers.EnableDisableBtns2(Array As Button(btnPrint,btnPause,btnCancel),False)
 		Return
@@ -188,7 +184,12 @@ Public Sub Update_Printer_Btns
 		'--- job is paused
 		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel,btnPrint),True)
 		guiHelpers.EnableDisableBtns2(Array As Button(btnPause),False)
-		
+	
+	else if oc.JobPrintState = "Resuming" Then
+		'--- job is resuming (filament change)
+		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel),True)
+		guiHelpers.EnableDisableBtns2(Array As Button(btnPause,btnPrint),False)
+			
 	Else
 		
 		'--- not printing anything
@@ -201,13 +202,6 @@ Public Sub Update_Printer_Btns
 End Sub
 
 Public Sub Update_Printer_Stats
-	
-	#if klipper 
-	If oc.isConnected = False Then
-		CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_MENU)
-		Return
-	End If
-	#End If
 	
 	'--- update printer job
 	If IsNumber(oc.JobCompletion) Then

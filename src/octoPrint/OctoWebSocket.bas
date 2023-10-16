@@ -258,6 +258,7 @@ End Sub
 Private Sub ws_Closed (Reason As String)
 	'--- socket is closed!
 	Dim InSub As String = "ws_Closed"
+	Dim msg As String = ""
 	pConnected = False
 	pClosedReason = ""
 	If strHelpers.IsNullOrEmpty(Reason) Then 
@@ -270,27 +271,23 @@ Private Sub ws_Closed (Reason As String)
 	'--- Reason = "WebSockets protocol violation" 
 	If Reason = "WebSockets connection lost" Then 
 		logMe.LogIt2("reconnecting - WS lost: "  & Reason,mModule,InSub)
-'		Wait For (Connect) Complete (msg As String)
-'		If mConnected = False Then 
-'			Return
-'		End If
 		guiHelpers.Show_toast2("(Re)Connecting WebSocket...",2000)
 		Connect
 		
 	Else If Reason = "WebSockets protocol violation" Then
 		'--- general reason has been logged above already ---
 		If mSocketTries > 3 Then
-			Dim t As String = "WebSockets protocol violation. Restart Octoprint and App"
-			logMe.LogIt2(t,mModule,InSub)
-			guiHelpers.Show_toast2(t,15000)
-			''CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)
+			msg = "WebSockets protocol violation. Restart Octoprint and App"
+			logMe.LogIt2(msg,mModule,InSub)
+			guiHelpers.Show_toast2(msg,15000)
 		End If
 		wSocket.Close
 		
 	Else
 		If Main.isAppClosing Or Reason = "Sys closed" Then Return
-		Log("Socket Connect err???: " & pClosedReason)
-		guiHelpers.Show_toast2("Restart Octoprint: Error: " & pClosedReason ,15000)
+		msg ="Restart Octoprint: Error: " & pClosedReason
+		guiHelpers.Show_toast2(msg ,15000)
+		Log("WS error: " & msg)
 		CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)
 	End If
 	

@@ -280,8 +280,9 @@ Private Sub ws_Closed (Reason As String)
 	Else If Reason = "WebSockets protocol violation" Then
 		'--- general reason has been logged above already ---
 		If mSocketTries > 3 Then
-			logMe.LogIt2("!!!WebSockets protocol violation -- Octoprint needs to be restarted!!!",mModule,InSub)
-			guiHelpers.Show_toast2("WebSockets protocol violation. Restart Octoprint",15000)
+			Dim t As String = "WebSockets protocol violation. Restart Octoprint and App"
+			logMe.LogIt2(t,mModule,InSub)
+			guiHelpers.Show_toast2(t,15000)
 			''CallSubDelayed2(B4XPages.MainPage,"CallSetupErrorConnecting",False)
 		End If
 		wSocket.Close

@@ -196,9 +196,9 @@ Public Sub  JobStatus(s As String)
 		'---- get status
 		oc.JobPrintState = m.Get("state")
 		Select Case oc.JobPrintState
-			Case "Printing"     : oc.isPrinting = True
-			Case "Cancelling" : oc.isCanceling = True
-			Case "Paused"      : oc.isPaused2 = True
+			Case "Printing"     			: oc.isPrinting = True
+			Case "Canceling","Cancelling"	: oc.isCanceling = True
+			Case "Paused"      				: oc.isPaused2 = True
 		End Select
 		
 		'--- populate vars from json
@@ -252,7 +252,7 @@ End Sub
 '    Issues found when octoprint is running but the Klipper host is not
 '================================================================================
 
-#if not (klipper)
+
 Private Sub CheckNull(v As String) As String
 	Try
 		Return IIf(v = Null Or v = "null" Or v = "","",v)
@@ -260,7 +260,7 @@ Private Sub CheckNull(v As String) As String
 		Return ""
 	End Try
 End Sub
-#end if
+
 
 
 Private Sub CheckNull0(v As String) As String
@@ -271,7 +271,7 @@ Private Sub CheckNull0(v As String) As String
 	End Try
 End Sub
 
-#if not (klipper)
+
 Private Sub CheckNullDash(v As String) As String
 	Try
 		Return IIf(v = Null Or v = "null" Or v = "","-",v)
@@ -279,5 +279,5 @@ Private Sub CheckNullDash(v As String) As String
 		Return "-"
 	End Try
 End Sub
-#end if
+
 '================================================================================

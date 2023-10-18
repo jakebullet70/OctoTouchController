@@ -316,7 +316,7 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 			Dim ws As OctoWebSocket
 			ws.Initialize
 			Wait For (ws.ProviderInstall) Complete (b As Boolean) '--- SSL / Android 4.x crap / cleanup
-			Wait For (ws.Connect) Complete (msg As String) '--- connect to socket
+			Wait For (ws.Connect_Socket) Complete (msg As String) '--- connect to socket
 			If msg = "" Then
 				'--- if error we never get here, this needs a refatctor but as this will only happen 1 in a million times...
 				'Dim mb As dlgMsgBox : mb.Initialize(mainObj.Root,"Problem",320dip, 160dip,False)

@@ -36,7 +36,7 @@ public Sub CreateDefaultFile
 		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,  _
 						CreateMap( "logall": "false", "logpwr": "false",  "logfiles": "false", "logoctokey": "false", "logrest": "false", _
 						"syscmds": "false", "axesx": "false",  "axesy": "false", "axesz": "false","sboot":"false","syscmds":"false", _
-						 "m600":"false","prpwr":"false","mpsd":"false","ort":"Autodetect"))					 
+						 "m600":"false","prpwr":"false","mpsd":"true","ort":"Autodetect"))					 
 	End If
 End Sub
 

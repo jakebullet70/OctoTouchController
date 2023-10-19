@@ -19,7 +19,8 @@ Sub Class_Globals
 	Public IsInit As Boolean = False
 	Public mIgnoreMasterOctoEvent As Boolean = True
 	Public pParserWO As WebSocketParse
-	Public subscribe As String = $"{"subscribe": {"plugins": ["klipper"]  }}"$
+	'Public subscribe As String = $"{"subscribe": {"plugins": ["klipper"]  }}"$
+	Public pSubscriptionMain As String
 
 	Private mSesionName As String = ""
 	Private mSessionKey As String = ""	
@@ -39,6 +40,14 @@ End Sub
 'Initializes the object. You can add parameters to this method if needed.
 Public Sub Initialize() As OctoWebSocket
 	pParserWO.Initialize
+	pSubscriptionMain  = $"{"subscribe": {
+				  "state": {
+			      "logs": false,
+			      "messages": true},
+			      "events": true,
+				  "plugins": ["OctoKlipper","klipper"]
+				  }}"$
+				  
 	IsInit = True
 	Return Me
 End Sub
@@ -129,21 +138,10 @@ Public Sub Connect_Socket() As ResumableSub
 	pConnected = True
 	Wait For ws_TextMessage (Message As String)
 	
-	
-	
+		
 	'--- set subscriptions
-	Dim subscribe As String = $"{"subscribe": {
-				  "state": {
-			      "logs": false,
-			      "messages": true},
-			      "events": true,
-				  "plugins": ["OctoKlipper","klipper"]
-				  }}"$
-	
-	
-	
 	'Log(subscribe.Replace(CRLF," "))
-	Send(subscribe)
+	Send(mSubscriptionMain)
 	
 '	--- Set the AUTH And start socket events
 	Dim allGood As Boolean = False, ct As Int = 0

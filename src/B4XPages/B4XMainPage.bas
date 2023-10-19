@@ -320,6 +320,11 @@ Private Sub TryPrinterConnection
 			oMasterController.Start
 			oMasterController.oWS.pParserWO.EventAdd("MetadataAnalysisFinished",Me,"ev_file_change")
 			oMasterController.oWS.pParserWO.EventAdd("FileRemoved",Me,"ev_file_del")
+			oMasterController.oWS.pParserWO.EventAdd("FilamentChange",Me,"ev_filament_change_rec")
+			oMasterController.oWS.pParserWO.EventAdd("PrintStarted",Me,"ev_print_started") '{"event": {"type": "PrintStarted", "payload": {"name": "StreamDeck-Keycap.gcode", "path": "StreamDeck-Keycap.gcode", "origin": "local", "size": 381399, "owner": "ehome", "user": "ehome"}}}
+			oMasterController.oWS.pParserWO.EventAdd("PrintFailed",Me,"ev_print_done") '{"event": {"type": "PrintFailed", "payload": {"name": "StreamDeck-Keycap.gcode", "path": "StreamDeck-Keycap.gcode", "origin": "local", "size": 381399, "position": {"e": null, "x": null, "t": null, "z": null, "f": null, "y": null}, "owner": "ehome", "user": "ehome", "time": 28.347002013993915, "reason": "cancelled"}}}
+			
+			
 '			oMasterController.oWS.pParserWO.EventAdd("PrinterStateChanged",Me,"ev_get_jobstatus")
 '			Main.tmrTimerCallSub.CallSubDelayedPlus2(Me,"ev_get_jobstatus",1200,Null)
 			If Main.kvs.ContainsKey(gblConst.IS_OCTO_KLIPPY) = False Then
@@ -615,16 +620,16 @@ End Sub
 '--- callback for plugins options Menu
 Private Sub FncMenu_Event(value As String, tag As Object)
 	
-	If value.Length = 0 Then PopupMainOptionMenu
+	If value.Length = 0 Then 
+		PopupMainOptionMenu
+		Return
+	End If
+	
 	Dim onOff As Boolean
 	Dim msg As String = ""
 	
 	Select Case value
 			
-'		Case "g29"
-'			Main.kvs.Put("g29", Not (Main.kvs.GetDefault("g29",False)))
-'			Show_toast("G29 Option Saved",2000)
-
 		Case "mms"
 			onOff = Main.kvs.Get(gblConst.MANUAL_MESH_FLAG).As(Boolean)
 			msg = "Manual mesh wizard turned "
@@ -634,6 +639,8 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 				msg = msg & "on"
 			End If
 			Main.kvs.Put(gblConst.MANUAL_MESH_FLAG, Not (onOff))
+			CallSubDelayed(Me,"PopupFunctionOptionsMnu")
+			
 			
 		Case "zo"
 			onOff = Main.kvs.Get(gblConst.Z_OFFSET_FLAG).As(Boolean)
@@ -644,13 +651,13 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 				msg = msg & "on"
 			End If
 			Main.kvs.Put(gblConst.Z_OFFSET_FLAG, Not (onOff))
+			CallSubDelayed(Me,"PopupFunctionOptionsMnu")
 
 		Case "blcr" '--- BL touch
 			Dim oB7 As dlgBLTouchSetup
 			oB7.Initialize : oB7.Show
 			
 		Case "fl" '--- filament control
-			''Dim pDlgFilSetup As dlgFilamentSetup
 			pDlgFilSetup.Initialize 
 			pDlgFilSetup.Show
 			
@@ -670,7 +677,9 @@ Private Sub FncMenu_Event(value As String, tag As Object)
 			
 	End Select
 	
-	If msg.Length <> 0 Then Show_toast(msg,2400)
+	If msg.Length <> 0 Then 
+		Show_toast(msg,2400)
+	End If
 	
 End Sub
 
@@ -718,6 +727,8 @@ Private Sub PluginsMenu_Event(value As String, tag As Object)
 			oA1.Show("HTTP Control Config - " & value,value & gblConst.HTTP_ONOFF_SETUP_FILE)
 
 	End Select
+	
+	
 		
 End Sub
 
@@ -824,14 +835,6 @@ Private Sub lblStatus_Click
 		CallSetupErrorConnecting(False)
 	End If
 End Sub
-
-'Private Sub btnPower_Click
-'	'--- printer on/off
-'	Dim o1 As dlgOctoPsuCtrl
-'	o1.Initialize(Me)
-'	o1.Show
-'End Sub
-
 
 Public Sub Check4_Update
 	
@@ -1299,9 +1302,9 @@ End Sub
 #end region
 
 
-
+#region "SOCKET FILE CHANGE EVENT"
 Private Sub ev_file_change(msg As String)
-	logMe.LogDebug2("ev_file_change","")
+	logMe.LogDebug2("WS-ev_file_change","")
 	If oPageFiles.IsInitialized = False Then Return
 	If oPageCurrent <> oPageFiles Then
 		oPageFiles.FileEvent = True
@@ -1327,7 +1330,7 @@ Private Sub ev_file_change(msg As String)
 	End If
 End Sub
 Private Sub ev_file_del(msg As String)
-	logMe.LogDebug2("ev_file_del","")
+	logMe.LogDebug2("WS-ev_file_del","")
 	If oPageFiles.IsInitialized = False Then Return
 	If oPageCurrent <> oPageFiles Then
 		oPageFiles.FileEvent = True
@@ -1343,6 +1346,32 @@ End Sub
 Private Sub FilesCheckChange
 	oPageFiles.FilesCheckChange(False)
 End Sub
+#end region
+
+
+#region "PRINT START / DONE - FILAMENT CHANGE"
+Private Sub ev_print_started(msg As String)
+	'--- want to do something?
+End Sub
+Private Sub ev_print_done(msg As String)
+	'--- want to do something? This will fire also when canceled and other things
+End Sub
+Private Sub ev_filament_change_rec(msg As String)
+	Log("ev_filament_change_rec")
+	
+	Dim dataMapG As Map = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
+	If dataMapG.GetDefault(gblConst.filM600Show,False).As(Boolean) Then
+		Dim b As SoundsBeeps : b.Initialize
+		b.Beeps(300,500,5)
+		Dim o As dlgFilamentCtrl
+		pObjCurrentDlg2 = o.Initialize(True) 'dim WeArePrinting as Boolean = False
+		o.Show
+	End If
+	
+End Sub
+
+#end region
+
 '
 'Private Sub ev_get_jobstatus(msg As String)
 '	'oMasterController.Get_JobStatus(msg As String)

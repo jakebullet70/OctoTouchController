@@ -33,6 +33,10 @@ End Sub
 
 public Sub CreateDefaultFile
 	
+	Dim klippyDef As String = "false"
+	If oc.Klippy Then
+		klippyDef = "true" '--- def to showing wizard on M600 in klippy
+	End If
 
 	If File.Exists(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE) = False Then
 		File.WriteMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE, _
@@ -44,7 +48,7 @@ public Sub CreateDefaultFile
 						 gblConst.filZLiftRel: "30", gblConst.filParkSpeed: "6000", _
 						 gblConst.filUnloadLen:"30,150,150,150", gblConst.filUnloadSpeed:"60,2600", _
 						 gblConst.filLoadLen:"150,150,150,30",gblConst.filLoadSpeed:"2600,60", _
-						 gblConst.filSmallExtBeforeUload:"true"))
+						 gblConst.filSmallExtBeforeUload:"true",gblConst.filM600Show:klippyDef))
 						 
 	End If
 

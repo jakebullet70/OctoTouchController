@@ -186,10 +186,15 @@ Public Sub Update_Printer_Btns
 		guiHelpers.EnableDisableBtns2(Array As Button(btnPause),False)
 	
 	else if oc.JobPrintState = "Resuming" Then
-		'--- job is resuming (filament change)
+		
+		'--- job is resuming (filament change or just paused)
 		guiHelpers.EnableDisableBtns2(Array As Button(btnCancel),True)
 		guiHelpers.EnableDisableBtns2(Array As Button(btnPause,btnPrint),False)
-			
+		
+	else if oc.isCanceling Then
+		
+		guiHelpers.EnableDisableBtns2(Array As Button(btnPause,btnPrint,btnCancel),False)
+		
 	Else
 		
 		'--- not printing anything
@@ -288,11 +293,7 @@ Private Sub btnAction_Click
 				
 				CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
 				
-				#if klipper
-				If oc.isklipperCanceling = True Then
-				#else
 				If oc.isCanceling = True Then
-				#End If
 					guiHelpers.Show_toast("Printer Is Canceling, Please Wait...",2000)
 					Return
 				End If
@@ -303,12 +304,8 @@ Private Sub btnAction_Click
 				If res = xui.DialogResponse_Cancel Then Return
 				
 				guiHelpers.Show_toast("Starting Print...",2000)
-				#if klipper
-				Dim fname As String = oc.cCMD_PRINT.Replace("!FN!",oc.JobFileName) '--- TODO KLIPPER, folders?
-				mMainObj.oMasterController.cn.PostRequest(fname)
-				#else
 				mMainObj.oMasterController.cn.PostRequest(oc.cCMD_PRINT)
-				#End If
+				'{"event": {"type": "FilamentChange", "payload": null}}
 				
 				If ivPreviewLG.mBase.Visible = True Then
 					ivPreviewLG_Click '--- show tempeture panel
@@ -324,9 +321,6 @@ Private Sub btnAction_Click
 
 			If res = xui.DialogResponse_Positive Then
 				guiHelpers.Show_toast("Canceling...",2000)
-				#if klipper
-				oc.isKlipperCanceling = True
-				#end if
 				mMainObj.oMasterController.cn.PostRequest(oc.cCMD_CANCEL)
 			End If
 			

@@ -115,6 +115,7 @@ public Sub Update_Printer_Btns
 	mPageEnableDisable = IIf(oc.isPrinting,False,True)
 	If oc.IsPaused2 And File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE).GetDefault("mpsd",False).As(Boolean) Then '--- over ride flag to show movement screen when paused
 		mPageEnableDisable = True
+		If oc.JobPrintState = "Resuming" Then mPageEnableDisable = False
 	End If
 		
 	guiHelpers.EnableDisableBtns2(Array As Button( _
@@ -146,14 +147,11 @@ Private Sub btnGeneral_Click
 	
 	If oc.isConnected = False Then Return
 	
-	#if klipper
-	If oc.JobPrintState.ToLowerCase <> "standby" And oc.JobPrintState.ToLowerCase <> "operational" Then
-	#Else
-	If oc.JobPrintState <> "Operational" Then
-	#End If
-		guiHelpers.Show_toast(oc.cPRINTER_BUSY_MSG,2000)
-		Return
-	End If
+	'--- Check over-ride movement flag	
+'	If oc.JobPrintState <> "Operational" And File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE).GetDefault("mpsd",False).As(Boolean) = False Then
+'		guiHelpers.Show_toast(oc.cPRINTER_BUSY_MSG,2000)
+'		Return
+'	End If
 	
 	Select Case o.Tag
 		Case "heat" 	: ToolHeatChangeRequest
@@ -172,16 +170,11 @@ Private Sub btnXYZ_Click
 	
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	
-	If oc.isConnected = False Then Return
-	
-		#if klipper
-		If oc.JobPrintState.ToLowerCase <> "standby" And oc.JobPrintState.ToLowerCase <> "operational" Then
-		#Else
-		If oc.JobPrintState <> "Operational" Then
-		#End If
-		guiHelpers.Show_toast(oc.cPRINTER_BUSY_MSG,2000)
-		Return
-	End If
+'	If oc.isConnected = False Then Return
+'		If oc.JobPrintState <> "Operational" Then
+'		guiHelpers.Show_toast(oc.cPRINTER_BUSY_MSG,2000)
+'		Return
+'	End If
 		
 '	Log("PrinterProfileInvertedZ" & oc.PrinterProfileInvertedZ )
 '	Log("PrinterProfileInvertedY" & oc.PrinterProfileInvertedy )
@@ -310,15 +303,9 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 			mMainObj.pobjWizards = uu.Initialize(mMainObj.pnlWizards)
 			uu.Show
 			
-'		Case "cfl" '--- Change filament through firmware
-'			Wait For (mb.Show(Ask,gblConst.MB_ICON_QUESTION,"OK","","CANCEL")) Complete (ret As Int)
-'			If ret = xui.DialogResponse_Cancel Then Return
-'			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!","M600"))
-'			msg = msg & "Sending M600"
-			
 		Case "cf"'--- built in load / unload filament wiz
 			Dim o1 As dlgFilamentCtrl
-			B4XPages.MainPage.pObjCurrentDlg2 = o1.Initialize()
+			B4XPages.MainPage.pObjCurrentDlg2 = o1.Initialize(False) 'dim AreWePrinting as Boolean = False
 			o1.Show
 			
 		Case "prh" '--- pre-heat menu

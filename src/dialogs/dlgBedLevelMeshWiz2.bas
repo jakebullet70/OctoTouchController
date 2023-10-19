@@ -272,8 +272,9 @@ Private Sub btnStart_Click
 				guiHelpers.Show_toast2("Setting up for Z Offset...",2500)
 				mOBJ.Send_Gcode($"G1 Z5 X${oc.PrinterWidth / 2} Y${oc.PrinterDepth / 2} F4000"$)
 				Sleep(500)
-				mOBJ.Send_Gcode("MANUAL_PROBE")
-				
+				mOBJ.Send_Gcode("PROBE_CALIBRATE")
+				'mOBJ.Send_Gcode("MANUAL_PROBE")
+						
 			End If
 			#end region
 		Else '-------------------- Marlin firmware
@@ -357,6 +358,7 @@ Private Sub btnStart_Click
 			
 			'--- same for Z-Offset or Manual mesh
 			mOBJ.Send_Gcode(oc.cKLIPPY_ACCEPT)
+			ProcessMeshComplete
 			
 		Else '-------------------- Marlin firmware
 			

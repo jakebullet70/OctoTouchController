@@ -134,6 +134,7 @@ Sub Process_Globals
 	Public Const filYPark As String = "yp",filXPark As String = "xp"
 	Public Const filZLiftRel As String = "zrel", filParkSpeed As String = "pmspd"
 	Public Const filShow As String = "mnu", filSmallExtBeforeUload As String = "extb"
+	Public Const filM600Show As String = "m600ok"
 	
 	'---------------------------------------------------------------------------------------------------------------------
 	'--- bed level wizard ---

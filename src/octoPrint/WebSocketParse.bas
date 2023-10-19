@@ -21,6 +21,7 @@ Sub Class_Globals
 	Public pEvents2Monitor As Map
 	Public pMsgs2Monitor As Map
 	Type tOctoEvents(CallbackObj As Object, CallbackSub As String)
+	
 		
 End Sub
 
@@ -29,6 +30,7 @@ End Sub
 Public Sub Initialize
 	pEvents2Monitor.Initialize
 	pMsgs2Monitor.Initialize
+	
 End Sub
 
 
@@ -48,7 +50,7 @@ Public Sub EventAdd(name As String,CallbackObj As Object, CallbackSub As String)
 End Sub
 
 Public Sub Event_Parse(msg As String)
-	'Log(msg)
+	Log(msg)
 	
 	Dim parser As JSONParser : parser.Initialize(msg)
 	
@@ -86,11 +88,13 @@ Public Sub Event_Parse(msg As String)
 		Case "MetadataAnalysisFinished"
 			'fileHelpers.WriteTxt2SharedFolder("newfile.txt",msg)
 			outMsg = msg	
-			
-		Case "FileRemoved"
-			'fileHelpers.WriteTxt2SharedFolder("delfile.txt",msg)
+				
+		Case "FilamentChange"
+			outMsg = "" '{"event": {"type": "FilamentChange", "payload": null}}
+		
+		Case "PrintStarted","PrintFailed","FileRemoved"
 			outMsg = msg
-			
+		
 	End Select
 	
 	If SubExists(o.CallbackObj,o.CallbackSub) Then

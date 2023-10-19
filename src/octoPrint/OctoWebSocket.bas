@@ -19,7 +19,6 @@ Sub Class_Globals
 	Public IsInit As Boolean = False
 	Public mIgnoreMasterOctoEvent As Boolean = True
 	Public pParserWO As WebSocketParse
-	'Public subscribe As String = $"{"subscribe": {"plugins": ["klipper"]  }}"$
 	Public pSubscriptionMain As String
 
 	Private mSesionName As String = ""
@@ -40,6 +39,7 @@ End Sub
 'Initializes the object. You can add parameters to this method if needed.
 Public Sub Initialize() As OctoWebSocket
 	pParserWO.Initialize
+	
 	pSubscriptionMain  = $"{"subscribe": {
 				  "state": {
 			      "logs": false,
@@ -101,6 +101,10 @@ End Sub
 
 'ws://192.168.1.193:80/websocket?apikey=D009C78831ED4A25A9E48D2EC3538261
 
+Public Sub SetSubscription(s As String)
+	Send(s)
+End Sub
+
 Public Sub Connect_Socket() As ResumableSub
 	'--- we wont ever run this code if the REST API fails
 	Dim Const inSub As String	= "Connect"
@@ -138,10 +142,7 @@ Public Sub Connect_Socket() As ResumableSub
 	pConnected = True
 	Wait For ws_TextMessage (Message As String)
 	
-		
-	'--- set subscriptions
-	'Log(subscribe.Replace(CRLF," "))
-	Send(mSubscriptionMain)
+	SetSubscription(pSubscriptionMain)
 	
 '	--- Set the AUTH And start socket events
 	Dim allGood As Boolean = False, ct As Int = 0

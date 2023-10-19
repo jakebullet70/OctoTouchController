@@ -267,7 +267,7 @@ End Sub
 
 Private Sub InitWebSocket'ignore
 	oWS.Initialize
-	oWS.Connect
+	oWS.Connect_Socket
 End Sub
 
 
@@ -282,12 +282,12 @@ Private Sub GetConnectionPrinterStatus
 	Try
 		If oWS.IsInit = False Or oWS.pConnected = False Then
 			InitWebSocket
-			Wait For (oWS.Passive_Login) Complete(i As Boolean) '--- Set the AUTH and start socket events
+			'Wait For (oWS.Passive_Login) Complete(i As Boolean) '--- Set the AUTH and start socket events
 		End If
 	Catch
 		oWS.Initialize
 		InitWebSocket
-		Wait For (oWS.Passive_Login) Complete(i As Boolean) '--- Set the AUTH and start socket events
+		'Wait For (oWS.Passive_Login) Complete(i As Boolean) '--- Set the AUTH and start socket events
 	End Try
 	
 

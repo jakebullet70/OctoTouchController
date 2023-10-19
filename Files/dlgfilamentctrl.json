@@ -6,7 +6,13 @@
             "title": "Add To Function Menu ",
             "type": "Boolean",
             "key": "mnu",
-            "required": true
+            "required": false
+        },
+        {
+            "title": "Use When M600 Detected",
+            "type": "Boolean",
+            "key": "m600ok",
+            "required": false
         },
         {
             "title": "** Print head settings **",
@@ -18,43 +24,49 @@
             "title": "Pause Printer Before Park (M0)",
             "type": "Boolean",
             "key": "pbp",
-            "required": true
+            "required": false
         },
         {
-            "title": "Small rectration Before Park",
+            "title": "Small Retraction Before Park",
             "type": "Boolean",
             "key": "rbp",
-            "required": true
+            "required": false
         },
         {
             "title": "Home Before Park",
             "type": "Boolean",
             "key": "hbp",
-            "required": true
+            "required": false
+        },
+        {
+            "title": "** Lengths \/ Speed **",
+            "type": "Separator",
+            "key": "",
+            "required": false
         },
         {
             "title": "X Park Position",
             "type": "Number",
             "key": "xp",
-            "required": true
+            "required": false
         },
         {
             "title": "Y Park Position",
             "type": "Number",
             "key": "yp",
-            "required": true
+            "required": false
         },
         {
             "title": "Z Lift Relative When Unloading",
             "type": "Number",
             "key": "zrel",
-            "required": true
+            "required": false
         },
         {
             "title": "Park Movement Speed",
             "type": "Number",
             "key": "pmspd",
-            "required": true
+            "required": false
         },
         {
             "title": "** Extruder Settings **",
@@ -72,25 +84,25 @@
             "title": "Unload Length (30,180,180)",
             "type": "Text",
             "key": "ulen",
-            "required": true
+            "required": false
         },
         {
             "title": "Unload Speeds (60,2500)",
             "type": "Text",
             "key": "uspd",
-            "required": true
+            "required": false
         },
         {
             "title": "Load Length (180,180,30)",
             "type": "Text",
             "key": "llen",
-            "required": true
+            "required": false
         },
         {
             "title": "Load Speeds (2500,60)",
             "type": "Text",
             "key": "lspd",
-            "required": true
+            "required": false
         }
     ]
 }

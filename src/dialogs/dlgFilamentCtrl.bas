@@ -31,12 +31,16 @@ Sub Class_Globals
 	Private chkHeatOff As CheckBox
 	Private btnBack As B4XView
 	Private btnSetup As Button
+	
+	Public pCalledM600WeArePrinting As Boolean = False
+	
 End Sub
 
-Public Sub Initialize() As Object
+Public Sub Initialize(CalledM600WeArePrinting As Boolean) As Object
 	mMainObj = B4XPages.MainPage
 	mData = File.ReadMap(xui.DefaultFolder,gblConst.FILAMENT_CHANGE_FILE)
 	oBeepMe.Initialize
+	pCalledM600WeArePrinting = CalledM600WeArePrinting
 	Return Me
 End Sub
 
@@ -101,18 +105,20 @@ Public Sub Show
 	dlgHelper.ThemeDialogForm("Filament Change")
 	Dim rs As ResumableSub = mDialog.ShowCustom(p, "", "", "CLOSE")
 	mDialog.Base.Parent.Tag = "" 'this will prevent the dialog from closing when the second dialog appears.
-	BuildChkbox
+	
+	If pCalledM600WeArePrinting = True Then
+		btnPark.Enabled = False
+	Else
+		BuildChkbox
+	End If
+	
 	dlgHelper.ThemeInputDialogBtnsResize
 
 	Wait For (rs) Complete (Result As Int)
 	
-	If chkHeatOff.Checked Then
+	If pCalledM600WeArePrinting = False And chkHeatOff.Checked Then
 		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Tool Heater Off", 1600)
-		#if klipper
-		mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!","M104 S0"))
-		#else
 		mMainObj.oMasterController.cn.PostRequest(oc.cCMD_SET_TOOL_TEMP.Replace("!VAL0!",0).Replace("!VAL1!",0))
-		#End If
 	End If
 	
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_OFF) '--- turn it off if its on
@@ -167,13 +173,19 @@ End Sub
 
 
 Private Sub btnStuff_Click
+	Dim inSub As String = "btnStuff_Click"
 	
+	'--- is this just the extrude more button?
 	If btnStuff.Text.StartsWith("E") Then 
 		SendMGcode("G1 E10 F60") '--- Extrude 10mm more
 		CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Extruding 10mm...", 1000)
 		Return
 	End If
 	
+	
+	Dim NOT_SET_UP As String = "Filament load / unload wizard not setup"
+	'--------------------------------------------
+	'--- OK, do some real load-unload work
 	'--------------------------------------------
 	Dim aLen() As String, speeds As String
 	If mLoadUnload = "load" Then
@@ -182,62 +194,109 @@ Private Sub btnStuff_Click
 		speeds = mData.Get(gblConst.filUnLoadSpeed)
 	End If
 	
-	Dim speed1, speed2 As String
-	If mData.Get(gblConst.filUnLoadSpeed).As(String).Contains(",") Then
-		speed1 = Regex.split(",", speeds)(0)
-		speed2 = Regex.split(",", speeds)(1)
-	Else
-		speed1 = mData.Get(gblConst.filUnLoadSpeed)
-		speed2 = speed1
+	If strHelpers.IsNullOrEmpty(speeds) Then
+		guiHelpers.Show_toast2(NOT_SET_UP,3000)
+		Return
 	End If
-	
-	Dim sLen As String
-	Dim first As Boolean = True
-	If mLoadUnload <> "load" Then
-		'--- UNLOAD	------
-		btnStuff.Visible = False
-		SendMGcode("M117 UnLoading filament")
-		SetStatusLabel("UnLoad filament") : Sleep(200)
-		SendMGcode("M83") : Sleep(100)
 		
-		If mData.Get(gblConst.filSmallExtBeforeUload).As(Boolean) = True Then
-			SendMGcode($"G1 E20 F${speed1}"$) : Sleep(500) '--- small push to avoid blobs
-		End If
-		
-		sLen = mData.Get(gblConst.filUnLoadLen)
-		If sLen.Contains(",") Then '--- multi lengths as marlin has EXTRUDE_MAXLENGTH set low
-			aLen = Regex.Split(",",sLen)
-			For Each partLen As String In aLen
-				SendMGcode($"G1 E-${partLen} F${IIf(first,speed1,speed2)}"$) : Sleep(400)
-				first = False
-			Next
+	Try
+		Dim speed1, speed2 As String
+		If mData.Get(gblConst.filUnLoadSpeed).As(String).Contains(",") Then
+			speed1 = Regex.split(",", speeds)(0)
+			speed2 = Regex.split(",", speeds)(1)
 		Else
-			SendMGcode($"G1 E-${sLen} F${speed2}"$) : Sleep(100)
+			speed1 = mData.Get(gblConst.filUnLoadSpeed)
+			speed2 = speed1
 		End If
+		If strHelpers.IsNullOrEmpty(speed1) Then
+			guiHelpers.Show_toast2(NOT_SET_UP,3000)
+			Return
+		End If
+			
+	Catch
+		guiHelpers.Show_toast2(NOT_SET_UP,3000)
+		#if release 
+		logMe.LogIt2(LastException.Message,mModule,inSub)
+		#else
+		Log(LastException)
+		#end if
+		Return
+	End Try
+	
+	
+	Dim sLen As String, first As Boolean = True
+	If mLoadUnload <> "load" Then
 		
-		SendMGcode("M18 E") : Sleep(100)
+		Try
+		
+			'--- UNLOAD	------
+			btnStuff.Visible = False
+			SendMGcode("M117 UnLoading filament")
+			SetStatusLabel("UnLoad filament") : Sleep(200)
+			SendMGcode("M83") : Sleep(100)
+			
+			If mData.Get(gblConst.filSmallExtBeforeUload).As(Boolean) = True Then
+				SendMGcode($"G1 E5 F${speed1}"$) : Sleep(500) '--- small push to avoid blobs
+			End If
+			
+			sLen = mData.Get(gblConst.filUnLoadLen)
+			If sLen.Contains(",") Then '--- multi lengths as marlin / klipper has EXTRUDE_MAXLENGTH set low
+				aLen = Regex.Split(",",sLen)
+				For Each partLen As String In aLen
+					SendMGcode($"G1 E-${partLen} F${IIf(first,speed1,speed2)}"$) : Sleep(400)
+					first = False
+				Next
+			Else
+				SendMGcode($"G1 E-${sLen} F${speed2}"$) : Sleep(100)
+			End If
+			
+			If pCalledM600WeArePrinting = False Then
+				SendMGcode("M18 E") : Sleep(100)
+			End If
+			
+		Catch
+			guiHelpers.Show_toast2(LastException.Message,3000)
+			#if release 
+			logMe.LogIt2(LastException.Message,mModule,inSub)
+			#else
+			Log(LastException)
+			#end if
+		End Try
+			
 		Sleep(600)
 		ShowMainPnl
 		
 	Else
 		
-		'--- LOAD --------	
-		SetStatusLabel("Filament load") : Sleep(100)
-		SendMGcode("M117 Load filament") 
-		SendMGcode("M83") : Sleep(100)
-		sLen = mData.Get(gblConst.filLoadLen)
-		Dim first As Boolean = True
-		If sLen.Contains(",") Then '--- multi lengths as marlin has EXTRUDE_MAXLENGTH set low
-			aLen = Regex.Split(",",sLen)
-			Dim isLast As Int = 0
-			For Each partLen As String In aLen
-				SendMGcode($"G1 E${partLen} F${IIf(isLast = aLen.Length - 1,speed2,speed1)}"$) : Sleep(400)
-				isLast = isLast + 1
-			Next
-		Else
-			SendMGcode($"G1 E${sLen} F${speed2}"$) : Sleep(100)
-		End If
-		btnStuff.Text = "Extrude" & CRLF & "10mm More"
+		Try
+		
+			'--- LOAD --------
+			SetStatusLabel("Filament load") : Sleep(100)
+			SendMGcode("M117 Load filament")
+			SendMGcode("M83") : Sleep(100)
+			sLen = mData.Get(gblConst.filLoadLen)
+			Dim first As Boolean = True
+			If sLen.Contains(",") Then '--- multi lengths as marlin / klipper has EXTRUDE_MAXLENGTH set low
+				aLen = Regex.Split(",",sLen)
+				Dim isLast As Int = 0
+				For Each partLen As String In aLen
+					SendMGcode($"G1 E${partLen} F${IIf(isLast = aLen.Length - 1,speed2,speed1)}"$) : Sleep(400)
+					isLast = isLast + 1
+				Next
+			Else
+				SendMGcode($"G1 E${sLen} F${speed2}"$) : Sleep(100)
+			End If
+			btnStuff.Text = "Extrude" & CRLF & "10mm More"
+		Catch
+			
+			guiHelpers.Show_toast2(LastException.Message,3000)
+			#if release
+			logMe.LogIt2(LastException.Message,mModule,inSub)
+			#else
+			Log(LastException)
+			#end if
+			
+		End Try
 	
 	End If
 	
@@ -245,6 +304,8 @@ End Sub
 
 
 Private Sub ParkNozzle() As ResumableSub 'ignore
+	
+	'--- btn disabled when M600 called and we are in the middle of a print
 	
 	CallSubDelayed3(B4XPages.MainPage,"Show_Toast", "Parking Nozzle...", 2600)
 	
@@ -275,13 +336,7 @@ End Sub
 
 
 Private Sub SendMGcode(code As String)
-	
-	#if klipper
-	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE.Replace("!G!",code))
-	#else
 	mMainObj.oMasterController.cn.PostRequest(oc.cPOST_GCODE_COMMAND.Replace("!CMD!",code))
-	#End If
-	
 End Sub
 
 

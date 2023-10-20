@@ -34,6 +34,7 @@ Sub Class_Globals
 	
 	Public pCalledM600WeArePrinting As Boolean = False
 	
+	Private btnHome As Button
 End Sub
 
 Public Sub Initialize(CalledM600WeArePrinting As Boolean) As Object
@@ -95,7 +96,7 @@ Public Sub Show
 					IIf(guiHelpers.gScreenSizeAprox < 6,460dip,560dip),IIf(guiHelpers.gScreenSizeAprox < 6,guiHelpers.MaxVerticalHeight_Landscape,280dip))
 	Else
 		p.SetLayoutAnimated(0, 0, 0, 90%x, _
-							IIf(guiHelpers.gScreenSizeAprox < 5,280dip,320dip))
+							IIf(guiHelpers.gScreenSizeAprox < 5.1,320dip,360dip))
 	End If
 	'---
 		
@@ -441,4 +442,8 @@ End Sub
 Private Sub btnSetup_Click
 	mMainObj.pDlgFilSetup.Initialize
 	mMainObj.pDlgFilSetup.Show
+End Sub
+
+Private Sub btnHome_Click
+	SendMGcode("G28")
 End Sub

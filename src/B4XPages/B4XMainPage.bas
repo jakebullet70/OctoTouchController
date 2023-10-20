@@ -1364,7 +1364,9 @@ Private Sub ev_filament_change_rec(msg As String)
 		Dim b As SoundsBeeps : b.Initialize
 		b.Beeps(300,500,5)
 		Dim o As dlgFilamentCtrl
-		pObjCurrentDlg2 = o.Initialize(True) 'dim WeArePrinting as Boolean = False
+		Dim AreWeInTheMiddleOfPrint As Boolean = True
+		If oc.JobPrintState.EqualsIgnoreCase("Operational") Then AreWeInTheMiddleOfPrint = False
+		pObjCurrentDlg2 = o.Initialize(AreWeInTheMiddleOfPrint) 
 		o.Show
 	End If
 	

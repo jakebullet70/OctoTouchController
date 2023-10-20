@@ -305,7 +305,9 @@ Private Sub FunctionMenu_Event(value As String, tag As Object)
 			
 		Case "cf"'--- built in load / unload filament wiz
 			Dim o1 As dlgFilamentCtrl
-			B4XPages.MainPage.pObjCurrentDlg2 = o1.Initialize(False) 'dim AreWePrinting as Boolean = False
+			Dim AreWeInTheMiddleOfPrint As Boolean = True
+			If oc.JobPrintState.EqualsIgnoreCase("Operational") Then AreWeInTheMiddleOfPrint = False
+			mMainObj.pObjCurrentDlg2 = o1.Initialize(AreWeInTheMiddleOfPrint)
 			o1.Show
 			
 		Case "prh" '--- pre-heat menu

@@ -23,22 +23,11 @@ Sub Process_Globals
 	
 	'===============================================================
 	Public Const THUMBNAIL_LOADING As String = "Getting Thumbnail..."
-		
-	#if klipper
-	Public Const APP_TITLE As String = "MoonrakerTC ™"
-	Private Const WEB_ADDR As String = "http://sadlogic.com/moonrakertouchcontroller/"
-	If DEBUG_TEST_INSTALL Then
-		APK_NAME         = WEB_ADDR & "MoonrakerTouchController.apk"
-		APK_FILE_INFO = WEB_ADDR & "MoonrakerTouchController.txt"
-	Else
-		APK_NAME         = WEB_ADDR & "MoonrakerTouchController_testing.apk"
-		APK_FILE_INFO = WEB_ADDR & "MoonrakerTouchController_testing.txt"
-	End If
 	
-	#else
 	
+	'--- Have added the '2' to the end 	
 	Public Const APP_TITLE As String = "OctoTC ™"
-	Private Const WEB_ADDR As String = "http://sadlogic.com/octotouchcontroller/"
+	Private Const WEB_ADDR As String = "http://sadlogic.com/octotouchcontroller2/"
 	If DEBUG_TEST_INSTALL Then
 		APK_NAME         = WEB_ADDR & "OctoTouchController_testing.apk"
 		APK_FILE_INFO = WEB_ADDR & "OctoTouchController_testing.txt"
@@ -46,7 +35,7 @@ Sub Process_Globals
 		APK_NAME         = WEB_ADDR & "OctoTouchController.apk"
 		APK_FILE_INFO = WEB_ADDR & "OctoTouchController.txt"
 	End If
-	#End If
+	
 	'===============================================================
 
 	

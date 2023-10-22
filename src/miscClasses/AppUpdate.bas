@@ -6,6 +6,8 @@ Version=8.5
 @EndOfDesignText@
 ' Author:  sadLogic
 #Region VERSIONS 
+' V. 1.1 	Oct/22/2023
+'			Refactored for V2
 ' V. 1.0 	Sept/22/2022
 #End Region
 
@@ -27,23 +29,10 @@ Public Sub RunPrgUpdate
 	fileHelpers.DeleteFiles(xui.DefaultFolder,"*.crash")
 	fileHelpers.DeleteFiles(xui.DefaultFolder,"sad_*.png") '--- thumbnails
 	
-	''''#if release
 	Dim PrevVer As Int = Main.kvs.Get("version_code").As(Int) 'ignore
 	
+
 	
-	
-	'--- V2 is a complete RE-INSTALL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	'--- V2 is a complete RE-INSTALL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	'--- V2 is a complete RE-INSTALL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	
-	
-	
-'	#if klipper
-'	
-'	'--- nothing here yet
-'	
-'	#else
-'	
 '	'=============================================================================================
 '	
 '	If PrevVer <= 15 Then '--- V1.2.2
@@ -92,8 +81,6 @@ Public Sub RunPrgUpdate
 '		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,mSys2)
 '	End If
 '
-'	#End If
-'	
 	
 	'=============================================================================================
 	'--- update the version

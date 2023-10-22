@@ -6,7 +6,9 @@ Version=5.5
 @EndOfDesignText@
 ' Author:  B4X
 #Region VERSIONS 
-' V. 1.0 	No idea
+' V. 1.1	Aug/20/2023
+'			Added Exists and ExistsRemove methods
+' V. 1.0 	From https://www.b4x.com/android/forum/threads/b4x-callsubplus-callsub-with-explicit-delay.60877/#content
 #End Region
 
 'Class module

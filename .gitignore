@@ -2,6 +2,5 @@
 **/AutoBackups
 *.meta
 *.keystore
-KlipperTouchController.apk
 *.apk
 OctoTouchController_java_src.7z

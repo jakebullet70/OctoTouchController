@@ -41,15 +41,11 @@ Theme color builder
 ### Supported Octoprint Plugins
 OctoKlipper  (V2.X) https://plugins.octoprint.org/plugins/klipper/  
 
-Cura Thumbnails		https://plugins.octoprint.org/plugins/UltimakerFormatPackage/
+Cura Thumbnails		https://plugins.octoprint.org/plugins/UltimakerFormatPackage/  
 
-Prusa Thumbnails	https://plugins.octoprint.org/plugins/prusaslicerthumbnails/
+Prusa Thumbnails	https://plugins.octoprint.org/plugins/prusaslicerthumbnails/  
 
-WLED  (V1.X)				https://plugins.octoprint.org/plugins/wled/
-
-PSUControl			https://plugins.octoprint.org/plugins/psucontrol/
-
-ws281z LED  (V1.X)			https://plugins.octoprint.org/plugins/ws281x_led_status/
+PSUControl			https://plugins.octoprint.org/plugins/psucontrol/  
 
 ** Arc Welder Aware **  
 

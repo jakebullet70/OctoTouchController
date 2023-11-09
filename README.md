@@ -69,9 +69,11 @@ Written in the middle of a war under occupation in Kherson Ukraine. Continued af
 Written in [B4X](https://www.b4x.com/)  
 ![GitHub all releases](https://img.shields.io/github/downloads/jakebullet70/OctoTouchController/total)
 
-![](./github_pics/printing2.png?raw=true "Printing")  
+![Av3xIXHuRR](https://github.com/jakebullet70/OctoTouchController/assets/14124210/7819a654-2855-4051-bc45-57b0a7f80f89)
 
-![](./github_pics/portrait-movement.png?raw=true "Movement")  
+
+ ![main-menu](https://github.com/jakebullet70/OctoTouchController/assets/14124210/ff26ba09-7e26-4f8d-8788-5bd4bd61ec37)
+
 
 ![](./github_pics/files2.png?raw=true "Files")  
 

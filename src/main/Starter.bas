@@ -46,7 +46,8 @@ Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
 		B4XPages.MainPage.oMasterController.oWS.wSocket.Close
 	Catch
 	End Try	'ignore
-	CallSub(Main,"Restart_App") '--- this code is there but seems to fail
+	CallSub3("Main", "Show_Unhandled_Error", Error, StackTrace) 
+	'CallSub(Main,"Restart_App") '--- this code is there but seems to fail
 	Return False
 	#end if
 End Sub

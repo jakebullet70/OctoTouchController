@@ -50,7 +50,7 @@ Public Sub EventAdd(name As String,CallbackObj As Object, CallbackSub As String)
 End Sub
 
 Public Sub Event_Parse(msg As String)
-	Log(msg)
+	'Log(msg)
 	
 	Dim parser As JSONParser : parser.Initialize(msg)
 	

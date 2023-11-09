@@ -220,8 +220,8 @@ Version=12.5
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: OctoTC
-	#VersionCode: 50
-	#VersionName: 2.0.3
+	#VersionCode: 51
+	#VersionName: 2.0.0
 	#SignKeyFile: ..\keystore\release.keystore
  	#SignKeyPassword: !!OctoTC!!
 	
@@ -312,18 +312,6 @@ Sub Activity_Create(FirstTime As Boolean) 'ignore
 	If tmrScreen.IsInitialized = False Then 
 		tmrScreen.Initialize("tmrScreenPower",15000)	'--- init, will be reset later
 	End If
-	
-	
-'	#if release
-'	Dim fcheck As Long = 3000
-'	#else
-'	Dim fcheck As Long = 8000
-'	#End If
-'	'--- TODO add 
-'	If tmrFilesCheckChange.IsInitialized = False Then 
-'		tmrFilesCheckChange.Initialize("tmrFilesCheckChange",fcheck) '--- printer files check change
-'	End If
-		
 	
 	If tmrMain.IsInitialized = False Then 
 		tmrMain.Initialize("tmrMain",2100) 	'--- main loop
@@ -611,7 +599,7 @@ Public Sub Dim_ActionBar_Off
 End Sub
 
 
-Public Sub Restart_App
+'Public Sub Restart_App
 '	' TODO, errors out, needs work
 '	guiHelpers.Show_toast("Re-Starting Application...",2000)
 '	Activity.Finish
@@ -624,7 +612,7 @@ Public Sub Restart_App
 '	r.Target = I
 '	r.RunMethod2("addFlags",  67108864, "java.lang.int")
 '	StartActivity(I)
-End Sub
+'End Sub
 
 
 
@@ -744,4 +732,10 @@ End Sub
 
 Public Sub SetObj_Null(obj As Object)
 	obj = Null
+End Sub
+
+
+Public Sub Show_Unhandled_Error (Error As Exception, StackTrace As String) As Boolean
+	MsgboxAsync(StackTrace, Error)
+	Return False
 End Sub

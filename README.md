@@ -9,6 +9,7 @@
 A dedicated touch screen controller for Octoprint supporting **older Android phones / tablets** (Android 4.X) 
 Device specs: Android **4.x and above**, 4inch screen with a minimum resolution of 680x340. (Single core - 512Mb) It is Free Software and released under the [GNU Affero General Public License V3](https://www.gnu.org/licenses/agpl-3.0.html).  
 ** Directly supports Klipper firmware with OctoKlipper plugin: https://plugins.octoprint.org/plugins/klipper/ **  
+** See https://github.com/jakebullet70/OctoTouchController/wiki/OctoKlipper **  
 
 NOTE: Newer Android phones WILL NOT WORK. I know now Android 13 fails and I have tested Android 4,5,6 and 7 myself. Google is **very** famous for breaking existing software with newer releases.   
 
@@ -41,22 +42,18 @@ Theme color builder
 ### Supported Octoprint Plugins
 OctoKlipper  (V2.X) https://plugins.octoprint.org/plugins/klipper/  
 
-Cura Thumbnails		https://plugins.octoprint.org/plugins/UltimakerFormatPackage/
+Cura Thumbnails		https://plugins.octoprint.org/plugins/UltimakerFormatPackage/  
 
-Prusa Thumbnails	https://plugins.octoprint.org/plugins/prusaslicerthumbnails/
+Prusa Thumbnails	https://plugins.octoprint.org/plugins/prusaslicerthumbnails/  
 
-WLED  (V1.X)				https://plugins.octoprint.org/plugins/wled/
-
-PSUControl			https://plugins.octoprint.org/plugins/psucontrol/
-
-ws281z LED  (V1.X)			https://plugins.octoprint.org/plugins/ws281x_led_status/
+PSUControl			https://plugins.octoprint.org/plugins/psucontrol/  
 
 ** Arc Welder Aware **  
 
 ### Project Status
 Initialze release Aug/26/2022  
 Latest release V1.3.1: Jul/30/2023  
-Pre-release V2.0.0: Oct/23/2023  
+Pre-release V2.0.0: Nov/09/2023  
 
 
 ### Installing  
@@ -73,13 +70,13 @@ Written in the middle of a war under occupation in Kherson Ukraine. Continued af
 Written in [B4X](https://www.b4x.com/)  
 ![GitHub all releases](https://img.shields.io/github/downloads/jakebullet70/OctoTouchController/total)
 
-![](./github_pics/printing2.png?raw=true "Printing")  
+![Av3xIXHuRR](https://github.com/jakebullet70/OctoTouchController/assets/14124210/7819a654-2855-4051-bc45-57b0a7f80f89)
 
-![](./github_pics/portrait-movement.png?raw=true "Movement")  
+
+ ![main-menu](https://github.com/jakebullet70/OctoTouchController/assets/14124210/ff26ba09-7e26-4f8d-8788-5bd4bd61ec37)
+
 
 ![](./github_pics/files2.png?raw=true "Files")  
-
-V2 - Comming soon!  
 
 ![image](https://github.com/jakebullet70/OctoTouchController/assets/14124210/3e537942-1178-4fbd-a424-d59870a5d6e2)
 

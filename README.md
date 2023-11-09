@@ -9,6 +9,7 @@
 A dedicated touch screen controller for Octoprint supporting **older Android phones / tablets** (Android 4.X) 
 Device specs: Android **4.x and above**, 4inch screen with a minimum resolution of 680x340. (Single core - 512Mb) It is Free Software and released under the [GNU Affero General Public License V3](https://www.gnu.org/licenses/agpl-3.0.html).  
 ** Directly supports Klipper firmware with OctoKlipper plugin: https://plugins.octoprint.org/plugins/klipper/ **  
+** See https://github.com/jakebullet70/OctoTouchController/wiki/OctoKlipper **  
 
 NOTE: Newer Android phones WILL NOT WORK. I know now Android 13 fails and I have tested Android 4,5,6 and 7 myself. Google is **very** famous for breaking existing software with newer releases.   
 

@@ -12,8 +12,7 @@ Version=11.5
 Sub Class_Globals
 	
 	Private const mModule As String = "dlgAppUpdate"' 'ignore
-	Private mMainObj As B4XView
-	Private xui As XUI
+	Private mMainObj As B4XView, xui As XUI
 	
 	Private BasePnl As B4XView, mDialog As B4XDialog
 	Private lblAction As AutoTextSizeLabel,lblPB As Label
@@ -21,8 +20,6 @@ Sub Class_Globals
 	Private btnContinue As Button
 	
 	Private Const DAYS_BETWEEN_CHECKS As Int = 15
-	
-	
 
 End Sub
 

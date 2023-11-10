@@ -10,10 +10,8 @@ Version=9.85
 #End Region
 
 Sub Process_Globals
-	
 	Private xui As XUI
 	Private logcat As LogCat
-	
 End Sub
 
 

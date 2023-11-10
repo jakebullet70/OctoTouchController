@@ -17,8 +17,6 @@ Version=9.85
 '============ SEARCH FOR -------- 'TODO V2
 '============ SEARCH FOR -------- 'TODO V2
 '============ SEARCH FOR -------- 'TODO V2
-'============ SEARCH FOR -------- 'TODO V2
-'============ SEARCH FOR -------- 'TODO V2
 
 
 Sub Class_Globals

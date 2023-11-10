@@ -1,4 +1,5 @@
 **/Objects
+**/keystore
 **/AutoBackups
 *.meta
 *.keystore

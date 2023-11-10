@@ -21,7 +21,6 @@ Sub Class_Globals
 	Public pEvents2Monitor As Map
 	Public pMsgs2Monitor As Map
 	Type tOctoEvents(CallbackObj As Object, CallbackSub As String)
-	
 		
 End Sub
 
@@ -145,9 +144,6 @@ Public Sub Msgs_Parse(msg As String)
 End Sub
 '---------------------------------------------------------------------------------------
 
-
-
-
 '===========================================================================================
 '===========================================================================================
 '===========================================================================================
@@ -157,10 +153,6 @@ Public Sub ResetRaiseEvent
 	RaiseEventEvent = ""
 	RaiseEventMod = Null
 End Sub
-
-
-
-
 
 
 

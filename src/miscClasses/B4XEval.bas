@@ -5,6 +5,7 @@ Type=Class
 Version=5.83
 @EndOfDesignText@
 'version 2.01
+'From b4x forum
 #Event: Function(Name As String, Values As List) As Double
 Sub Class_Globals
 	Private Const NUMBER_TYPE = 1, OPERATOR_TYPE = 2 As Int

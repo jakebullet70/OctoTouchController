@@ -52,8 +52,8 @@ PSUControl			https://plugins.octoprint.org/plugins/psucontrol/
 
 ### Project Status
 Initialze release Aug/26/2022  
-Latest release V1.3.1: Jul/30/2023  
-Pre-release V2.0.0: Nov/09/2023  
+Last V1.3.1 release: Jul/30/2023  
+Latest release V2.0.0: Nov/09/2023  
 
 
 ### Installing  

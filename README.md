@@ -30,7 +30,7 @@ Built in filament loading - unloading wizard
 Built in manual bed leveling wizard  
 Built in Klipper manual mesh bed leveling wizard (V2.X)  
 Built in Z-Offset wizard (V2.X)  
-Built in BL/CR touch testing (V2.X)
+Built in BL/CR touch testing (V2.X)  
 Support for Sonoff power device without Octoprint plugin  
 Support for custom GCode commands (V2.X)  
 Support for generic HTTP control (V2.X)  

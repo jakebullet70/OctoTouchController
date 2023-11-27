@@ -72,6 +72,7 @@ Sub Class_Globals
 	Public pnlWizards As Panel
 	Public pDlgFilSetup As dlgFilamentSetup
 	Public pObjWizards As Object = Null
+	Public pDlgPrinterSetup As dlgOctoSetup
 	Private mErrorDlg As dlgMsgBox 
 	Public pMBox2 As dlgMsgBox2 
 	
@@ -110,7 +111,6 @@ Public Sub Initialize
 	
 End Sub
 
-
 #Region "PAGE EVENTS"
 Private Sub B4XPage_Created (Root1 As B4XView)
 
@@ -143,6 +143,12 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	
 	TryPrinterConnection
 	
+	#if legacy
+	logMe.LogIt("Legacy","")
+	#else
+	logMe.LogIt("FOSS","")
+	#end if
+	
 End Sub
 
 Private Sub B4XPage_CloseRequest As ResumableSub
@@ -156,8 +162,12 @@ Private Sub B4XPage_CloseRequest As ResumableSub
 		Return False
 	End If
 	
-	If mConnectionErrDlgShowingFLAG Or pPrinterCfgDlgShowingFLAG Then
-		mErrorDlg.Close_Me
+	If mConnectionErrDlgShowingFLAG Then
+		CallSubDelayed(mErrorDlg,"Close_Me")
+		Return False
+	End If
+	If pPrinterCfgDlgShowingFLAG Then
+		CallSubDelayed(pDlgPrinterSetup,"Close_Me")
 		Return False
 	End If
 	
@@ -309,9 +319,9 @@ Private Sub TryPrinterConnection
 		oMasterController.Initialize
 	End If
 	If fnc.ReadConnectionFile(oMasterController.CN) = False Then
-		Dim o9 As dlgOctoSetup : 
-		o9.Initialize("Printer Connection","PrinterSetup_Closed")
-		o9.Show(True)
+		'Dim o9 As dlgOctoSetup : 
+		pDlgPrinterSetup.Initialize("Printer Connection","PrinterSetup_Closed")
+		pDlgPrinterSetup.Show(True)
 	Else
 		If oc.IsConnectionValid Then
 			oMasterController.SetCallbackTargets(Me,"Update_Printer_Temps","Update_Printer_Status","Update_Printer_Btns")
@@ -546,9 +556,9 @@ Private Sub OptionsMenu_Event(value As String, tag As Object)
 			o3.Show
 			
 		Case "oc"  '--- octo setup
-			Dim o9 As dlgOctoSetup
-			o9.Initialize("Printer Connection","PrinterSetup_Closed")
-			o9.Show(False)
+			'im o9 As dlgOctoSetup
+			pDlgPrinterSetup.Initialize("Printer Connection","PrinterSetup_Closed")
+			pDlgPrinterSetup.Show(False)
 			
 		Case "pw"  '--- android power setup
 			Dim o1 As dlgAndroidPowerOptions 
@@ -589,8 +599,6 @@ Public Sub PrinterSetup_Closed
 		Show_toast("Trying to connect... This might take a few moments...",3000)		
 		TryPrinterConnection
 	End If
-	'Sleep(100)
-	'guiHelpers.SetActionBtnColorIsConnected(btnPageAction)
 	
 End Sub
 
@@ -1023,9 +1031,7 @@ Private Sub Build_RightSideMenu
 '		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Retry Connection").PopAll,"rcnt")
 '	End If
 
-	'If oc.isPrinting Then
-		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Filament Cooling Menu").PopAll,"fcm")
-	'End If
+	clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Filament Cooling Menu").PopAll,"fcm")
 	
 	If dataMapG.GetDefault("m600",False).As(Boolean) Then
 		clvDrawer.AddTextItem(cs.Initialize.Size(size).Append("Filament Change M600").PopAll,"m600")

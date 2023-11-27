@@ -52,6 +52,11 @@ Public Sub Initialize( title As String, EventName As String) As Object
 	Return Me
 End Sub
 
+Public Sub Close_Me
+	Dialog.Close(xui.DialogResponse_Cancel)
+End Sub
+
+
 
 Public Sub Show(firstRun As Boolean)
 	
@@ -313,9 +318,11 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 			
 			'--- WS check
 			'Dim SocketOK As Boolean = False
-			Dim ws As OctoWebSocket
-			ws.Initialize
+			Dim ws As OctoWebSocket : ws.Initialize
+			#if legacy 
+			'--- needed for Android < 4.3
 			Wait For (ws.ProviderInstall) Complete (b As Boolean) '--- SSL / Android 4.x crap / cleanup
+			#end if
 			Wait For (ws.Connect_Socket) Complete (msg As String) '--- connect to socket
 			If msg = "" Then
 				'--- if error we never get here, this needs a refatctor but as this will only happen 1 in a million times...

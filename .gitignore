@@ -4,4 +4,5 @@
 *.meta
 *.keystore
 *.apk
-OctoTouchController_java_src.7z
+OctoTouchController_java_*.7z
+

@@ -5,4 +5,4 @@
 *.keystore
 *.apk
 OctoTouchController_java_*.7z
-
+*.tmp

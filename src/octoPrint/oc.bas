@@ -45,8 +45,6 @@ Sub Process_Globals
 	Public Tool2Actual As String, Tool2ActualReal As Float
 	
 	Public PrinterState As String
-	'Public PrinterBaud As String
-	'Public PrinterPort As String
 	Public PrinterProfile As String '--- need the profile 1st to get the name, desc, inverted stuff
 	
 	Public PrinterProfileName As String

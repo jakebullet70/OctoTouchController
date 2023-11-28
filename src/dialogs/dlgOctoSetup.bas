@@ -319,7 +319,7 @@ Public Sub RequestAPI_RequestComplete (result As Object, Success As Object)
 			'--- WS check
 			'Dim SocketOK As Boolean = False
 			Dim ws As OctoWebSocket : ws.Initialize
-			#if legacy 
+			#if not (FOSS)
 			'--- needed for Android < 4.3
 			Wait For (ws.ProviderInstall) Complete (b As Boolean) '--- SSL / Android 4.x crap / cleanup
 			#end if

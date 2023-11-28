@@ -143,7 +143,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	
 	TryPrinterConnection
 	
-	#if legacy
+	#if not (FOSS)
 	logMe.LogIt("Legacy","")
 	#else
 	logMe.LogIt("FOSS","")

@@ -122,8 +122,12 @@ Private Sub GetAboutText() As String
 	
 	Dim msg As StringBuilder : msg.Initialize
 	msg.Append("OctoTouchController™ V" & Application.VersionName).Append(CRLF)
-	msg.Append("A dedicated touch screen controller for Octoprint using older Android devices").Append(CRLF).Append(CRLF)
-	msg.Append("(©)sadLogic 2022-23").Append(CRLF)
+	#if not (FOSS)
+	msg.Append("A dedicated touch screen controller for Octoprint using older Android devices (Legacy)").Append(CRLF).Append(CRLF)
+	#else
+	msg.Append("A dedicated touch screen controller for Octoprint using older Android devices (FOSS)").Append(CRLF).Append(CRLF)
+	#end if
+	msg.Append("(©)sadLogic 2022-24").Append(CRLF)
 	msg.Append("Kherson Ukraine!").Append(CRLF)
 	msg.Append("AGPL-3.0 license")
 	

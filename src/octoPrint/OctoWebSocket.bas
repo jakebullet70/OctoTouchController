@@ -52,6 +52,8 @@ Public Sub Initialize() As OctoWebSocket
 	Return Me
 End Sub
 
+'--- Android 4
+#if not (FOSS)
 Private Sub DisableStrictMode
 	Dim InSub As String = "DisableStrictMode"
 	logMe.LogIt2("Start",mModule,InSub)
@@ -94,6 +96,7 @@ Public Sub ProviderInstall() As ResumableSub
 	Return mErrorSecProvider
 	
 End Sub
+#End If
 
 '=========================================================================
 '=========================================================================

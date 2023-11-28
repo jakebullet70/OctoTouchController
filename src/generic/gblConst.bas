@@ -29,11 +29,17 @@ Sub Process_Globals
 	Public Const APP_TITLE As String = "OctoTC ™"
 	Private Const WEB_ADDR As String = "http://sadlogic.com/octotouchcontroller2/"
 	If DEBUG_TEST_INSTALL Then
-		APK_NAME         = WEB_ADDR & "OctoTouchController_testing.apk"
+		APK_NAME      = WEB_ADDR & "OctoTouchController_testing.apk"
 		APK_FILE_INFO = WEB_ADDR & "OctoTouchController_testing.txt"
 	Else
-		APK_NAME         = WEB_ADDR & "OctoTouchController.apk"
 		APK_FILE_INFO = WEB_ADDR & "OctoTouchController.txt"
+		#if not (FOSS)
+		'--- pre android 4.4
+		APK_NAME      = WEB_ADDR & "OctoTouchController.apk"
+		#else
+		'--- does not include any google crap! 100% open source.
+		APK_NAME      = WEB_ADDR & "OctoTouchController_foss.apk"
+		#end if
 	End If
 	
 	'===============================================================

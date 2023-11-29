@@ -32,12 +32,13 @@ Sub Process_Globals
 		APK_NAME      = WEB_ADDR & "OctoTouchController_testing.apk"
 		APK_FILE_INFO = WEB_ADDR & "OctoTouchController_testing.txt"
 	Else
-		APK_FILE_INFO = WEB_ADDR & "OctoTouchController.txt"
 		#if not (FOSS)
 		'--- pre android 4.4
 		APK_NAME      = WEB_ADDR & "OctoTouchController.apk"
+		APK_FILE_INFO = WEB_ADDR & "OctoTouchController.txt"
 		#else
 		'--- does not include any google crap! 100% open source.
+		APK_FILE_INFO = WEB_ADDR & "OctoTouchController_foss.txt"
 		APK_NAME      = WEB_ADDR & "OctoTouchController_foss.apk"
 		#end if
 	End If

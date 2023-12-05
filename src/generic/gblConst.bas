@@ -73,17 +73,6 @@ Sub Process_Globals
 	Public Const CHECK_VERSION_DATE As String = "chk_v_dt"
 	
 	'---------------------------------------------------------------------------------------------------------------------
-	'--- Plugins - ZLED and WS281
-'	Public Const ZLED_CTRL_ON As String = "sTurnOn"
-'	Public Const ZLED_ENDPOINT As String = "sEP"
-'	Public Const ZLED_CMD_ON As String = "sOn"
-'	Public Const ZLED_CMD_OFF As String = "sOff"
-	'--- above const used in both configs below
-	'Public Const ZLED_OPTIONS_FILE As String = "zled_options.map"
-	'Public Const WS281_OPTIONS_FILE As String = "ws281_options.map"
-	'---------------------------------------------------------------------------------------------------------------------
-	
-	'---------------------------------------------------------------------------------------------------------------------
 	'--- saved data for pref dialogs
 	Public Const ANDROID_POWER_OPTIONS_FILE As String = "power_options.map"
 	Public Const GENERAL_OPTIONS_FILE As String = "general_options.map"
@@ -152,14 +141,6 @@ Sub Process_Globals
 	
 	Public Const Z_OFFSET_FLAG As String = "zoffst"
 	Public Const MANUAL_MESH_FLAG As String = "mmesh"
-	
-	
-	
-'	#if klipper
-'	Public KLIPPER_FRONTEND_NONE As Int = 0
-'	Public KLIPPER_FRONTEND_MAINSAIL As Int = 1
-'	Public KLIPPER_FRONTEND_FLUIDD As Int = 2
-'	#End If
 	
 	
 End Sub

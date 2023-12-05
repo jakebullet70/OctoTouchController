@@ -90,7 +90,8 @@ Public Sub Initialize(parentObj As B4XView) As Object
 End Sub
 
 Public Sub Close_Me
-	mDialog.Close(-1)
+	'mDialog.Close(-1)
+	mDialog.Close(xui.DialogResponse_Cancel)
 End Sub
 
 Public Sub Show() As ResumableSub

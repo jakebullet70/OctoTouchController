@@ -221,8 +221,8 @@ Version=12.5
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: OctoTC
-	#VersionCode: 52
-	#VersionName: 2.0.1
+	#VersionCode: 53
+	#VersionName: 2.0.2
 	#SignKeyFile: ..\keystore\release.keystore
  	#SignKeyPassword: !!OctoTC!!
 	

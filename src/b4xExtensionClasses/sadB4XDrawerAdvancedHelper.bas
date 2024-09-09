@@ -18,6 +18,7 @@ Sub Class_Globals
 	Private btnSTOP,btnFRESTART,btnRESTART As Button 'ignore
 	Private btnBrightness_F, btnScrnOff_R As Button 'ignore
 	Private pnlBtnsDrawer As B4XView
+
 End Sub
 
 

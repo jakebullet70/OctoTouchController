@@ -24,7 +24,7 @@ Sub Class_Globals
 	Private ivPreview As lmB4XImageViewX
 	Private btnDelete, btnLoad, btnLoadAndPrint As Button
 	Private mCurrentFileInfo As tOctoFileInfo
-	Private pnlPortraitDivide As B4XView
+	Private pnlPortraitDivide,pnlPortraitDivideTop As B4XView
 	
 	'--- list view panel
 	Private lblpnlFileViewTop,lblpnlFileViewBottom As B4XView
@@ -169,7 +169,8 @@ Private Sub BuildGUI
 	lblBusy.SetColorAndBorder(clrTheme.BackgroundHeader,1dip,clrTheme.txtNormal,8dip)
 	
 	pnlPortraitDivide.SetColorAndBorder(clrTheme.txtAccent,2dip,clrTheme.txtaccent,8dip)
-	
+	pnlPortraitDivideTop.SetColorAndBorder(clrTheme.txtAccent,2dip,clrTheme.txtaccent,8dip)
+		
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized And mMainObj.oMasterController.gMapOctoFilesList.Size > 0 Then
 		Build_ListViewFileList
 		Show1stFile '--- select the 1st item and load image

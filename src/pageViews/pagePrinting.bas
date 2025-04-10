@@ -243,6 +243,7 @@ Private Sub UpdateFileName
 		lblFileName.Text = " File: " & fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
 	Else
 		lblFileName.Text = gblConst.NO_FILE_LOADED
+		Show_Temp_Panel
 	End If
 	mNumOfTries4Thumbnail = 0
 	LoadThumbNail
@@ -287,7 +288,7 @@ Private Sub btnAction_Click
 		Case "print"
 			If oc.isFileLoaded = False Then
 				
-				guiHelpers.Show_toast("No file loaded",2000)
+				guiHelpers.Show_toast(gblConst.NO_FILE_LOADED,2000)
 				
 			Else
 				

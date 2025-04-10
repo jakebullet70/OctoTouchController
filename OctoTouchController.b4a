@@ -231,6 +231,10 @@ Version=12.5
 	#CanInstallToExternalStorage: false
 #End Region
 
+' ----- NOTE... Conditionial  '#if klipper' directives are not used any more, ignore
+' ----- NOTE... Conditionial  '#if klipper' directives are not used any more, ignore
+' ----- NOTE... Conditionial  '#if klipper' directives are not used any more, ignore
+
 #if not (FOSS)
 '--- support for websocket and older android versions
 #AdditionalJar: com.google.android.gms:play-services-base

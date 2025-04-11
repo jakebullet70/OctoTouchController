@@ -7,6 +7,7 @@ Version=11.8
 ' Author:  sadLogic
 #Region VERSIONS 
 ' V. 1.0 	Apr/26/2023
+' Fixed Raise and Lower buttons presses  Apr/11/2025
 #End Region
 Sub Class_Globals
 	
@@ -44,11 +45,7 @@ Sub Class_Globals
 	
 	Private mCurrentMarlinZ As Float = 0
 	Private mOldMarlinZ As Float = -999
-	
-	
-	
-	
-	
+
 End Sub
 
 Public Sub Initialize(p As Panel,mode As String) As Object
@@ -155,6 +152,7 @@ Private Sub BuildGUI(headerTxt As String)
 	btnDistance_Highlight(btnDst1)
 	ShowZinfo("Touch START to begin")
 	parent.Visible = True
+	btnDn.BringToFront : 	btnUp.BringToFront
 End Sub
 
 Private Sub ProcessStop_GUI
@@ -403,6 +401,7 @@ End Sub
 Private Sub btnUpDown_Click
 	Dim btn As Button = Sender
 	If btn1.Text = "START" Or mInProbeMode = False Then
+		guiHelpers.Show_toast2("Press START to begin",1500)
 		Return
 	End If
 	

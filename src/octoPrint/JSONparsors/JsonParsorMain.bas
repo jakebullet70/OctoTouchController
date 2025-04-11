@@ -8,10 +8,12 @@ Version=8.8
 ' Author:  sadLogic, Kherson Ukraine
 #Region VERSIONS 
 ' V. 1.0 	June/7/2022
+' April/10/2025 - fixed rounding af actual temps
 #End Region
 Sub Class_Globals
 	Private Const mModule As String = "jsonParserMain" 'ignore
 	Private xui As XUI
+	Private tmpBedFloat As Float
 End Sub
 
 Public Sub Initialize
@@ -53,7 +55,9 @@ Public Sub TempStatus(s As String)
 		Try	
 			TargetBedCheck = CheckNull0(mBed.Get("target"))
 			tmpBed = CheckNull0(mBed.Get("actual"))
-			oc.BedActual   = tmpBed & gblConst.DEGREE_SYMBOL & "C"
+			tmpBedFloat = CheckNull0(mBed.Get("actual"))			
+			'oc.BedActual   = tmpBed & gblConst.DEGREE_SYMBOL & "C"
+			oc.BedActual = IIf(Round2(tmpBedFloat,0) > tmpBed,Round2(tmpBedFloat,0),tmpBed).As(String) & gblConst.DEGREE_SYMBOL & "C"
 			oc.BedTarget   = TargetBedCheck.As(String)  & gblConst.DEGREE_SYMBOL & "C"
 		Catch
 			logMe.LogIt2("temp 11:"$ & LastException,mModule,CallingSub)
@@ -70,7 +74,8 @@ Public Sub TempStatus(s As String)
 			oc.Tool1TargetReal = CheckNull0(mTool1.Get("target"))
 			oc.Tool1ActualReal = CheckNull0(mTool1.Get("actual"))
 			tmpTool = CheckNull0(mTool1.Get("actual"))
-			oc.Tool1Actual = tmpTool & gblConst.DEGREE_SYMBOL & "C"
+			'oc.Tool1Actual = tmpTool & gblConst.DEGREE_SYMBOL & "C"
+			oc.Tool1Actual = IIf(Round2(oc.Tool1ActualReal,0) > tmpTool,Round2(oc.Tool1ActualReal,0),tmpTool).As(String) & gblConst.DEGREE_SYMBOL & "C"
 			oc.Tool1Target = TargetToolCheck.As(String) & gblConst.DEGREE_SYMBOL & "C"
 		Catch
 			logMe.LogIt2("temp 22:"$ & LastException,mModule,CallingSub)

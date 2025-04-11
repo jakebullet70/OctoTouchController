@@ -24,7 +24,7 @@ Sub Class_Globals
 	Private ivPreview As lmB4XImageViewX
 	Private btnDelete, btnLoad, btnLoadAndPrint As Button
 	Private mCurrentFileInfo As tOctoFileInfo
-	Private pnlPortraitDivide As B4XView
+	Private pnlPortraitDivide,pnlPortraitDivideTop As B4XView
 	
 	'--- list view panel
 	Private lblpnlFileViewTop,lblpnlFileViewBottom As B4XView
@@ -169,7 +169,8 @@ Private Sub BuildGUI
 	lblBusy.SetColorAndBorder(clrTheme.BackgroundHeader,1dip,clrTheme.txtNormal,8dip)
 	
 	pnlPortraitDivide.SetColorAndBorder(clrTheme.txtAccent,2dip,clrTheme.txtaccent,8dip)
-	
+	pnlPortraitDivideTop.SetColorAndBorder(clrTheme.txtAccent,2dip,clrTheme.txtaccent,8dip)
+		
 	If mMainObj.oMasterController.gMapOctoFilesList.IsInitialized And mMainObj.oMasterController.gMapOctoFilesList.Size > 0 Then
 		Build_ListViewFileList
 		Show1stFile '--- select the 1st item and load image
@@ -303,15 +304,16 @@ Public Sub Build_ListViewFileList
 	Do While rsFiles.NextRow
 		fname = rsFiles.GetString("file_name")
 		Dim o As tOctoFileInfo  = mMainObj.oMasterController.gMapOctoFilesList.Get(fname)
-		clvFiles.InsertAt(ndx, CreateListItem(o, clvFiles.AsView.Width, 60dip), fname)
+		clvFiles.InsertAt(ndx, CreateListItem(o, clvFiles.AsView.Width, 58dip), fname)
 		ndx = ndx + 1
 	Loop
 	
 	clvFiles.PressedColor = DimColor(clrTheme.txtNormal)
 	CSelections.SelectionColor = clvFiles.PressedColor
 	clvFiles.DefaultTextColor  = clrTheme.txtNormal
-	clvFiles.DefaultTextBackgroundColor = xui.Color_Transparent
-
+	clvFiles.DefaultTextBackgroundColor =  xui.Color_Transparent
+	'clvFiles.sv.ScrollViewInnerPanel.Color = xui.Color_Blue
+	
 	If clvFiles.Size > 0 Then
 		'--- if we have data select the 1st one
 		CSelections.ItemClicked(0)
@@ -327,6 +329,7 @@ End Sub
 Private Sub DimColor(clr As Int) As Int
 	Dim argb() As Int = clrTheme.Int2ARGB(clr)
 	Return xui.Color_ARGB(18,argb(1),argb(2),argb(3))
+	'Return xui.Color_ARGB(98,argb(1),argb(2),argb(3))
 End Sub
 
 Private Sub CreateListItem(oData As tOctoFileInfo, Width As Int, Height As Int) As B4XView
@@ -336,21 +339,22 @@ Private Sub CreateListItem(oData As tOctoFileInfo, Width As Int, Height As Int) 
 	p.SetLayoutAnimated(0, 0, 0, Width, Height + IIf(guiHelpers.gScreenSizeAprox > 7.8,20dip,0dip))
 	p.LoadLayout("viewFiles")
 
+	'lblpnlFileViewTop.Color = clrTheme.Background
 	lblpnlFileViewTop.TextColor = clrTheme.txtNormal
 	lblpnlFileViewTop.font = xui.CreateDefaultFont( _
 		NumberFormat2(lblpnlFileViewTop.TextSize / guiHelpers.gFscale,1,0,0,False))
 		
 	lblpnlFileViewTop.Text = fileHelpers.RemoveExtFromeFileName(oData.Name)
-
+	
+	'lblpnlFileViewBottom.Color = clrTheme.Background
 	lblpnlFileViewBottom.TextColor = clrTheme.txtAccent
-	lblpnlFileViewBottom.Font = lblpnlFileViewTop.Font
-	#if klipper
-	lblpnlFileViewBottom.Text = "Size: " &  fileHelpers.BytesToReadableString(oData.Size)
-	#else
+	lblpnlFileViewBottom.font = xui.CreateDefaultFont( _
+			NumberFormat2(lblpnlFileViewTop.TextSize-4 / guiHelpers.gFscale,1,0,0,False))	
+	'lblpnlFileViewBottom.Font = lblpnlFileViewTop.Font
+		
 	lblpnlFileViewBottom.Text = "Size: " &  fileHelpers.BytesToReadableString(oData.Size) & _
 								$"  ${oData.length.As(String)}m / ${oData.Volume.As(String)}³"$
-	#End If
-	
+		
 	Return p
 	
 End Sub

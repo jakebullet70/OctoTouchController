@@ -221,8 +221,8 @@ Version=12.5
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: OctoTC
-	#VersionCode: 53
-	#VersionName: 2.0.2
+	#VersionCode: 54
+	#VersionName: 2.0.3
 	#SignKeyFile: ..\keystore\release.keystore
  	#SignKeyPassword: !!OctoTC!!
 	
@@ -230,6 +230,10 @@ Version=12.5
 	#SupportedOrientations: unspecified
 	#CanInstallToExternalStorage: false
 #End Region
+
+' ----- NOTE... Conditionial  '#if klipper' directives are not used any more, ignore
+' ----- NOTE... Conditionial  '#if klipper' directives are not used any more, ignore
+' ----- NOTE... Conditionial  '#if klipper' directives are not used any more, ignore
 
 #if not (FOSS)
 '--- support for websocket and older android versions

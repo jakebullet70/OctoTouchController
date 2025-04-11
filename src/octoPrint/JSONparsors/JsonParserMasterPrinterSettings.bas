@@ -538,7 +538,7 @@ Public Sub ParsePrinterProfile(jsonTXT As String)
 	Catch
 		oc.PrinterWidth = 0
 		oc.PrinterDepth = 0
-		Log(LastException)
+		Log("oc.PrinterWidth & oc.PrinterDepth = 0" & LastException)
 	End Try
 	'Log("cbox: " & oc.PrinterCustomBoundingBox)
 	'Dim formFactor As String = volume.Get("formFactor")

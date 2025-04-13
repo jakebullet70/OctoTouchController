@@ -11,7 +11,7 @@ Device specs: Android **4.x and above**, 4inch screen with a minimum resolution 
 ** Directly supports Klipper firmware with OctoKlipper plugin: https://plugins.octoprint.org/plugins/klipper/ **  
 ** See https://github.com/jakebullet70/OctoTouchController/wiki/OctoKlipper **  
 
-NOTE: Newer Android phones WILL NOT WORK. I know now Android 13 fails and I have tested Android 4,5,6 and 7 myself. Google is **very** famous for breaking existing software with newer releases.   
+NOTE: Newer Android phones WILL NOT WORK. I know now Android 13 fails and I have tested Android 4,5,6 and 7 myself. Google is **very** famous for breaking existing software with newer releases. The whole point of this project though is to reclaim and old phone / tablet and reuse it.     
 
 Add a dedicated touch screen to your 3D printer with a *LOW/NO COST* Android device you probibly already have! No need for access to the Google Play Store.  
 

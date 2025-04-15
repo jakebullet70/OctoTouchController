@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="https://img.shields.io/github/v/release/jakebullet70/OctoTouchController?logo=github&logoColor=white" alt="GitHub release"/>
-  <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/sadLogic.OctoTouchController"/>
-  <img src="https://img.shields.io/github/issues-closed-raw/jakebullet70/OctoTouchController"/>
-  <img src="https://img.shields.io/github/issues/jakebullet70/OctoTouchController"/>
+  <a href="https://github.com/jakebullet70/OctoTouchController/releases"><img src="https://img.shields.io/github/v/release/jakebullet70/OctoTouchController?logo=github&logoColor=white" alt="GitHub release"/></a>
+  <a href="https://apt.izzysoft.de/packages/sadLogic.OctoTouchController.foss"><img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/sadLogic.OctoTouchController"/></a>
+  <a href="https://github.com/jakebullet70/OctoTouchController/issues?q=is%3Aissue%20state%3Aclosed%20sort%3Aupdated-desc"><img src="https://img.shields.io/github/issues-closed-raw/jakebullet70/OctoTouchController"/></a>
+  <a href="https://github.com/jakebullet70/OctoTouchController/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc"><img src="https://img.shields.io/github/issues/jakebullet70/OctoTouchController"/></a>
 </p>
 
 # OctoTouchController (OctoTC)

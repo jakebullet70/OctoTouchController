@@ -22,7 +22,7 @@ This in *not a replacement* for Octoprint but a way to add a dedicated touch scr
 
 
 ### Features
-Supports Android 4.X to about Android V9.0      
+Supports Android 4.X to about Android V9.0 or 10 or 11...        
 Native Android app, not a re-packaged web app  
 Complete support for OctoKlipper (V2.X)  
 Portrait or landscape modes  

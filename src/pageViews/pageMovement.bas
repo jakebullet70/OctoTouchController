@@ -128,16 +128,6 @@ public Sub Update_Printer_Btns
 	
 End Sub
 
-'Public Sub Update_Printer_Temps
-'
-'	
-'	
-'	'--- TODO, strip the 'C' of the temps and just use degree symbol
-'	'--- TODO, strip the 'C' of the temps and just use degree symbol
-'	'--- TODO, strip the 'C' of the temps and just use degree symbol
-'	
-'End Sub
-
 
 Private Sub btnGeneral_Click
 	

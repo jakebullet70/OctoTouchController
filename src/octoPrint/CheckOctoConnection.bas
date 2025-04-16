@@ -7,7 +7,7 @@ Version=11.5
 ' Author:  sadLogic
 #Region VERSIONS 
 ' V. 2.0	Mar/20/2023
-'		Added code for klipper - moonraker
+'		Added code for klipper - moonraker - REMOVED now!!!
 ' V. 1.0 	June/30/2022
 #End Region
 

@@ -242,6 +242,7 @@ Private Sub GetDownloadDir() As String
 	Catch
 		
 		dl = xui.DefaultFolder
+		logMe.LogIt("Main.Provider.SharedFolder call returned ERROR!",mModule)
 		
 	End Try 'ignore
 	

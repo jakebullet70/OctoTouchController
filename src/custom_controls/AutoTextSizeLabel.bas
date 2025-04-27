@@ -4,15 +4,19 @@ ModulesStructureVersion=1
 Type=Class
 Version=8.5
 @EndOfDesignText@
-' Author:  B4X, sadLogic - Kherson, Ukraine
 #Region VERSIONS 
+' Original:  B4X-forum, Erel, Jun 30, 2013
+' Modified:  B4X-forum, Alexander Stolte Dec 7, 2018 
+' Modified:  B4X-forum, Mike1970 Feb 18, 2022
+' Modified:  and me... sadLogic - Kherson, Ukraine 2022 in the middle of a war...
+'
 ' V. 1.3 	Aug/24/2022
 '			Fixed click event
 ' V. 1.2 	Aug/20/2022
 '			Added tag to return me
 ' V. 1.1 	Aug/12/2022
 '			Added TextColor properties
-' V. 1.3 	Unknown
+'  V. 1.0   From b4x forum
 ' https://www.b4x.com/android/forum/threads/slightly-modified-autotextsizelabel.138544/#content
 #End Region
 #IF B4A or B4I

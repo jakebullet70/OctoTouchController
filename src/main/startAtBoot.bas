@@ -16,6 +16,11 @@ Sub Process_Globals
 	Private xui As XUI
 End Sub
 
+
+' for newer version of Android. v12+
+' SEE ---> https://www.b4x.com/android/forum/threads/receivers-and-services-in-2023.145370/#content
+' SEE ---> https://www.b4x.com/android/forum/threads/problem-using-start-at-boot-with-android-10.16
+
 Sub Service_Create
 End Sub
 

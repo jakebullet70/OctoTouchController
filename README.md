@@ -6,7 +6,9 @@
 </p>
 
 # OctoTouchController (OctoTC)
-A dedicated touch screen controller for Octoprint supporting **older Android phones / tablets** (Android 4.X) 
+An Android reclamation project.  
+
+What is it? Its a dedicated touch screen controller for Octoprint supporting **older Android phones / tablets** (Android 4.X) 
 Device specs: Android **4.x and above**, 4inch screen with a minimum resolution of 680x340. (Single core - 512Mb) It is Free Software and released under the [GNU Affero General Public License V3](https://www.gnu.org/licenses/agpl-3.0.html).  
 ** Directly supports Klipper firmware with OctoKlipper plugin: https://plugins.octoprint.org/plugins/klipper/ **  
 ** See https://github.com/jakebullet70/OctoTouchController/wiki/OctoKlipper **  
@@ -19,7 +21,7 @@ Add a dedicated touch screen to your 3D printer with a *LOW/NO COST* Android dev
 ### Project Purpose
 **Reclaim** those old Phones / Tablets that are sitting around that **DO NOT** have access to the Google store anymore. 
 This in *not a replacement* for Octoprint but a way to add a dedicated touch screen to your printer using **old - unused** Android hardware.
-I call this The Andoid reclamation project.  
+
 
 ### Features
 Supports Android 4.X to about Android V9.0 or 10 or 11...        

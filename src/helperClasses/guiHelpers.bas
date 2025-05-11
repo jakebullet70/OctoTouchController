@@ -136,6 +136,11 @@ Public Sub SetTextColor2(obj() As B4XView)
 		o.TextColor = clrTheme.txtAccent
 	Next
 End Sub
+Public Sub SetTextColor3(obj() As B4XView,clr As Int)
+	For Each o As B4XView In obj
+		o.TextColor = clr
+	Next
+End Sub
 
 Public Sub SetTextSize(obj() As Button,size As Float)
 	For Each o As Button In obj

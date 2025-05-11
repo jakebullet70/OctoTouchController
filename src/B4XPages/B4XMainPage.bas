@@ -6,7 +6,8 @@ Version=9.85
 @EndOfDesignText@
 ' Author:  sadLogic
 #Region VERSIONS 
-' V. 2.0	Aug/2023
+' V. 2.0.5  May/2025
+' V. 2.0.X	Aug/2023-Late 2024
 ' V. 1.1-3	Mar-Jul/2023	
 ' V. Rocket artillery attack while in bed, almost killed, lost home. Dec 1st 2022
 ' V. 1.x	Oct/2022 - Nov/2022
@@ -107,7 +108,9 @@ Public Sub Initialize
 	'--- set toast text size
 	mToastTxtSize = IIf(guiHelpers.gScreenSizeAprox > 5,24,22) 
 	
-	Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Check4_Update",8000)
+	If config.ReadCheck4UpdatesFLAG = True Then 
+		Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Check4_Update",8000)
+	End If
 	
 End Sub
 
@@ -139,9 +142,9 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 '		Starter.FirstRun = False
 '	End If
 
-	BuildGUI
-	
+	BuildGUI	
 	TryPrinterConnection
+	
 	
 	#if not (FOSS)
 	logMe.LogIt("Legacy","")
@@ -292,6 +295,11 @@ Private Sub BuildGUI
 		
 	Switch_Pages(gblConst.PAGE_MENU)
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
+	Sleep(0)
+	
+	If config.Is1stRun Then 
+		CallSub(Me,"Show_1stRun")
+	End If
 	
 End Sub
 
@@ -843,13 +851,11 @@ Private Sub lblStatus_Click
 End Sub
 
 Public Sub Check4_Update
-	
 	Dim obj As dlgAppUpdate : obj.Initialize(Null)
 	Wait For (obj.CheckIfNewDownloadAvail()) Complete (yes As Boolean)
 	If yes Then
 		guiHelpers.Show_toast2("App update available", 3600)
 	End If
-	
 End Sub
 
 #Region HEATER_STUFF_MENU
@@ -1377,6 +1383,13 @@ Private Sub ev_filament_change_rec(msg As String)
 End Sub
 
 #end region
+
+
+Private Sub Show_1stRun
+	Dim o As dlg1stRun : pObjCurrentDlg2 = o.Initialize()
+	o.Show
+End Sub
+
 
 '
 'Private Sub ev_get_jobstatus(msg As String)

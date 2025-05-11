@@ -80,12 +80,23 @@ Public Sub RunPrgUpdate
 '		fileHelpers.SafeKill(gblConst.GENERAL_OPTIONS_FILE)
 '		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,mSys2)
 '	End If
-'
+	'
+	
+	
+	If PrevVer <= 55 Then '--- V2.0.4
+		'--- add check for updates to general dialog (FOSS)
+		Dim mSys2 As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+		mSys2.Put("chk_updt","true") '--- keep doing what you did before
+		fileHelpers.SafeKill(gblConst.GENERAL_OPTIONS_FILE)
+		File.WriteMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE,mSys2)
+	End If
+
+	
 	
 	'=============================================================================================
 	'--- update the version
 	Main.kvs.Put("version_code",Application.VersionCode)
-	
+		
 End Sub
 
 

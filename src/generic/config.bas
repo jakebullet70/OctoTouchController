@@ -17,8 +17,8 @@ Sub Process_Globals
 	Private Const LICENSE_FILE As String = "LICENSE.txt"
 	Public IsInit As Boolean = False
 	
-	
-	Public empw As String = "b4x!sadLogic512" '--- mail password for the moment
+	Public Is1stRun As Boolean = False
+	'Public empw As String = "b4x!sadLogic512" '--- mail password for the moment, not used... ever
 	
 	Public LastConnectedClient As String
 	Public pTurnOnDebugTabFLAG As Boolean
@@ -195,6 +195,11 @@ Public Sub ReadManualBedMeshLevelFLAG As Boolean
 	Return Main.kvs.Get(gblConst.MANUAL_MESH_FLAG).As(Boolean)
 End Sub
 
+Public Sub ReadCheck4UpdatesFLAG() As Boolean
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+	Return Data.Get(gblConst.GENERAL_SETUP_SCRN_CHECK_4_UPDATES).As(Boolean)
+End Sub
+
 
 Public Sub ReadGeneralCFG
 	
@@ -233,5 +238,17 @@ Public Sub ReadAndroidPowerCFG
 End Sub
 
 
-
+Public Sub Change_AppUpdateCheck(check As Boolean)
+	'--- called from 1st run dialog
+	Dim Data As Map = File.ReadMap(xui.DefaultFolder,gblConst.GENERAL_OPTIONS_FILE)
+	Data.Put(gblConst.GENERAL_SETUP_SCRN_CHECK_4_UPDATES,check)
+	File.WriteMap(xui.DefaultFolder, gblConst.GENERAL_OPTIONS_FILE,Data)
+	If check Then
+		Main.tmrTimerCallSub.CallSubDelayedPlus(B4XPages.MainPage,"Check4_Update",8000)
+	Else
+		#if debug
+		Log("update is off")
+		#end if
+	End If
+End Sub
 

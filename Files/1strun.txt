@@ -1,0 +1,5 @@
+Do you want to check for updates? This is done at the app's Github repo.
+If updates are available, you will be notified and then you can then download and install the APKs directly from the settings menu.
+If you originally installed the app from a repository that performs extra checks/screenings (like IzzyOnDroid), please be aware that those screenings would then be bypassed.
+
+Turn on the checkbox at the bottom of this screen to allow checking for updates. 

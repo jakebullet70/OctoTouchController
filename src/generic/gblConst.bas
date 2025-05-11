@@ -44,7 +44,7 @@ Sub Process_Globals
 	End If
 	
 	'===============================================================
-
+	
 	
 	Public Const NO_THUMBNAIL As String = "no_thumbnail.jpg"
 	Public Const SELECTED_CLR_THEME As String = "themeclr" '--- selected theme color
@@ -71,6 +71,7 @@ Sub Process_Globals
 	'---------------------------------------------------------------------------------------------------------------------
 	
 	Public Const CHECK_VERSION_DATE As String = "chk_v_dt"
+	Public Const GENERAL_SETUP_SCRN_CHECK_4_UPDATES As String = "chk_updt"
 	
 	'---------------------------------------------------------------------------------------------------------------------
 	'--- saved data for pref dialogs

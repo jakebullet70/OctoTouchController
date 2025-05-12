@@ -90,7 +90,7 @@ Public Sub Show(firstRun As Boolean)
 	If firstRun = False Then 
 		ReadSettingsFile
 	Else
-		txtPrinterDesc.Text = "Default"		
+		txtPrinterDesc.Text = "My Printer"		
 	End If
 	InvalidateConnection
 	CallSubDelayed2(Main,"Dim_ActionBar",gblConst.ACTIONBAR_ON)

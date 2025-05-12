@@ -14,11 +14,10 @@ Version=10
 Sub Class_Globals
 	Private XUI As XUI
 	Private dlg As B4XDialog
-	Private lblAboutTop As Label
 	Private dlgHelper As sadB4XDialogHelper
-	Private iv As lmB4XImageViewX
 	Private chkBox As CheckBox
-	Private txt1stRun,txtNever As AutoTextSizeLabel
+	Private txtNever As AutoTextSizeLabel
+	Private txt1stRun As B4XView
 End Sub
 
 
@@ -36,10 +35,20 @@ Public Sub Show()
 	dlgHelper.Initialize(dlg)
 		
 	Dim p As B4XView = XUI.CreatePanel("")
-	p.SetLayoutAnimated(0, 0, 0,540dip,420dip)
-	p.LoadLayout("dlg1stRun")
+	'p.SetLayoutAnimated(0, 0, 0,540dip,420dip)
 	
-	iv.Bitmap = XUI.LoadBitmap(File.DirAssets,"logo02.png")
+	Dim w, h As Float
+	If guiHelpers.gScreenSizeAprox < 7 Then
+		w = 92%x
+		h = IIf(guiHelpers.gIsLandScape,64%y,70%y)
+	Else
+		w = 74%x : h = 70%y
+	End If
+	Log("w="&w)
+	Log("h="&h)
+	
+	p.SetLayoutAnimated(0, 0, 0, w,h)
+	p.LoadLayout("dlg1stRun")
 	
 	
 	dlgHelper.ThemeDialogForm( "App Update Checking")
@@ -48,22 +57,16 @@ Public Sub Show()
 	dlgHelper.ThemeInputDialogBtnsResize
 		
 	'--- interesting text goes here
-	lblAboutTop.TextSize = 18
-	'txtNever.BaseLabel
-	guiHelpers.SetTextColor3(Array As B4XView(lblAboutTop,txt1stRun.BaseLabel,txtNever.BaseLabel),clrTheme.txtNormal)
+	guiHelpers.SetTextColor3(Array As B4XView(txt1stRun,txtNever.BaseLabel),clrTheme.txtNormal)
 	txtNever.Text = "Remember, updates will *NEVER* be downloaded automaticly"
 	txt1stRun.Text = File.GetText(File.DirAssets,"1stRun.txt")
+	If guiHelpers.gIsLandScape = False Then
+		txt1stRun.TextSize = txt1stRun.TextSize + 3
+	End If
 	BuildChkbox
 	
-	Dim msg As StringBuilder : msg.Initialize
-	msg.Append("(©)sadLogic 2015-25").Append(CRLF)
-	msg.Append("Kherson Ukraine!").Append(CRLF)
-	msg.Append("AGPL-3.0 license")
-	lblAboutTop.Text = msg.ToString
-	
 	Wait For (rs) Complete (Result As Int)
-	
-	'CallSubDelayed(B4XPages.MainPage,"ResetScrn_SleepCounter")
+		
 	config.Change_AppUpdateCheck(chkBox.Checked)
 	Close_Me
 	
@@ -79,7 +82,7 @@ Private Sub BuildChkbox
 	guiHelpers.SetCBDrawable(chkBox, clrTheme.txtNormal, 1,clrTheme.txtNormal, Chr(8730), Colors.LightGray, 32dip, 2dip)
 	dlg.Base.AddView(chkBox,10dip,dlg.Base.Height - 50dip, _
 		(dlg.Base.Width - dlg.GetButton(XUI.DialogResponse_Cancel).Width - 16dip),36dip)
-	'chkBox.Checked = Main.kvs.GetDefault(FIL_WIZ_TURN_OFF_ON_HEAT,False)
+	
 End Sub
 
 Private Sub chkCheckUpdate_CheckedChange(Checked As Boolean)

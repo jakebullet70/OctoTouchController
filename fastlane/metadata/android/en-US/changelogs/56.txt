@@ -1,0 +1,4 @@
+1. Refactor files screen for smaller devices.
+2. Removed LOAD button from files screen.
+3. Added Opt In updates on first install.
+

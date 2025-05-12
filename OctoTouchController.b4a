@@ -28,30 +28,31 @@ File31=menumovement.png
 File32=menuprint.png
 File33=no_thumbnail.jpg
 File34=pageFiles.bal
-File35=pageMenu2.bal
-File36=pageMovement.bal
-File37=pagePrinting.bal
-File38=splash.png
-File39=splashklipper.png
+File35=pageFiles2.bal
+File36=pageMenu2.bal
+File37=pageMovement.bal
+File38=pagePrinting.bal
+File39=splash.png
 File4=dlg1strun.bal
-File40=view_z_movement.bal
-File41=viewAppUpdate.bal
-File42=viewFilamentCtrl.bal
-File43=viewfiles.bal
-File44=viewMovementMM.bal
-File45=viewMsgBox.bal
-File46=viewMsgBox2.bal
-File47=viewOctoSetup.bal
-File48=viewPsuCtrl.bal
-File49=viewPsuSetup.bal
+File40=splashklipper.png
+File41=view_z_movement.bal
+File42=viewAppUpdate.bal
+File43=viewFilamentCtrl.bal
+File44=viewfiles.bal
+File45=viewMovementMM.bal
+File46=viewMsgBox.bal
+File47=viewMsgBox2.bal
+File48=viewOctoSetup.bal
+File49=viewPsuCtrl.bal
 File5=dlgAbout.bal
-File50=viewPsuSetupSonOff.bal
-File51=viewRoundSlider.bal
-File52=viewSlidingWindow.bal
-File53=wizbedlevel.json
-File54=wizFilamentCtrl.bal
-File55=wizManualBedLevel.bal
-File56=wizManualMeshBedLevel_Zoffet.bal
+File50=viewPsuSetup.bal
+File51=viewPsuSetupSonOff.bal
+File52=viewRoundSlider.bal
+File53=viewSlidingWindow.bal
+File54=wizbedlevel.json
+File55=wizFilamentCtrl.bal
+File56=wizManualBedLevel.bal
+File57=wizManualMeshBedLevel_Zoffet.bal
 File6=dlgbedlevel.json
 File7=dlgBLCRtouch.bal
 File8=dlgbltouch.json
@@ -84,17 +85,17 @@ FileGroup31=MAIN_MENU
 FileGroup32=MAIN_MENU
 FileGroup33=MISC
 FileGroup34=VIEWS_PAGES
-FileGroup35=VIEWS_PAGES
+FileGroup35=Default Group
 FileGroup36=VIEWS_PAGES
 FileGroup37=VIEWS_PAGES
-FileGroup38=MISC
+FileGroup38=VIEWS_PAGES
 FileGroup39=MISC
 FileGroup4=Default Group
-FileGroup40=DIALOG_CUSTOM_VIEWS
+FileGroup40=MISC
 FileGroup41=DIALOG_CUSTOM_VIEWS
 FileGroup42=DIALOG_CUSTOM_VIEWS
-FileGroup43=VIEWS
-FileGroup44=DIALOG_CUSTOM_VIEWS
+FileGroup43=DIALOG_CUSTOM_VIEWS
+FileGroup44=VIEWS
 FileGroup45=DIALOG_CUSTOM_VIEWS
 FileGroup46=DIALOG_CUSTOM_VIEWS
 FileGroup47=DIALOG_CUSTOM_VIEWS
@@ -103,11 +104,12 @@ FileGroup49=DIALOG_CUSTOM_VIEWS
 FileGroup5=DIALOG_CUSTOM_VIEWS
 FileGroup50=DIALOG_CUSTOM_VIEWS
 FileGroup51=DIALOG_CUSTOM_VIEWS
-FileGroup52=VIEWS
-FileGroup53=JSON_CONFIGS
-FileGroup54=DIALOG_CUSTOM_VIEWS
+FileGroup52=DIALOG_CUSTOM_VIEWS
+FileGroup53=VIEWS
+FileGroup54=JSON_CONFIGS
 FileGroup55=DIALOG_CUSTOM_VIEWS
 FileGroup56=DIALOG_CUSTOM_VIEWS
+FileGroup57=DIALOG_CUSTOM_VIEWS
 FileGroup6=JSON_CONFIGS
 FileGroup7=DIALOG_CUSTOM_VIEWS
 FileGroup8=JSON_CONFIGS
@@ -223,7 +225,7 @@ Module83=|relative|src\miscClasses\SysInfo
 Module84=|relative|src\octoPrint\WebSocketParse
 Module85=|relative|src\miscClasses\WildCardFilesList
 Module9=|relative|src\generic\config
-NumberOfFiles=56
+NumberOfFiles=57
 NumberOfLibraries=24
 NumberOfModules=85
 Version=12.5
@@ -231,7 +233,7 @@ Version=12.5
 #Region  Project Attributes 
 	#ApplicationLabel: OctoTC
 	#VersionCode: 56
-	#VersionName: 2.0.5
+	#VersionName: 2.1.0
 	#SignKeyFile: ..\keystore\release.keystore
  	#SignKeyPassword: !!OctoTC!!
 	
@@ -712,7 +714,7 @@ Private Sub InitApp
 	If kvs.ContainsKey("install_date") = False Then
 		kvs.Put("install_date",DateTime.Now)
 		kvs.Put("version_code",Application.VersionCode)
-		config.Is1stRun = True
+		config.FirstRunFOSS = True
 	End If
 	
 	db.Initialize

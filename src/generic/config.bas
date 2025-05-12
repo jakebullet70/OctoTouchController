@@ -17,7 +17,7 @@ Sub Process_Globals
 	Private Const LICENSE_FILE As String = "LICENSE.txt"
 	Public IsInit As Boolean = False
 	
-	Public Is1stRun As Boolean = False
+	Public FirstRunFOSS As Boolean = False
 	'Public empw As String = "b4x!sadLogic512" '--- mail password for the moment, not used... ever
 	
 	Public LastConnectedClient As String

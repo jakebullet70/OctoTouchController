@@ -297,10 +297,6 @@ Private Sub BuildGUI
 	Main.tmrTimerCallSub.CallSubDelayedPlus(Main,"Dim_ActionBar_Off",300)
 	Sleep(0)
 	
-	If config.Is1stRun Then 
-		CallSub(Me,"Show_1stRun")
-	End If
-	
 End Sub
 
 Private Sub LoadSplashPic
@@ -347,6 +343,10 @@ Private Sub TryPrinterConnection
 				Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Is_OctoKlipper",800)
 			Else
 				oc.Klippy = Main.kvs.Get(gblConst.IS_OCTO_KLIPPY)
+			End If
+			
+			If config.FirstRunFOSS Then
+				CallSub(Me,"Show_1stRun")
 			End If
 			
 		End If

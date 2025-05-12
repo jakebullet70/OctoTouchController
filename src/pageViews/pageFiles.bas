@@ -6,7 +6,9 @@ Version=11.8
 @EndOfDesignText@
 ' Author:  sadLogic
 #Region VERSIONS 
-' V. 1.0 	Aug/4/2022 - Kherson Ukraine
+' V. 1.1.Whatever...  May/11/2024 - Removed Octoprint Load button and just display selected file 
+'								  See '--- *LoadBTN* for old code 
+' V. 1.0 	Aug/04/2022 - Kherson Ukraine
 #End Region
 Sub Class_Globals
 	Private xui As XUI	
@@ -33,10 +35,10 @@ Sub Class_Globals
 	Private FilesCheckChangeIsBusyFLAG As Boolean = False
 	Private firstRun As Boolean = True
 	
-	Private lblFileName As AutoTextSizeLabel, lblHeaderFileName As B4XView
+	Private lblFileName As ScrollingLabel, lblHeaderFileName As B4XView
 	Private lblBusy As B4XView
 	
-	Private mOldFileName As String
+	'Private mOldFileName As String
 	
 	Private lblSort2 As Label, cboSort As B4XComboBox, rsFiles As ResultSet
 	Private SortAscDesc As Boolean = True
@@ -53,7 +55,7 @@ Public Sub Initialize(masterPanel As B4XView,callBackEvent As String)
 	mMainObj = B4XPages.MainPage
 	
 	mPnlMain.SetLayoutAnimated(0,0,masterPanel.top,masterPanel.Width,masterPanel.Height)
-	mPnlMain.LoadLayout("pageFiles")
+	mPnlMain.LoadLayout("pageFiles2")
 		
 	BuildGUI
 	
@@ -65,7 +67,7 @@ public Sub Set_focus()
 	mPnlMain.Enabled = oc.isConnected  
 	If config.logFILE_EVENTS Then logMe.LogIt2(firstRun,mModule,"Set_focus")
 	Update_LoadedFileName2Scrn
-	DisplayedFileName = oc.JobFileName
+	'DisplayedFileName = oc.JobFileName
 	Update_Printer_Btns
 	Wait For (FilesCheckChange(True)) Complete (i As Object) '--- always check files on focus
 	
@@ -88,7 +90,6 @@ public Sub Set_focus()
 	End If
 	
 	
-	
 End Sub
 
 public Sub Lost_focus()
@@ -103,21 +104,10 @@ End Sub
 
 public Sub Update_Printer_Btns
 	
-	#if klipper 
-	If oc.isConnected = False Then
-		CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_MENU)
-		Return
-	End If
-	#End If
 
 	'--- sets enable, disable
 	mPnlMain.Enabled = oc.isConnected
-	#if klipper
-	Dim enableDisable As Boolean  = Not (oc.isKlipperCanceling Or oc.isPrinting Or oc.IsPaused2 Or (clvLastIndexClicked = NO_SELECTION))
-	#else
 	Dim enableDisable As Boolean  = Not (oc.isCanceling Or oc.isPrinting Or oc.IsPaused2 Or (clvLastIndexClicked = NO_SELECTION))
-	#End If
-	
 	guiHelpers.EnableDisableBtns2(Array As Button(btnLoad,btnLoadAndPrint,btnDelete),enableDisable)
 
 End Sub
@@ -133,13 +123,17 @@ Public Sub FilesCheckChange(Force As Boolean) As ResumableSub 'ignore
 	
 	Wait For (CheckIfFilesChanged) Complete (i As Object)
 	
-	If (oc.JobFileName.Length = 0 And lblFileName.Text <> gblConst.NO_FILE_LOADED) Or _
-		(oc.JobFileName.Length <> 0 And lblFileName.Text = gblConst.NO_FILE_LOADED) Or _
-		(DisplayedFileName <> oc.JobFileName) Then
-		 Update_LoadedFileName2Scrn
-	End If
-	
-	DisplayedFileName = oc.JobFileName
+	'--- *LoadBTN*
+'	If (oc.JobFileName.Length = 0 And lblFileName.Text <> gblConst.NO_FILE_LOADED) Or _
+'		(oc.JobFileName.Length <> 0 And lblFileName.Text = gblConst.NO_FILE_LOADED) Or _
+'		(DisplayedFileName <> oc.JobFileName) Then
+'		 Update_LoadedFileName2Scrn
+'	End If
+'	
+'	DisplayedFileName = oc.JobFileName
+'---  end OLD
+
+
 	
 	If mMainObj.oMasterController.IsIncompleteFileData Or Force Then
 		Log("---------> setting refresh for incomplete files")
@@ -153,7 +147,8 @@ End Sub
 Private Sub BuildGUI
 	
 	guiHelpers.ReSkinB4XComboBox(Array As B4XComboBox(cboSort))
-	guiHelpers.SetTextColor2(Array As B4XView(lblFileName.BaseLabel,lblHeaderFileName,lblSort2,lblBusy))
+	guiHelpers.SetTextColor2(Array As B4XView(lblHeaderFileName,lblSort2,lblBusy))
+	lblFileName.TextColor = clrTheme.txtNormal
 	guiHelpers.ResizeText(Chr(0xF175),lblSort2) : lblSort2.TextSize = lblSort2.TextSize - 6 '--- make text a little smaller
 	
 	cboSort.setitems(Array As String("File Name","Date Added"))
@@ -181,7 +176,7 @@ Private Sub BuildGUI
 	End If
 	
 	btnLoadAndPrint.Text = "Print"
-	btnLoad.Text = "Load"
+	'btnLoad.Text = "Load"
 	btnDelete.Text = "Delete"
 
 	guiHelpers.SkinButton(Array As Button(btnLoadAndPrint,btnLoad,btnDelete))
@@ -192,13 +187,7 @@ Private Sub BuildGUI
 	guiHelpers.SetTextSize(Array As Button(btnLoadAndPrint,btnLoad,btnDelete), _
 										NumberFormat2(btnDelete.TextSize / guiHelpers.gFscale,1,0,0,False) - IIf(guiHelpers.gFscale > 1,2,0))
 	
-	#if klipper  
-	'btnLoad.Visible = False '------------------  happens in the screen file now
-	lblHeaderFileName.Text = "Viewing File"
-	lblFileName.Text = ""
-	#End If
-
-	
+	lblFileName.Text = "N/A"
 End Sub
 
 Private Sub btnAction_Click
@@ -229,15 +218,15 @@ Private Sub btnAction_Click
 			End If
 			'CallSub2(Main,"TurnOnOff_FilesCheckChangeTmr",True)
 
-		#if not (klipper)			
-		Case "load"
-			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_FILES_SELECT.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
-			'guiHelpers.Show_toast("Loading file...",2000)
-			guiHelpers.Show_toast("Loading file...",2000)
-			Sleep(500) '<--- needed
-			CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
-			Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName2Scrn",400)
-		#end if
+			'--- *LoadBTN*
+'		Case "load"
+'			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_FILES_SELECT.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
+'			'guiHelpers.Show_toast("Loading file...",2000)
+'			guiHelpers.Show_toast("Loading file...",2000)
+'			Sleep(500) '<--- needed
+'			CallSub(B4XPages.MainPage.oMasterController,"tmrMain_Tick")
+'			Main.tmrTimerCallSub.CallSubDelayedPlus(Me,"Update_LoadedFileName2Scrn",400)
+			'--- *LoadBTN*
 			
 		Case "loadandprint"
 			Dim mb2 As dlgMsgBox2
@@ -245,11 +234,7 @@ Private Sub btnAction_Click
 			mb2.NewTextSize = 32
 			Wait For (mb2.Show("Start print job?",gblConst.MB_ICON_QUESTION, "PRINT","","CANCEL")) Complete (res As Int)
 			If res = xui.DialogResponse_Cancel Then Return
-			#if klipper
-			mMainObj.oMasterController.cn.PostRequest($"/printer/print/start?filename=${mCurrentFileInfo.Name}"$)
-			#else
 			mMainObj.oMasterController.cn.PostRequest(oc.cPOST_FILES_PRINT.Replace("!LOC!",mCurrentFileInfo.Origin).Replace("!PATH!",mCurrentFileInfo.Name))
-			#End If
 			guiHelpers.EnableDisableBtns2(Array As Button(btnLoad,btnLoadAndPrint,btnDelete),False)
 			CallSubDelayed2(mMainObj,"Switch_Pages",gblConst.PAGE_PRINTING)
 			Sleep(10)
@@ -367,27 +352,25 @@ End Sub
 
 Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	
+	DisplayedFileName = "N/A"
 	CallSub(Main,"Set_ScreenTmr") '--- reset the power / screen on-off
 	'Dim InSub As String = "clvFiles_ItemClick"
 	
 	If Value = Null Then
 		clvLastIndexClicked = NO_SELECTION
 		SetThumbnail2Nothing
-		#if klipper
 		Update_LoadedFileName2Scrn
-		#End If
 		Return 
 	End If
 	
 	CSelections.ItemClicked(Index)
 	clvLastIndexClicked = Index
 	mCurrentFileInfo =  mMainObj.oMasterController.gMapOctoFilesList.Get(Value)
+	DisplayedFileName = Value
 	
 	If mCurrentFileInfo.myThumbnail_filename_disk = "" Then
 		SetThumbnail2Nothing
-		#if klipper
 		Update_LoadedFileName2Scrn
-		#End If
 		Return
 	End If
 	
@@ -419,12 +402,9 @@ Private Sub clvFiles_ItemClick (Index As Int, Value As Object)
 	Else
 		ivPreview.Load(xui.DefaultFolder,mCurrentFileInfo.myThumbnail_filename_disk)
 	End If
-	#if klipper
+	
 	Update_LoadedFileName2Scrn
-	#End If
-	
-	
-	
+		
 End Sub
 
 
@@ -641,39 +621,38 @@ End Sub
 
 Public Sub Update_LoadedFileName2Scrn
 	'dim fname as String
+	lblFileName.Text = fileHelpers.RemoveExtFromeFileName(DisplayedFileName)
 	
-	If mCurrentFileInfo = Null Then Return
-	If mOldFileName = fileHelpers.RemoveExtFromeFileName(mCurrentFileInfo.Name) Then
-		Return
-	End If
+	'--- *LoadBTN*
+	'If mCurrentFileInfo = Null Then Return
+	'If mOldFileName = fileHelpers.RemoveExtFromeFileName(mCurrentFileInfo.Name) Then
+'		Return'
+	'End If
+		
+'	Try
+'		If oc.isFileLoaded Then
+'			lblFileName.Text = fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
+'		Else
+'			lblFileName.Text = gblConst.NO_FILE_LOADED
+'		End If
+'	Catch
+'		Log(LastException)
+'	End Try
+	'mOldFileName = lblFileName.Text
+	'--- *LoadBTN*
 	
-	Try
-		#if klipper
-		If mCurrentFileInfo.myThumbnail_filename_disk = "" Then
-			lblFileName.Text = ""
-		Else
-			lblFileName.Text = fileHelpers.RemoveExtFromeFileName(mCurrentFileInfo.Name)
-		End If
-		#else
-		If oc.isFileLoaded Then
-			lblFileName.Text = fileHelpers.RemoveExtFromeFileName(oc.JobFileName)
-		Else
-			lblFileName.Text = gblConst.NO_FILE_LOADED
-		End If
-		#End If	
-	Catch
-		Log(LastException)
-	End Try
 	
-	mOldFileName = lblFileName.Text
 	
 End Sub
 
 Private Sub Show1stFile
 	If Main.db.GetTotalRecs = 0 Then Return
 	rsFiles.Position = 0 
+	DisplayedFileName = rsFiles.GetString("file_name")
 	clvFiles_ItemClick(0,rsFiles.GetString("file_name"))
 	clvFiles.JumpToItem(0)
+	
+	Update_LoadedFileName2Scrn
 	Sleep(100)
 End Sub
 

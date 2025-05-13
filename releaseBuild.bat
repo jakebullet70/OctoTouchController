@@ -17,4 +17,8 @@ copy Objects\*.apk
 7z a -t7z -r OctoTouchController_java_src.7z "Objects\src\*.*"
 
 ECHO -------------- end --------------------
+ECHO --- Do not forget to copy to sadLogic.com support site
+ECHO --- Do not forget to copy to sadLogic.com support site
+ECHO --- Do not forget to copy to sadLogic.com support site
+ECHO --- Do not forget to copy to sadLogic.com support site
 pause

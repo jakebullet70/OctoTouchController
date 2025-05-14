@@ -1,27 +1,28 @@
-
-A dedicated touch screen controller for Octoprint supporting older Android devices.
-Reclaim old Android Phones / Tablets! supporting older Hardware (Android 4.X)
-
-Features:
-- Native Android app, not a re-packaged web app
-- Complete support for OctoKlipper (V2.X)
-- Portrait or landscape modes
-- Built in filament loading - unloading wizard
-- Built in manual bed leveling wizard
-- Built in Klipper manual mesh bed leveling wizard (V2.X)
-- Built in Z-Offset wizard (V2.X)
-- Built in BL/CR touch testing (V2.X)
-- Support for Sonoff power device without Octoprint plugin
-- Support for custom GCode commands (V2.X)
-- Support for generic HTTP control (V2.X)
-- Colors themes to match your printers look
-- View / select and print files right on the touch screen
-- Theme color builder 
-
-https://github.com/jakebullet70/OctoTouchController
-
-
-
-
-
   
+A dedicated touch screen controller for Octoprint supporting older Android devices.  
+Reclaim old Android Phones / Tablets! supporting older Hardware (Android 4.X)  
+  
+Features:  
+ - Native Android app, not a re-packaged web app  
+ - Complete support for OctoKlipper  
+ - Portrait or landscape modes  
+ - Built in filament loading - unloading wizard  
+ - Built in manual bed leveling wizard  
+ - Built in Klipper manual mesh bed leveling wizard  
+ - Built in Z-Offset wizard  
+ - Built in BL/CR touch testing  
+ - Support for Sonoff power device without Octoprint plugin  
+ - Support for custom GCode commands  
+ - Support for generic HTTP control  
+ - Colors themes to match your printers look  
+ - View / select and print files right on the touch screen  
+ - Theme color builder  
+  
+https://github.com/jakebullet70/OctoTouchController  
+
+Note:  
+There are 2 versions on GitHub.  
+OctoTouchController_foss.apk - use for Android V4.4 and above  
+OctoTouchController.apk - for pre V4.4 devices.
+See https://github.com/jakebullet70/OctoTouchController/wiki/Release-versions-%E2%80%90-FOSS for more information.  
+

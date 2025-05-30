@@ -19,11 +19,9 @@ Features:
 - View / select and print files right on the touch screen  
 - Theme color builder  
   
-https://github.com/jakebullet70/OctoTouchController  
-
-Note:  
-There are 2 versions on GitHub.  
-OctoTouchController_foss.apk - use for Android V4.4 and above  
-OctoTouchController.apk - for pre V4.4 devices.
+Note: There are 2 versions on GitHub.  
+  
+* OctoTouchController_foss.apk - use for Android V4.4 and above  
+* OctoTouchController.apk - for pre V4.4 devices.  
+  
 See https://github.com/jakebullet70/OctoTouchController/wiki/Release-versions-%E2%80%90-FOSS for more information.  
-
